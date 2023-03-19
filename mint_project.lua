@@ -54,8 +54,8 @@ end
 			"RessourceManagement/Common/RessourceLoaders",
 			"RessourceManagement/Common",
 			"RessourceManagement",
-
-
+			"Physics/Common",
+			"Physics",
 		}
 
 

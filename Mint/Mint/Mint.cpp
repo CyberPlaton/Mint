@@ -5,6 +5,14 @@ namespace mint
 	
 	bool CMintEngine::initialize(const String& manifest_filepath)
 	{
+		_prepare_for_init();
+
+		CScene* initial_scene = nullptr;
+		CWindow::SDescription desc;
+		maml::SNode* maml_root = nullptr;
+
+
+
 		return true;
 	}
 
@@ -66,6 +74,12 @@ namespace mint
 	void CMintEngine::on_after_update(f32 dt)
 	{
 		_on_post_update();
+	}
+
+
+	bool CMintEngine::_prepare_for_init()
+	{
+
 	}
 
 

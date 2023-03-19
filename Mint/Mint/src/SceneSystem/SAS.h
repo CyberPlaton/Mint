@@ -48,10 +48,11 @@ namespace mint
 	}
 
 
-
+	class IMintEngine;
 
 	class CSAS : public IService
 	{
+		friend class IMintEngine;
 	public:
 		STATIC_GET(CSAS, g_CSAS);
 

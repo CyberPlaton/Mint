@@ -48,6 +48,8 @@ namespace mint
 	private:
 		bool _prepare_for_init();
 
+		bool _load_app_manifiest();
+
 		bool _pre_init(CWindow::SDescription& desc);
 
 		bool _init();

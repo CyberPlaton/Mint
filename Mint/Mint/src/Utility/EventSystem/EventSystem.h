@@ -13,11 +13,11 @@
 
 namespace mint
 {
-	class CMintEngine;
+	class IMintEngine;
 
 	class CEventSystem : public IService
 	{
-		friend class CMintEngine;
+		friend class IMintEngine;
 
 	public:
 		STATIC_GET(CEventSystem, s_CEventSystem);

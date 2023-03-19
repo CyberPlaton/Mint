@@ -6,7 +6,8 @@
 #include "SceneSystem/SceneManager.h"
 #include "Common/Window.h"
 #include "Utility/EventSystem/EventSystem.h"
-
+#include "Physics/PhysicsSystem.h"
+#include "SceneSystem/SAS.h"
 
 
 namespace mint
@@ -15,6 +16,13 @@ namespace mint
 	{
 	public:
 		static IMintEngine* get_engine();
+
+		
+		static void run_event_system();
+
+		static void run_spatial_acceleration_structure();
+
+		static void run_scripting_system();
 
 
 		virtual bool initialize(const String&) = 0;

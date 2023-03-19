@@ -47,4 +47,16 @@ namespace mint::algorithm
 	}
 
 
+	f32 radians_to_degree(f32 radians)
+	{
+		return glm::degrees(radians);
+	}
+
+
+	f32 degree_to_radians(f32 degrees)
+	{
+		return glm::radians(degrees);
+	}
+
+
 }
