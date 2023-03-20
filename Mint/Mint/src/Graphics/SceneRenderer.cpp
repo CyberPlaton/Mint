@@ -4,26 +4,12 @@
 namespace mint::fx
 {
 
+	mint::fx::CSceneRenderer* CSceneRenderer::s_CSceneRenderer = nullptr;
 
-	bool CSceneRenderer::initialize(SDescription& desc)
+
+	bool CSceneRenderer::initialize()
 	{
-		bgfx::renderFrame();
-
-
-		bgfx::Init init;
-		init.platformData.nwh = desc.m_nativeWindowHandle;
-		init.resolution.width = desc.m_width;
-		init.resolution.height = desc.m_height;
-		init.resolution.reset = (desc.m_vsync == true) ? BGFX_RESET_VSYNC : BGFX_RESET_NONE;
-		init.type = desc.m_api;
-
-		if(bgfx::init(init))
-		{
-
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 	void CSceneRenderer::terminate()

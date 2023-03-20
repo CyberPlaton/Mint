@@ -9,8 +9,11 @@
 
 namespace mint::component
 {
+	class IMintEngine;
+
 	class CUCA
 	{
+		friend class IMintEngine;
 	public:
 
 		static Vec2 transform_get_position(entt::entity entity);
@@ -39,7 +42,10 @@ namespace mint::component
 		static bool dirtyflag_get_is_dirty(entt::entity entity);
 
 
-	private:
+
+
+
+
 		static MINT_CRITICAL_SECTION(m_dirtyFlagCriticalSection);
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);
 		static MINT_CRITICAL_SECTION(m_hierarchyCriticalSection);

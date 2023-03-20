@@ -11,6 +11,8 @@ namespace mint
 	class CServiceLocator
 	{
 	public:
+		STATIC_GET(CServiceLocator, s_CServiceLocator);
+
 		bool initialize();
 
 		void terminate();
@@ -21,9 +23,9 @@ namespace mint
 
 
 	private:
+		static CServiceLocator* s_CServiceLocator;
+
 		MINT_CRITICAL_SECTION(m_criticalSection);
-
-
 	};
 
 

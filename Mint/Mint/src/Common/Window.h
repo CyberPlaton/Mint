@@ -33,6 +33,8 @@ namespace mint
 
 			bool m_focus;
 
+			bool m_vsync;
+
 			Vec4 m_clearColor;
 		};
 

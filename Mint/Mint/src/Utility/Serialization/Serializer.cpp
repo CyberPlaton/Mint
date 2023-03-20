@@ -13,7 +13,6 @@ namespace mint
 		{
 			return document.get_root();
 		}
-
 		return nullptr;
 	}
 

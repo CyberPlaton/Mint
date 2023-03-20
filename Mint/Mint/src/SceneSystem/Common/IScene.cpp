@@ -11,4 +11,11 @@ namespace mint
 		return IScene::s_activeScene;
 	}
 
+
+	void IScene::set_active_scene(IScene* scene)
+	{
+		s_activeScene = scene;
+	}
+
+
 }

@@ -13,6 +13,8 @@ namespace mint
 	{
 	public:
 		MINT_DEFINE_ENGINE_CTOR(CMintEngine);
+		
+		STATIC_GET(CMintEngine, s_CMintEngine);
 
 
 		bool initialize(const String& manifest_filepath) override final;
@@ -41,18 +43,31 @@ namespace mint
 		void on_after_update(f32 dt) override final;
 
 
+		CWindow& get_main_window() override final;
+
+		fx::SViewport& get_main_viewport() override final;
+
+
 	private:
+		static CMintEngine* s_CMintEngine;
+
 		bool m_running;
+
+		CWindow m_mainWindow;
+
+		fx::SViewport m_mainViewport;
 
 
 	private:
 		bool _prepare_for_init();
 
-		bool _load_app_manifiest();
+		bool _load_app_manifiest(maml::CDocument& document, CWindow::SDescription& window_desc,
+								 CPhysicsSystem::SDescription& physics_desc, CScene* initial_scene);
 
-		bool _pre_init(CWindow::SDescription& desc);
 
 		bool _init();
+
+		bool _pre_init(CWindow::SDescription& wdesc, CPhysicsSystem::SDescription& pdesc);
 
 		bool _post_init(IScene* current_scene);
 

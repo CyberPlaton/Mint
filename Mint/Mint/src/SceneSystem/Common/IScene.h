@@ -18,6 +18,7 @@ namespace mint
 		friend class CSceneManager;
 	public:
 		static IScene* get_active_scene();
+		static void set_active_scene(IScene* scene);
 
 
 		virtual void on_update(f32) = 0;

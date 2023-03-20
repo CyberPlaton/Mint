@@ -12,6 +12,12 @@ namespace mint
 	}
 
 
+	void CPluginSystem::finalize_initialize()
+	{
+		_finalize_initialization();
+	}
+
+
 	void CPluginSystem::terminate()
 	{
 		while (!m_activePlugins.empty())

@@ -6,27 +6,43 @@ namespace maml
 {
 
 
+	CLexer::CLexer() : 
+		m_cursor(0), m_currentLine(0), m_panik(false)
+	{
+
+	}
+
+
 	mint::Vector< maml::SToken > CLexer::scan_from_file(const mint::String& maml_file_path)
 	{
-		std::ifstream in(maml_file_path.c_str());
+		mint::CFileystem fs(mint::CFileystem::get_working_directory());
+		std::ifstream in;
 
-		if(!in.is_open())
+		if(fs.forward(maml_file_path))
 		{
-			mint::String msg = "Could not open file at \"";
-			msg.append(maml_file_path.c_str());
-			msg.append("\!");
+			in.open(fs.get_current_directory().as_string().c_str());
 
-			m_tokens.push_back(_make_error_token(msg));
+			if (!in.is_open())
+			{
+				mint::String msg = "Could not open file at \"";
+				msg.append(maml_file_path.c_str());
+				msg.append("\! Message: ");
 
-			return m_tokens;
+				std::string err = strerror(errno);
+				msg.append(err.c_str());
+
+				m_tokens.push_back(_make_error_token(msg));
+
+				return m_tokens;
+			}
 		}
-
 
 		std::string line;
 		while(std::getline(in, line))
 		{
-			line += "\n";
-			m_source.append(line.c_str());
+			m_source += "\n";
+
+			m_source += line;
 		}
 
 		in.close();
@@ -126,11 +142,11 @@ namespace maml
 		}
 		if(_is_digit(c))
 		{
-			_make_number_token();
+			return _make_number_token();
 		}
 		if (_is_identifier(c))
 		{
-			_make_identifier_token();
+			return _make_identifier_token();
 		}
 		if (_is_comment(c))
 		{
@@ -213,9 +229,11 @@ namespace maml
 		{
 			bool accum = true;
 			
-			for(auto i = 1; i <= dimension; i++)
+			for(auto i = 0; i < dimension; i++)
 			{
-				accum &= _is_number(m_tokens[m_cursor + dimension].m_type);
+				accum &= _is_number(m_tokens[m_cursor + i].m_type);
+
+				if (!accum) break;
 			}
 
 			return accum;
@@ -227,9 +245,9 @@ namespace maml
 
 	bool CLexer::_is_number(SToken::TokenType type)
 	{
-		return type == SToken::TokenType_Float ||
+		return (type == SToken::TokenType_Float ||
 				type == SToken::TokenType_Uint ||
-				type == SToken::TokenType_Sint;
+				type == SToken::TokenType_Sint);
 	}
 
 
@@ -395,18 +413,18 @@ namespace maml
 		}
 
 
-		m_currentToken.append(current_token.c_str());
+		m_currentToken = current_token;
 
 
-		if(_is_end(current_token.c_str()))
+		if(_is_end(current_token))
 		{
 			return _make_token(SToken::TokenType_End, m_currentToken, m_currentLine);
 		}
-		if (_is_false(current_token.c_str()))
+		if (_is_false(current_token))
 		{
 			return _make_token(SToken::TokenType_False, m_currentToken, m_currentLine);
 		}
-		if (_is_false(current_token.c_str()))
+		if (_is_true(current_token))
 		{
 			return _make_token(SToken::TokenType_True, m_currentToken, m_currentLine);
 		}
@@ -530,28 +548,20 @@ namespace maml
 	}
 
 
-	bool CLexer::_is_end(const char* text)
+	bool CLexer::_is_end(const mint::String& text)
 	{
-		return strcmp(text, "end");
+		return text == "end";
 	}
 
 
-	bool CLexer::_is_false(const char* text)
+	bool CLexer::_is_false(const mint::String& text)
 	{
-		return strcmp(text, "False");
+		return text == "False";
 	}
 
 
-	bool CLexer::_is_true(const char* text)
+	bool CLexer::_is_true(const mint::String& text)
 	{
-		return strcmp(text, "True");
-	}
-
-	bool CLexer::strcmp(const char* str1, const char* str2) {
-		while (*str1 != '\0' && *str2 != '\0' && *str1 == *str2) {
-			str1++;
-			str2++;
-		}
-		return (*str1 == *str2) ? true : false;
+		return text == "True";
 	}
 }

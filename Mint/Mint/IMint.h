@@ -2,12 +2,17 @@
 #define _MINT_IMINT_H_
 
 
+#include "Utility/ServiceSystem/ServiceLocator.h"
+#include "Utility/Logging/Logging.h"
 #include "Common/Timestep.h"
 #include "SceneSystem/SceneManager.h"
 #include "Common/Window.h"
 #include "Utility/EventSystem/EventSystem.h"
 #include "Physics/PhysicsSystem.h"
 #include "SceneSystem/SAS.h"
+#include "Utility/PluginSystem/PluginSystem.h"
+#include "Graphics/Common/Viewport.h"
+#include "Graphics/SceneRenderer.h"
 
 
 namespace mint
@@ -17,7 +22,6 @@ namespace mint
 	public:
 		static IMintEngine* get_engine();
 
-		
 		static void run_event_system();
 
 		static void run_spatial_acceleration_structure();
@@ -49,6 +53,11 @@ namespace mint
 		virtual void on_update(f32) = 0;
 
 		virtual void on_after_update(f32) = 0;
+
+
+		virtual CWindow& get_main_window() = 0;
+
+		virtual fx::SViewport& get_main_viewport() = 0;
 
 
 	protected:

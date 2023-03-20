@@ -12,23 +12,9 @@ namespace mint::fx
 	class CSceneRenderer
 	{
 	public:
-		struct SDescription
-		{
-			bgfx::RendererType::Enum m_api;
+		STATIC_GET(CSceneRenderer, s_CSceneRenderer);
 
-			void* m_nativeWindowHandle;
-
-			u32 m_width;
-
-			u32 m_height;
-
-			bool m_vsync;
-		};
-
-
-	public:
-
-		bool initialize(SDescription& desc);
+		bool initialize();
 
 		void terminate();
 
@@ -40,9 +26,9 @@ namespace mint::fx
 		void end();
 
 
-
-
 	private:
+		static CSceneRenderer* s_CSceneRenderer;
+
 
 	};
 }

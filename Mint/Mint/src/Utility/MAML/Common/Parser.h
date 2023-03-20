@@ -18,7 +18,6 @@ namespace maml
 	public:
 		CParser(const mint::Vector< SToken >& stream);
 
-
 		bool parse(CDocument& document);
 
 

@@ -2,6 +2,7 @@ workspace "Mint Engine"
 	print("\n")
 	print("Creating Workspace: \"Mint Engine\":")
 	architecture "x86_64"
+	startproject "Sandbox"
 	configurations{
 		"Debug",		-- Traditional Debugging build
 		"Release",		-- Verbose build to be debugged in a "Release" environment

@@ -10,14 +10,22 @@ namespace maml
 	CParser::CParser(const mint::Vector< SToken >& stream) : 
 		m_tokens(stream), m_document(nullptr), m_cursor(0), m_currentNode(nullptr), m_panik(false)
 	{
-
+		if(!m_tokens.empty())
+		{
+			if(m_tokens.begin()->m_type == SToken::TokenType_Error)
+			{
+				m_panik = true;
+				m_errorMessage = m_tokens.begin()->m_text;
+			}
+		}
 	}
 
 
 	bool CParser::parse(CDocument& document)
 	{
-		if(m_tokens.empty())
+		if(m_tokens.empty() || m_panik)
 		{
+			MINT_LOG_ERROR("[{:.4f}][CParser::parse] Error while scanning the document: \"{}\"", MINT_APP_TIME, m_errorMessage);
 			return false;
 		}
 
@@ -59,7 +67,13 @@ namespace maml
 		{
 			if(_peek_next() == SToken::TokenType_Colon)
 			{
+				auto node = m_document->create_node(_get_current_token().m_text, m_currentNode);
 
+				m_currentNode = node;
+
+				_advance(); _advance();
+
+				return;
 			}
 
 			_report_error(":", _get_next_token().m_text);
@@ -437,7 +451,9 @@ namespace maml
 
 		m_errorMessage += _get_current_token().m_text;
 
-		m_errorMessage += "\", instead got \"";
+		m_errorMessage += "\" at line " + std::to_string(_get_current_token().m_line);
+
+		m_errorMessage += ", instead got \"";
 
 		m_errorMessage += got;
 

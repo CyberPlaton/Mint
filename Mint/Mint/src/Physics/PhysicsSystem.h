@@ -38,6 +38,11 @@ namespace mint
 	public:
 		STATIC_GET(CPhysicsSystem, s_CPhysicsSystem);
 
+		static void set_use_physics(bool value);
+
+		static bool get_use_physics();
+
+
 		bool initialize(SDescription& desc);
 
 		void terminate();
@@ -50,6 +55,8 @@ namespace mint
 
 	private:
 		static CPhysicsSystem* s_CPhysicsSystem;
+
+		static bool s_usePhysics;
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 

@@ -4,6 +4,8 @@
 
 #include "Common/Common.h"
 
+#include "Utility/FileSystem/Filesystem.h"
+
 #include "Token.h"
 
 #include <string>
@@ -15,6 +17,7 @@ namespace maml
 	class CLexer
 	{
 	public:
+		CLexer();
 
 		mint::Vector< SToken > scan_from_file(const mint::String& maml_file_path);
 
@@ -102,14 +105,11 @@ namespace maml
 
 		bool _is_comment(char character);
 
-		bool _is_end(const char* text);
+		bool _is_end(const mint::String& text);
 
-		bool _is_false(const char* text);
+		bool _is_false(const mint::String& text);
 
-		bool _is_true(const char* text);
-
-
-		bool strcmp(const char* str1, const char* str2);
+		bool _is_true(const mint::String& text);
 	};
 }
 

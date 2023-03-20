@@ -4,6 +4,7 @@
 
 // Common Includes
 #include <thread>
+#include <vector>
 #include <string>
 
 #include "SDL3/SDL.h"
@@ -20,9 +21,6 @@
 
 #include "box2d/box2d.h"
 #include "entt/entt.hpp"
-
-#include "tinystl/allocator.h"
-#include "tinystl/vector.h"
 
 
 // Platform Detection
@@ -88,7 +86,7 @@ namespace mint
 
 
 	template< typename T >
-	using Vector = tinystl::vector< T >;
+	using Vector = std::vector< T >;
 
 	using Vec2 = glm::vec2;
 	using Vec3 = glm::vec3;

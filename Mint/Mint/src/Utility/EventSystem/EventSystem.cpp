@@ -48,8 +48,8 @@ namespace mint
 
 					pair.second.pop_back();
 
-					delete delegate;
-					delegate = nullptr;
+					delete *delegate;
+					*delegate = nullptr;
 				}
 			}
 

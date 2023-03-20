@@ -17,6 +17,8 @@ namespace mint
 
 		bool initialize();
 
+		void finalize_initialize();
+
 		void terminate();
 
 

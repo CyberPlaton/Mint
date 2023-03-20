@@ -4,6 +4,8 @@
 namespace mint
 {
 
+	mint::CServiceLocator* CServiceLocator::s_CServiceLocator = nullptr;
+
 
 	bool CServiceLocator::initialize()
 	{
@@ -21,6 +23,7 @@ namespace mint
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
+
 
 
 }

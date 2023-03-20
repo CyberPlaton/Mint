@@ -7,6 +7,21 @@ namespace mint
 	mint::CPhysicsSystem* CPhysicsSystem::s_CPhysicsSystem = nullptr;
 
 
+	bool CPhysicsSystem::s_usePhysics = false;
+
+
+	void CPhysicsSystem::set_use_physics(bool value)
+	{
+		s_usePhysics = value;
+	}
+
+
+	bool CPhysicsSystem::get_use_physics()
+	{
+		return s_usePhysics;
+	}
+
+
 	bool CPhysicsSystem::initialize(SDescription& desc)
 	{
 		b2Vec2 g(desc.m_gravity.x, desc.m_gravity.y);

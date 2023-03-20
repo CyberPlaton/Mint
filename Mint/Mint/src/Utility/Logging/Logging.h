@@ -5,8 +5,6 @@
 #include "Common/Common.h"
 #include "Common/Timer.h"
 
-#include "../ServiceSystem/Service.h"
-
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
@@ -14,7 +12,7 @@
 
 namespace mint
 {
-	class CLogging : public IService
+	class CLogging
 	{
 	public:
 		enum Mode
@@ -33,13 +31,11 @@ namespace mint
 	public:
 		STATIC_GET(CLogging, g_CLogging);
 
-		bool initialize() override final;
+		bool initialize();
 
-		void terminate() override final;
+		void terminate();
 
-		void reset()  override final;
-
-		String get_service_type() override final { return "Logging"; }
+		void reset();
 
 		template< typename... ARGS >
 		void log_info(const std::shared_ptr< spdlog::logger >& logger, ARGS&&... args);
@@ -60,13 +56,13 @@ namespace mint
 		void set_mode(Mode mode);
 
 	private:
-		static CTimer s_timer;
+		CTimer m_timer;
 
-		static Mode s_mode;
+		Mode m_mode;
 
-		static Verbosity s_verbosity;
+		Verbosity m_verbosity;
 
-		static f32 s_applicationStartingTime;
+		f32 m_applicationStartingTime;
 
 		static std::shared_ptr< spdlog::logger > s_consoleLog;
 
@@ -77,7 +73,7 @@ namespace mint
 	template< typename... ARGS >
 	void mint::CLogging::log_critical(const std::shared_ptr< spdlog::logger >& logger, ARGS&&... args)
 	{
-		switch (s_verbosity)
+		switch (m_verbosity)
 		{
 		case Verbosity_Debug:
 		{
@@ -107,7 +103,7 @@ namespace mint
 	template< typename... ARGS >
 	void mint::CLogging::log_error(const std::shared_ptr< spdlog::logger >& logger, ARGS&&... args)
 	{
-		switch (s_verbosity)
+		switch (m_verbosity)
 		{
 		case Verbosity_Debug:
 		{
@@ -137,7 +133,7 @@ namespace mint
 	template< typename... ARGS >
 	void mint::CLogging::log_warn(const std::shared_ptr< spdlog::logger >& logger, ARGS&&... args)
 	{
-		switch (s_verbosity)
+		switch (m_verbosity)
 		{
 		case Verbosity_Debug:
 		{
@@ -167,7 +163,7 @@ namespace mint
 	template< typename... ARGS >
 	void mint::CLogging::log_info(const std::shared_ptr< spdlog::logger >& logger, ARGS&&... args)
 	{
-		switch(s_verbosity)
+		switch(m_verbosity)
 		{
 		case Verbosity_Debug:
 		{
