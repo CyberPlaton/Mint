@@ -13,7 +13,6 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-
 	// Simulate a "Run".
 	while(engine.is_running())
 	{

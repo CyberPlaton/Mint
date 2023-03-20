@@ -66,7 +66,7 @@ CSceneFactory::register_scene(STRING(class_name), &class_name::create)
 
 
 #define MINT_DEFINE_SCENE_CTOR(class_name) \
-static mint::CScene* create() {return new class_name();} \
+static mint::CScene* create() {return dynamic_cast< mint::CScene* >( new class_name() );} \
 mint::String get_scene_name() override final {return STRING(class_name);} \
 bool m_ready = false; \
 bool is_ready() override final { return m_ready; }

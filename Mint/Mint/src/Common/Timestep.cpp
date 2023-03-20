@@ -8,7 +8,7 @@ namespace mint
 	{
 		auto stats = bgfx::getStats();
 
-		return stats->cpuTimeFrame;
+		return 1000.0f / stats->cpuTimeFrame;
 	}
 
 
@@ -16,7 +16,7 @@ namespace mint
 	{
 		auto stats = bgfx::getStats();
 
-		return 1000.0f / stats->cpuTimeFrame;
+		return stats->cpuTimeFrame;
 	}
 
 

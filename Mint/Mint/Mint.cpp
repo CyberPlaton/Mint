@@ -27,6 +27,12 @@ namespace mint
 		}
 
 
+		if(!_pre_init(wdesc, pdesc))
+		{
+			return false;
+		}
+
+
 		if(!_init())
 		{
 			return false;
@@ -41,6 +47,9 @@ namespace mint
 		CPluginSystem::Get().finalize_initialize();
 
 		CSceneManager::Get().set_initial_scene(initial_scene);
+
+
+		m_running = true;
 
 		return true;
 	}
@@ -138,7 +147,7 @@ namespace mint
 	}
 
 
-	bool CMintEngine::_load_app_manifiest(maml::CDocument& document, CWindow::SDescription& window_desc, CPhysicsSystem::SDescription& physics_desc, CScene* initial_scene)
+	bool CMintEngine::_load_app_manifiest(maml::CDocument& document, CWindow::SDescription& window_desc, CPhysicsSystem::SDescription& physics_desc, CScene*& initial_scene)
 	{
 		auto root = document.get_root();
 
@@ -383,19 +392,19 @@ namespace mint
 
 	void CMintEngine::_begin_frame()
 	{
-
+		fx::CSceneRenderer::Get().begin(get_main_viewport());
 	}
 
 
 	void CMintEngine::_frame()
 	{
-
+		fx::CSceneRenderer::Get().render(get_main_viewport(), MINT_ACTIVE_SCENE());
 	}
 
 
 	void CMintEngine::_end_frame()
 	{
-
+		fx::CSceneRenderer::Get().end();
 	}
 
 

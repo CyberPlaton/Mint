@@ -31,7 +31,7 @@ namespace mint::fx
 	void CSceneRenderer::render(SViewport& viewport, mint::IScene* scene /*= mint::IScene::get_active_scene()*/)
 	{
 #ifndef MINT_DISTR
-		if(scene)
+		if(!scene->get_entities().empty())
 		{
 
 		}

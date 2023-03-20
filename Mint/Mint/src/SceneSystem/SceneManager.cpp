@@ -177,8 +177,6 @@ namespace mint
 	{
 		m_current = scene;
 
-		IScene::s_activeScene = scene;
-
 		load_scene(scene);
 	}
 

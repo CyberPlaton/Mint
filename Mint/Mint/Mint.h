@@ -62,7 +62,7 @@ namespace mint
 		bool _prepare_for_init();
 
 		bool _load_app_manifiest(maml::CDocument& document, CWindow::SDescription& window_desc,
-								 CPhysicsSystem::SDescription& physics_desc, CScene* initial_scene);
+								 CPhysicsSystem::SDescription& physics_desc, CScene*& initial_scene);
 
 
 		bool _init();
