@@ -275,7 +275,7 @@ namespace mint
 		m_mainViewport.m_viewIdentifier = 0;
 
 		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-			mint::algorithm::convert_from_argb(wdesc.m_clearColor), 1.0f, 0);
+						   mint::algorithm::convert_to_rgba(wdesc.m_clearColor), 1.0f, 0);
 
 		bgfx::setViewRect(m_mainViewport.m_viewIdentifier, 0, 0, bgfx::BackbufferRatio::Equal);
 

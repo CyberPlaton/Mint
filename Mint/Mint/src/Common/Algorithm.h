@@ -19,8 +19,11 @@ namespace mint::algorithm
 	f32 degree_to_radians(f32 degrees);
 
 
-	u32 convert_from_argb(u32 r, u32 g, u32 b, u32 a);
-	u32 convert_from_argb(Vec4 v);
+	u32 convert_to_argb(u32 r, u32 g, u32 b, u32 a);
+	u32 convert_to_argb(Vec4 v);
+
+	u32 convert_to_rgba(u32 r, u32 g, u32 b, u32 a);
+	u32 convert_to_rgba(Vec4 v);
 
 
 	template< typename T >
