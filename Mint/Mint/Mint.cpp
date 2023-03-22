@@ -143,6 +143,10 @@ namespace mint
 
 		result &= CLogging::Get().initialize();
 
+		
+		CRessourceLoaderFactory::register_ressource_loader("Texture", &CTextureLoader::create);
+
+
 		return result;
 	}
 
@@ -274,8 +278,10 @@ namespace mint
 		m_mainViewport.m_bottom = wdesc.m_height;
 		m_mainViewport.m_viewIdentifier = 0;
 
+		fx::CColor color(wdesc.m_clearColor);
+
 		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-						   mint::algorithm::convert_to_rgba(wdesc.m_clearColor), 1.0f, 0);
+						   color.as_rgba(), 1.0f, 0);
 
 		bgfx::setViewRect(m_mainViewport.m_viewIdentifier, 0, 0, bgfx::BackbufferRatio::Equal);
 

@@ -6,7 +6,7 @@
 #ifndef BX_ERROR_H_HEADER_GUARD
 #define BX_ERROR_H_HEADER_GUARD
 
-#include "string.h"
+#include "String.h"
 
 #define BX_ERROR_SET(_ptr, _result, _msg)    \
 	BX_MACRO_BLOCK_BEGIN                     \

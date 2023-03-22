@@ -49,6 +49,7 @@ namespace mint
 			CSerializer::import_string(folder, "folder", node);
 			CSerializer::import_string(extension, "extension", node);
 			CSerializer::import_string(path, "path", node);
+			CSerializer::import_string(type, "type", node);
 			CSerializer::import_bool(&recurse, "recursive", node);
 
 

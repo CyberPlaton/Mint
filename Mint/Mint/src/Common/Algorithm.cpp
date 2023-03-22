@@ -35,18 +35,6 @@ namespace mint::algorithm
 	}
 
 
-	u32 convert_to_argb(u32 r, u32 g, u32 b, u32 a)
-	{
-		return ((a << 24) | (r << 16) | (g << 8) | b);
-	}
-
-
-	u32 convert_to_argb(Vec4 v)
-	{
-		return convert_to_argb((u32)v.r, (u32)v.g, (u32)v.b, (u32)v.a);
-	}
-
-
 	f32 radians_to_degree(f32 radians)
 	{
 		return glm::degrees(radians);
@@ -57,18 +45,5 @@ namespace mint::algorithm
 	{
 		return glm::radians(degrees);
 	}
-
-
-	mint::u32 convert_to_rgba(u32 r, u32 g, u32 b, u32 a)
-	{
-		return ((r << 24) | (g << 16) | (b << 8) | a);
-	}
-
-
-	mint::u32 convert_to_rgba(Vec4 v)
-	{
-		return convert_to_rgba((u32)v.r, (u32)v.g, (u32)v.b, (u32)v.a);
-	}
-
 
 }

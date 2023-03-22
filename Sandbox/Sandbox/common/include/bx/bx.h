@@ -7,6 +7,7 @@
 #define BX_H_HEADER_GUARD
 
 #include <stdarg.h> // va_list
+#include <alloca.h>
 #include <stdint.h> // uint32_t
 #include <stdlib.h> // size_t
 #include <stddef.h> // ptrdiff_t
@@ -18,13 +19,6 @@
 #include "debug.h"
 #include "typetraits.h"
 
-#ifdef BX_PLATFORM_WINDOWS
-#define __STDC_FORMAT_MACROS
-#include <malloc.h>
-#undef __STDC_FORMAT_MACROS
-#else
-#include <alloca.h>
-#endif
 
 ///
 #define BX_COUNTOF(_x) sizeof(bx::CountOfRequireArrayArgumentT(_x) )

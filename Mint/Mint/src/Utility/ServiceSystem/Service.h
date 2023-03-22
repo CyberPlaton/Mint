@@ -50,4 +50,8 @@ namespace mint
 }
 
 
+#define MINT_REGISTER_SERVICE(class_name, service) \
+mint::IService::register_service(new class_name(), service)
+
+
 #endif

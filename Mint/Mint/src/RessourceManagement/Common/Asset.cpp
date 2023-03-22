@@ -10,9 +10,21 @@ namespace mint
 	}
 
 
+	void CAsset::set_asset_extension(const String& value)
+	{
+		write_string("extension", value);
+	}
+
+
 	mint::String CAsset::get_ressource_type()
 	{
 		return read_string("type");
+	}
+
+
+	void CAsset::set_ressource_type(const String& value)
+	{
+		write_string("type", value);
 	}
 
 
@@ -22,21 +34,45 @@ namespace mint
 	}
 
 
+	void CAsset::set_asset_name(const String& value)
+	{
+		write_string("name", value);
+	}
+
+
 	mint::u64 CAsset::get_asset_id()
 	{
 		return read_uint("id");
 	}
 
 
+	void CAsset::set_asset_id(u64 value)
+	{
+		write_uint("id", value);
+	}
+
+
 	mint::String CAsset::get_asset_path()
 	{
-		return read_string("asset path");
+		return read_string("path");
+	}
+
+
+	void CAsset::set_asset_path(const String& value)
+	{
+		write_string("path", value);
 	}
 
 
 	mint::String CAsset::get_asset_source_path()
 	{
-		return read_string("source path");
+		return read_string("source");
+	}
+
+
+	void CAsset::set_asset_source_path(const String& value)
+	{
+		write_string("source", value);
 	}
 
 
@@ -46,15 +82,33 @@ namespace mint
 	}
 
 
+	void CAsset::set_asset_description(const String& value)
+	{
+		write_string("description", value);
+	}
+
+
 	mint::String CAsset::get_asset_author()
 	{
 		return read_string("author");
 	}
 
 
+	void CAsset::set_asset_author(const String& value)
+	{
+		write_string("author", value);
+	}
+
+
 	mint::u64 CAsset::get_asset_version()
 	{
 		return read_uint("version");
+	}
+
+
+	void CAsset::set_asset_version(u64 value)
+	{
+		write_uint("version", value);
 	}
 
 

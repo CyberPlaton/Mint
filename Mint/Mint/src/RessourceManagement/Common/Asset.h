@@ -14,22 +14,31 @@ namespace mint
 	public:
 
 		String get_asset_extension();
+		void set_asset_extension(const String& value);
 
 		String get_ressource_type();
+		void set_ressource_type(const String& value);
 
 		String get_asset_name();
+		void set_asset_name(const String& value);
 
 		u64 get_asset_id();
+		void set_asset_id(u64 value);
 
 		String get_asset_path();
+		void set_asset_path(const String& value);
 
 		String get_asset_source_path();
+		void set_asset_source_path(const String& value);
 
 		String get_asset_description();
+		void set_asset_description(const String& value);
 
 		String get_asset_author();
+		void set_asset_author(const String& value);
 
 		u64 get_asset_version();
+		void set_asset_version(u64 value);
 
 
 		void write_string(const String& entry_name, const String& data);

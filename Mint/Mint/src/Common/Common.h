@@ -6,14 +6,20 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <fstream>
 
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_syswm.h"
 
 #include "bx/bx.h"
+#include "bx/file.h"
+#include "bx/file.h"
+#include "bx/allocator.h"
 #include "bgfx/bgfx.h"
+#include "bgfx/bgfx_utils.h"
 #include "bgfx/platform.h"
 #include "bimg/bimg.h"
+#include "bimg/decode.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -93,6 +99,68 @@ namespace mint
 	using Vec4 = glm::vec4;
 	using Mat4 = glm::mat4x4;
 }
+
+
+namespace mint::fx
+{
+
+	bgfx::ShaderHandle loadShader(const String& name);
+	bgfx::ShaderHandle loadEmbeddedShader(const String& name);
+	bgfx::ProgramHandle loadProgram(const String& vs, const String& fs);
+	void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _filePath, uint32_t* _size);
+	void* load(const char* _filePath, uint32_t* _size);
+	void unload(void* _ptr);
+	static void imageReleaseCb(void* _ptr, void* _userData);
+	bgfx::TextureHandle loadTexture(bx::FileReaderI* _reader, const char* _filePath, uint64_t _flags, uint8_t _skip, bgfx::TextureInfo* _info, bimg::Orientation::Enum* _orientation);
+	bgfx::TextureHandle loadTexture(const char* _name, uint64_t _flags = BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, uint8_t _skip = 0, bgfx::TextureInfo* _info = NULL, bimg::Orientation::Enum* _orientation = NULL);
+	void setPlatformData(void* platformData);
+
+
+}
+
+namespace entry {
+
+	static bgfx::PlatformData s_platformData;
+
+	static bx::DefaultAllocator s_allocator;
+	static bx::FileReaderI* s_fileReader;
+	static bx::FileWriterI* s_fileWriter;
+	static bx::AllocatorI* g_allocator = &s_allocator;
+
+	typedef bx::StringT<&g_allocator> bxString;
+
+	static bxString s_currentDir;
+
+	class FileReader : public bx::FileReader
+	{
+		typedef bx::FileReader super;
+
+	public:
+		virtual bool open(const bx::FilePath& _filePath, bx::Error* _err) override;
+	};
+
+	class FileWriter : public bx::FileWriter
+	{
+		typedef bx::FileWriter super;
+
+	public:
+		virtual bool open(const bx::FilePath& _filePath, bool _append, bx::Error* _err) override;
+	};
+
+	void setCurrentDir(const char* _dir);
+
+	void init();
+
+	void terminate();
+
+	bx::FileReaderI* getFileReader();
+
+	bx::FileWriterI* getFileWriter();
+
+	bx::AllocatorI* getAllocator();
+
+}
+
 
 
 // Common macros

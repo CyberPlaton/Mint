@@ -5,9 +5,10 @@ filter {"platforms:Windows","configurations:Debug"}
 	libdirs{"libs", "%{prj.location}/common/lib/Debug"}
 	links{
 		"SDL3",
-		"bgfx",
-		"bimg",
-		"bx",
+		"bgfxDebug",
+		"bxDebug",
+		"bimgDebug",
+		"bimg_decodeDebug",
 		"fmtd",
 		"spdlogd",
 		"box2d",
@@ -23,9 +24,10 @@ filter {"platforms:Windows","configurations:Release"}
 	libdirs{"libs", "%{prj.location}/common/lib/Release"}
 	links{
 		"SDL3",
-		"bgfx",
-		"bimg",
-		"bx",
+		"bgfxRelease",
+		"bxRelease",
+		"bimgRelease",
+		"bimg_decodeRelease",
 		"fmt",
 		"spdlog",
 		"box2d",
@@ -41,9 +43,10 @@ filter {"platforms:Windows","configurations:Distr"}
 	libdirs{"libs", "%{prj.location}/common/lib/Distr"}
 	links{
 		"SDL3",
-		"bgfx",
-		"bimg",
-		"bx",
+		"bgfxRelease",
+		"bxRelease",
+		"bimgRelease",
+		"bimg_decodeRelease",
 		"fmt",
 		"spdlog",
 		"box2d",

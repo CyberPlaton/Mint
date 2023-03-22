@@ -10,13 +10,17 @@ function LinkLibraryForPlatformAndConfig(platform, config, library, library_path
 	filter{}
 end
 
+mint_dir = os.getcwd()
+mint_dir = mint_dir .. "/bin"
+
+
 filter {"platforms:Windows", "configurations:Debug"}
-	LinkLibraryForPlatformAndConfig("Windows", "Debug", "Mint", "bin/Debug_Windows")
+	LinkLibraryForPlatformAndConfig("Windows", "Debug", "Mint", mint_dir .. "/Debug_Windows/Mint")
 
 
 filter {"platforms:Windows", "configurations:Release"}
-	LinkLibraryForPlatformAndConfig("Windows", "Release", "Mint", "bin/Release_Windows")
+	LinkLibraryForPlatformAndConfig("Windows", "Release", "Mint", mint_dir .. "/Release_Windows/Mint")
 
 
 filter {"platforms:Windows", "configurations:Distr"}
-	LinkLibraryForPlatformAndConfig("Windows", "Distr", "Mint", "bin/Distr_Windows")
+	LinkLibraryForPlatformAndConfig("Windows", "Distr", "Mint", mint_dir .. "/Distr_Windows/Mint")

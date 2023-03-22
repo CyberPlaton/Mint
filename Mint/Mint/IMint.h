@@ -12,7 +12,11 @@
 #include "SceneSystem/SAS.h"
 #include "Utility/PluginSystem/PluginSystem.h"
 #include "Graphics/Common/Viewport.h"
+#include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer.h"
+
+#include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
+#include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
 
 
 namespace mint
