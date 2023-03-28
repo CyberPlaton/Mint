@@ -94,7 +94,7 @@ namespace mint::component
 
 	struct SScript
 	{
-		ScriptHandle m_scriptHandle = BGFX_INVALID_HANDLE;
+		ScriptHandle m_scriptHandle;
 	};
 
 }
