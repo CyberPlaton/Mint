@@ -32,6 +32,10 @@ namespace mint
 
 		void frame() override final;
 
+		void ui_frame_begin() override final;
+
+		void ui_frame_end() override final;
+
 		void end_frame() override final;
 
 

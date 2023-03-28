@@ -47,6 +47,10 @@ namespace mint
 
 		virtual void frame() = 0;
 
+		virtual void ui_frame_begin() = 0;
+
+		virtual void ui_frame_end() = 0;
+
 		virtual void end_frame() = 0;
 
 

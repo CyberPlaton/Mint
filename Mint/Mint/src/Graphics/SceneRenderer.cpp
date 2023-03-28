@@ -20,6 +20,11 @@ namespace mint::fx
 
 	void CSceneRenderer::begin(SViewport& viewport)
 	{
+		auto view = MINT_ACTIVE_SCENE()->get_active_camera().get_view_matrix();
+		auto proj = MINT_ACTIVE_SCENE()->get_active_camera().get_project_matrix();
+
+		bgfx::setViewTransform(viewport.m_viewIdentifier, &view[0], &proj[0]);
+
 		bgfx::touch(viewport.m_viewIdentifier);
 
 		bgfx::setState(

@@ -94,16 +94,24 @@ namespace mint
 	void CMintEngine::frame()
 	{
 		_frame();
+	}
 
+
+	void CMintEngine::ui_frame_begin()
+	{
 		CUI::Get().begin();
+	}
+
+
+	void CMintEngine::ui_frame_end()
+	{
+		CUI::Get().end();
 	}
 
 
 	void CMintEngine::end_frame()
 	{
 		_end_frame();
-
-		CUI::Get().end();
 	}
 
 

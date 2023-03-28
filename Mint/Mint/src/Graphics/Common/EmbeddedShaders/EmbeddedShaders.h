@@ -26,6 +26,8 @@ namespace mint::fx
 
 		static void terminate();
 
+		static mint::ShaderProgramHandle get_embedded_shader(const String& name);
+
 
 		static mint::CMap< mint::ShaderProgramHandle > m_shaders;
 	};

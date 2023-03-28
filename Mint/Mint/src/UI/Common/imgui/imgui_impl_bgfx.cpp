@@ -56,10 +56,10 @@ void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
     const bgfx::Caps* caps = bgfx::getCaps();
 
     // Setup viewport, orthographic projection matrix
-    float ortho[16];
-    bx::mtxOrtho(
-        ortho, 0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, 0.0f, 1000.0f,
-        0.0f, caps->homogeneousDepth);
+	float ortho[16];
+	bx::mtxOrtho(&ortho[0], 0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, 0.0f, 1000.0f,
+ 		0.0f, caps->homogeneousDepth);
+
     bgfx::setViewTransform(g_View, NULL, ortho);
     bgfx::setViewRect(g_View, 0, 0, (uint16_t)fb_width, (uint16_t)fb_height);
 
@@ -101,9 +101,9 @@ void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
             } else {
                 const uint16_t xx = (uint16_t)bx::max(pcmd->ClipRect.x, 0.0f);
                 const uint16_t yy = (uint16_t)bx::max(pcmd->ClipRect.y, 0.0f);
-                bgfx::setScissor(
-                    xx, yy, (uint16_t)bx::min(pcmd->ClipRect.z, 65535.0f) - xx,
-                    (uint16_t)bx::min(pcmd->ClipRect.w, 65535.0f) - yy);
+// 				bgfx::setScissor(
+// 					xx, yy, (uint16_t)bx::min(pcmd->ClipRect.z, 65535.0f) - xx,
+//  					        (uint16_t)bx::min(pcmd->ClipRect.w, 65535.0f) - yy);
 
                 bgfx::setState(state);
                 bgfx::TextureHandle texture = {

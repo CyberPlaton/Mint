@@ -107,4 +107,16 @@ namespace mint::fx
 	}
 
 
+	mint::ShaderProgramHandle CEmbeddedShaders::get_embedded_shader(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+		if(m_shaders.lookup(h))
+		{
+			return m_shaders.get(h);
+		}
+
+		return BGFX_INVALID_HANDLE;
+	}
+
+
 }
