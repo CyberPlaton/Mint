@@ -14,6 +14,7 @@
 #include "Graphics/Common/Viewport.h"
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer.h"
+#include "UI/UI.h"
 
 #include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
@@ -25,8 +26,6 @@ namespace mint
 	{
 	public:
 		static IMintEngine* get_engine();
-
-		static void run_event_system();
 
 		static void run_spatial_acceleration_structure();
 

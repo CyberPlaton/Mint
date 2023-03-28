@@ -51,6 +51,7 @@ namespace mint
 		template< typename T >
 		T get_native_handle();
 
+		Window* as_sdl_window();
 
 		void show();
 

@@ -48,7 +48,6 @@ end
 			"Utility",
 			"Components",
 			"SceneSystem/Common",
-			"SceneSystem/EntityFactory",
 			"SceneSystem",
 			"Graphics/Common/EmbeddedShaders/Shaders/android",
 			"Graphics/Common/EmbeddedShaders/Shaders/ios",
@@ -65,6 +64,9 @@ end
 			"RessourceManagement",
 			"Physics/Common",
 			"Physics",
+			"UI/Common/imgui",
+			"UI/Common",
+			"UI",
 		}
 
 

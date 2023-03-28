@@ -45,6 +45,12 @@ namespace mint
 	}
 
 
+	mint::Window* CWindow::as_sdl_window()
+	{
+		return m_window;
+	}
+
+
 	void CWindow::show()
 	{
 		SDL_ShowWindow(m_window);

@@ -9,19 +9,15 @@ namespace mint
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
-		m_internalLoop = false;
-		m_running = false;
-		m_update = false;
-
 		return true;
 	}
 
 
 	void CEventSystem::terminate()
 	{
-		_set_is_running(false);
+		reset();
 
-		wait_for_termination();
+		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
 
 
@@ -59,30 +55,49 @@ namespace mint
 	}
 
 
-	void CEventSystem::wait_for_termination()
+	void CEventSystem::update()
 	{
+		SDL_Event sdl_event;
+		while (SDL_PollEvent(&sdl_event))
+		{
+			ImGui_ImplSDL3_ProcessEvent(&sdl_event);
 
-	}
+			switch (sdl_event.type)
+			{
+			case SDL_EVENT_QUIT:
+			{
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
 
-
-	bool CEventSystem::is_running()
-	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			bool v = m_running;
+			while (!m_eventQueue.empty())
+			{
+				auto event = m_eventQueue.front();
 
-		);
+				auto event_type = event->get_event_type();
 
-		return v;
-	}
+				for (auto& pair : m_listeners)
+				{
+					if (event_type == pair.first)
+					{
+						for (auto& delegate : pair.second)
+						{
+							delegate->execute(event);
+						}
+					}
+				}
 
+				m_eventQueue.pop();
 
-	void CEventSystem::set_should_update(bool value)
-	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			m_update = value;
-
+				delete event; event = nullptr;
+			}
 		);
 	}
 
@@ -162,109 +177,5 @@ namespace mint
 
 		);
 	}
-
-
-	void CEventSystem::_run()
-	{
-		std::thread thread(&CEventSystem::_internal_run, this);
-
-		thread.detach();
-	}
-
-
-	void CEventSystem::_internal_run()
-	{
-		_set_is_running(true);
-
-		while(is_running())
-		{
-			if(_should_update())
-			{
-				_internal_computation();
-			}
-			else
-			{
-				std::this_thread::yield();
-			}
-		}
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			m_internalLoop = false;
-
-		);
-	}
-
-
-	void CEventSystem::_internal_computation()
-	{
-		set_should_update(false);
-
-
-		SDL_Event sdl_event;
-		while(SDL_PollEvent(&sdl_event))
-		{
-			switch(sdl_event.type)
-			{
-				case SDL_EVENT_QUIT:
-				{
-					break;
-				}
-				default:
-				{
-					break;
-				}
-			}
-		}
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			while(!m_eventQueue.empty())
-			{
-				auto event = m_eventQueue.front();
-
-				auto event_type = event->get_event_type();
-
-				for (auto& pair : m_listeners)
-				{
-					if (event_type == pair.first)
-					{
-						for (auto& delegate : pair.second)
-						{
-							delegate->execute(event);
-						}
-					}
-				}
-
-				m_eventQueue.pop();
-
-				delete event; event = nullptr;
-			}
-		);
-	}
-
-
-	void CEventSystem::_set_is_running(bool value)
-	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			m_running = value;
-
-			);
-	}
-
-
-	bool CEventSystem::_should_update()
-	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			bool v = m_update;
-
-		);
-
-		return v;
-	}
-
 
 }

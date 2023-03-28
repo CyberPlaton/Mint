@@ -94,12 +94,16 @@ namespace mint
 	void CMintEngine::frame()
 	{
 		_frame();
+
+		CUI::Get().begin();
 	}
 
 
 	void CMintEngine::end_frame()
 	{
 		_end_frame();
+
+		CUI::Get().end();
 	}
 
 
@@ -230,6 +234,7 @@ namespace mint
 		bool result = true;
 
 		// UI.
+		result &= CUI::Get().initialize(m_mainWindow.as_sdl_window());
 
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
@@ -294,11 +299,7 @@ namespace mint
 
 		// Event System.
 		result &= CEventSystem::Get().initialize();
-		if(result)
-		{
-			IMintEngine::get_engine()->run_event_system();
-		}
-
+		
 		// Shader manager.
 		result &= CShaderManager::Get().initialize();
 
@@ -380,13 +381,13 @@ namespace mint
 
 	void CMintEngine::_on_pre_update()
 	{
-
+		CEventSystem::Get().update();
 	}
 
 
 	void CMintEngine::_on_update(f32 dt /*= CTimestep::get_fps()*/)
 	{
-
+		
 	}
 
 

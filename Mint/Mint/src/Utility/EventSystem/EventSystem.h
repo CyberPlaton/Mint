@@ -6,7 +6,7 @@
 #include "Event.h"
 #include "Delegate.h"
 
-#include "../ServiceSystem/Service.h"
+#include "UI/Common/UICommon.h"
 
 #include <queue>
 
@@ -15,26 +15,20 @@ namespace mint
 {
 	class IMintEngine;
 
-	class CEventSystem : public IService
+	class CEventSystem
 	{
 		friend class IMintEngine;
 
 	public:
 		STATIC_GET(CEventSystem, s_CEventSystem);
 
-		bool initialize() override final;
+		bool initialize();
 
-		void terminate() override final;
+		void terminate();
 
-		void reset() override final;
+		void reset();
 
-		String get_service_type() override final { return "Event System"; }
-
-		void wait_for_termination();
-
-		bool is_running();
-
-		void set_should_update(bool value);
+		void update();
 
 		void add_listener(const String& listened_event_type, SDelegate* delegate);
 
@@ -43,12 +37,6 @@ namespace mint
 		void queue_event(SEvent* event);
 
 	private:
-		bool m_internalLoop;
-
-		bool m_running;
-
-		bool m_update;
-
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 		
@@ -58,17 +46,6 @@ namespace mint
 
 		std::queue< SEvent* > m_eventQueue;
 
-
-	private:
-		void _run();
-
-		void _internal_run();
-
-		void _internal_computation();
-
-		void _set_is_running(bool value);
-
-		bool _should_update();
 	};
 
 }

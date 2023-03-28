@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 
 		engine.frame();
 
+		MINT_ACTIVE_SCENE()->on_after_frame(CTimestep::get_fps());
+
 		engine.end_frame();
 
 
@@ -44,7 +46,9 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 
 void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 {
-
+	ImGui::Begin("Window");
+	ImGui::Text("Hello World");
+	ImGui::End();
 }
 
 
