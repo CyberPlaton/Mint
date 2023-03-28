@@ -38,6 +38,16 @@ namespace mint
 	}
 
 
+	mint::CPath CFileystem::construct_from(const String& path, const String& addition)
+	{
+		CPath p(path);
+
+		p.append(addition);
+
+		return p;
+	}
+
+
 	mint::CPath CFileystem::get_working_directory()
 	{
 		return std::filesystem::current_path();

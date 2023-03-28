@@ -20,6 +20,8 @@ namespace mint
 
 		static CPath construct_from(CPath path, const String& addition);
 
+		static CPath construct_from(const String& path, const String& addition);
+
 		static CPath get_working_directory();
 
 		static bool set_working_directory(CPath path);

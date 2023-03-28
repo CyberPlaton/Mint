@@ -42,9 +42,10 @@ namespace mint
 		CSerializer::import_string(source, "source", node);
 
 
+		asset.set_asset_path(ressource_container_folder);
 		asset.set_asset_name(name);
 		asset.set_ressource_type(type);
-		asset.set_ressource_type(source);
+		asset.set_asset_source_path(source);
 
 		return asset;
 	}

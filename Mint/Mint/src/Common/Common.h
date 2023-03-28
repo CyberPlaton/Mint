@@ -80,7 +80,7 @@ namespace mint
 // Common defines
 namespace mint
 {
-	using ShaderHandle = bgfx::ProgramHandle;
+	using ShaderProgramHandle = bgfx::ProgramHandle;
 
 	using TextureHandle = bgfx::TextureHandle;
 
@@ -105,7 +105,6 @@ namespace mint::fx
 {
 
 	bgfx::ShaderHandle loadShader(const String& name);
-	bgfx::ShaderHandle loadEmbeddedShader(const String& name);
 	bgfx::ProgramHandle loadProgram(const String& vs, const String& fs);
 	void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _filePath, uint32_t* _size);
 	void* load(const char* _filePath, uint32_t* _size);
@@ -114,8 +113,6 @@ namespace mint::fx
 	bgfx::TextureHandle loadTexture(bx::FileReaderI* _reader, const char* _filePath, uint64_t _flags, uint8_t _skip, bgfx::TextureInfo* _info, bimg::Orientation::Enum* _orientation);
 	bgfx::TextureHandle loadTexture(const char* _name, uint64_t _flags = BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, uint8_t _skip = 0, bgfx::TextureInfo* _info = NULL, bimg::Orientation::Enum* _orientation = NULL);
 	void setPlatformData(void* platformData);
-
-
 }
 
 namespace entry {
@@ -174,6 +171,8 @@ static CLASS& Get() \
 { static CLASS STATIC_MEMBER; return STATIC_MEMBER;} \
 
 #define STRING(s) #s
+
+#define CONCAT(f, s) STRING(f ## s)
 
 #define TYPESTRING(s) typeid(s).name()
 

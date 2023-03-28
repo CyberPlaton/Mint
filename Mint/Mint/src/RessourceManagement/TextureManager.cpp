@@ -33,9 +33,9 @@ namespace mint
 	}
 
 
-	bool CTextureManager::add_texture(const String& texture_name, bgfx::TextureHandle& handle, bgfx::TextureInfo& info)
+	bool CTextureManager::add_texture(const String& texture_name, TextureHandle& handle, bgfx::TextureInfo& info)
 	{
-		MINT_ASSERT(bgfx::isValid(handle) == true, "Passing an invalid handle is a critical error!");
+		MINT_ASSERT(bgfx::isValid(handle) == true, "Passing an invalid handle!");
 
 		auto h = mint::algorithm::djb_hash(texture_name);
 
@@ -63,5 +63,64 @@ namespace mint
 
 		return true;
 	}
+
+
+	mint::Vec2 CTextureManager::get_texture_dimension(const String& texture_name)
+	{
+		auto h = mint::algorithm::djb_hash(texture_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const bool result = m_textureInfo.lookup(h);
+
+		);
+
+		if(result)
+		{
+			Vec2 vec;
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				const auto& info = m_textureInfo.get(h);
+
+				vec.x = SCAST(f32, info.width);
+				vec.y = SCAST(f32, info.height);
+
+			);
+
+
+			return vec;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CTextureManager::get_texture_dimension] Requested Texture \"{}\" was not found!", MINT_APP_TIME, texture_name.c_str());
+		return { 0, 0 };
+	}
+
+
+	mint::TextureHandle CTextureManager::get_texture_handle(const String& texture_name)
+	{
+		auto h = mint::algorithm::djb_hash(texture_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const bool result = m_textures.lookup(h);
+
+		);
+
+		if(result)
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				const auto& handle = m_textures.get(h);
+
+			);
+
+			return handle;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CTextureManager::get_texture_handle] Requested Texture \"{}\" was not found!", MINT_APP_TIME, texture_name.c_str());
+		return BGFX_INVALID_HANDLE;
+	}
+
 
 }

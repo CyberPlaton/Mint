@@ -64,9 +64,9 @@ namespace mint::component
 
 		u32 m_depth = 0;
 
-		ShaderHandle m_shaderHandle = BGFX_INVALID_HANDLE;
+		ShaderProgramHandle m_shaderHandle;
 
-		TextureHandle m_textureHandle = BGFX_INVALID_HANDLE;
+		TextureHandle m_textureHandle;
 
 		u32 m_textureWidth = 0;
 

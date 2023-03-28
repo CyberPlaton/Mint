@@ -1,0 +1,2 @@
+python ./compile.py --file particle
+python ./compile.py --file sprite -embedded

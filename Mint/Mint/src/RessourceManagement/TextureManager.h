@@ -22,7 +22,11 @@ namespace mint
 		void reset();
 
 		
-		bool add_texture(const String& texture_name, bgfx::TextureHandle& handle, bgfx::TextureInfo& info);
+		bool add_texture(const String& texture_name, TextureHandle& handle, bgfx::TextureInfo& info);
+
+		Vec2 get_texture_dimension(const String& texture_name);
+
+		TextureHandle get_texture_handle(const String& texture_name);
 
 
 	private:
@@ -31,7 +35,7 @@ namespace mint
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		CMap< bgfx::TextureHandle > m_textures;
+		CMap< TextureHandle > m_textures;
 
 		CMap< bgfx::TextureInfo > m_textureInfo;
 	};

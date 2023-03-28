@@ -139,6 +139,9 @@ namespace mint
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_dirtyFlagCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 
+		entry::init();
+		entry::setCurrentDir(CFileystem::get_working_directory().as_string().c_str());
+
 		bool result = true;
 
 		result &= CLogging::Get().initialize();
@@ -297,6 +300,7 @@ namespace mint
 		}
 
 		// Shader manager.
+		result &= CShaderManager::Get().initialize();
 
 		// Texture manager.
 
@@ -369,6 +373,8 @@ namespace mint
 		DELETE_CRITICAL_SECTION(CUCA::m_dirtyFlagCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 
+
+		entry::terminate();
 	}
 
 

@@ -57,9 +57,10 @@ namespace mint
 			fpath.append_path(assets);
 			fpath.append_path(folder);
 
-			ressource.write_string("source path", fpath.get_current_directory().as_string());
-			ressource.write_string("type", type);
-			ressource.write_string("extension", extension);
+			ressource.set_asset_source_path(fpath.get_current_directory().as_string());
+			ressource.set_ressource_type(type);
+			ressource.set_asset_extension(extension);
+
 			ressource.write_bool("recursive", recurse);
 
 
@@ -97,7 +98,11 @@ namespace mint
 						CAsset def = ressource_loader->load_asset(fs.get_current_directory().as_string(), type, asset_node);
 
 
-						ressource_loader->load_ressource(type, def);
+						if(!ressource_loader->load_ressource(type, def))
+						{
+							MINT_LOG_ERROR("[{:.4f}][CSceneManager::_load_scene_asset_ressources] Failed loading asset \"{}\" at \"{}\" of type \"{}\" for scene \"{}\"!", 
+											MINT_APP_TIME, def.get_asset_name(), def.get_asset_source_path(), type, MINT_ACTIVE_SCENE()->get_scene_name());
+						}
 					}
 				}
 			}
@@ -113,8 +118,7 @@ namespace mint
 
 				CAsset recursive_asset_decl = asset;
 
-				recursive_asset_decl.write_string("source path", path.as_string());
-
+				recursive_asset_decl.set_asset_source_path(path.as_string());
 
 				_load_scene_asset_ressources(scene, recursive_asset_decl);
 			}
