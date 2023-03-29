@@ -119,4 +119,12 @@ namespace mint::fx
 	}
 
 
+	bool CEmbeddedShaders::lookup_embedded_shader(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		return m_shaders.lookup(h);
+	}
+
+
 }

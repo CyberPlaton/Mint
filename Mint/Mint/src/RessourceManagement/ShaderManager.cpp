@@ -51,7 +51,7 @@ namespace mint
 		);
 
 
-		if(result)
+		if(result || fx::CEmbeddedShaders::Get().lookup_embedded_shader(program_name))
 		{
 			MINT_LOG_WARN("[{:.4f}][CShaderManager::add_shader_program] Attempt to add a duplicate Shader Program \"{}\"!", MINT_APP_TIME, program_name.c_str());
 			return false;
@@ -89,6 +89,10 @@ namespace mint
 			);
 
 			return handle;
+		}
+		if(fx::CEmbeddedShaders::Get().lookup_embedded_shader(program_name))
+		{
+			return fx::CEmbeddedShaders::Get().get_embedded_shader(program_name);
 		}
 
 
