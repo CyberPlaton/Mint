@@ -16,6 +16,12 @@ namespace mint
 	}
 
 
+	void CScene::add_entity(entt::entity entity)
+	{
+		m_entities.push_back(entity);
+	}
+
+
 	mint::Vector< entt::entity > CScene::get_entities()
 	{
 		return m_entities;
@@ -88,7 +94,7 @@ namespace mint
 
 	void CScene::push_camera(CCamera& camera)
 	{
-		m_camera = camera;
+		m_camera = std::move(camera);
 	}
 
 

@@ -3,7 +3,7 @@
 
 
 #include "Common/Common.h"
-
+#include "Graphics/Common/Color.h"
 
 namespace mint::component
 {
@@ -78,7 +78,7 @@ namespace mint::component
 
 		bool m_flipY = false;
 
-		Vec4 m_color;
+		mint::fx::CColor m_color;
 
 		Vec2 m_origin;
 	};

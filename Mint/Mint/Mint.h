@@ -13,8 +13,6 @@ namespace mint
 	{
 	public:
 		MINT_DEFINE_ENGINE_CTOR(CMintEngine);
-		
-		STATIC_GET(CMintEngine, s_CMintEngine);
 
 
 		bool initialize(const String& manifest_filepath) override final;
@@ -53,8 +51,6 @@ namespace mint
 
 
 	private:
-		static CMintEngine* s_CMintEngine;
-
 		bool m_running;
 
 		CWindow m_mainWindow;
@@ -106,6 +102,10 @@ namespace mint
 
 
 }
+
+
+#define ENGINE() \
+mint::IMintEngine::get_engine()
 
 
 #endif

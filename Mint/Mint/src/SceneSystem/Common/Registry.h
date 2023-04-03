@@ -90,9 +90,11 @@ namespace mint
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			m_registry.emplace< T >(entity);
+			auto& component = m_registry.emplace< T >(entity);
 
 		);
+
+		return component;
 	}
 
 

@@ -12,6 +12,7 @@
 #include "SDL3/SDL_syswm.h"
 
 #include "bx/bx.h"
+#include "bx/timer.h"
 #include "bx/file.h"
 #include "bx/file.h"
 #include "bx/allocator.h"
@@ -24,6 +25,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/type_trait.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "box2d/box2d.h"
 #include "entt/entt.hpp"
@@ -98,6 +100,7 @@ namespace mint
 	using Vec3 = glm::vec3;
 	using Vec4 = glm::vec4;
 	using Mat4 = glm::mat4x4;
+	using Mat3 = glm::mat3x3;
 }
 
 

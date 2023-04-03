@@ -26,7 +26,10 @@ namespace mint
 
 		Vec2 get_texture_dimension(const String& texture_name);
 
+		Vec2 get_texture_dimension(TextureHandle& handle);
+
 		TextureHandle get_texture_handle(const String& texture_name);
+
 
 
 	private:

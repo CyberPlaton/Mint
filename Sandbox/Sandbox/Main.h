@@ -19,4 +19,7 @@ public:
 	void on_unload() override final;
 
 
+
+
+	entt::entity m_knight;
 };

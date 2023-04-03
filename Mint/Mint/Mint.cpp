@@ -3,9 +3,6 @@
 namespace mint
 {
 	
-	mint::CMintEngine* CMintEngine::s_CMintEngine = nullptr;
-
-
 	bool CMintEngine::initialize(const String& manifest_filepath)
 	{
 		_prepare_for_init();
@@ -152,15 +149,16 @@ namespace mint
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 
 		entry::init();
-		entry::setCurrentDir(CFileystem::get_working_directory().as_string().c_str());
-
+		
 		bool result = true;
 
+
+		// Initialize lowest level sub-systems.
 		result &= CLogging::Get().initialize();
 
-		
-		CRessourceLoaderFactory::register_ressource_loader("Texture", &CTextureLoader::create);
 
+		CRessourceLoaderFactory::register_ressource_loader("Texture", &CTextureLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("Shader", &CShaderLoader::create);
 
 		return result;
 	}
@@ -259,7 +257,9 @@ namespace mint
 
 	bool CMintEngine::_pre_init(CWindow::SDescription& wdesc, CPhysicsSystem::SDescription& pdesc)
 	{
-		if (!m_mainWindow.initialize(wdesc)) return false;
+		auto& window = get_main_window();
+
+		if (!window.initialize(wdesc)) return false;
 		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
 
 
@@ -269,6 +269,7 @@ namespace mint
 		bgfx::Init bgfxInit;
 		bgfxInit.resolution.width = wdesc.m_width;
 		bgfxInit.resolution.height = wdesc.m_height;
+		bgfxInit.type = bgfx::RendererType::Direct3D11;
 
 		if (wdesc.m_vsync)
 		{
@@ -279,27 +280,28 @@ namespace mint
 			bgfxInit.resolution.reset = BGFX_RESET_NONE;
 		}
 
-		bgfxInit.platformData.nwh = m_mainWindow.get_native_handle< void* >();
+		bgfxInit.platformData.nwh = window.get_native_handle< void* >();
 
 		if (!bgfx::init(bgfxInit))
 		{
-			m_mainWindow.terminate();
+			window.terminate();
 			m_running = false;
 			return false;
 		}
 
-		m_mainViewport.m_top = 0;
-		m_mainViewport.m_left = 0;
-		m_mainViewport.m_right = wdesc.m_width;
-		m_mainViewport.m_bottom = wdesc.m_height;
-		m_mainViewport.m_viewIdentifier = 0;
+		auto& viewport = get_main_viewport();
+
+		viewport.m_top = 0;
+		viewport.m_left = 0;
+		viewport.m_right = wdesc.m_width;
+		viewport.m_bottom = wdesc.m_height;
+		viewport.m_viewIdentifier = 0;
 
 		fx::CColor color(wdesc.m_clearColor);
 
 		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
 						   color.as_rgba(), 1.0f, 0);
 
-		bgfx::setViewRect(m_mainViewport.m_viewIdentifier, 0, 0, bgfx::BackbufferRatio::Equal);
 
 
 		// Initialize medium level engine systems.
@@ -312,6 +314,7 @@ namespace mint
 		result &= CShaderManager::Get().initialize();
 
 		// Texture manager.
+		result &= CTextureManager::Get().initialize();
 
 		// Plugin Manager (pre-initialize plugins).
 		CPluginSystem::Get().on_pre_initialization();
@@ -338,6 +341,7 @@ namespace mint
 		// Animation System.
 
 		// Renderer.
+		result &= fx::CEmbeddedShaders::Get().initialize();
 		result &= fx::CSceneRenderer::Get().initialize();
 
 		// CSAS.

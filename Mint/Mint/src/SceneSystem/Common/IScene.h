@@ -38,6 +38,9 @@ namespace mint
 		virtual bool is_ready() = 0;
 
 
+
+		virtual void add_entity(entt::entity) = 0;
+
 		virtual Vector< entt::entity > get_entities() = 0;
 
 		virtual Vector< entt::entity > get_dynamic_entities() = 0;

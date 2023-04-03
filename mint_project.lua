@@ -58,6 +58,7 @@ end
 			"Graphics/Common/EmbeddedShaders/Shaders",
 			"Graphics/Common/EmbeddedShaders",
 			"Graphics/Common",
+			"Graphics/SUSManager",
 			"Graphics",
 			"RessourceManagement/Common/RessourceLoaders",
 			"RessourceManagement/Common",

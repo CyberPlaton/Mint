@@ -57,7 +57,7 @@ namespace mint
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 			m_textures.add(h, handle);
-			m_textureInfo.add(h, info);
+			m_textureInfo.add(handle.idx, info);
 
 		);
 
@@ -69,19 +69,25 @@ namespace mint
 	{
 		auto h = mint::algorithm::djb_hash(texture_name);
 
+		
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			const bool result = m_textureInfo.lookup(h);
-
+			const bool result = m_textures.lookup(h);
 		);
+
 
 		if(result)
 		{
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+				const auto & handle = m_textures.get(h);
+			);
+
+
 			Vec2 vec;
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				const auto& info = m_textureInfo.get(h);
+				const auto& info = m_textureInfo.get(handle.idx);
 
 				vec.x = SCAST(f32, info.width);
 				vec.y = SCAST(f32, info.height);
@@ -93,6 +99,36 @@ namespace mint
 		}
 
 		MINT_LOG_WARN("[{:.4f}][CTextureManager::get_texture_dimension] Requested Texture \"{}\" was not found!", MINT_APP_TIME, texture_name.c_str());
+		return { 0, 0 };
+	}
+
+
+	mint::Vec2 CTextureManager::get_texture_dimension(TextureHandle& handle)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+			const bool result = m_textureInfo.lookup(handle.idx);
+		);
+
+
+		if(result)
+		{
+			Vec2 vec;
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				const auto & info = m_textureInfo.get(handle.idx);
+
+			vec.x = SCAST(f32, info.width);
+			vec.y = SCAST(f32, info.height);
+
+			);
+
+
+			return vec;
+		}
+
+
+		MINT_LOG_WARN("[{:.4f}][CTextureManager::get_texture_dimension] Requested Texture \"idx := {}\" was not found!", MINT_APP_TIME, handle.idx);
 		return { 0, 0 };
 	}
 

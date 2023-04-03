@@ -40,7 +40,9 @@ namespace mint::fx
 
 	void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _filePath, uint32_t* _size)
 	{
-		if (bx::open(_reader, _filePath)) {
+		bx::Error error;
+
+		if (bx::open(_reader, _filePath, &error)) {
 			uint32_t size = (uint32_t)bx::getSize(_reader);
 			void* data = BX_ALLOC(_allocator, size);
 			bx::read(_reader, data, size, bx::ErrorAssert{});
@@ -50,7 +52,7 @@ namespace mint::fx
 			}
 			return data;
 		}
-
+		
 		if (NULL != _size) {
 			*_size = 0;
 		}

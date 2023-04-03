@@ -2,8 +2,11 @@
 #define _MINTFX_SCENE_RENDERER_H_
 
 
+#include "Common/Common.h"
 #include "SceneSystem/Common/Camera.h"
 #include "SceneSystem/Common/IScene.h"
+#include "Common/Timestep.h"
+#include "Common/SpriteBatch.h"
 
 
 namespace mint::fx
@@ -29,7 +32,7 @@ namespace mint::fx
 	private:
 		static CSceneRenderer* s_CSceneRenderer;
 
-
+		CSpriteBatch m_spriteBatch;
 	};
 }
 

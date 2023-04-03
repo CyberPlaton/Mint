@@ -5,39 +5,59 @@ namespace mint
 {
 
 
-	CCamera::CCamera(fx::SViewport& main_scene_viewport)
+	CCamera::CCamera(fx::SViewport& main_scene_viewport) :
+		m_projection(Mat4(0.0f)), m_view(Mat4(0.0f))
 	{
-		m_projection = glm::ortho(main_scene_viewport.m_left, main_scene_viewport.m_right,
-								  main_scene_viewport.m_bottom, main_scene_viewport.m_top, -1.0f, 1.0f);
+		m_viewport = { main_scene_viewport.m_left, main_scene_viewport.m_top, main_scene_viewport.m_right , main_scene_viewport.m_bottom };
 	}
 
 
 	CCamera::CCamera(f32 left, f32 right, f32 bottom, f32 top, f32 far, f32 near)
 	{
-		m_projection = glm::ortho(left, right, bottom, top, near, far);
+		m_viewport = { left, top, right, bottom };
 	}
 
 
-	CCamera::CCamera()
+	CCamera::CCamera() : 
+		m_projection(1.0f), m_view(1.0f), m_viewProjection(1.0f),
+		m_transform(0.0f), m_rotation(0.0f)
 	{
+	}
+
+
+	void CCamera::recalculate_view_projection()
+	{
+		m_viewProjection = m_projection * m_view;
 	}
 
 
 	void CCamera::recalculate_view()
 	{
-		Mat4 transform = glm::translate(glm::mat4(1.0f), m_transform) *
-						 glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation), Vec3(0, 0, 1));
+		m_view = glm::lookAt(m_transform, Vec3(get_viewport_right() / 2.0f, get_viewport_bottom() / 2.0f,  0.0f), { 0.0f, 1.0f, 0.0f });
 
-		m_view = glm::inverse(transform);
-
-		m_viewProjection = m_projection * m_view;
+		recalculate_view_projection();
 	}
 
 
-	void CCamera::recalculate_view(fx::SViewport& viewport)
+	void CCamera::recalculate_projection()
 	{
-		m_projection = glm::ortho(viewport.m_left, viewport.m_right,
-								  viewport.m_bottom, viewport.m_top, -1.0f, 1.0f);
+		m_projection = glm::perspective(mint::algorithm::degree_to_radians(45.0f), get_viewport_right() / get_viewport_bottom(), 0.01f, 1000.0f);
+
+		recalculate_view_projection();
+	}
+
+
+	void CCamera::set_position(Vec3 position)
+	{
+		m_transform = position;
+
+		recalculate_view();
+	}
+
+
+	void CCamera::set_rotation(f32 angle)
+	{
+		m_rotation = angle;
 
 		recalculate_view();
 	}
@@ -55,6 +75,12 @@ namespace mint
 	}
 
 
+	mint::Mat4 CCamera::get_inverse_view_matrix()
+	{
+		return glm::inverse(m_view);
+	}
+
+
 	mint::Mat4 CCamera::get_project_matrix()
 	{
 		return m_projection;
@@ -64,6 +90,42 @@ namespace mint
 	mint::Mat4 CCamera::get_view_projection_matrix()
 	{
 		return m_viewProjection;
+	}
+
+
+	mint::f32 CCamera::get_scale_x()
+	{
+		return 1.0f;
+	}
+
+
+	mint::f32 CCamera::get_scale_y()
+	{
+		return 1.0f;
+	}
+
+
+	mint::f32 CCamera::get_viewport_left()
+	{
+		return m_viewport.x;
+	}
+
+
+	mint::f32 CCamera::get_viewport_right()
+	{
+		return m_viewport.z;
+	}
+
+
+	mint::f32 CCamera::get_viewport_bottom()
+	{
+		return m_viewport.w;
+	}
+
+
+	mint::f32 CCamera::get_viewport_top()
+	{
+		return m_viewport.y;
 	}
 
 
