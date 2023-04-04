@@ -61,7 +61,7 @@ namespace mint::fx
 
 		Mat4 model = glm::translate(Mat4(1.0f), Vec3(position, 0.0f)) *
 
-			glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(rotation), Vec3(0.0f, 0.0f, 1.0f)) *
+					glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(rotation), Vec3(0.0f, 0.0f, 1.0f)) *
 
  					 glm::scale(Mat4(1.0f), Vec3(scale, 1.0f));
 
@@ -71,8 +71,13 @@ namespace mint::fx
 
 	void CSpriteBatch::draw_sprite(const Mat4& transform, CColor color, Vec2 uv, TextureHandle texture)
 	{
-		constexpr Vec2 textureCoords[] = { { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f } };
-
+		constexpr Vec2 textureCoords[] = 
+		{ 
+			{ 0.0f, 1.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f, 0.0f },
+			{ 0.0f, 0.0f } 
+		};
 		constexpr Vec4 quad_vertex_positions[4] =
 		{
 			{ -0.5f, -0.5f, 0.0f, 1.0f },

@@ -33,7 +33,7 @@ namespace mint
 
 	void CCamera::recalculate_view()
 	{
-		m_view = glm::lookAt(m_transform, Vec3(get_viewport_right() / 2.0f, get_viewport_bottom() / 2.0f,  0.0f), { 0.0f, 1.0f, 0.0f });
+		m_view = glm::lookAtLH(m_transform, m_lookAt, { 0.0f, 1.0f, 0.0f });
 
 		recalculate_view_projection();
 	}
@@ -41,7 +41,7 @@ namespace mint
 
 	void CCamera::recalculate_projection()
 	{
-		m_projection = glm::perspective(mint::algorithm::degree_to_radians(45.0f), get_viewport_right() / get_viewport_bottom(), 0.01f, 1000.0f);
+		m_projection = glm::perspectiveFovLH(mint::algorithm::degree_to_radians(m_fov), get_viewport_right(), get_viewport_bottom(), 0.01f, 1000.0f);
 
 		recalculate_view_projection();
 	}

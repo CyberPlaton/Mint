@@ -22,6 +22,7 @@
 #include "bimg/bimg.h"
 #include "bimg/decode.h"
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/type_trait.hpp"

@@ -60,9 +60,13 @@ namespace mint
 	public:
 		Vec4 m_viewport;
 
-		Vec3 m_transform;
+		Vec3 m_transform = Vec3(0.0f);
+
+		Vec3 m_lookAt = Vec3(0.0f);
 
 		f32 m_rotation;
+
+		f32 m_fov = 45.0f;
 
 		Mat4 m_projection;
 

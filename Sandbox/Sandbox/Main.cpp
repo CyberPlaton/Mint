@@ -70,11 +70,14 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	auto& camera = get_active_camera();
 
 	ImGui::Begin("Camera");
-	CUI::edit_field_vec3(camera.m_transform, -100.0f, 100.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec3(camera.m_transform, -500.0f, 500.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec3(camera.m_lookAt, -500.0f, 500.0f, "LookAt", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_f32(camera.m_rotation, 0.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_f32(camera.m_fov, 0.0f, 360.0f, "FOV", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	ImGui::End();
 
 	camera.recalculate_view();
+	camera.recalculate_projection();
 }
 
 
