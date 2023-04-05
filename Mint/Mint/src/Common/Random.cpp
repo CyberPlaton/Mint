@@ -22,13 +22,13 @@ namespace mint
 
 	f32 CRandom::normalized_float()
 	{
-		return SCAST(f32, s_distribution(s_randomEngine) / std::numeric_limits<int32_t>::max());
+		return (f32)s_distribution(s_randomEngine) / std::numeric_limits<int32_t>::max();
 	}
 
 
-	u32 CRandom::normalized_int()
+	u32 CRandom::integer()
 	{
-		return SCAST(u32, s_distribution(s_randomEngine));
+		return (u32)s_distribution(s_randomEngine);
 	}
 
 

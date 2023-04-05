@@ -62,7 +62,8 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	ImGui::Begin("Knight");
 	CUI::edit_field_vec2(transform.m_scale, 0.1f, 10.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_vec2(transform.m_position, -1.0f, 1.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_f32(transform.m_rotation, 0.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_rect(sprite.m_rect, -10.0f, 10.0f, "UV", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_f32(transform.m_rotation, -360.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_color(sprite.m_color, 0, 255, "Color", "", sliderId++, scalarId++);
 	ImGui::End();
 
@@ -71,9 +72,9 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 
 	ImGui::Begin("Camera");
 	CUI::edit_field_vec3(camera.m_transform, -500.0f, 500.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_vec3(camera.m_lookAt, -500.0f, 500.0f, "LookAt", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec2(camera.m_scale, -50.0f, 50.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_f32(camera.m_rotation, 0.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_f32(camera.m_fov, 0.0f, 360.0f, "FOV", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_f32(camera.m_zoom, 0.0f, 100.0f, "Zoom", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	ImGui::End();
 
 	camera.recalculate_view();
@@ -114,7 +115,7 @@ bool CMainScene::on_load()
 	transform.m_scale = { 1.0f, 1.0f };
 
 	sprite.m_color = { 255, 255, 255, 255 };
-	sprite.m_uv = { 1.0f, 1.0f };
+	sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
 	sprite.m_textureHandle = mint::CTextureManager::Get().get_texture_handle("Knight");
 
 

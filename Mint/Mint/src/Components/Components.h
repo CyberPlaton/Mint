@@ -3,6 +3,7 @@
 
 
 #include "Common/Common.h"
+#include "Common/Rectangle.h"
 #include "Graphics/Common/Color.h"
 
 namespace mint::component
@@ -72,7 +73,7 @@ namespace mint::component
 
 		u32 m_textureHeight = 0;
 
-		Vec2 m_uv;
+		CRect m_rect;
 
 		bool m_flipX = false;
 

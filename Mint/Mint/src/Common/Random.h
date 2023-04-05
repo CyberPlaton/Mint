@@ -29,7 +29,7 @@ namespace mint
 
 		f32 normalized_float();
 
-		u32 normalized_int();
+		u32 integer();
 
 
 	private:

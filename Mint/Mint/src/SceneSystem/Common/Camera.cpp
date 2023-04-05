@@ -6,7 +6,7 @@ namespace mint
 
 
 	CCamera::CCamera(fx::SViewport& main_scene_viewport) :
-		m_projection(Mat4(0.0f)), m_view(Mat4(0.0f))
+		m_projection(Mat4(1.0f)), m_view(Mat4(0.0f))
 	{
 		m_viewport = { main_scene_viewport.m_left, main_scene_viewport.m_top, main_scene_viewport.m_right , main_scene_viewport.m_bottom };
 	}
@@ -19,31 +19,24 @@ namespace mint
 
 
 	CCamera::CCamera() : 
-		m_projection(1.0f), m_view(1.0f), m_viewProjection(1.0f),
+		m_projection(1.0f), m_view(0.0f),
 		m_transform(0.0f), m_rotation(0.0f)
 	{
 	}
 
-
-	void CCamera::recalculate_view_projection()
-	{
-		m_viewProjection = m_projection * m_view;
-	}
-
-
 	void CCamera::recalculate_view()
 	{
-		m_view = glm::lookAtLH(m_transform, m_lookAt, { 0.0f, 1.0f, 0.0f });
+		m_view = glm::translate(Mat4(1.0f), -Vec3(m_transform)) *
 
-		recalculate_view_projection();
+				 glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(m_rotation), Vec3(0.0f, 0.0f, 1.0f)) *
+
+				 glm::scale(Mat4(1.0f), Vec3(m_scale, 1.0f));
 	}
 
 
 	void CCamera::recalculate_projection()
 	{
-		m_projection = glm::perspectiveFovLH(mint::algorithm::degree_to_radians(m_fov), get_viewport_right(), get_viewport_bottom(), 0.01f, 1000.0f);
-
-		recalculate_view_projection();
+		m_projection = glm::ortho(-m_zoom, m_zoom, -m_zoom, m_zoom);
 	}
 
 
@@ -63,6 +56,14 @@ namespace mint
 	}
 
 
+	void CCamera::set_zoom(f32 value)
+	{
+		m_zoom = -value;
+
+		recalculate_projection();
+	}
+
+
 	mint::Vec4 CCamera::get_world_visible_area()
 	{
 		return { 0, 0, 0, 0 };
@@ -75,33 +76,9 @@ namespace mint
 	}
 
 
-	mint::Mat4 CCamera::get_inverse_view_matrix()
-	{
-		return glm::inverse(m_view);
-	}
-
-
 	mint::Mat4 CCamera::get_project_matrix()
 	{
 		return m_projection;
-	}
-
-
-	mint::Mat4 CCamera::get_view_projection_matrix()
-	{
-		return m_viewProjection;
-	}
-
-
-	mint::f32 CCamera::get_scale_x()
-	{
-		return 1.0f;
-	}
-
-
-	mint::f32 CCamera::get_scale_y()
-	{
-		return 1.0f;
 	}
 
 

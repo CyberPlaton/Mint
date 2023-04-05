@@ -27,17 +27,17 @@ namespace mint::fx
 
 	void CSceneRenderer::begin(SViewport& viewport)
 	{
-		auto view = MINT_ACTIVE_SCENE()->get_active_camera().get_view_matrix();
-		auto proj = MINT_ACTIVE_SCENE()->get_active_camera().get_project_matrix();
+ 		auto view = MINT_ACTIVE_SCENE()->get_active_camera().get_view_matrix();
+ 		auto proj = MINT_ACTIVE_SCENE()->get_active_camera().get_project_matrix();
 
-
+		
 		bgfx::touch(viewport.m_viewIdentifier);
 		
 		bgfx::setViewTransform(viewport.m_viewIdentifier, glm::value_ptr(view), glm::value_ptr(proj));
 
  		bgfx::setViewRect(viewport.m_viewIdentifier, 0, 0, viewport.m_right, viewport.m_bottom);
 
-		constexpr uint64_t stateDefault = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA |
+		constexpr uint64_t stateDefault = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CCW | BGFX_STATE_MSAA |
 										  BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
 		bgfx::setState(
@@ -63,7 +63,7 @@ namespace mint::fx
 
 
 				m_spriteBatch.draw_sprite(transform.m_position, transform.m_rotation, transform.m_scale,
-										  sprite.m_color, sprite.m_uv, sprite.m_textureHandle);
+										  sprite.m_color, sprite.m_rect, sprite.m_textureHandle);
 			}
 
 

@@ -11,7 +11,7 @@
 
 namespace mint::fx
 {
-
+	
 	class CSpriteBatch
 	{
 	public:
@@ -25,9 +25,9 @@ namespace mint::fx
 		void next_batch() { flush_batch(); start_batch(m_view); }
 
 
-		void draw_sprite(Vec2 position, f32 rotation, Vec2 scale, CColor color, Vec2 uv, TextureHandle texture);
+		void draw_sprite(const Vec2& position, f32 rotation, const Vec2& scale, const CColor& color, const mint::CRect& rect, TextureHandle texture);
 
-		void draw_sprite(const Mat4& transform, CColor color, Vec2 uv, TextureHandle texture);
+		void draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture);
 
 
 	private:

@@ -409,6 +409,66 @@ namespace mint
 	}
 
 
+	bool CUI::edit_field_rect(CRect& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	{
+		f32 prev[4]; prev[0] = value.get_x(); prev[1] = value.get_y(); prev[2] = value.get_width(); prev[3] = value.get_height();
+
+		if (ImGui::CollapsingHeader(field_text.c_str()))
+		{
+			ImGui::PushID(slider_id);
+			ImGui::PushItemWidth(s_editDragFieldWidth /*250.0f*/);
+			ImGui::DragFloat4("f32", prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+
+			ImGui::PushID(scalar_id);
+			ImGui::PushItemWidth(s_editScalarFieldWidth /*125.0f*/);
+			ImGui::InputFloat("X", &prev[0], 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			ImGui::SameLine();
+
+			ImGui::PushID(++scalar_id);
+			ImGui::PushItemWidth(s_editScalarFieldWidth /*125.0f*/);
+			ImGui::InputFloat("Y", &prev[1], 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			ImGui::SameLine();
+
+			ImGui::PushID(++scalar_id);
+			ImGui::PushItemWidth(s_editScalarFieldWidth /*125.0f*/);
+			ImGui::InputFloat("W", &prev[2], 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			ImGui::SameLine();
+
+			ImGui::PushID(++scalar_id);
+			ImGui::PushItemWidth(s_editScalarFieldWidth /*125.0f*/);
+			ImGui::InputFloat("H", &prev[3], 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			value.set_x(prev[0]);
+			value.set_y(prev[1]);
+			value.set_width(prev[2]);
+			value.set_height(prev[3]);
+
+			return true;
+		}
+
+		return false;
+	}
+
+
 	void CUI::help_marker(const String& desc)
 	{
 		ImGui::TextDisabled("(?)");

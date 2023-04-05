@@ -3,6 +3,7 @@
 
 
 #include "Common/Common.h"
+#include "Common/Rectangle.h"
 #include "Graphics/Common/Color.h"
 
 #include "imgui/imgui.h"

@@ -24,29 +24,25 @@ namespace mint
 		CCamera(f32 left, f32 right, f32 bottom, f32 top, f32 far, f32 near);
 
 
-		void recalculate_view_projection();
-
 		void recalculate_view();
 
 		void recalculate_projection();
+
+
 
 		void set_position(Vec3 position);
 
 		void set_rotation(f32 angle);
 
+		void set_zoom(f32 value);
+
+
 		Vec4 get_world_visible_area();
 
 		virtual Mat4 get_view_matrix();
 
-		Mat4 get_inverse_view_matrix();
-
 		virtual Mat4 get_project_matrix();
 
-		virtual Mat4 get_view_projection_matrix();
-
-		virtual f32 get_scale_x();
-
-		virtual f32 get_scale_y();
 
 		f32 get_viewport_left();
 
@@ -62,17 +58,15 @@ namespace mint
 
 		Vec3 m_transform = Vec3(0.0f);
 
-		Vec3 m_lookAt = Vec3(0.0f);
+		Vec2 m_scale = Vec2(1.0f);
+
+		f32 m_zoom = 1.0f;
 
 		f32 m_rotation;
-
-		f32 m_fov = 45.0f;
 
 		Mat4 m_projection;
 
 		Mat4 m_view;
-
-		Mat4 m_viewProjection;
 
 	private:
 		
