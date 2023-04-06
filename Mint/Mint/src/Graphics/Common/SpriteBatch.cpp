@@ -47,7 +47,7 @@ namespace mint::fx
 	}
 
 
-	void CSpriteBatch::draw_sprite(const Vec2& position, f32 rotation, const Vec2& scale, const CColor& color, const mint::CRect& rect, TextureHandle texture)
+	void CSpriteBatch::draw_sprite(const Vec2& position, f32 rotation, const Vec2& scale, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy)
 	{
 		if (!m_qbuffer.has_room_for_another_quad() ||
 			(m_previousTexture.idx != bgfx::kInvalidHandle && m_previousTexture.idx != texture.idx))
@@ -65,17 +65,12 @@ namespace mint::fx
 
  					 glm::scale(Mat4(1.0f), Vec3(scale, 1.0f));
 
- 		draw_sprite(model, color, rect, texture);
+ 		draw_sprite(model, color, rect, texture, flipx, flipy);
 	}
 
 
-	void CSpriteBatch::draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture)
+	void CSpriteBatch::draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy)
 	{
-		f32 left_uv =	rect.get_x() / m_previousTextureSize.x;
-		f32 right_uv =	(rect.get_x() + rect.get_width()) / m_previousTextureSize.x;
-		f32 bottom_uv = rect.get_y() / m_previousTextureSize.y;
-		f32 top_uv =	(rect.get_y() + rect.get_height()) / m_previousTextureSize.y;
-
 // 		const Vec2 textureCoords[] = 
 // 		{ 
 // 			{ 0.0f, 1.0f },		
@@ -83,22 +78,19 @@ namespace mint::fx
 // 			{ 1.0f, 0.0f },		
 // 			{ 0.0f, 0.0f }		
 // 		};
-// 		constexpr Vec4 quad_vertex_positions[4] =
-// 		{
-// 			{ -0.5f, -0.5f,		0.0f, 0.0f },
-// 			{  0.5f, -0.5f,		0.0f, 0.0f },
-// 			{  0.5f,  0.5f,		0.0f, 0.0f },
-// 			{ -0.5f,  0.5f,		0.0f, 0.0f },
-//   		};
+		f32 u_modifier = 1.0f;
+		f32 v_modifier = 1.0f;
+		if (flipx) u_modifier = -1.0f;
+		if (flipy) v_modifier = -1.0f;
 
-
-		const Vec2 textureCoords[] =
+		Vec2 textureCoords[] =
 		{
-			{ 0.0f, 1.0f },		// Bottom left
-			{ 0.0f, 0.0f },		// Top left
-			{ 1.0f, 0.0f },		// Top right
-			{ 1.0f, 1.0f },		// Bottom right
-		};
+			{ u_modifier * rect.get_x(),					  v_modifier * (rect.get_y() + rect.get_height()) },	// Bottom left
+			{ u_modifier * rect.get_x(),					  v_modifier * rect.get_y() },							// Top left
+			{ u_modifier * (rect.get_x() + rect.get_width()), v_modifier * rect.get_y() },							// Top right
+			{ u_modifier * (rect.get_x() + rect.get_width()), v_modifier * (rect.get_y() + rect.get_height()) },	// Bottom right
+ 		};
+
 		constexpr Vec4 quad_vertex_positions[4] =
 		{
 			{ -0.5f, -0.5f,		0.0f, 0.0f },	// Bottom left

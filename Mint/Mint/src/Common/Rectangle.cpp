@@ -5,7 +5,7 @@ namespace mint
 {
 
 	CRect::CRect() :
-		m_position(Vec2(1, 1)), m_dimension(Vec2(1, 1))
+		m_position(Vec2(0, 0)), m_dimension(Vec2(0, 0))
 	{
 	}
 

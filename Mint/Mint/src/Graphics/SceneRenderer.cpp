@@ -13,7 +13,7 @@ namespace mint::fx
 
 
 #ifndef MINT_DISTR
-		bgfx::setDebug(BGFX_DEBUG_STATS);
+ 		bgfx::setDebug(BGFX_DEBUG_TEXT);
 #endif
 
 		return true;
@@ -63,18 +63,13 @@ namespace mint::fx
 
 
 				m_spriteBatch.draw_sprite(transform.m_position, transform.m_rotation, transform.m_scale,
-										  sprite.m_color, sprite.m_rect, sprite.m_textureHandle);
+										  sprite.m_color, sprite.m_rect, sprite.m_textureHandle,
+										  sprite.m_flipX, sprite.m_flipY);
 			}
 
 
 			m_spriteBatch.flush_batch();
 		}
-		
-
-		const bgfx::Stats* stats = bgfx::getStats();
-		bgfx::dbgTextClear();
-		bgfx::dbgTextPrintf(0, 2, 0x0f, "Backbuffer %dW x %dH in pixels, debug text %dW x %dH in characters.",
-			stats->width, stats->height, stats->textWidth, stats->textHeight);
 #endif
 	}
 

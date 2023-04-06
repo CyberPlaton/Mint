@@ -148,7 +148,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_f32(f32& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	bool CUI::edit_field_f32(f32& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		if (ImGui::CollapsingHeader(field_text.c_str()))
 		{
@@ -156,7 +156,7 @@ namespace mint
 
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth);
-			ImGui::DragFloat("f32", &prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::DragFloat("f32", &prev, speed, min, max, "%.4f", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -195,7 +195,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_vec2(Vec2& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	bool CUI::edit_field_vec2(Vec2& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		f32 prev[2]; prev[0] = value.x; prev[1] = value.y;
 
@@ -203,7 +203,7 @@ namespace mint
 		{
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth /*250.0f*/);
-			ImGui::DragFloat2("f32", prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::DragFloat2("f32", prev, speed, min, max, "%.4f", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -235,7 +235,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_vec3(Vec3& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	bool CUI::edit_field_vec3(Vec3& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		f32 prev[3]; prev[0] = value.x; prev[1] = value.y; prev[2] = value.z;
 
@@ -243,7 +243,7 @@ namespace mint
 		{
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth /*250.0f*/);
-			ImGui::DragFloat3("f32", prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::DragFloat3("f32", prev, speed, min, max, "%.4f", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -285,7 +285,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_vec4(Vec4& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	bool CUI::edit_field_vec4(Vec4& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		f32 prev[4]; prev[0] = value.x; prev[1] = value.y; prev[2] = value.z; prev[3] = value.w;
 
@@ -293,7 +293,7 @@ namespace mint
 		{
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth /*250.0f*/);
-			ImGui::DragFloat4("f32", prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::DragFloat4("f32", prev, speed, min, max, "%.4f", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -409,7 +409,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_rect(CRect& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	bool CUI::edit_field_rect(CRect& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		f32 prev[4]; prev[0] = value.get_x(); prev[1] = value.get_y(); prev[2] = value.get_width(); prev[3] = value.get_height();
 
@@ -417,7 +417,7 @@ namespace mint
 		{
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth /*250.0f*/);
-			ImGui::DragFloat4("f32", prev, 1.0f, min, max, "%.4f", flags);
+			ImGui::DragFloat4("f32", prev, speed, min, max, "%.4f", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);

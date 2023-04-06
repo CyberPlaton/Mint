@@ -52,6 +52,15 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 {
 	using namespace mint;
 
+	ImGui::Begin("Debug");
+	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
+	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
+	ImGui::End();
+
+
+
+
+
 	// Entity controls.
 	auto& registry = get_registry();
 	auto& transform = registry.get_component< mint::component::STransform >(m_knight);
@@ -62,9 +71,11 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	ImGui::Begin("Knight");
 	CUI::edit_field_vec2(transform.m_scale, 0.1f, 10.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_vec2(transform.m_position, -1.0f, 1.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_rect(sprite.m_rect, -10.0f, 10.0f, "UV", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_rect(sprite.m_rect, -1.5f, 1.5f, "UV", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic,  0.01f);
 	CUI::edit_field_f32(transform.m_rotation, -360.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_color(sprite.m_color, 0, 255, "Color", "", sliderId++, scalarId++);
+	CUI::edit_field_bool(sprite.m_flipX, "FlipX", "", sliderId++, scalarId++);
+	CUI::edit_field_bool(sprite.m_flipY, "FlipY", "", sliderId++, scalarId++);
 	ImGui::End();
 
 	// Camera controls.

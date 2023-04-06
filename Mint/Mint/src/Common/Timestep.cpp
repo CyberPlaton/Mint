@@ -6,17 +6,17 @@ namespace mint
 
 	mint::f32 CTimestep::get_fps()
 	{
-		auto stats = bgfx::getStats();
+		const auto stats = bgfx::getStats();
 
-		return 1000.0f / stats->cpuTimeFrame;
+		return 1000.0f / (f32(stats->cpuTimeFrame) * 1000.0f / stats->cpuTimerFreq);
 	}
 
 
 	mint::f32 CTimestep::get_frametime()
 	{
-		auto stats = bgfx::getStats();
+		const auto stats = bgfx::getStats();
 
-		return stats->cpuTimeFrame;
+		return (f32(stats->cpuTimeFrame) * 1000.0f / stats->cpuTimerFreq);
 	}
 
 
