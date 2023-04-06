@@ -9,12 +9,6 @@
 namespace mint::component
 {
 
-	struct SDirty
-	{
-		bool m_isDirty = false;
-	};
-
-
 	struct SIdentifier
 	{
 		u64 m_uuid = 0;
@@ -54,6 +48,8 @@ namespace mint::component
 		f32 m_rotation = 0.0f;
 
 		Vec2 m_scale = { 0.0f, 0.0f };
+
+		Mat4 m_worldTransform = Mat4(1.0f);
 	};
 
 

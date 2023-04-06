@@ -47,7 +47,7 @@ namespace mint::fx
 	}
 
 
-	void CSpriteBatch::draw_sprite(const Vec2& position, f32 rotation, const Vec2& scale, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy)
+	void CSpriteBatch::draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy)
 	{
 		if (!m_qbuffer.has_room_for_another_quad() ||
 			(m_previousTexture.idx != bgfx::kInvalidHandle && m_previousTexture.idx != texture.idx))
@@ -59,18 +59,7 @@ namespace mint::fx
 		m_previousTexture = texture;
 		m_previousTextureSize = CTextureManager::Get().get_texture_dimension(texture);
 
-		Mat4 model = glm::translate(Mat4(1.0f), Vec3(position, 0.0f)) *
 
-					glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(rotation), Vec3(0.0f, 0.0f, 1.0f)) *
-
- 					 glm::scale(Mat4(1.0f), Vec3(scale, 1.0f));
-
- 		draw_sprite(model, color, rect, texture, flipx, flipy);
-	}
-
-
-	void CSpriteBatch::draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy)
-	{
 // 		const Vec2 textureCoords[] = 
 // 		{ 
 // 			{ 0.0f, 1.0f },		

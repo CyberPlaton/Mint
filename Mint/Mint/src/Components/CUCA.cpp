@@ -11,7 +11,6 @@ namespace mint::component
 	MINT_CRITICAL_SECTION(CUCA::m_transformCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
-	MINT_CRITICAL_SECTION(CUCA::m_dirtyFlagCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 	
 
@@ -69,7 +68,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 	}
 
 
@@ -92,7 +91,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -129,7 +128,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 	}
 
 
@@ -151,7 +150,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -185,7 +184,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 	}
 
 
@@ -209,7 +208,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -245,7 +244,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 	}
 
 
@@ -267,7 +266,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -314,27 +313,6 @@ namespace mint::component
 	}
 
 
-	void CUCA::dirtyflag_set_is_dirty(entt::entity entity, bool value)
-	{
-		MINT_BEGIN_CRITICAL_SECTION(m_dirtyFlagCriticalSection,
-
-			MINT_SCENE_REGISTRY().get_component< mint::component::SDirty >(entity).m_isDirty = value;
-		);
-	}
-
-
-	bool CUCA::dirtyflag_get_is_dirty(entt::entity entity)
-	{
-		MINT_BEGIN_CRITICAL_SECTION(m_dirtyFlagCriticalSection,
-
-			auto v = MINT_SCENE_REGISTRY().get_component< mint::component::SDirty >(entity).m_isDirty;
-
-		);
-
-		return v;
-	}
-
-
 	f32 CUCA::transform_get_rotation(entt::entity entity)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
@@ -372,7 +350,7 @@ namespace mint::component
 
 		);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -402,7 +380,7 @@ namespace mint::component
 
 		);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 	}
 
 
@@ -424,7 +402,7 @@ namespace mint::component
 
 		);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -456,7 +434,77 @@ namespace mint::component
 
 		);
 
-		dirtyflag_set_is_dirty(entity, true);
+		transform_get_world_transform_matrix(entity);
+	}
+
+
+	mint::Mat4 CUCA::transform_get_world_transform_matrix(entt::entity entity)
+	{
+		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true &&
+					MINT_SCENE_REGISTRY().has_component< mint::component::SSceneHierarchy >(entity) == true,
+			"Invalid operation. Trying to get the world Transform Matrix for an entity without a Transform or Scene Hierarchy component!");
+
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+
+		
+		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+			auto& value = transform.m_worldTransform;
+
+		);
+
+		return value;
+	}
+
+
+	mint::Mat4 CUCA::transform_get_local_transform_matrix(entt::entity entity)
+	{
+		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+			"Invalid operation. Trying to get the local Transform Matrix for an entity without a Transform component!");
+
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+			const auto& value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
+
+								glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(transform.m_rotation), Vec3(0.0f, 0.0f, 1.0f)) *
+
+								glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 1.0f));
+		);
+
+		return value;
+	}
+
+
+	void CUCA::_transform_recompute_world_transform(entt::entity entity)
+	{
+		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true &&
+					MINT_SCENE_REGISTRY().has_component< mint::component::SSceneHierarchy >(entity) == true,
+			"Invalid operation. Trying to recompute the world Transform Matrix for an entity without a Transform or Scene Hierarchy component!");
+
+
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			bool has_parent = hierarchy.m_parent != entt::null;
+			entt::entity parent = hierarchy.m_parent;
+
+		);
+
+
+		if (has_parent)
+		{
+			transform.m_worldTransform = transform_get_world_transform_matrix(parent) * transform_get_local_transform_matrix(entity);
+		}
+		else
+		{
+			transform.m_worldTransform = transform_get_local_transform_matrix(entity);
+		}
 	}
 
 

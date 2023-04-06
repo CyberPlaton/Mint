@@ -62,7 +62,7 @@ namespace mint::fx
 				const auto& transform = MINT_SCENE_REGISTRY().get_component< component::STransform >(entity);
 
 
-				m_spriteBatch.draw_sprite(transform.m_position, transform.m_rotation, transform.m_scale,
+				m_spriteBatch.draw_sprite(CUCA::transform_get_world_transform_matrix(entity),
 										  sprite.m_color, sprite.m_rect, sprite.m_textureHandle,
 										  sprite.m_flipX, sprite.m_flipY);
 			}

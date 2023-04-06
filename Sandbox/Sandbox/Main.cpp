@@ -119,6 +119,7 @@ bool CMainScene::on_load()
 	m_knight = registry.create_entity();
 
 	auto& transform = registry.add_component< mint::component::STransform >(m_knight);
+	auto& hierarchy = registry.add_component< mint::component::SSceneHierarchy >(m_knight);
 	auto& sprite = registry.add_component< mint::component::SSprite >(m_knight);
 
 	transform.m_position = { 0.5f, 0.5f };

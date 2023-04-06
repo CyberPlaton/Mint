@@ -138,15 +138,7 @@ namespace mint
 
 	bool CMintEngine::_prepare_for_init()
 	{
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_transformCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_rigidBodyCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_spriteCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_animatedSpriteCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_dirtyFlagCriticalSection);
-		INITIALIZE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
+		IMintEngine::initialize_cuca_critical_sections();
 
 		entry::init();
 		
@@ -376,16 +368,7 @@ namespace mint
 
 	void CMintEngine::_post_terminate()
 	{
-		DELETE_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_transformCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_rigidBodyCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_spriteCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_animatedSpriteCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_dirtyFlagCriticalSection);
-		DELETE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
-
+		IMintEngine::delete_cuca_critical_sections();
 
 		entry::terminate();
 	}

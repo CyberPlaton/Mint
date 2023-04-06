@@ -24,8 +24,6 @@ namespace mint::fx
 
 		void next_batch() { flush_batch(); start_batch(m_view); }
 
-		void draw_sprite(const Vec2& position, f32 rotation, const Vec2& scale, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy);
-
 		void draw_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flipx, bool flipy);
 
 

@@ -28,6 +28,10 @@ namespace mint
 	public:
 		static IMintEngine* get_engine();
 
+		static void initialize_cuca_critical_sections();
+
+		static void delete_cuca_critical_sections();
+
 		static void run_spatial_acceleration_structure();
 
 		static void run_scripting_system();

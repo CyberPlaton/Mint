@@ -5,6 +5,7 @@
 #include "Common/Common.h"
 #include "SceneSystem/Common/Camera.h"
 #include "SceneSystem/Common/IScene.h"
+#include "Components/CUCA.h"
 #include "Common/Timestep.h"
 #include "Common/SpriteBatch.h"
 
