@@ -4,7 +4,7 @@
 
 #include "Common/Common.h"
 
-#include "Camera.h"
+#include "../../Graphics/Common/Camera.h"
 #include "Registry.h"
 #include "Utility/FileSystem/Filesystem.h"
 
@@ -62,9 +62,9 @@ namespace mint
 
 
 
-		virtual CCamera& get_active_camera() = 0;
+		virtual fx::ICamera* get_active_camera() = 0;
 
-		virtual void push_camera(CCamera&) = 0;
+		virtual void push_camera(fx::ICamera*) = 0;
 
 
 

@@ -13,7 +13,7 @@
 #include "Utility/PluginSystem/PluginSystem.h"
 #include "Graphics/Common/Viewport.h"
 #include "Graphics/Common/Color.h"
-#include "Graphics/SceneRenderer.h"
+#include "Graphics/SceneRenderer/SceneRenderer.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
 

@@ -86,15 +86,15 @@ namespace mint
 	}
 
 
-	mint::CCamera& CScene::get_active_camera()
+	fx::ICamera* CScene::get_active_camera()
 	{
 		return m_camera;
 	}
 
 
-	void CScene::push_camera(CCamera& camera)
+	void CScene::push_camera(fx::ICamera* camera)
 	{
-		m_camera = std::move(camera);
+		m_camera = camera;
 	}
 
 

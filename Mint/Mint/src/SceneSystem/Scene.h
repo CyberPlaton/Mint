@@ -55,9 +55,9 @@ namespace mint
 
 
 
-		CCamera& get_active_camera() override final;
+		fx::ICamera* get_active_camera() override final;
 
-		void push_camera(CCamera& camera) override final;
+		void push_camera(fx::ICamera* camera) override final;
 
 
 
@@ -73,7 +73,7 @@ namespace mint
 	protected:
 		Vector< entt::entity > m_entities;
 
-		CCamera m_camera;
+		fx::ICamera* m_camera;
 
 		CRegistry m_registry;
 

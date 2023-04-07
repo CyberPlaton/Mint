@@ -13,6 +13,9 @@ namespace mint::fx
 		f32 m_left;
 		f32 m_bottom;
 		f32 m_right;
+		f32 m_nearPlane;
+		f32 m_farPlane;
+		void* m_windowHandle;
 
 		bgfx::ViewId m_viewIdentifier;
 	};

@@ -29,6 +29,7 @@ end
 				"/Zc:__cplusplus"
 			}
 
+
 		-- Note: In order to create nested vpaths the "deepest" ones have to be defined first,
 		-- e.g. first define "Renderer/BGFX" and after it "Renderer".
 		-- This is a premake5 specific issue.
@@ -50,15 +51,15 @@ end
 			"SceneSystem/Common",
 			"SceneSystem",
 			"Graphics/Common/EmbeddedShaders/Shaders/android",
-			"Graphics/Common/EmbeddedShaders/Shaders/ios",
 			"Graphics/Common/EmbeddedShaders/Shaders/linux",
-			"Graphics/Common/EmbeddedShaders/Shaders/orbis",
 			"Graphics/Common/EmbeddedShaders/Shaders/osx",
+			"Graphics/Common/EmbeddedShaders/Shaders/ios",
 			"Graphics/Common/EmbeddedShaders/Shaders/windows",
+			"Graphics/Common/EmbeddedShaders/Shaders/orbis",
 			"Graphics/Common/EmbeddedShaders/Shaders",
 			"Graphics/Common/EmbeddedShaders",
 			"Graphics/Common",
-			"Graphics/SUSManager",
+			"Graphics/SceneRenderer",
 			"Graphics",
 			"RessourceManagement/Common/RessourceLoaders",
 			"RessourceManagement/Common",
@@ -91,7 +92,9 @@ end
 		for index = 1, #mint_dirs_to_load do
 			fldr = mint_dirs_to_load[index]
 			print("Loading folder: " .. "[" .. fldr.."]" .. " = " .. mint_abs_path .. "/" .. fldr)
-			-- Create virtual path in solution
+
+			
+			print("Create Virtual folder: [" .. fldr .. "] = " .. mint_abs_path)
 			vpaths{
 				[fldr] = {mint_abs_path .. "/" .. fldr .. "/**.h", mint_abs_path .. "/" .. fldr .. "/**.cpp"}
 			}
@@ -105,6 +108,14 @@ end
 				fldr
 			}
 		end
+
+
+		-- Import shader sources
+		group "Shaders"
+			include "mint_shaders.lua"
+		group ""
+
+
 
 		-- Includes
 		includedirs{

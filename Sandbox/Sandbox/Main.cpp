@@ -79,7 +79,7 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	ImGui::End();
 
 	// Camera controls.
-	auto& camera = get_active_camera();
+	auto camera = get_active_camera();
 
 	ImGui::Begin("Camera");
 	CUI::edit_field_vec3(camera.m_transform, -500.0f, 500.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);

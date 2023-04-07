@@ -400,19 +400,25 @@ namespace mint
 
 	void CMintEngine::_begin_frame()
 	{
-		fx::CSceneRenderer::Get().begin(get_main_viewport());
+		auto scene = MINT_ACTIVE_SCENE();
+		auto camera = scene->get_active_camera();
+
+		fx::CSceneRenderer::Get().on_pre_render(camera);
 	}
 
 
 	void CMintEngine::_frame()
 	{
-		fx::CSceneRenderer::Get().render(get_main_viewport(), MINT_ACTIVE_SCENE());
+		fx::CSceneRenderer::Get().on_render(MINT_ACTIVE_SCENE());
 	}
 
 
 	void CMintEngine::_end_frame()
 	{
-		fx::CSceneRenderer::Get().end();
+		auto scene = MINT_ACTIVE_SCENE();
+		auto camera = scene->get_active_camera();
+
+		fx::CSceneRenderer::Get().on_post_render(camera);
 	}
 
 
