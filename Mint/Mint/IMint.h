@@ -14,6 +14,7 @@
 #include "Graphics/Common/Viewport.h"
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
+#include "Graphics/Common/OrthographicCamera.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
 

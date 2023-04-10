@@ -86,12 +86,12 @@ namespace mint
 
 		Vector< detail::SQuadTreeNode > bboxes;
 
-		Vec4 visible_area = MINT_ACTIVE_SCENE()->get_active_camera().get_world_visible_area();
+		CRect visible_area = MINT_ACTIVE_SCENE()->get_active_camera()->get_world_visible_area();
 
-		worldmin[0] = visible_area.x;
-		worldmin[1] = visible_area.y;
-		worldmax[0] = visible_area.z;
-		worldmax[1] = visible_area.w;
+		worldmin[0] = visible_area.get_x();
+		worldmin[1] = visible_area.get_y();
+		worldmax[0] = visible_area.get_width();
+		worldmax[1] = visible_area.get_height();
 
 
 		for (auto& entity : entities)
@@ -192,12 +192,12 @@ namespace mint
 		f32 viewmin[2] = { 0 };
 		f32 viewmax[2] = { 0 };
 
-		Vec4 visible_area = MINT_ACTIVE_SCENE()->get_active_camera().get_world_visible_area();
+		CRect visible_area = MINT_ACTIVE_SCENE()->get_active_camera()->get_world_visible_area();
 
-		viewmin[0] = visible_area.x;
-		viewmin[1] = visible_area.y;
-		viewmax[0] = visible_area.z;
-		viewmax[1] = visible_area.w;
+		viewmin[0] = visible_area.get_x();
+		viewmin[1] = visible_area.get_y();
+		viewmax[0] = visible_area.get_width();
+		viewmax[1] = visible_area.get_height();
 
 
 		spatial::BoundingBox< f32, 2 > bbox(viewmin, viewmax);

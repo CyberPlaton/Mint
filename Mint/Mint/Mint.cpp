@@ -272,7 +272,9 @@ namespace mint
 			bgfxInit.resolution.reset = BGFX_RESET_NONE;
 		}
 
-		bgfxInit.platformData.nwh = window.get_native_handle< void* >();
+		auto native_window_handle = window.get_native_handle< void* >();
+
+		bgfxInit.platformData.nwh = native_window_handle;
 
 		if (!bgfx::init(bgfxInit))
 		{
@@ -287,7 +289,11 @@ namespace mint
 		viewport.m_left = 0;
 		viewport.m_right = wdesc.m_width;
 		viewport.m_bottom = wdesc.m_height;
-		viewport.m_viewIdentifier = 0;
+		viewport.m_viewIdentifier = MINTFX_DEFAULT_VIEW;
+		viewport.m_nearPlane = -1.0f;
+		viewport.m_farPlane = 1000.0f;
+ 		viewport.m_windowHandle = native_window_handle;
+
 
 		fx::CColor color(wdesc.m_clearColor);
 

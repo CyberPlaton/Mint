@@ -11,8 +11,7 @@
 
 namespace mint::fx
 {
-
-
+	
 	class CEmbeddedShaders
 	{
 	public:

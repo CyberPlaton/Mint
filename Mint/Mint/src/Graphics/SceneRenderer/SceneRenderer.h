@@ -17,12 +17,6 @@
 namespace mint::fx
 {
 
-#define MINTFX_MAX_RENDERING_PASSES 256
-
-#define MINTFX_DEFAULT_VIEW 0
-#define MINTFX_FRAMEBUFFER_VIEW 1
-
-
 	class CSceneRenderer
 	{
 	public:
@@ -52,6 +46,8 @@ namespace mint::fx
 
 		bgfx::ViewId m_defaultView = MINTFX_DEFAULT_VIEW;
 		bgfx::ViewId m_backbufferView = MINTFX_FRAMEBUFFER_VIEW;
+
+		bgfx::ViewId m_viewOrder[2] = { m_defaultView, m_backbufferView };
 
 		CQuadBuffer m_quadBuffer;
 
@@ -87,6 +83,8 @@ namespace mint::fx
 		void _render_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);
 	
 		void _fullscreen_quad(f32 texture_width, f32 texture_height);
+
+		void _setup_states(ICamera* render_camera);
 	};
 
 }

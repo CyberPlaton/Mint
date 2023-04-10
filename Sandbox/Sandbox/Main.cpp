@@ -78,18 +78,18 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	CUI::edit_field_bool(sprite.m_flipY, "FlipY", "", sliderId++, scalarId++);
 	ImGui::End();
 
-	// Camera controls.
-	auto camera = get_active_camera();
+	CUCA::transform_rotate(m_knight, dt);
 
+
+	auto camera = MINT_ACTIVE_SCENE()->get_active_camera();
+	
 	ImGui::Begin("Camera");
-	CUI::edit_field_vec3(camera.m_transform, -500.0f, 500.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_vec2(camera.m_scale, -50.0f, 50.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_f32(camera.m_rotation, 0.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_f32(camera.m_zoom, 0.0f, 100.0f, "Zoom", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_color(camera->m_viewClearColor, 0, 255, "Color", "", sliderId++, scalarId++);
+	CUI::edit_field_vec3(camera->m_translation, -10.0f, 10.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec3(camera->m_rotation, -360.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec3(camera->m_scale, 0.0f, 10.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_rect(camera->m_viewportRect, 0.0f, 2000.0f, "Viewport", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	ImGui::End();
-
-	camera.recalculate_view();
-	camera.recalculate_projection();
 }
 
 
@@ -101,15 +101,13 @@ bool CMainScene::on_before_load()
 
 bool CMainScene::on_load()
 {
-	mint::CCamera camera(ENGINE()->get_main_viewport());
-	camera.set_position({ 0.0f, 0.0f, -10.0f });
-	camera.set_rotation(0.0f);
+	auto camera = new mint::fx::COrthographicCamera(ENGINE()->get_main_viewport());
 
-	camera.recalculate_view();
-	camera.recalculate_projection();
+	camera->set_translation({ 0.0f, 0.0f, 1.0f });
+	camera->set_rotation({ 0.0f, 0.0f, 0.0f });
+	camera->set_scale({ 1.0f, 1.0f, 1.0f });
 
 	push_camera(camera);
-
 
 
 	// Manually create a testing entity.

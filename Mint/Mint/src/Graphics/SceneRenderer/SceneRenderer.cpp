@@ -14,7 +14,7 @@ namespace mint::fx
 
 
 #ifndef MINT_DISTR
- 		bgfx::setDebug(BGFX_DEBUG_TEXT);
+ 		bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS);
 #endif
 
 
@@ -23,9 +23,15 @@ namespace mint::fx
 		m_defaultShader = CEmbeddedShaders::Get().get_embedded_shader("Sprite");
 		m_currentTextureUniform = bgfx::createUniform("s_tex", bgfx::UniformType::Sampler);
 
+		m_backbufferShader = CEmbeddedShaders::Get().get_embedded_shader("Backbuffer");
 		m_backbufferTextureUniform = bgfx::createUniform("s_backbuffer", bgfx::UniformType::Sampler);
+		m_backbufferTexture = BGFX_INVALID_HANDLE;
+		m_backbuffer = BGFX_INVALID_HANDLE;
+		
+		m_backbufferOrthographicProjection = glm::ortho(-1, 1, 1, -1);
 
-		m_backbufferOrthographicProjection = glm::ortho(-1, 1, -1, 1);
+
+		bgfx::setViewOrder(MINTFX_DEFAULT_VIEW, BX_COUNTOF(m_viewOrder), m_viewOrder);
 
 		return true;
 	}
@@ -38,101 +44,186 @@ namespace mint::fx
 	}
 
 
+	void CSceneRenderer::_setup_states(ICamera* render_camera)
+	{
+	}
+
+
 	void CSceneRenderer::on_pre_render(ICamera* render_camera)
 	{
-		if(!bgfx::isValid(m_backbuffer))
-		{
-			m_backbuffer = bgfx::createFrameBuffer(render_camera->get_window_handle(), uint16_t(render_camera->get_viewport_width()), uint16_t(render_camera->get_viewport_height()), bgfx::TextureFormat::RGB8);
-			m_backbufferTexture = bgfx::createTexture2D(uint16_t(render_camera->get_viewport_width()), uint16_t(render_camera->get_viewport_height()), false, 1, bgfx::TextureFormat::RGBA8, BGFX_SAMPLER_V_CLAMP | BGFX_SAMPLER_U_CLAMP);
-		}
-
-		bgfx::setViewFrameBuffer(m_backbufferView, m_backbuffer);
-
+		// This dummy draw call is here to make sure that view 0 is cleared
+		// if no other draw calls are submitted to view 0.
+		bgfx::touch(m_defaultView);
 		bgfx::touch(m_backbufferView);
 
-		bgfx::setViewTransform(m_backbufferView, glm::value_ptr(render_camera->get_view_matrix()), glm::value_ptr(render_camera->get_projection_matrix()));
+
+		if (!bgfx::isValid(m_backbuffer))
+		{
+			m_backbuffer = bgfx::createFrameBuffer(render_camera->get_viewport_width(), render_camera->get_viewport_height(),
+												   bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_RT);
+
+			m_backbufferTexture = bgfx::getTexture(m_backbuffer);
+
+			MINT_ASSERT(bgfx::isValid(m_backbuffer) == true, "Failed creating the Framebuffer!");
+			MINT_ASSERT(bgfx::isValid(m_backbufferTexture) == true, "Failed creating the Framebuffer Texture!");
+ 		}
+
+
+		// Bind view "m_backbufferView" and bind a Framebuffer to it.
+		bgfx::setViewClear(m_backbufferView, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, render_camera->get_view_clear_color());
 
 		bgfx::setViewRect(m_backbufferView, render_camera->get_viewport_x(), render_camera->get_viewport_y(), render_camera->get_viewport_width(), render_camera->get_viewport_height());
 
-		bgfx::setState( render_camera->get_render_state() );
+		bgfx::setViewFrameBuffer(m_backbufferView, m_backbuffer);
+
+
+		bgfx::setViewTransform(m_backbufferView, glm::value_ptr(render_camera->get_view_matrix()), glm::value_ptr(render_camera->get_projection_matrix()));
+
+		_start_batch();
 	}
 
 
 	void CSceneRenderer::on_post_render(ICamera* render_camera)
 	{
-		bgfx::setViewFrameBuffer(m_backbufferView, BGFX_INVALID_HANDLE);
+		bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | 
+					   BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA);
 
+		_flush_batch();
+
+
+
+		bgfx::setViewClear(m_defaultView, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, render_camera->get_view_clear_color());
+
+ 		bgfx::setViewRect(m_defaultView, 0, 0, render_camera->get_viewport_width(), render_camera->get_viewport_height());
+		
+
+		bgfx::setTexture(0, m_backbufferTextureUniform, m_backbufferTexture);
 
 		bgfx::setViewTransform(m_defaultView, NULL, glm::value_ptr(m_backbufferOrthographicProjection));
 
-		bgfx::setViewRect(m_defaultView, 0, 0, render_camera->get_viewport_width(), render_camera->get_viewport_height());
+ 		_fullscreen_quad(render_camera->get_viewport_width(), render_camera->get_viewport_height());
+ 
+		bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z |
+					   BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA);
 
-		bgfx::setTexture(m_defaultView, m_backbufferTextureUniform, m_backbufferTexture, NULL);
-
-		bgfx::setState(m_defaultView, BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A );
-
-		_fullscreen_quad(render_camera->get_viewport_width(), render_camera->get_viewport_height());
-
-		bgfx::submit(m_defaultView, m_backbufferShader);
+  		bgfx::submit(m_defaultView, m_backbufferShader);
 
 		bgfx::frame();
-
 	}
+
 
 
 	void CSceneRenderer::_fullscreen_quad(f32 texture_width, f32 texture_height)
 	{
-		const bgfx::RendererType::Enum renderer = bgfx::getRendererType();
-		f32 _texelHalf = bgfx::RendererType::Direct3D9 == renderer ? 0.5f : 0.0f;
-		bool _originBottomLeft = bgfx::RendererType::OpenGL == renderer || bgfx::RendererType::OpenGLES == renderer;
-		f32 _width = 1.0f;
-		f32 _height = 1.0f;
+// 		bool origin_bottom_left = bgfx::getCaps()->originBottomLeft;
+// 
+// 		f32 texel_half = bgfx::RendererType::Direct3D9 == bgfx::getCaps()->rendererType ? 0.5f : 0.0f;
+// 
+// 		f32 _width = 1.0f;
+// 		f32 _height = 1.0f;
+// 
+// 
+// 		if (3 == bgfx::getAvailTransientVertexBuffer(3, ScreenQuadVertex::s_VertexLayout))
+// 		{
+// 			bgfx::TransientVertexBuffer vb;
+// 			bgfx::allocTransientVertexBuffer(&vb, 3, ScreenQuadVertex::s_VertexLayout);
+// 			auto vertex = (ScreenQuadVertex*)vb.data;
+// 
+// 			const f32 zz = 0.0f;
+// 
+// 			const f32 minx = -_width;
+// 			const f32 maxx = _width;
+// 			const f32 miny = 0.0f;
+// 			const f32 maxy = _height * 2.0f;
+// 
+// 			const f32 texelHalfW = texel_half / texture_width;
+// 			const f32 texelHalfH = texel_half / texture_height;
+// 			const f32 minu = -1.0f + texelHalfW;
+// 			const f32 maxu = 1.0f + texelHalfW;
+// 
+// 			f32 minv = texelHalfH;
+// 			f32 maxv = 2.0f + texelHalfH;
+// 
+// 			if (origin_bottom_left)
+// 			{
+// 				f32 temp = minv;
+// 				minv = maxv;
+// 				maxv = temp;
+// 
+// 				minv -= 1.0f;
+// 				maxv -= 1.0f;
+// 			}
+// 
+// 			vertex[0].m_x = minx;
+// 			vertex[0].m_y = miny;
+// 			vertex[0].m_z = zz;
+// 			vertex[0].m_u = minu;
+// 			vertex[0].m_v = minv;
+// 
+// 			vertex[1].m_x = maxx;
+// 			vertex[1].m_y = miny;
+// 			vertex[1].m_z = zz;
+// 			vertex[1].m_u = maxu;
+// 			vertex[1].m_v = minv;
+// 
+// 			vertex[2].m_x = maxx;
+// 			vertex[2].m_y = maxy;
+// 			vertex[2].m_z = zz;
+// 			vertex[2].m_u = maxu;
+// 			vertex[2].m_v = maxv;
+// 
+// 			bgfx::setVertexBuffer(0, &vb);
+// 		}
 
-		if (bgfx::getAvailTransientVertexBuffer(3, ScreenQuadVertex::s_VertexLayout))
+		if (bgfx::getAvailTransientVertexBuffer(4, ScreenQuadVertex::s_VertexLayout))
 		{
 			bgfx::TransientVertexBuffer vb;
-			bgfx::allocTransientVertexBuffer(&vb, 3, ScreenQuadVertex::s_VertexLayout);
+			bgfx::allocTransientVertexBuffer(&vb, 4, ScreenQuadVertex::s_VertexLayout);
 			ScreenQuadVertex* vertex = (ScreenQuadVertex*)vb.data;
 
-			const f32 minx = -_width;
-			const f32 maxx = _width;
-			const f32 miny = 0.0f;
-			const f32 maxy = _height * 2.0f;
+			bgfx::TransientIndexBuffer ib;
+			bgfx::allocTransientIndexBuffer(&ib, 6);
 
-			const f32 texelHalfW = _texelHalf / texture_width;
-			const f32 texelHalfH = _texelHalf / texture_height;
-			const f32 minu = -1.0f + texelHalfW;
-			const f32 maxu = 1.0f + texelHalfH;
-
-			float minv = texelHalfH;
-			float maxv = 2.0f + texelHalfH;
-
-			if (_originBottomLeft)
-			{
-				minv = 1.0f - minv;
-				maxv = 1.0f - maxv;
-			}
-
-			vertex[0].m_x = minx;
-			vertex[0].m_y = miny;
+			// 0
+			vertex[0].m_x = -1.0f;
+			vertex[0].m_y = 1.0f;
 			vertex[0].m_z = 0.0f;
-			vertex[0].m_u = minu;
-			vertex[0].m_v = minv;
+			vertex[0].m_u = 0.0f;
+			vertex[0].m_v = 1.0f;
 
-			vertex[1].m_x = maxx;
-			vertex[1].m_y = miny;
+			// 1
+			vertex[1].m_x = 1.0f;
+			vertex[1].m_y = -1.0f;
 			vertex[1].m_z = 0.0f;
-			vertex[1].m_u = maxu;
-			vertex[1].m_v = minv;
+			vertex[1].m_u = 1.0f;
+			vertex[1].m_v = 1.0f;
 
-			vertex[2].m_x = maxx;
-			vertex[2].m_y = maxy;
+			// 2
+			vertex[2].m_x = 1.0f;
+			vertex[2].m_y = 1.0f;
 			vertex[2].m_z = 0.0f;
-			vertex[2].m_u = maxu;
-			vertex[2].m_v = maxv;
+			vertex[2].m_u = 1.0f;
+			vertex[2].m_v = 0.0f;
 
-			bgfx::setVertexBuffer(0, &vb);
-		}
+			// 3
+			vertex[3].m_x = -1.0f;
+			vertex[3].m_y = 1.0f;
+			vertex[3].m_z = 0.0f;
+			vertex[3].m_u = 0.0f;
+			vertex[3].m_v = 0.0f;
+
+
+			u16* index = (u16*)ib.data;
+			index[0] = 0;
+			index[1] = 1;
+			index[2] = 2;
+			index[3] = 3;
+			index[4] = 0;
+			index[5] = 2;
+
+			bgfx::setVertexBuffer(0, &vb, 0, 6, ScreenQuadVertex::s_VertexLayoutHandle);
+			bgfx::setIndexBuffer(&ib, 0, 6);
+ 		}
 	}
 
 
@@ -261,6 +352,5 @@ namespace mint::fx
 	{
 		return m_backbuffer;
 	}
-
 
 }

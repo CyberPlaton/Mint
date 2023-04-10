@@ -6,6 +6,8 @@
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
 #include "Graphics/Common/Viewport.h"
+#include "Common/Rectangle.h"
+#include "Color.h"
 
 
 namespace mint::fx
@@ -14,10 +16,14 @@ namespace mint::fx
 	class ICamera
 	{
 	public:
-
+		ICamera(const SViewport& viewport, const CColor& clear_color = {0, 0, 0, 0});
+		ICamera(f32 x, f32 y, f32 width, f32 height, f32 near_plane, f32 far_plane, const CColor& clear_color = {0, 0, 0, 0});
+		
 		virtual void update_view_matrix() {};
 
 		virtual void update_projection_matrix() {};
+
+		virtual CRect get_world_visible_area() { CRect rect; return rect; }
 
 
 		Mat4 get_view_matrix() { return m_view; }
@@ -47,30 +53,47 @@ namespace mint::fx
 		void* get_window_handle() { return m_windowHandle; }
 
 
-		virtual u64 get_render_state() { return BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CCW | BGFX_STATE_MSAA |
-												BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA); }
+		virtual u64 get_render_state() { return m_renderState; }
+
+		void set_render_state(u64 state);
+
+		virtual u64 get_view_clear_state() { return m_viewClearState; }
+
+		void set_view_clear_state(u64 state);
+
+		virtual u32 get_view_clear_color() { return m_viewClearColor.as_rgba(); }
+
+		CColor get_clear_color() { return m_viewClearColor; }
+
+		void set_view_clear_color(u8 r, u8 g, u8 b, u8 a);
 
 
-	protected:
-		Mat4 m_projection;
-
-		Mat4 m_view;
-
-		CRect m_viewportRect;
-
-		Vec2 m_nearFarPlanes;
-
-
+	public:
 		Vec3 m_translation;
 
 		Vec3 m_rotation;
 
 		Vec3 m_scale;
 
+		Mat4 m_projection;
+
+		Mat4 m_view;
+
+
+
+		CRect m_viewportRect;
+
+		Vec2 m_nearFarPlanes;
+
+
+		CColor m_viewClearColor;
+
 		void* m_windowHandle;
 
-
 		u64 m_renderState;
+
+		u64 m_viewClearState;
+
 	};
 
 

@@ -6,18 +6,30 @@
 #include "Shaders/windows/sprite/ps_sprite.dx12.h"
 #include "Shaders/windows/sprite/vs_sprite.dx11.h"
 #include "Shaders/windows/sprite/vs_sprite.dx12.h"
+#include "Shaders/windows/backbuffer/vs_backbuffer.dx11.h"
+#include "Shaders/windows/backbuffer/vs_backbuffer.dx12.h"
+#include "Shaders/windows/backbuffer/ps_backbuffer.dx11.h"
+#include "Shaders/windows/backbuffer/ps_backbuffer.dx12.h"
 #elif BX_PLATFORM_LINUX
 #include "Shaders/linux/sprite/ps_sprite.spv.h"
 #include "Shaders/linux/sprite/vs_sprite.spv.h"
+#include "Shaders/backbuffer/backbuffer/vs_backbuffer.spv.h"
+#include "Shaders/backbuffer/backbuffer/ps_backbuffer.spv.h"
 #elif BX_PLATFORM_ANDROID
 #include "Shaders/android/sprite/ps_sprite.spv.h"
 #include "Shaders/android/sprite/vs_sprite.spv.h"
+#include "Shaders/backbuffer/sprite/ps_backbuffer.spv.h"
+#include "Shaders/backbuffer/sprite/vs_backbuffer.spv.h"
 #elif BX_PLATFORM_IOS
 #include "Shaders/ios/sprite/ps_sprite.metal.h"
 #include "Shaders/ios/sprite/vs_sprite.metal.h"
+#include "Shaders/ios/backbuffer/ps_backbuffer.metal.h"
+#include "Shaders/ios/backbuffer/vs_backbuffer.metal.h"
 #elif BX_PLATFORM_OSX
 #include "Shaders/osx/sprite/ps_sprite.metal.h"
 #include "Shaders/osx/sprite/vs_sprite.metal.h"
+#include "Shaders/osx/backbuffer/ps_backbuffer.metal.h"
+#include "Shaders/osx/backbuffer/vs_backbuffer.metal.h"
 #elif BX_PLATFORM_PS4 or BX_PLATFORM_PS5
 #endif
 
@@ -32,12 +44,52 @@ namespace mint::fx
 	{
 		bool result = true;
 
+		auto renderer_type = bgfx::getRendererType();
+
 #if BX_PLATFORM_WINDOWS or BX_PLATFORM_XBOXONE or BX_PLATFORM_WINRT
-		if(result &= create_embedded_shader("Sprite", bgfx::RendererType::Direct3D11, &vs_sprite_dx11[0], BX_COUNTOF(vs_sprite_dx11),
-																					  &ps_sprite_dx11[0], BX_COUNTOF(ps_sprite_dx11)); result == false)
+		switch (renderer_type)
 		{
-			MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Failed creating DirectX11 embedded shader \"{}\"!", MINT_APP_TIME, "Sprite");
+		case bgfx::RendererType::Direct3D9:
+			MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Unsupported rendering API \"{}\"!", MINT_APP_TIME, "Direct3D9");
+			return false;
+		case bgfx::RendererType::Direct3D11:
+		{
+			if (result &= create_embedded_shader("Sprite", bgfx::RendererType::Direct3D11, &vs_sprite_dx11[0], BX_COUNTOF(vs_sprite_dx11),
+												 &ps_sprite_dx11[0], BX_COUNTOF(ps_sprite_dx11)); 
+												 result == false)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Failed creating Direct3D11 embedded shader \"{}\"!", MINT_APP_TIME, "Sprite");
+			}
+			if (result &= create_embedded_shader("Backbuffer", bgfx::RendererType::Direct3D11, &vs_backbuffer_dx11[0], BX_COUNTOF(vs_backbuffer_dx11),
+												 &ps_backbuffer_dx11[0], BX_COUNTOF(ps_backbuffer_dx11)); 
+												 result == false)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Failed creating Direct3D11 embedded shader \"{}\"!", MINT_APP_TIME, "Backbuffer");
+			}
+			break;
 		}
+		case bgfx::RendererType::Direct3D12:
+		{
+			if (result &= create_embedded_shader("Sprite", bgfx::RendererType::Direct3D12, &vs_sprite_dx12[0], BX_COUNTOF(vs_sprite_dx12),
+				&ps_sprite_dx12[0], BX_COUNTOF(ps_sprite_dx12));
+				result == false)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Failed creating Direct3D12 embedded shader \"{}\"!", MINT_APP_TIME, "Sprite");
+			}
+			if (result &= create_embedded_shader("Backbuffer", bgfx::RendererType::Direct3D12, &vs_backbuffer_dx12[0], BX_COUNTOF(vs_backbuffer_dx12),
+				&ps_backbuffer_dx12[0], BX_COUNTOF(ps_backbuffer_dx12));
+				result == false)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Failed creating Direct3D12 embedded shader \"{}\"!", MINT_APP_TIME, "Backbuffer");
+			}
+			break;
+		}
+		default:
+			MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::initialize] Microsoft platforms support Direct3D11 and Direct3D12 only!", MINT_APP_TIME);
+			return false;
+		}
+
+
 
 #elif BX_PLATFORM_LINUX or BX_PLATFORM_ANDROID
 		if (result &= create_embedded_shader("Sprite", bgfx::RendererType::Vulkan, &vs_sprite_spv[0], BX_COUNTOF(vs_sprite_spv),

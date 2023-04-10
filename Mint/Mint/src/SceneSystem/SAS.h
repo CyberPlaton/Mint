@@ -4,6 +4,7 @@
 
 #include "THST/QuadTree.h"
 #include "Utility/STL/Map.h"
+#include "Common/Rectangle.h"
 
 #include "Utility/ServiceSystem/Service.h"
 

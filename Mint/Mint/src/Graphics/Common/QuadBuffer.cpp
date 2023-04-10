@@ -12,10 +12,6 @@ namespace mint::fx
 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 1));
 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 2));
 		
-// 		m_indices.push_back(SCAST(u16, vindex));
-// 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 2));
-// 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 3));
-
 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 3));
 		m_indices.push_back(SCAST(u16, vindex));
 		m_indices.push_back(SCAST(u16, vindex) + SCAST(u16, 2));
