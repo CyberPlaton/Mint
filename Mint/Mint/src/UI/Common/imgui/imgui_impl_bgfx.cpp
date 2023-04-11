@@ -60,6 +60,7 @@ void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
 	bx::mtxOrtho(&ortho[0], 0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, 0.0f, 1000.0f,
  		0.0f, caps->homogeneousDepth);
 
+    bgfx::setViewMode(g_View, bgfx::ViewMode::Sequential);
     bgfx::setViewTransform(g_View, NULL, ortho);
     bgfx::setViewRect(g_View, 0, 0, (uint16_t)fb_width, (uint16_t)fb_height);
 

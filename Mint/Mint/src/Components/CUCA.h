@@ -68,7 +68,11 @@ namespace mint::component
 		static MINT_CRITICAL_SECTION(m_dynamicGameobjectCriticalSection);
 
 
+#ifndef MINT_DISTR
+	public:
+#else
 	private:
+#endif
 		static void _rigid_body_update_translation(entt::entity entity, Vec2 value);
 		static void _rigid_body_update_rotation(entt::entity entity, f32 value);
 

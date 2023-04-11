@@ -33,21 +33,19 @@ namespace mint::fx
 
 		void on_render(Vector< entt::entity >& entities);
 
-		void on_post_render(ICamera* render_camera);
+		void on_post_render();
 
 		void on_resize(ICamera* render_camera);
-
-
-		bgfx::FrameBufferHandle get_backbuffer();
 
 
 	private:
 		static CSceneRenderer* s_CSceneRenderer;
 
-		bgfx::ViewId m_defaultView = MINTFX_DEFAULT_VIEW;
-		bgfx::ViewId m_backbufferView = MINTFX_FRAMEBUFFER_VIEW;
+		ICamera* m_currentRenderCamera = nullptr;
 
-		bgfx::ViewId m_viewOrder[2] = { m_defaultView, m_backbufferView };
+		bgfx::ViewId m_defaultView = MINTFX_DEFAULT_VIEW;
+
+		bgfx::ViewId m_uiView = 255;
 
 		CQuadBuffer m_quadBuffer;
 
@@ -60,15 +58,18 @@ namespace mint::fx
 		ShaderProgramHandle m_defaultShader;
 
 
+
+		bgfx::ViewId m_backbufferView = MINTFX_FRAMEBUFFER_VIEW;
+
 		bgfx::FrameBufferHandle m_backbuffer;
 
 		TextureHandle m_backbufferTexture;
-		
+
 		bgfx::UniformHandle m_backbufferTextureUniform;
-	
+
 		ShaderProgramHandle m_backbufferShader;
 
-		Mat4 m_backbufferOrthographicProjection;
+
 
 		Vector< IRenderingPass* > m_renderingPasses;
 
@@ -80,11 +81,9 @@ namespace mint::fx
 
 		void _next_batch();
 
-		void _render_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);
+		void _render_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);	
 	
-		void _fullscreen_quad(f32 texture_width, f32 texture_height);
-
-		void _setup_states(ICamera* render_camera);
+		void CSceneRenderer::_fullscreen_quad(f32 texture_width, f32 texture_height);
 	};
 
 }

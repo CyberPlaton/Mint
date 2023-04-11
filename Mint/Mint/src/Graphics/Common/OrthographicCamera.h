@@ -20,7 +20,7 @@ namespace mint::fx
 		void update_projection_matrix() override final;
 
 
-	private:
+	public:
 		f32 m_zoom;
 
 	};

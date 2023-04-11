@@ -297,8 +297,8 @@ namespace mint
 
 		fx::CColor color(wdesc.m_clearColor);
 
-		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-						   color.as_rgba(), 1.0f, 0);
+// 		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
+// 						   color.as_rgba(), 1.0f, 0);
 
 
 
@@ -421,10 +421,7 @@ namespace mint
 
 	void CMintEngine::_end_frame()
 	{
-		auto scene = MINT_ACTIVE_SCENE();
-		auto camera = scene->get_active_camera();
-
-		fx::CSceneRenderer::Get().on_post_render(camera);
+		fx::CSceneRenderer::Get().on_post_render();
 	}
 
 

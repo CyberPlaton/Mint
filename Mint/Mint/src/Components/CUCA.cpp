@@ -68,7 +68,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -91,7 +91,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -128,7 +128,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -150,7 +150,7 @@ namespace mint::component
 
 		_rigid_body_update_translation(entity, position);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -184,7 +184,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -208,7 +208,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -244,7 +244,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -266,7 +266,7 @@ namespace mint::component
 
 		_rigid_body_update_rotation(entity, rotation);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -350,7 +350,7 @@ namespace mint::component
 
 		);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -380,7 +380,7 @@ namespace mint::component
 
 		);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -402,7 +402,7 @@ namespace mint::component
 
 		);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
 
@@ -434,7 +434,7 @@ namespace mint::component
 
 		);
 
-		transform_get_world_transform_matrix(entity);
+		_transform_recompute_world_transform(entity);
 	}
 
 
@@ -467,7 +467,7 @@ namespace mint::component
 
 		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
 
-			const auto& value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
+			auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
 
 								glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(transform.m_rotation), Vec3(0.0f, 0.0f, 1.0f)) *
 
