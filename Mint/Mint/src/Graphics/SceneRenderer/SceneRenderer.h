@@ -81,7 +81,7 @@ namespace mint::fx
 
 		void _next_batch();
 
-		void _render_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);	
+		void _render_sprite(Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);	
 	
 		void CSceneRenderer::_fullscreen_quad(f32 texture_width, f32 texture_height);
 	};

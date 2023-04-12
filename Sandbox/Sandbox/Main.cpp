@@ -93,10 +93,10 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 	
 	ImGui::Begin("Camera");
 	CUI::edit_field_color(camera->m_viewClearColor, 0, 255, "Color", "", sliderId++, scalarId++);
-	CUI::edit_field_vec3(camera->m_translation, -10.0f, 10.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_vec3(camera->m_translation, -100.0f, 100.0f, "Position", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_vec3(camera->m_rotation, -360.0f, 360.0f, "Rotation", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_vec3(camera->m_scale, 0.0f, 10.0f, "Scale", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
-	CUI::edit_field_f32(camera->m_zoom, 0.0f, 10.0f, "Zoom", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
+	CUI::edit_field_f32(camera->m_zoom, 0.0f, 100.0f, "Zoom", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	CUI::edit_field_rect(camera->m_viewportRect, 0.0f, 2000.0f, "Viewport", "", sliderId++, scalarId++, ImGuiSliderFlags_Logarithmic);
 	ImGui::End();
 
@@ -150,7 +150,7 @@ bool CMainScene::on_load()
 		auto& sprite = registry.add_component< mint::component::SSprite >(entity);
 
 
-		CUCA::transform_set_position_local(entity, { -200.0f, 66.0f });
+		CUCA::transform_set_position_local(entity, { -20.0f, 10.0f });
 		CUCA::transform_set_rotation_local(entity, 45.0f);
 		CUCA::transform_set_scale_local(entity, { 1.5f, 1.5f });
 

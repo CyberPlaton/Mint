@@ -73,6 +73,14 @@ namespace mint::fx
 
 		bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CCW | BGFX_STATE_MSAA);
 
+// 		bgfx::setState(0
+// 			| BGFX_STATE_WRITE_RGB
+// 			| BGFX_STATE_WRITE_A
+// 			| BGFX_STATE_CULL_CCW 
+// 			| BGFX_STATE_MSAA
+// 			| BGFX_STATE_WRITE_Z
+// 			| BGFX_STATE_DEPTH_TEST_LEQUAL);
+
 		_start_batch();
 	}
 
@@ -81,6 +89,7 @@ namespace mint::fx
 	{
 		_flush_batch();
 
+		bgfx::setViewFrameBuffer(m_backbufferView, BGFX_INVALID_HANDLE);
 
 
 		bgfx::setViewClear(m_defaultView, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, m_currentRenderCamera->get_view_clear_color());
@@ -90,16 +99,18 @@ namespace mint::fx
 
 		bgfx::setTexture(0, m_backbufferTextureUniform, m_backbufferTexture);
 
- 		bgfx::setViewTransform(m_defaultView, glm::value_ptr(m_currentRenderCamera->get_view_matrix()), glm::value_ptr(m_currentRenderCamera->get_projection_matrix()));
+ 		bgfx::setViewTransform(m_defaultView, NULL, glm::value_ptr(m_currentRenderCamera->get_projection_matrix()));
 
-		bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_MSAA);
+		bgfx::setState(0
+			| BGFX_STATE_WRITE_RGB
+			| BGFX_STATE_WRITE_A
+			| BGFX_STATE_CULL_CCW
+			| BGFX_STATE_MSAA);
 
 		_fullscreen_quad(m_currentRenderCamera->get_viewport_width(), m_currentRenderCamera->get_viewport_height());
 
 		bgfx::submit(m_defaultView, m_backbufferShader);
 
-
-		m_currentRenderCamera = nullptr;
 	}
 
 
@@ -176,7 +187,7 @@ namespace mint::fx
 	}
 
 
-	void CSceneRenderer::_render_sprite(const Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical)
+	void CSceneRenderer::_render_sprite(Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical)
 	{
 		if (!m_quadBuffer.has_room_for_another_quad() ||
 			(m_currentTexture.idx != bgfx::kInvalidHandle && m_currentTexture.idx != texture.idx))
@@ -203,10 +214,10 @@ namespace mint::fx
 
 		constexpr Vec4 quad_vertex_positions[4] =
 		{
-			{ -0.5f, -0.5f,		0.0f, 0.0f },	// Bottom left
-			{ -0.5f, 0.5f,		0.0f, 0.0f },	// Top left
-			{  0.5f, 0.5f,		0.0f, 0.0f },	// Top right
-			{  0.5f,  -0.5f,	0.0f, 0.0f },	// Bottom right
+			{ -0.5f, -0.5f,		1.0f, 1.0f },	// Bottom left
+			{ -0.5f, 0.5f,		1.0f, 1.0f },	// Top left
+			{  0.5f, 0.5f,		1.0f, 1.0f },	// Top right
+			{  0.5f,  -0.5f,	1.0f, 1.0f },	// Bottom right
 		};
 
 		QuadVertex quad_vertices[4];
@@ -214,6 +225,9 @@ namespace mint::fx
 		for (auto i = 0; i < 4; i++)
 		{
 			Vec4 vpos = transform * quad_vertex_positions[i];
+
+			MINT_LOG_WARN("Transform Matrix: \"{}\"", glm::to_string(transform));
+			MINT_LOG_INFO("Vertex Position: \"{}\"", glm::to_string(vpos));
 
 			quad_vertices[i] = QuadVertex::make(vpos.x, vpos.y, color, textureCoords[i].x, textureCoords[i].y);
 		}
@@ -282,7 +296,7 @@ namespace mint::fx
 			vertex[2].m_v = maxv;
 
 			bgfx::setVertexBuffer(0, &vb);
- 		}
+  		}
 
 // 		if (bgfx::getAvailTransientVertexBuffer(4, ScreenQuadVertex::s_VertexLayout))
 // 		{
@@ -326,13 +340,13 @@ namespace mint::fx
 // 			index[0] = 0;
 // 			index[1] = 1;
 // 			index[2] = 2;
-//  			index[3] = 3;
+// 			index[3] = 3;
 // 			index[4] = 0;
 // 			index[5] = 2;
 // 
 // 			bgfx::setVertexBuffer(0, &vb, 0, 6, ScreenQuadVertex::s_VertexLayoutHandle);
 // 			bgfx::setIndexBuffer(&ib, 0, 6);
-//  		}
+//   		}
 	}
 
 }
