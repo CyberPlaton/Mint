@@ -47,15 +47,11 @@ namespace mint
 
 		CWindow& get_main_window() override final;
 
-		fx::SViewport& get_main_viewport() override final;
-
 
 	private:
 		bool m_running;
 
 		CWindow m_mainWindow;
-
-		fx::SViewport m_mainViewport;
 
 
 	private:

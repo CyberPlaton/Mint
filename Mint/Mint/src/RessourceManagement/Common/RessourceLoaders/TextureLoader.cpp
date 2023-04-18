@@ -14,18 +14,10 @@ namespace mint
 		type = asset.get_ressource_type();
 		source = asset.get_asset_source_path();
 
-		bgfx::TextureInfo info;
-
 		CFileystem fs(CFileystem::get_working_directory());
 		if(fs.forward(asset.get_asset_path()) && fs.forward(source))
 		{
-			bgfx::TextureHandle handle = fx::loadTexture(fs.get_current_directory().as_string().c_str(),
-													 BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, 0, &info);
-
-			if(bgfx::isValid(handle))
-			{
-				return CTextureManager::Get().add_texture(name, handle, info);
-			}
+			return false;
 		}
 	}
 

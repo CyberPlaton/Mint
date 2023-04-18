@@ -60,6 +60,7 @@
 		includedirs{
 			"%{prj.location}/common/include",
 			"%{prj.location}/common/include/spdlog",
+			"%{prj.location}/common/include/raylib",
 		}
 		print("Include third party files...")
 
@@ -69,8 +70,6 @@
 			include "mint_editor_linker.lua"
 			include "mint_editor_mint_engine_linker.lua"
 		group ""
-
-		SetBXCompat()
 
 		print("Create common defines...")
 		group "Defines"

@@ -5,7 +5,6 @@
 #include "Common/Rectangle.h"
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
-#include "Graphics/Common/Viewport.h"
 #include "Common/Rectangle.h"
 #include "Color.h"
 
@@ -16,7 +15,7 @@ namespace mint::fx
 	class ICamera
 	{
 	public:
-		ICamera(const SViewport& viewport, const CColor& clear_color = {0, 0, 0, 0});
+		ICamera(const CColor& clear_color = {0, 0, 0, 0});
 		ICamera(f32 x, f32 y, f32 width, f32 height, f32 near_plane, f32 far_plane, const CColor& clear_color = {0, 0, 0, 0});
 		
 		virtual void update_view_matrix() {};

@@ -47,12 +47,6 @@ namespace mint
 
 		void terminate();
 
-
-		template< typename T >
-		T get_native_handle();
-
-		Window* as_sdl_window();
-
 		void show();
 
 		void hide();
@@ -64,29 +58,9 @@ namespace mint
 
 
 	private:
-		Window* m_window;
-
 		Vec4 m_clearColor;
 
-		bgfx::ViewId m_viewId;
 	};
-
-
-	template< typename T >
-	T mint::CWindow::get_native_handle()
-	{
-		SDL_SysWMinfo info;
-		SDL_GetWindowWMInfo(m_window, &info, SDL_SYSWM_CURRENT_VERSION);
-
-#ifdef MINT_PLATFORM_WINDOWS
-		return reinterpret_cast< T >(info.info.win.window);
-#endif
-#ifdef MINT_PLATFORM_LINUX
-		return reinterpret_cast< T >(info.info.x11.window);
-#endif
-
-
-	}
 
 
 }

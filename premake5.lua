@@ -1,8 +1,8 @@
 workspace "Mint Engine"
 	print("\n")
 	print("Creating Workspace: \"Mint Engine\":")
-	architecture "x86_64"
 	startproject "Sandbox"
+	architecture "x86_64"
 	configurations{
 		"Debug",		-- Traditional Debugging build
 		"Release",		-- Verbose build to be debugged in a "Release" environment
@@ -12,6 +12,12 @@ workspace "Mint Engine"
 	platforms{
 		"Windows", "Linux"
 	}
+
+	if os.target() == "windows" then
+		system "Windows"
+	elseif os.target() == "linux" then
+		system "Linux"
+	end
 
 	flags{
 		"MultiProcessorCompile"

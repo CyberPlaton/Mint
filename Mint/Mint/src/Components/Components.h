@@ -38,6 +38,10 @@ namespace mint::component
 	struct SRigidBody
 	{
 		b2Body* m_body = nullptr;
+
+		b2PolygonShape m_bodyShape;
+
+		b2FixtureDef m_fixtureDefinition;
 	};
 
 

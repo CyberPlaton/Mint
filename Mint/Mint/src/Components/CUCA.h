@@ -75,6 +75,7 @@ namespace mint::component
 #endif
 		static void _rigid_body_update_translation(entt::entity entity, Vec2 value);
 		static void _rigid_body_update_rotation(entt::entity entity, f32 value);
+		static void _rigid_body_update_scale(entt::entity entity, Vec2 value);
 
 		static void _transform_recompute_world_transform(entt::entity entity);
 	};

@@ -13,7 +13,7 @@ namespace mint
 	public:
 		STATIC_GET(CUI, s_CUI);
 
-		bool initialize(Window* window);
+		bool initialize();
 
 		void terminate();
 

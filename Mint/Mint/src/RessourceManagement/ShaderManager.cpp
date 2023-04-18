@@ -13,8 +13,6 @@ namespace mint
 
 		bool result = true;
 
-		result &= fx::CEmbeddedShaders::Get().initialize();
-
 		return result;
 	}
 
@@ -39,65 +37,13 @@ namespace mint
 
 	bool CShaderManager::add_shader_program(const String& program_name, ShaderProgramHandle& handle)
 	{
-		MINT_ASSERT(bgfx::isValid(handle) == true, "Passing an invalid handle!");
-
-		auto h = mint::algorithm::djb_hash(program_name);
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			const bool result = m_programs.lookup(h);
-
-		);
-
-
-		if(result || fx::CEmbeddedShaders::Get().lookup_embedded_shader(program_name))
-		{
-			MINT_LOG_WARN("[{:.4f}][CShaderManager::add_shader_program] Attempt to add a duplicate Shader Program \"{}\"!", MINT_APP_TIME, program_name.c_str());
-			return false;
-		}
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			m_programs.add(h, handle);
-
-		);
-
-		return true;
+		return false;
 	}
 
 
 	mint::ShaderProgramHandle CShaderManager::get_shader_program(const String& program_name)
 	{
-		auto h = mint::algorithm::djb_hash(program_name);
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			const bool result = m_programs.lookup(h);
-
-		);
-
-
-		if(result)
-		{
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				const auto & handle = m_programs.get(h);
-
-			);
-
-			return handle;
-		}
-		if(fx::CEmbeddedShaders::Get().lookup_embedded_shader(program_name))
-		{
-			return fx::CEmbeddedShaders::Get().get_embedded_shader(program_name);
-		}
-
-
-		MINT_LOG_WARN("[{:.4f}][CShaderManager::get_shader_program] Requested Shader Program \"{}\" was not found!", MINT_APP_TIME, program_name.c_str());
-		return BGFX_INVALID_HANDLE;
+		return 0;
 	}
 
 

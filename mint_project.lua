@@ -1,14 +1,3 @@
-function SetBXCompat()
-	filter "action:vs*"
-		includedirs{"%{prj.location}/common/include/compat/msvc"}
-	filter {"system:windows", "action:gmake"}
-		includedirs{"%{prj.location}/common/include/compat/mingw"}
-	filter {"system:macosx"}
-		includedirs {"%{prj.location}/common/include/compat/osx"}
-		buildoptions {"-x objective-c++"}
-end
-
-
 ----------------------------------------------
 -- Mint library
 ----------------------------------------------
@@ -50,20 +39,13 @@ end
 			"Components",
 			"SceneSystem/Common",
 			"SceneSystem",
-			"Graphics/Common/EmbeddedShaders/Shaders/android",
-			"Graphics/Common/EmbeddedShaders/Shaders/linux",
-			"Graphics/Common/EmbeddedShaders/Shaders/osx",
-			"Graphics/Common/EmbeddedShaders/Shaders/ios",
-			"Graphics/Common/EmbeddedShaders/Shaders/windows",
-			"Graphics/Common/EmbeddedShaders/Shaders/orbis",
-			"Graphics/Common/EmbeddedShaders/Shaders",
-			"Graphics/Common/EmbeddedShaders",
 			"Graphics/Common",
 			"Graphics/SceneRenderer",
 			"Graphics",
 			"RessourceManagement/Common/RessourceLoaders",
 			"RessourceManagement/Common",
 			"RessourceManagement",
+			"Physics/Common/box2d",
 			"Physics/Common",
 			"Physics",
 			"UI/Common/imgui",
@@ -100,7 +82,7 @@ end
 			}
 			-- Load files to project
 			files{
-				mint_abs_path .. "/" .. fldr .. "/**.h", mint_abs_path .. "/" .. fldr .. "/**.cpp"
+				mint_abs_path .. "/" .. fldr .. "/**.h", mint_abs_path .. "/" .. fldr .. "/**.cpp",
 			}
 			-- Allow including folder headers across project
 			print("Create Include folder: " .. fldr)
@@ -109,27 +91,20 @@ end
 			}
 		end
 
-
-		-- Import shader sources
-		group "Shaders"
-			include "mint_shaders.lua"
-		group ""
-
-
-
 		-- Includes
 		includedirs{
 			"%{prj.location}/common/include",
 			"%{prj.location}/common/include/spdlog",
+			"%{prj.location}/common/include/raylib",
+			"%{prj.location}/src/Physics/Common",
 		}
+		print("Include third party files...")
 
 
 		-- Platform specific defines and linking
 		group "Linking"
 			include "mint_linker.lua"
 		group ""
-
-		SetBXCompat()
 
 		group "Defines"
 			include "mint_defines.lua"

@@ -4,10 +4,6 @@
 
 #include "Common/Rectangle.h"
 
-#include "../Common/RenderingPass.h"
-#include "../Common/Color.h"
-#include "../Common/QuadBuffer.h"
-#include "../Common/EmbeddedShaders/EmbeddedShaders.h"
 
 #include "../../SceneSystem/Common/IScene.h"
 #include "../../Components/CUCA.h"
@@ -43,47 +39,8 @@ namespace mint::fx
 
 		ICamera* m_currentRenderCamera = nullptr;
 
-		bgfx::ViewId m_defaultView = MINTFX_DEFAULT_VIEW;
-
-		bgfx::ViewId m_uiView = 255;
-
-		CQuadBuffer m_quadBuffer;
-
-		TextureHandle m_currentTexture;
-
-		bgfx::UniformHandle m_currentTextureUniform;
-
-		Vec2 m_currentTextureSize;
-
-		ShaderProgramHandle m_defaultShader;
-
-
-
-		bgfx::ViewId m_backbufferView = MINTFX_FRAMEBUFFER_VIEW;
-
-		bgfx::FrameBufferHandle m_backbuffer;
-
-		TextureHandle m_backbufferTexture;
-
-		bgfx::UniformHandle m_backbufferTextureUniform;
-
-		ShaderProgramHandle m_backbufferShader;
-
-
-
-		Vector< IRenderingPass* > m_renderingPasses;
-
-
 	private:
-		void _start_batch();
 
-		void _flush_batch();
-
-		void _next_batch();
-
-		void _render_sprite(Mat4& transform, const CColor& color, const mint::CRect& rect, TextureHandle texture, bool flip_horizontal, bool flip_vertical);	
-	
-		void CSceneRenderer::_fullscreen_quad(f32 texture_width, f32 texture_height);
 	};
 
 }

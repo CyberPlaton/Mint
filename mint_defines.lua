@@ -29,9 +29,7 @@ filter "platforms:Windows"
 		optimize "Off"
 		symbols "On"
 		defines{
-			"BX_CONFIG_DEBUG=1",
-			"MINT_DEBUG",
-			"_USE_MATH_DEFINES",
+			"MINT_DEBUG=1",
 			"__STDC_FORMAT_MACROS",
 			"_ITERATOR_DEBUG_LEVEL=2",
 			"_CRT_SECURE_NO_WARNINGS",
@@ -44,8 +42,7 @@ filter "platforms:Windows"
 		optimize "Full"
 		symbols "On"
 		defines{
-			"BX_CONFIG_DEBUG=0",
-			"MINT_RELEASE",
+			"MINT_RELEASE=1",
 			"__STDC_FORMAT_MACROS",
 			"_ITERATOR_DEBUG_LEVEL=0",
 			"_CRT_SECURE_NO_WARNINGS",
@@ -59,8 +56,7 @@ filter "platforms:Windows"
 		optimize "Full"
 		symbols "Off"
 		defines{
-			"BX_CONFIG_DEBUG=0",
-			"MINT_DISTR",
+			"MINT_DISTR=1",
 			"__STDC_FORMAT_MACROS",
 			"_ITERATOR_DEBUG_LEVEL=0",
 			"_CRT_SECURE_NO_WARNINGS",

@@ -11,11 +11,8 @@
 #include "Physics/PhysicsSystem.h"
 #include "SceneSystem/SAS.h"
 #include "Utility/PluginSystem/PluginSystem.h"
-#include "Graphics/Common/Viewport.h"
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
-#include "Graphics/Common/OrthographicCamera.h"
-#include "Graphics/Common/PerspectiveCamera.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
 
@@ -70,9 +67,6 @@ namespace mint
 
 
 		virtual CWindow& get_main_window() = 0;
-
-		virtual fx::SViewport& get_main_viewport() = 0;
-
 
 	protected:
 		static IMintEngine* s_engine;

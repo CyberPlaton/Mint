@@ -130,17 +130,10 @@ namespace mint
 	}
 
 
-	mint::fx::SViewport& CMintEngine::get_main_viewport()
-	{
-		return m_mainViewport;
-	}
-
 
 	bool CMintEngine::_prepare_for_init()
 	{
 		IMintEngine::initialize_cuca_critical_sections();
-
-		entry::init();
 		
 		bool result = true;
 
@@ -232,7 +225,7 @@ namespace mint
 		bool result = true;
 
 		// UI.
-		result &= CUI::Get().initialize(m_mainWindow.as_sdl_window());
+		result &= CUI::Get().initialize();
 
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
@@ -255,51 +248,10 @@ namespace mint
 		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
 
 
-		// Initialize BGFX.
-		bgfx::renderFrame();
-
-		bgfx::Init bgfxInit;
-		bgfxInit.resolution.width = wdesc.m_width;
-		bgfxInit.resolution.height = wdesc.m_height;
-		bgfxInit.type = bgfx::RendererType::Direct3D11;
-
-		if (wdesc.m_vsync)
-		{
-			bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
-		}
-		else
-		{
-			bgfxInit.resolution.reset = BGFX_RESET_NONE;
-		}
-
-		auto native_window_handle = window.get_native_handle< void* >();
-
-		bgfxInit.platformData.nwh = native_window_handle;
-
-		if (!bgfx::init(bgfxInit))
-		{
-			window.terminate();
-			m_running = false;
-			return false;
-		}
-
-		auto& viewport = get_main_viewport();
-
-		viewport.m_top = 0;
-		viewport.m_left = 0;
-		viewport.m_right = wdesc.m_width;
-		viewport.m_bottom = wdesc.m_height;
-		viewport.m_viewIdentifier = MINTFX_DEFAULT_VIEW;
-		viewport.m_nearPlane = -1.0f;
-		viewport.m_farPlane = 1000.0f;
- 		viewport.m_windowHandle = native_window_handle;
+		
 
 
 		fx::CColor color(wdesc.m_clearColor);
-
-// 		bgfx::setViewClear(m_mainViewport.m_viewIdentifier, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-// 						   color.as_rgba(), 1.0f, 0);
-
 
 
 		// Initialize medium level engine systems.
@@ -339,7 +291,6 @@ namespace mint
 		// Animation System.
 
 		// Renderer.
-		result &= fx::CEmbeddedShaders::Get().initialize();
 		result &= fx::CSceneRenderer::Get().initialize();
 
 		// CSAS.
@@ -375,8 +326,6 @@ namespace mint
 	void CMintEngine::_post_terminate()
 	{
 		IMintEngine::delete_cuca_critical_sections();
-
-		entry::terminate();
 	}
 
 

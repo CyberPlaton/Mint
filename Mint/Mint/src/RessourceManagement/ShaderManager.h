@@ -6,7 +6,6 @@
 #include "Utility/STL/Map.h"
 #include "Common/Algorithm.h"
 
-#include "Graphics/Common/EmbeddedShaders/EmbeddedShaders.h"
 
 
 namespace mint

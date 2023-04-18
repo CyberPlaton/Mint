@@ -17,13 +17,11 @@ namespace mint::component
 
 	mint::Vec2 CUCA::transform_get_position(entt::entity entity)
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);
 
-			Vec2 v = MINT_SCENE_REGISTRY().get_component< STransform >(entity).m_position;
+		const auto& position = Vec3(transform[3]);
 
-		);
-
-		return v;
+		return { position.x, position.y };
 	}
 
 
@@ -315,25 +313,25 @@ namespace mint::component
 
 	f32 CUCA::transform_get_rotation(entt::entity entity)
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);
 
-			auto v = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity).m_rotation;
+		Vec3 rotation; glm::extractEulerAngleXYZ(transform, rotation.x, rotation.y, rotation.z);
 
-		);
-
-		return v;
+		return rotation.z;
 	}
 
 
 	mint::Vec2 CUCA::transform_get_scale(entt::entity entity)
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);	
 
-			auto v = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity).m_scale;
-
+		const auto& scale = Vec3(
+			glm::length(Vec3(transform[0])),
+			glm::length(Vec3(transform[1])),
+			glm::length(Vec3(transform[2]))
 		);
 
-		return v;
+		return { scale.x, scale.y };
 	}
 
 
@@ -504,6 +502,25 @@ namespace mint::component
 		else
 		{
 			transform.m_worldTransform = transform_get_local_transform_matrix(entity);
+		}
+	}
+
+
+	void CUCA::_rigid_body_update_scale(entt::entity entity, Vec2 value)
+	{
+		if (MINT_SCENE_REGISTRY().has_component< mint::component::SRigidBody >(entity))
+		{
+			auto& rb = MINT_SCENE_REGISTRY().get_component< mint::component::SRigidBody >(entity);
+
+			rb.m_body->DestroyFixture(rb.m_body->GetFixtureList());
+
+			const auto& dimensions = CUCA::sprite_get_texture_dimension(entity);
+
+			rb.m_bodyShape.SetAsBox(value.x * dimensions.x, value.y * dimensions.y);
+
+			rb.m_fixtureDefinition.shape = &rb.m_bodyShape;
+
+			rb.m_body->CreateFixture(&rb.m_fixtureDefinition);
 		}
 	}
 

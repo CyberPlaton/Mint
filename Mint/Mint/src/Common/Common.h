@@ -2,44 +2,37 @@
 #define _MINT_COMMON_H_
 #pragma once
 
+
+// Platform Detection
+#include "platform.h"
+
+#define MINT_PLATFORM_WINDOWS 0
+#define MINT_PLATFORM_LINUX 0
+
+#if BX_PLATFORM_WINDOWS
+#define MINT_PLATFORM_WINDOWS BX_PLATFORM_WINDOWS
+#elif BX_PLATFORM_LINUX
+#define MINT_PLATFORM_LINUX 1
+#endif
+
+
 // Common Includes
 #include <thread>
 #include <vector>
 #include <string>
 #include <fstream>
 
-#include "SDL3/SDL.h"
-#include "SDL3/SDL_syswm.h"
+#include "raylib/raylib-cpp.hpp"
 
-#include "bx/bx.h"
-#include "bx/timer.h"
-#include "bx/file.h"
-#include "bx/file.h"
-#include "bx/allocator.h"
-#include "bgfx/bgfx.h"
-#include "bgfx/bgfx_utils.h"
-#include "bgfx/platform.h"
-#include "bimg/bimg.h"
-#include "bimg/decode.h"
-
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/type_trait.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/string_cast.hpp"
+#include "glm/gtx/euler_angles.hpp"
 
-#include "box2d/box2d.h"
 #include "entt/entt.hpp"
-
-
-// Platform Detection
-#if BX_PLATFORM_WINDOWS
-#define MINT_PLATFORM_WINDOWS
-#elif BX_PLATFORM_LINUX
-#define MINT_PLATFORM_LINUX
-#endif
-
+#include "Physics/Common/box2d/box2d.h"
 
 
 // Common primitive data types
@@ -84,13 +77,11 @@ namespace mint
 // Common defines
 namespace mint
 {
-	using ShaderProgramHandle = bgfx::ProgramHandle;
+	using ShaderProgramHandle = u64;
 
-	using TextureHandle = bgfx::TextureHandle;
+	using TextureHandle = u64;
 
 	using ScriptHandle = u64;
-
-	using Window = SDL_Window;
 
 	using String = std::string;
 
@@ -106,64 +97,6 @@ namespace mint
 }
 
 
-namespace mint::fx
-{
-
-	bgfx::ShaderHandle loadShader(const String& name);
-	bgfx::ProgramHandle loadProgram(const String& vs, const String& fs);
-	void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _filePath, uint32_t* _size);
-	void* load(const char* _filePath, uint32_t* _size);
-	void unload(void* _ptr);
-	static void imageReleaseCb(void* _ptr, void* _userData);
-	bgfx::TextureHandle loadTexture(bx::FileReaderI* _reader, const char* _filePath, uint64_t _flags, uint8_t _skip, bgfx::TextureInfo* _info, bimg::Orientation::Enum* _orientation);
-	bgfx::TextureHandle loadTexture(const char* _name, uint64_t _flags = BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, uint8_t _skip = 0, bgfx::TextureInfo* _info = NULL, bimg::Orientation::Enum* _orientation = NULL);
-	void setPlatformData(void* platformData);
-}
-
-namespace entry {
-
-	static bgfx::PlatformData s_platformData;
-
-	static bx::DefaultAllocator s_allocator;
-	static bx::FileReaderI* s_fileReader;
-	static bx::FileWriterI* s_fileWriter;
-	static bx::AllocatorI* g_allocator = &s_allocator;
-
-	typedef bx::StringT<&g_allocator> bxString;
-
-	static bxString s_currentDir;
-
-	class FileReader : public bx::FileReader
-	{
-		typedef bx::FileReader super;
-
-	public:
-		virtual bool open(const bx::FilePath& _filePath, bx::Error* _err) override;
-	};
-
-	class FileWriter : public bx::FileWriter
-	{
-		typedef bx::FileWriter super;
-
-	public:
-		virtual bool open(const bx::FilePath& _filePath, bool _append, bx::Error* _err) override;
-	};
-
-	void setCurrentDir(const char* _dir);
-
-	void init();
-
-	void terminate();
-
-	bx::FileReaderI* getFileReader();
-
-	bx::FileWriterI* getFileWriter();
-
-	bx::AllocatorI* getAllocator();
-
-}
-
-
 
 // Common macros
 #define MINTFX_MAX_RENDERING_PASSES 256
@@ -171,7 +104,8 @@ namespace entry {
 #define MINTFX_FRAMEBUFFER_VIEW 1
 #define MINT_SAS_RENDERING_LAYERS_MAX 100
 #define MINT_SAS_OUT_QUEUE_COUNT_MAX 3
-#define MINT_INVALID_HANDLE SCAST(u64, -1)
+#define MINT_INVALID_HANDLE static_cast< mint::u64 >(-1)
+
 
 #define STATIC_GET(CLASS, STATIC_MEMBER) \
 static CLASS& Get() \
@@ -198,7 +132,7 @@ assert((message, expression))
 	// Static cast is preferred over c-style cast as it is more safer and can throw compiler errors.
 #define SCAST(type, value) static_cast< type >(value)
 
-#ifdef MINT_PLATFORM_LINUX
+#if MINT_PLATFORM_LINUX
 #include <pthread.h>
 #define MINT_CRITICAL_SECTION(pSection) pthread_mutex_t pSection
 #define INITIALIZE_CRITICAL_SECTION(pSection) pSection = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
@@ -206,7 +140,12 @@ assert((message, expression))
 #define ENTER_CRITICAL_SECTION(pSection) pthread_mutex_lock(&pSection)
 #define LEAVE_CRITICAL_SECTION(pSection) pthread_mutex_unlock(&pSection)
 
-#elif defined(MINT_PLATFORM_WINDOWS)
+#elif MINT_PLATFORM_WINDOWS
+#define NOGDI
+#define NORASTEROPS
+#define NOUSER
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #define MINT_CRITICAL_SECTION(pSection) CRITICAL_SECTION pSection
 #define INITIALIZE_CRITICAL_SECTION(pSection) InitializeCriticalSection(&pSection)
 #define DELETE_CRITICAL_SECTION(pSection) DeleteCriticalSection(&pSection)

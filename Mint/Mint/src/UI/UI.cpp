@@ -9,7 +9,7 @@ namespace mint
 	f32 CUI::s_editScalarFieldWidth = 100.0f;
 
 
-	bool CUI::initialize(Window* window)
+	bool CUI::initialize()
 	{
 		IMGUI_CHECKVERSION();
 
@@ -21,29 +21,18 @@ namespace mint
 
 		ImGui::StyleColorsDark();
 
-#if BX_PLATFORM_WINDOWS or BX_PLATFORM_XBOXONE
-		ImGui_ImplSDL3_InitForD3D(window);
-#endif
-
-		ImGui_Implbgfx_Init(255);
-
-
 		return true;
 	}
 
 
 	void CUI::terminate()
 	{
-		ImGui_Implbgfx_Shutdown();
-		ImGui_ImplSDL3_Shutdown();
 		ImGui::DestroyContext();
 	}
 
 
 	void CUI::begin()
 	{
-		ImGui_Implbgfx_NewFrame();
-		ImGui_ImplSDL3_NewFrame();
 		ImGui::NewFrame();
 	}
 
@@ -51,7 +40,6 @@ namespace mint
 	void CUI::end()
 	{
 		ImGui::Render();
-		ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
 	}
 
 
