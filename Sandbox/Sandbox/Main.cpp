@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
 
 		engine.end_frame();
 
-
 		
 		engine.ui_frame_begin();
 
@@ -38,6 +37,7 @@ int main(int argc, char* argv[])
 		engine.ui_frame_end();
 
 		engine.end_rendering();
+
 
 		engine.on_after_update(CTimestep::get_fps());
 	}

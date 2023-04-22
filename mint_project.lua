@@ -35,6 +35,7 @@
 			"Utility/Serialization",
 			"Utility/ServiceSystem",
 			"Utility/STL",
+			"Utility/Input",
 			"Utility",
 			"Components",
 			"SceneSystem/Common",
