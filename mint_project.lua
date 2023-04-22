@@ -51,6 +51,7 @@
 			"Physics/Common/box2d",
 			"Physics/Common",
 			"Physics",
+			"UI/Common/imgui/extras",
 			"UI/Common/imgui",
 			"UI/Common",
 			"UI",

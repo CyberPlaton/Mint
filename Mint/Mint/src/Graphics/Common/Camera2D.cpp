@@ -5,7 +5,7 @@ namespace mint::fx
 {
 
 
-	CCamera2D::CCamera2D(const CColor& clear_color)
+	CCamera2D::CCamera2D(const CColor& clear_color) : ICamera(clear_color)
 	{
 
 	}

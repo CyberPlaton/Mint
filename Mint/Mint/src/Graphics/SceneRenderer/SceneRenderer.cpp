@@ -23,8 +23,6 @@ namespace mint::fx
 
 		ClearBackground(m_renderingCamera->get_clear_color().as_cliteral());
 
-		BeginDrawing();
-
 		m_renderingCamera->use_camera();
 	}
 
@@ -32,8 +30,6 @@ namespace mint::fx
 	void CSceneRenderer::on_post_render()
 	{
 		m_renderingCamera->end_camera();
-
-		EndDrawing();
 	}
 
 

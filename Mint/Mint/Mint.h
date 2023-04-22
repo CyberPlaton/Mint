@@ -26,6 +26,8 @@ namespace mint
 		void exit() override final;
 
 
+		void begin_rendering() override final;
+
 		void begin_frame() override final;
 
 		void frame() override final;
@@ -36,6 +38,7 @@ namespace mint
 
 		void end_frame() override final;
 
+		void end_rendering() override final;
 
 
 		void on_before_update() override final;

@@ -48,6 +48,8 @@ namespace mint
 		virtual void exit() = 0;
 
 
+		virtual void begin_rendering() = 0;
+
 		virtual void begin_frame() = 0;
 
 		virtual void frame() = 0;
@@ -58,6 +60,7 @@ namespace mint
 
 		virtual void end_frame() = 0;
 
+		virtual void end_rendering() = 0;
 
 
 		virtual void on_before_update() = 0;

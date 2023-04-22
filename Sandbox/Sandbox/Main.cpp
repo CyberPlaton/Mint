@@ -21,6 +21,8 @@ int main(int argc, char* argv[])
 		engine.on_update(CTimestep::get_fps());
 
 
+		engine.begin_rendering();
+
 		engine.begin_frame();
 
 		engine.frame();
@@ -34,6 +36,8 @@ int main(int argc, char* argv[])
 		MINT_ACTIVE_SCENE()->on_after_frame(CTimestep::get_fps());
 
 		engine.ui_frame_end();
+
+		engine.end_rendering();
 
 		engine.on_after_update(CTimestep::get_fps());
 	}
@@ -53,9 +57,9 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 {
 	using namespace mint;
 
- 	ImGui::Begin("Debug");
- 	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
- 	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
+	ImGui::Begin("Debug");
+	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
+	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
  	ImGui::End();
 }
 

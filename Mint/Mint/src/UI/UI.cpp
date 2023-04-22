@@ -11,15 +11,7 @@ namespace mint
 
 	bool CUI::initialize()
 	{
-		IMGUI_CHECKVERSION();
-
-		ImGui::CreateContext();
-
-		ImGuiIO& io = ImGui::GetIO();
-
-		io.Fonts->AddFontDefault();
-
-		ImGui::StyleColorsDark();
+		rlImGuiSetup(true);
 
 		return true;
 	}
@@ -27,19 +19,19 @@ namespace mint
 
 	void CUI::terminate()
 	{
-		ImGui::DestroyContext();
+		rlImGuiShutdown();
 	}
 
 
 	void CUI::begin()
 	{
-		ImGui::NewFrame();
+		rlImGuiBegin();
 	}
 
 
 	void CUI::end()
 	{
-		ImGui::Render();
+		rlImGuiEnd();
 	}
 
 

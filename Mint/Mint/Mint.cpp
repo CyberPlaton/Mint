@@ -76,6 +76,12 @@ namespace mint
 	}
 
 
+	void CMintEngine::begin_rendering()
+	{
+		BeginDrawing();
+	}
+
+
 	void CMintEngine::on_update(f32 dt)
 	{
 		_on_update(dt);
@@ -109,6 +115,12 @@ namespace mint
 	void CMintEngine::end_frame()
 	{
 		_end_frame();
+	}
+
+
+	void CMintEngine::end_rendering()
+	{
+		EndDrawing();
 	}
 
 
