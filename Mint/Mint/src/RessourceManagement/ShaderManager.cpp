@@ -29,23 +29,29 @@ namespace mint
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			m_programs.reset();
+			m_shaders.reset();
 
 		);
 	}
 
 
-	bool CShaderManager::add_shader_program(const String& program_name, ShaderProgramHandle& handle)
+	bool CShaderManager::add_shader_program(const String& program_name, Shader& handle)
 	{
 		return false;
 	}
 
 
-	mint::ShaderProgramHandle CShaderManager::get_shader_program(const String& program_name)
+	Shader CShaderManager::get_shader_program(const String& program_name)
 	{
-		return 0;
+		return Shader{ 0 };
 	}
 
+
+
+	Shader CShaderManager::get_shader_program(ShaderHandle handle)
+	{
+		return Shader{ 0 };
+	}
 
 
 }

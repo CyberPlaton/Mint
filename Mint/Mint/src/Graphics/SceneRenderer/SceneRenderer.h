@@ -8,6 +8,7 @@
 #include "../../SceneSystem/Common/IScene.h"
 #include "../../Components/CUCA.h"
 #include "../../RessourceManagement/TextureManager.h"
+#include "../Shaders/MaterialManager.h"
 
 
 namespace mint::fx
@@ -37,7 +38,7 @@ namespace mint::fx
 	private:
 		static CSceneRenderer* s_CSceneRenderer;
 
-		ICamera* m_currentRenderCamera = nullptr;
+		ICamera* m_renderingCamera = nullptr;
 
 	private:
 

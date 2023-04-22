@@ -16,25 +16,23 @@ namespace mint::fx
 	{
 	public:
 		ICamera(const CColor& clear_color = {0, 0, 0, 0});
-		ICamera(f32 x, f32 y, f32 width, f32 height, f32 near_plane, f32 far_plane, const CColor& clear_color = {0, 0, 0, 0});
-		
-		virtual void update_view_matrix() {};
-
-		virtual void update_projection_matrix() {};
 
 		virtual CRect get_world_visible_area() { CRect rect; return rect; }
 
+		virtual void use_camera() { MINT_ASSERT(false, "Invalid operation using the camera interface!"); }
 
-		Mat4 get_view_matrix() { return m_view; }
-
-		Mat4 get_projection_matrix() { return m_projection; }
+		virtual void end_camera() { MINT_ASSERT(false, "Invalid operation using the camera interface!"); }
 
 
-		void set_translation(Vec3 value) { m_translation = value; update_view_matrix(); };
+		
+		void set_translation(Vec2 value) { m_translation = value; };
 
-		void set_rotation(Vec3 value) { m_rotation = value; update_view_matrix(); };
+		void set_translation_offset(Vec2 value)  { m_translationOffset = value; };
 
-		void set_scale(Vec3 value) { m_scale = value; update_view_matrix(); };
+		void set_rotation(f32 value) { m_rotation = value; };
+
+		void set_zoom(f32 value) { m_zoom = value; };
+
 
 
 		f32 get_viewport_x() { return m_viewportRect.get_x(); }
@@ -45,54 +43,26 @@ namespace mint::fx
 
 		f32 get_viewport_height() { return m_viewportRect.get_height(); }
 
-		f32 get_near_plane() { return m_nearFarPlanes.x; }
+		virtual u32 get_view_clear_color() { return m_clearColor.as_rgba(); }
 
-		f32 get_far_plane() { return m_nearFarPlanes.y; }
-
-		void* get_window_handle() { return m_windowHandle; }
-
-
-		virtual u64 get_render_state() { return m_renderState; }
-
-		void set_render_state(u64 state);
-
-		virtual u64 get_view_clear_state() { return m_viewClearState; }
-
-		void set_view_clear_state(u64 state);
-
-		virtual u32 get_view_clear_color() { return m_viewClearColor.as_rgba(); }
-
-		CColor get_clear_color() { return m_viewClearColor; }
+		CColor get_clear_color() { return m_clearColor; }
 
 		void set_view_clear_color(u8 r, u8 g, u8 b, u8 a);
 
 
 	public:
-		Vec3 m_translation;
+		Vec2 m_translation;
 
-		Vec3 m_rotation;
+		Vec2 m_translationOffset;
 
-		Vec3 m_scale;
+		f32 m_rotation;
 
-		Mat4 m_projection;
+		f32 m_zoom;
 
-		Mat4 m_view;
-
-
-
+		
 		CRect m_viewportRect;
 
-		Vec2 m_nearFarPlanes;
-
-
-		CColor m_viewClearColor;
-
-		void* m_windowHandle;
-
-		u64 m_renderState;
-
-		u64 m_viewClearState;
-
+		CColor m_clearColor;
 	};
 
 

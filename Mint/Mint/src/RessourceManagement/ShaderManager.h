@@ -22,9 +22,10 @@ namespace mint
 		void reset();
 
 
-		bool add_shader_program(const String& program_name, ShaderProgramHandle& handle);
+		bool add_shader_program(const String& program_name, Shader& shader);
 
-		ShaderProgramHandle get_shader_program(const String& program_name);
+		Shader get_shader_program(const String& program_name);
+		Shader get_shader_program(ShaderHandle handle);
 
 
 	private:
@@ -32,7 +33,7 @@ namespace mint
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		CMap< ShaderProgramHandle > m_programs;
+		CMap< Shader > m_shaders;
 
 	};
 }

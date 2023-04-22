@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include "raylib/raylib-cpp.hpp"
+#include "raylib/rlgl.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -77,12 +78,10 @@ namespace mint
 // Common defines
 namespace mint
 {
-	using ShaderProgramHandle = u64;
-
+	using ShaderHandle = u64;
 	using TextureHandle = u64;
-
+	using MaterialHandle = u64;
 	using ScriptHandle = u64;
-
 	using String = std::string;
 
 

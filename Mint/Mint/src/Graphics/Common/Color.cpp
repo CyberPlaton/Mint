@@ -103,4 +103,16 @@ namespace mint::fx
 	}
 
 
+	Color CColor::as_cliteral()
+	{
+		return { m_r, m_g, m_b, m_a };
+	}
+
+
+	Color CColor::as_cliteral() const
+	{
+		return { m_r, m_g, m_b, m_a };
+	}
+
+
 }

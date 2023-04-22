@@ -22,11 +22,15 @@ namespace mint
 
 		T get(u64 identifier);
 
+		const T& get_const(u64 identifier) const;
+
 		T get_by_index(u64 index);
 
 		bool lookup(u64 identifier) const;
 
 		Vector< T >& get_all();
+
+		const Vector< T >& get_all_const() const;
 
 		void remove(u64 identifier);
 
@@ -51,6 +55,23 @@ namespace mint
 		void _restore_integrity_on_remove();
 
 	};
+
+
+	template < typename T >
+	const mint::Vector< T >& mint::CMap<T>::get_all_const() const
+	{
+		return m_data;
+	}
+
+
+	template < typename T >
+	const T& mint::CMap<T>::get_const(u64 identifier) const
+	{
+		for (auto i = 0; i < m_indices.size(); i++)
+		{
+			if (identifier == m_indices[i].first) return m_data[m_indices[i].second];
+		}
+	}
 
 
 	template < typename T >

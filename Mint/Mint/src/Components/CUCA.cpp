@@ -27,14 +27,15 @@ namespace mint::component
 
 	mint::Vec2 CUCA::sprite_get_texture_dimension(entt::entity entity)
 	{
+		const auto& materials = CUCA::sprite_get_all_materials(entity);
+
+
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			auto w = MINT_SCENE_REGISTRY().get_component< SSprite >(entity).m_textureWidth;
-			auto h = MINT_SCENE_REGISTRY().get_component< SSprite >(entity).m_textureHeight;
-
+			auto v = materials[0].get_texture_dimension();
 		);
 
-		return { w, h };
+		return v;
 	}
 
 
@@ -522,6 +523,29 @@ namespace mint::component
 
 			rb.m_body->CreateFixture(&rb.m_fixtureDefinition);
 		}
+	}
+
+
+	const mint::Vector< mint::fx::CMaterial >& CUCA::sprite_get_all_materials(entt::entity entity)
+	{
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			const auto & v = fx::CMaterialManager::Get().get_materials_for_entity(entity);
+			
+		);
+
+		return v;
+	}
+
+
+	void CUCA::sprite_add_material(entt::entity entity, const fx::CMaterial& material)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			fx::CMaterialManager::Get().add_material_for_entity(entity, material);
+
+		);
 	}
 
 

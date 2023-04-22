@@ -27,6 +27,11 @@ namespace mint::fx
 		
 		mint::Vec4 as_vec4();
 
+		Color as_cliteral();
+
+		Color as_cliteral() const;
+
+
 		u8 m_r;
 		u8 m_g;
 		u8 m_b;

@@ -5,7 +5,7 @@
 #include "Components.h"
 
 #include "SceneSystem/Common/IScene.h"
-
+#include "Graphics/Shaders/MaterialManager.h"
 
 namespace mint
 {
@@ -55,7 +55,8 @@ namespace mint::component
 
 		static Vec2 sprite_get_texture_dimension(entt::entity entity);
 		static u32 sprite_get_depth(entt::entity entity);
-
+		static void sprite_add_material(entt::entity entity, const fx::CMaterial& material);
+		static const Vector< fx::CMaterial >& sprite_get_all_materials(entt::entity entity);
 
 	private:
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);

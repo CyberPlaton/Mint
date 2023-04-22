@@ -34,19 +34,37 @@ namespace mint
 
 	mint::Vec2 CTextureManager::get_texture_dimension(const String& texture_name)
 	{
-		return { 0.0f, 0.0f };
+		auto h = mint::algorithm::djb_hash(texture_name);
+
+		const auto& texture = m_textures.get_const(h);
+
+		return { texture.GetWidth(), texture.GetHeight() };
 	}
 
 
-	mint::Vec2 CTextureManager::get_texture_dimension(TextureHandle& handle)
+	mint::Vec2 CTextureManager::get_texture_dimension(TextureHandle handle)
 	{
-		return { 0.0f, 0.0f };
+		const auto& texture = m_textures.get_const(handle);
+
+		return { texture.GetWidth(), texture.GetHeight() };
 	}
 
 
 	mint::TextureHandle CTextureManager::get_texture_handle(const String& texture_name)
 	{
-		return 0;
+		return mint::algorithm::djb_hash(texture_name);
+	}
+
+
+	const mint::Vector< raylib::Texture >& CTextureManager::get_all_textures()
+	{
+		return m_textures.get_all_const();
+	}
+
+
+	const raylib::Texture& CTextureManager::get_texture(TextureHandle handle) const
+	{
+		return m_textures.get_const(handle);
 	}
 
 

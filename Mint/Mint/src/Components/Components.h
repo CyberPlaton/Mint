@@ -65,14 +65,6 @@ namespace mint::component
 
 		u32 m_depth = 0;
 
-		ShaderProgramHandle m_shaderHandle;
-
-		TextureHandle m_textureHandle;
-
-		u32 m_textureWidth = 0;
-
-		u32 m_textureHeight = 0;
-
 		CRect m_rect;
 
 		bool m_flipX = false;
