@@ -156,24 +156,27 @@ namespace mint
 		bool window_data_loaded = false;
 		bool scene_data_loaded = false;
 
-		auto window_node = document.find_first_match_in_document("Window");
-		auto physics_node = document.find_first_match_in_document("Physics");
-		auto package_manifest_node = document.find_first_match_in_document("PackageManifest");
-		auto initial_scene_node = document.find_first_match_in_document("InitialScene");
+		auto window_node = document.find_first_match_in_document("window");
+		auto physics_node = document.find_first_match_in_document("physics");
+		auto package_manifest_node = document.find_first_match_in_document("packageManifest");
+		auto initial_scene_node = document.find_first_match_in_document("initialScene");
 
 		if(window_node)
 		{
-			CSerializer::import_bool(&window_desc.m_fullscreen, "Fullscreen", window_node);
-			CSerializer::import_bool(&window_desc.m_resizable, "Resizable", window_node);
-			CSerializer::import_bool(&window_desc.m_decorated, "Decorated", window_node);
-			CSerializer::import_bool(&window_desc.m_visible, "Visible", window_node);
-			CSerializer::import_bool(&window_desc.m_minimized, "Minimized", window_node);
-			CSerializer::import_bool(&window_desc.m_focus, "Focus", window_node);
+			CSerializer::import_string(window_desc.m_title, "title", window_node);
+			CSerializer::import_string(window_desc.m_window_icon_path, "icon", window_node);
+			CSerializer::import_bool(&window_desc.m_fullscreen, "fullscreen", window_node);
+			CSerializer::import_bool(&window_desc.m_resizable, "resizable", window_node);
+			CSerializer::import_bool(&window_desc.m_decorated, "decorated", window_node);
+			CSerializer::import_bool(&window_desc.m_show, "show", window_node);
+			CSerializer::import_bool(&window_desc.m_minimized, "minimized", window_node);
+			CSerializer::import_bool(&window_desc.m_runMinimized, "runMinimized", window_node);
+			CSerializer::import_bool(&window_desc.m_focus, "focus", window_node);
 			CSerializer::import_bool(&window_desc.m_vsync, "VSYNC", window_node);
 
-			CSerializer::import_vec4(window_desc.m_clearColor, "ClearColor", window_node);
-			CSerializer::import_uint(&window_desc.m_width, "Width", window_node);
-			CSerializer::import_uint(&window_desc.m_height, "Height", window_node);
+			CSerializer::import_uint(&window_desc.m_width, "width", window_node);
+			CSerializer::import_uint(&window_desc.m_height, "height", window_node);
+			CSerializer::import_uint(&window_desc.m_targetFPS, "targetFPS", window_node);
 
 			window_data_loaded = true;
 		}
@@ -181,14 +184,14 @@ namespace mint
 		{
 			bool use = false;
 
-			CSerializer::import_bool(&use, "Use", physics_node);
+			CSerializer::import_bool(&use, "use", physics_node);
 			if(use)
 			{
-				CSerializer::import_bool(&physics_desc.m_debugRender, "DebugRender", physics_node);
-				CSerializer::import_float(&physics_desc.m_fixedTimestep, "FixedTimestep", physics_node);
-				CSerializer::import_uint(&physics_desc.m_positionIterations, "PositionIterations", physics_node);
-				CSerializer::import_uint(&physics_desc.m_velocityIterations, "VelocityIterations", physics_node);
-				CSerializer::import_vec2(physics_desc.m_gravity, "Gravity", physics_node);
+				CSerializer::import_bool(&physics_desc.m_debugRender, "debugRender", physics_node);
+				CSerializer::import_float(&physics_desc.m_fixedTimestep, "fixedTimestep", physics_node);
+				CSerializer::import_uint(&physics_desc.m_positionIterations, "positionIterations", physics_node);
+				CSerializer::import_uint(&physics_desc.m_velocityIterations, "velocityIterations", physics_node);
+				CSerializer::import_vec2(physics_desc.m_gravity, "gravity", physics_node);
 			
 				CPhysicsSystem::set_use_physics(true);
 			}
@@ -200,7 +203,7 @@ namespace mint
 		{
 			String scene_name;
 
-			CSerializer::import_string(scene_name, "Scene", initial_scene_node);
+			CSerializer::import_string(scene_name, "scene", initial_scene_node);
 
 			initial_scene = CSceneFactory::create_scene(scene_name);
 
@@ -246,12 +249,6 @@ namespace mint
 
 		if (!window.initialize(wdesc)) return false;
 		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
-
-
-		
-
-
-		fx::CColor color(wdesc.m_clearColor);
 
 
 		// Initialize medium level engine systems.

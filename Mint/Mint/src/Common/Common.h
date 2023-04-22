@@ -83,7 +83,8 @@ namespace mint
 	using MaterialHandle = u64;
 	using ScriptHandle = u64;
 	using String = std::string;
-
+	using Window = raylib::Window;
+	using Texture = raylib::Texture;
 
 	template< typename T >
 	using Vector = std::vector< T >;

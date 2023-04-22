@@ -53,10 +53,10 @@ void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
 {
 	using namespace mint;
 
-	ImGui::Begin("Debug");
-	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
-	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
-	ImGui::End();
+ 	ImGui::Begin("Debug");
+ 	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
+ 	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
+ 	ImGui::End();
 }
 
 
@@ -68,7 +68,13 @@ bool CMainScene::on_before_load()
 
 bool CMainScene::on_load()
 {
-	
+	auto camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 });
+	camera->set_translation({ 0.0f, 0.0f });
+	camera->set_rotation(0.0f);
+	camera->set_zoom(1.0f);
+
+	push_camera(camera);
+
 	m_ready = true;
 	return true;
 }

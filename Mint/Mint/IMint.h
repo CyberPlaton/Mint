@@ -15,6 +15,7 @@
 #include "Graphics/SceneRenderer/SceneRenderer.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
+#include "Graphics/Common/Camera2D.h"
 
 #include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"

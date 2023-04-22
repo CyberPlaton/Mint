@@ -15,7 +15,7 @@ namespace mint::fx
 	class ICamera
 	{
 	public:
-		ICamera(const CColor& clear_color = {0, 0, 0, 0});
+		ICamera(const CColor& clear_color = {255, 255, 255, 255 });
 
 		virtual CRect get_world_visible_area() { CRect rect; return rect; }
 
@@ -25,13 +25,13 @@ namespace mint::fx
 
 
 		
-		void set_translation(Vec2 value) { m_translation = value; };
+		virtual void set_translation(Vec2 value) { m_translation = value; };
 
-		void set_translation_offset(Vec2 value)  { m_translationOffset = value; };
+		virtual void set_translation_offset(Vec2 value)  { m_translationOffset = value; };
 
-		void set_rotation(f32 value) { m_rotation = value; };
+		virtual void set_rotation(f32 value) { m_rotation = value; };
 
-		void set_zoom(f32 value) { m_zoom = value; };
+		virtual void set_zoom(f32 value) { m_zoom = value; };
 
 
 
@@ -43,7 +43,7 @@ namespace mint::fx
 
 		f32 get_viewport_height() { return m_viewportRect.get_height(); }
 
-		virtual u32 get_view_clear_color() { return m_clearColor.as_rgba(); }
+		u32 get_view_clear_color() { return m_clearColor.as_rgba(); }
 
 		CColor get_clear_color() { return m_clearColor; }
 

@@ -20,7 +20,7 @@ workspace "Mint Engine"
 	end
 
 	flags{
-		--"MultiProcessorCompile",
+		"MultiProcessorCompile",
 	}
 
 	group "Mint"
