@@ -10,6 +10,8 @@ namespace maml
 {
 	struct SProperty
 	{
+		SProperty(const mint::String& name, std::any& data);
+		SProperty(const mint::String& name, std::any&& data);
 		SProperty(const mint::String& name, mint::CAny& data);
 		SProperty(const mint::String& name, mint::CAny&& data);
 		SProperty() = default;

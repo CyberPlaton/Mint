@@ -97,4 +97,10 @@ namespace mint
 	}
 
 
+	mint::Vec4 CRect::get_as_vec4()
+	{
+		return { m_position.x, m_position.y, m_dimension.x, m_dimension.y };
+	}
+
+
 }

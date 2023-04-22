@@ -3,6 +3,7 @@
 
 
 #include "Utility/MAML/MAML.h"
+#include "Common/Rectangle.h"
 
 
 namespace mint
@@ -31,7 +32,30 @@ namespace mint
 
 		static bool import_vec4(Vec4& value, const String& name, maml::SNode* node, Vec4 default_value = {0.0f, 0.0f, 0.0f, 0.0f});
 
+		static bool import_rect(CRect& value, const String& name, maml::SNode* node, CRect default_value = {0.0f, 0.0f, 0.0f, 0.0f});
+
 		static bool import_array(Vector< CAny >& value, const String& name, maml::SNode* node, Vector< CAny > default_value = Vector< CAny >{});
+
+
+		static bool export_bool(bool value, const String& name, maml::SNode* node);
+
+		static bool export_float(f32 value, const String& name, maml::SNode* node);
+
+		static bool export_uint(u64 value, const String& name, maml::SNode* node);
+
+		static bool export_sint(s64 value, const String& name, maml::SNode* node);
+
+		static bool export_string(const String& value, const String& name, maml::SNode* node);
+
+		static bool export_vec2(Vec2& value, const String& name, maml::SNode* node);
+
+		static bool export_vec3(Vec3& value, const String& name, maml::SNode* node);
+
+		static bool export_vec4(Vec4& value, const String& name, maml::SNode* node);
+
+		static bool export_rect(CRect& value, const String& name, maml::SNode* node);
+
+		static bool export_array(std::vector< CAny >& value, const String& name, maml::SNode* node);
 
 
 	};

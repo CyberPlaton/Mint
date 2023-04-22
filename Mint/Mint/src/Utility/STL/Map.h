@@ -15,10 +15,10 @@ namespace mint
 		CMap() = default;
 		~CMap();
 
+		void add(u64 identifier, T& data);
 
-		T add(u64 identifier, T& data);
+		void add(u64 identifier, T&& data);
 
-		T add(u64 identifier, T&& data);
 
 		T get(u64 identifier);
 
@@ -50,7 +50,7 @@ namespace mint
 
 
 	private:
-		T _override_data(u64 identifier, T& data);
+		void _override_data(u64 identifier, T& data);
 
 		void _restore_integrity_on_remove();
 
@@ -85,14 +85,13 @@ namespace mint
 
 
 	template < typename T >
-	T mint::CMap<T>::_override_data(u64 identifier, T& data)
+	void mint::CMap<T>::_override_data(u64 identifier, T& data)
 	{
 		for (auto i = 0; i < m_indices.size(); i++)
 		{
 			if (identifier == m_indices[i].first)
 			{
-				m_data[m_indices[i].second] = std::move(data);
-				return m_data[m_indices[i].second];
+				m_data[m_indices[i].second] = std::move(data); return;
 			}
 		}
 	}
@@ -183,20 +182,20 @@ namespace mint
 
 
 	template < typename T >
-	T mint::CMap<T>::add(u64 identifier, T&& data)
+	void mint::CMap<T>::add(u64 identifier, T&& data)
 	{
 		T& _data = data;
 
-		return add(identifier, _data);
+		add(identifier, _data);
 	}
 
 
 	template < typename T >
-	T mint::CMap<T>::add(u64 identifier, T& data)
+	void mint::CMap<T>::add(u64 identifier, T& data)
 	{
 		 if(lookup(identifier))
 		 {
-			 return _override_data(identifier, data);
+			 _override_data(identifier, data); return;
 		 }
 
 		 u64 index = m_data.size();
@@ -204,8 +203,6 @@ namespace mint
 		 m_indices.emplace_back(std::make_pair(identifier, index));
 
 		 m_data.push_back(std::move(data));
-
-		 return m_data[index];
 	}
 
 

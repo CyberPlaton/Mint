@@ -63,6 +63,7 @@ namespace maml
 		static void add_property_to_node(SNode* node, const mint::String& name, T&& data);
 
 
+
 		template< typename T >
 		static bool is_property_of_type(SNode* node, const mint::String& property_name);
 
@@ -136,7 +137,9 @@ namespace maml
 	{
 		auto h = mint::algorithm::djb_hash(name);
 
-		node->m_properties.add(h, data);
+		SProperty property(name, data);
+
+		node->m_properties.add(h, property);
 	}
 
 
@@ -145,7 +148,9 @@ namespace maml
 	{
 		auto h = mint::algorithm::djb_hash(name);
 
-		node->m_properties.add(h, data);
+		SProperty property(name, data);
+
+		node->m_properties.add(h, property);
 	}
 
 

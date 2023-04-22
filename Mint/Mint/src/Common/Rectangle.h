@@ -34,6 +34,9 @@ namespace mint
 		Vec2 get_bottom_right();
 
 
+		Vec4 get_as_vec4();
+
+
 	private:
 		Vec2 m_position;
 		Vec2 m_dimension;

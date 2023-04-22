@@ -5,12 +5,24 @@
 #include "Common/Common.h"
 #include "Common/Rectangle.h"
 #include "Graphics/Common/Color.h"
+#include "Utility/Serialization/Serializer.h"
+
 
 namespace mint::component
 {
-
-	struct SIdentifier
+	struct SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) {};
+
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) {};
+	};
+
+	struct SIdentifier : public SSerializable
+	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		u64 m_uuid = 0;
 
 		u64 m_enttId = 0;
@@ -21,22 +33,30 @@ namespace mint::component
 	};
 
 
-	struct SSceneHierarchy
+	struct SSceneHierarchy : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		entt::entity m_parent = entt::null;
 
 		Vector< entt::entity > m_children;
 	};
 
 
-	struct SDynamicGameobject
+	struct SDynamicGameobject : public SSerializable
 	{
 		u8 m_placeholder = 0;
 	};
 
 
-	struct SRigidBody
+	struct SRigidBody : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		b2Body* m_body = nullptr;
 
 		b2PolygonShape m_bodyShape;
@@ -45,8 +65,12 @@ namespace mint::component
 	};
 
 
-	struct STransform
+	struct STransform : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		Vec2 m_position = {0.0f, 0.0f};
 
 		f32 m_rotation = 0.0f;
@@ -57,13 +81,17 @@ namespace mint::component
 	};
 
 
-	struct SSprite
+	struct SSprite : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		bool m_visible = false;
 
 		bool m_internalVisible = false;
 
-		u32 m_depth = 0;
+		u64 m_depth = 0;
 
 		CRect m_rect;
 
@@ -77,16 +105,24 @@ namespace mint::component
 	};
 
 
-	struct SAnimatedSprite
+	struct SAnimatedSprite : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		f32 m_frameCounter;
 
-		u32 m_animationSpeed;
+		u64 m_animationSpeed;
 	};
 
 
-	struct SScript
+	struct SScript : public SSerializable
 	{
+		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+
+
 		ScriptHandle m_scriptHandle;
 	};
 
