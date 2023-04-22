@@ -72,7 +72,10 @@ bool CMainScene::on_before_load()
 
 bool CMainScene::on_load()
 {
-	auto camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 });
+	const auto& window = MINT_ENGINE()->get_main_window_const();
+
+	auto camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 }, 
+										   window.get_x(), window.get_y(), window.get_w(), window.get_h());
 	camera->set_translation({ 0.0f, 0.0f });
 	camera->set_rotation(0.0f);
 	camera->set_zoom(1.0f);

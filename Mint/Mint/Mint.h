@@ -48,7 +48,7 @@ namespace mint
 		void on_after_update(f32 dt) override final;
 
 
-		CWindow& get_main_window() override final;
+		const CWindow& get_main_window_const() const override final;
 
 
 	private:

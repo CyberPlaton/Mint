@@ -89,6 +89,30 @@ namespace mint
 	}
 
 
+	mint::f32 CWindow::get_x() const
+	{
+		return m_window.GetPosition().x;
+	}
+
+
+	mint::f32 CWindow::get_y() const
+	{
+		return m_window.GetPosition().y;
+	}
+
+
+	mint::f32 CWindow::get_w() const
+	{
+		return m_window.GetSize().x;
+	}
+
+
+	mint::f32 CWindow::get_h() const
+	{
+		return m_window.GetSize().y;
+	}
+
+
 	void CWindow::_setWindowState(ConfigFlags flag, bool value)
 	{
 		value == true ? SetWindowState(flag) : ClearWindowState(flag);

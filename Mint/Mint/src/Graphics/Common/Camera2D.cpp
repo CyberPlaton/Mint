@@ -4,10 +4,13 @@
 namespace mint::fx
 {
 
-
-	CCamera2D::CCamera2D(const CColor& clear_color) : ICamera(clear_color)
+	CCamera2D::CCamera2D(const CColor& clear_color, u32 x /*= 0*/, u32 y /*= 0*/, u32 w /*= 0*/, u32 h /*= 0*/, f32 z /*= 1.0f*/, f32 r /*= 0.0f*/) :
+		ICamera(clear_color, {(f32)x, (f32)y, (f32)w, (f32)h})
 	{
-
+		set_translation({ x, y });
+		set_translation_offset({ (f32)w / 2.0f, (f32)h / 2.0f });
+		set_rotation(r);
+		set_zoom(z);
 	}
 
 

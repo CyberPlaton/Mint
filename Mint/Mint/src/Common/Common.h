@@ -22,6 +22,7 @@
 #include <string>
 #include <fstream>
 
+
 #include "raylib/raylib-cpp.hpp"
 #include "raylib/rlgl.h"
 
@@ -99,9 +100,6 @@ namespace mint
 
 
 // Common macros
-#define MINTFX_MAX_RENDERING_PASSES 256
-#define MINTFX_DEFAULT_VIEW 0
-#define MINTFX_FRAMEBUFFER_VIEW 1
 #define MINT_SAS_RENDERING_LAYERS_MAX 100
 #define MINT_SAS_OUT_QUEUE_COUNT_MAX 3
 #define MINT_INVALID_HANDLE static_cast< mint::u64 >(-1)

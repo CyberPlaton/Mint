@@ -15,7 +15,7 @@ namespace mint::fx
 	class ICamera
 	{
 	public:
-		ICamera(const CColor& clear_color = {255, 255, 255, 255 });
+		ICamera(const CColor& clear_color = { 255, 255, 255, 255 }, const CRect & viewport = {0, 0, 1, 1});
 
 		virtual CRect get_world_visible_area() { CRect rect; return rect; }
 

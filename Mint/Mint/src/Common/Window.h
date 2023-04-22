@@ -73,6 +73,15 @@ namespace mint
 
 		void toggle_fullscreen();
 
+		f32 get_x() const;
+
+		f32 get_y() const;
+
+		f32 get_w() const;
+
+		f32 get_h() const;
+
+
 	private:
 		Window m_window;
 		Texture m_windowIcon;

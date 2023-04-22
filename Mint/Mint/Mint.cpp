@@ -136,11 +136,10 @@ namespace mint
 	}
 
 
-	mint::CWindow& CMintEngine::get_main_window()
+	const mint::CWindow& CMintEngine::get_main_window_const() const
 	{
 		return m_mainWindow;
 	}
-
 
 
 	bool CMintEngine::_prepare_for_init()
@@ -257,9 +256,7 @@ namespace mint
 
 	bool CMintEngine::_pre_init(CWindow::SDescription& wdesc, CPhysicsSystem::SDescription& pdesc)
 	{
-		auto& window = get_main_window();
-
-		if (!window.initialize(wdesc)) return false;
+		if (!m_mainWindow.initialize(wdesc)) return false;
 		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
 
 

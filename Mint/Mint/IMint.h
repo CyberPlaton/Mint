@@ -23,6 +23,7 @@
 
 namespace mint
 {
+
 	class IMintEngine
 	{
 	public:
@@ -69,18 +70,19 @@ namespace mint
 
 		virtual void on_after_update(f32) = 0;
 
+		virtual const CWindow& get_main_window_const() const = 0;
 
-		virtual CWindow& get_main_window() = 0;
 
 	protected:
 		static IMintEngine* s_engine;
 
 	};
+
 }
 
 
 #define MINT_ENGINE() \
-IMintEngine::get_engine()
+mint::IMintEngine::get_engine()
 
 
 #define MINT_DEFINE_ENGINE_CTOR(class_name) \

@@ -5,12 +5,13 @@ namespace mint::fx
 {
 
 
-	ICamera::ICamera(const CColor& clear_color) :
+	ICamera::ICamera(const CColor& clear_color, const CRect& viewport) :
 		m_clearColor(clear_color),
 		m_translation({0.0f, 0.0f}),
 		m_translationOffset({ 0.0f, 0.0f }),
 		m_zoom(0.0f),
-		m_rotation(0.0f)
+		m_rotation(0.0f),
+		m_viewportRect(viewport)
 	{
 	}
 
