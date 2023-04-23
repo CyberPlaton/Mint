@@ -91,24 +91,6 @@ namespace mint
 		void _terminate();
 
 		void _post_terminate();
-
-
-
-		void _on_pre_update();
-
-		void _on_update(f32 dt);
-
-		void _on_post_update();
-
-		void _on_late_update();
-
-
-
-		void _begin_frame();
-
-		void _frame();
-
-		void _end_frame();
 	};
 
 

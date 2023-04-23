@@ -70,19 +70,28 @@ namespace mint
 
 	void CMintEngine::on_update(f32 dt)
 	{
-		_on_update(dt);
+		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().update(dt);
+
+		MINT_ACTIVE_SCENE()->on_update(dt);
+
+		CSceneManager::Get().update();
+
+		CPluginSystem::Get().on_update(dt);
 	}
 
 
 	void CMintEngine::begin_frame()
 	{
-		_begin_frame();
+		auto scene = MINT_ACTIVE_SCENE();
+		auto camera = scene->get_active_camera();
+
+		fx::CSceneRenderer::Get().on_pre_render(camera);
 	}
 
 
 	void CMintEngine::frame()
 	{
-		_frame();
+		fx::CSceneRenderer::Get().on_render(MINT_ACTIVE_SCENE());
 	}
 
 
@@ -104,7 +113,7 @@ namespace mint
 
 	void CMintEngine::end_frame()
 	{
-		_end_frame();
+		fx::CSceneRenderer::Get().on_post_render();
 	}
 
 
@@ -116,13 +125,15 @@ namespace mint
 
 	void CMintEngine::on_before_update()
 	{
-		_on_pre_update();
+		CEventSystem::Get().update();
+
+		CPluginSystem::Get().on_before_update();
 	}
 
 
 	void CMintEngine::on_after_update(f32 dt)
 	{
-		_on_post_update();
+		CPluginSystem::Get().on_after_update(dt);
 	}
 
 
@@ -379,58 +390,6 @@ namespace mint
 		CLogging::Get().terminate();
 	}
 
-
-	void CMintEngine::_on_pre_update()
-	{
-		CEventSystem::Get().update();
-	}
-
-
-	void CMintEngine::_on_update(f32 dt)
-	{
-		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().update(dt);
-
-
-		MINT_ACTIVE_SCENE()->on_update(dt);
-
-		CSceneManager::Get().update();
-
-
-
-	}
-
-
-	void CMintEngine::_on_post_update()
-	{
-
-	}
-
-
-	void CMintEngine::_on_late_update()
-	{
-
-	}
-
-
-	void CMintEngine::_begin_frame()
-	{
-		auto scene = MINT_ACTIVE_SCENE();
-		auto camera = scene->get_active_camera();
-
-		fx::CSceneRenderer::Get().on_pre_render(camera);
-	}
-
-
-	void CMintEngine::_frame()
-	{
-		fx::CSceneRenderer::Get().on_render(MINT_ACTIVE_SCENE());
-	}
-
-
-	void CMintEngine::_end_frame()
-	{
-		fx::CSceneRenderer::Get().on_post_render();
-	}
 
 
 }

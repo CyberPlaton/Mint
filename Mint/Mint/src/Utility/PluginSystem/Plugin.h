@@ -35,11 +35,9 @@ namespace mint
 
 		virtual void on_before_update() = 0;
 
-		virtual void on_update() = 0;
+		virtual void on_update(f32) = 0;
 
-		virtual void on_after_update() = 0;
-
-		virtual void on_late_update() = 0;
+		virtual void on_after_update(f32) = 0;
 	};
 
 
@@ -56,11 +54,9 @@ namespace mint
 
 		virtual void on_before_update() override {}
 
-		virtual void on_update() override {}
+		virtual void on_update(f32 dt) override {}
 
-		virtual void on_after_update() override {}
-
-		virtual void on_late_update() override {}
+		virtual void on_after_update(f32 dt) override {}
 	};
 
 

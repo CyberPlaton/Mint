@@ -138,25 +138,28 @@ namespace mint
 
 	void CPluginSystem::on_before_update()
 	{
-
+		for (auto& plugin : m_activePlugins)
+		{
+			plugin->on_before_update();
+		}
 	}
 
 
-	void CPluginSystem::on_update()
+	void CPluginSystem::on_update(f32 dt)
 	{
-
+		for (auto& plugin : m_activePlugins)
+		{
+			plugin->on_update(dt);
+		}
 	}
 
 
-	void CPluginSystem::on_after_update()
+	void CPluginSystem::on_after_update(f32 dt)
 	{
-
-	}
-
-
-	void CPluginSystem::on_late_update()
-	{
-
+		for (auto& plugin : m_activePlugins)
+		{
+			plugin->on_after_update(dt);
+		}
 	}
 
 

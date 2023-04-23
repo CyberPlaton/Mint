@@ -42,12 +42,9 @@ namespace mint
 
 		void on_before_update();
 
-		void on_update();
+		void on_update(f32 dt);
 
-		void on_after_update();
-
-		void on_late_update();
-
+		void on_after_update(f32 dt);
 
 	private:
 		Vector< IPlugin* > m_registeredPlugins;

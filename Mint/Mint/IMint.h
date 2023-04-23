@@ -52,9 +52,15 @@ namespace mint
 
 		virtual void begin_rendering() = 0;
 
+		virtual void end_rendering() = 0;
+
+
 		virtual void begin_frame() = 0;
 
 		virtual void frame() = 0;
+
+		virtual void end_frame() = 0;
+
 
 		virtual void ui_frame_begin() = 0;
 
@@ -62,16 +68,13 @@ namespace mint
 
 		virtual void ui_frame_end() = 0;
 
-		virtual void end_frame() = 0;
-
-		virtual void end_rendering() = 0;
-
 
 		virtual void on_before_update() = 0;
 
 		virtual void on_update(f32) = 0;
 
 		virtual void on_after_update(f32) = 0;
+
 
 		virtual const CWindow& get_main_window_const() const = 0;
 
