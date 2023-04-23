@@ -45,13 +45,11 @@ namespace mint
 	}
 
 
-	class IMintEngine;
 
 	class CSAS
 	{
-		friend class IMintEngine;
 	public:
-		STATIC_GET(CSAS, g_CSAS);
+		STATIC_GET(CSAS, s_CSAS);
 
 		bool initialize();
 
@@ -59,6 +57,7 @@ namespace mint
 
 		void reset();
 
+		void run_sas_thread();
 
 		bool is_running();
 
@@ -74,6 +73,8 @@ namespace mint
 
 
 	private:
+		static CSAS* s_CSAS;
+
 		bool m_internalLoop;
 
 		bool m_running;

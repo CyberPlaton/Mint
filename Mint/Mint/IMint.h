@@ -2,25 +2,9 @@
 #define _MINT_IMINT_H_
 
 
-#include "Utility/ServiceSystem/ServiceLocator.h"
-#include "Utility/Logging/Logging.h"
-#include "Common/Timestep.h"
-#include "SceneSystem/SceneManager.h"
-#include "Common/Window.h"
-#include "Utility/EventSystem/EventSystem.h"
-#include "Physics/PhysicsSystem.h"
+#include "Components/CUCA.h"
 #include "SceneSystem/SAS.h"
-#include "Utility/PluginSystem/PluginSystem.h"
-#include "Graphics/Common/Color.h"
-#include "Graphics/SceneRenderer/SceneRenderer.h"
-#include "UI/UI.h"
-#include "Common/Random.h"
-#include "Graphics/Common/Camera2D.h"
-#include "Utility/Input/Input.h"
-#include "Scripting/Common/ScriptLuaBindingServiceImpl.h"
-
-#include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
-#include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
+#include "Common/Window.h"
 
 
 namespace mint
@@ -34,10 +18,6 @@ namespace mint
 		static void initialize_cuca_critical_sections();
 
 		static void delete_cuca_critical_sections();
-
-		static void run_spatial_acceleration_structure();
-
-		static void run_scripting_system();
 
 
 		virtual bool initialize(const String&) = 0;

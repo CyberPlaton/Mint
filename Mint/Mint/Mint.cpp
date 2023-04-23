@@ -263,11 +263,16 @@ namespace mint
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
 
-		// Scripting System (entity bound and unbound).
+		// Scripting and Behavior engine.
+		result &= mint::scripting::CBehaviorEngine::Get().initialize();
 
-		// Plugin System (initialize plugins).
-		CPluginSystem::Get().on_initialization();
+		if(result)
+		{
+			// Plugin System (initialize plugins).
+			CPluginSystem::Get().on_initialization();
 
+			mint::scripting::CBehaviorEngine::Get().run_behavior_engine_thread();
+		}
 
 		return result;
 	}
@@ -303,6 +308,8 @@ namespace mint
 		if(result)
 		{
 			IService::register_service(new mint::scripting::CScriptLuaBindingService(), "LuaRegistration");
+
+
 		}
 
 		return result;
@@ -327,7 +334,7 @@ namespace mint
 		result &= CSAS::Get().initialize();
 		if(result)
 		{
-			IMintEngine::get_engine()->run_spatial_acceleration_structure();
+			CSAS::Get().run_sas_thread();
 		}
 
 

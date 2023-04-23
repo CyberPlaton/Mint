@@ -3,6 +3,7 @@
 
 namespace mint
 {
+	mint::CSAS* CSAS::s_CSAS = nullptr;
 
 
 	bool CSAS::initialize()
@@ -36,6 +37,12 @@ namespace mint
 		{
 			queue.clear();
 		}
+	}
+
+
+	void CSAS::run_sas_thread()
+	{
+		_run();
 	}
 
 
