@@ -79,6 +79,13 @@ namespace mint
 	private:
 		static IScene* s_activeScene;
 
+
+	protected:
+		virtual bool import_entity(maml::SNode*) = 0;
+
+		virtual bool export_entity(entt::entity, maml::SNode*) = 0;
+
+
 	};
 }
 

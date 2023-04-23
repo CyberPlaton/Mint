@@ -70,13 +70,59 @@ namespace mint
 
 	bool CScene::import_scene(const String& maml_scene_filepath)
 	{
-		return false;
+		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
+
+		auto root = CSerializer::load_maml_document(maml_scene_filepath, document);
+
+		MINT_ASSERT(root != nullptr, "Failed loading scene persistence file!");
+
+		if (root == nullptr) return false;
+
+		// Import scene data.
+
+		// Import scene entities.
+		auto entities_node = document.find_first_match_in_document("entities");
+		bool result;
+		for(auto& node : maml::CDocument::get_node_children(entities_node))
+		{
+			result = import_entity(node);
+
+			MINT_ASSERT(result == false, "Failed importing entity!");
+		}
+
+		return true;
 	}
 
 
 	bool CScene::export_scene(const String& maml_scene_filepath)
 	{
-		return false;
+		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
+
+		auto root = document.get_root();
+
+		MINT_ASSERT(root != nullptr, "Failed creating MAML scene document!");
+
+		// Export scene data.
+
+		// Export entities.
+		auto entities_node = document.create_node("entities", root);
+		bool result;
+		for(const auto& entity : m_entities)
+		{
+			auto entity_node = document.create_node("entity", entities_node);
+
+			result = export_entity(entity, entity_node);
+
+			MINT_ASSERT(result == false, "Failed exporting entity!");
+		}
+
+		if(!document.save_document(maml_scene_filepath))
+		{
+			MINT_LOG_ERROR("[{:.4f}][CScene::export_scene] Failed exporting scene: \"{}\"", MINT_APP_TIME, maml_scene_filepath);
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -119,6 +165,20 @@ namespace mint
 	mint::CPath CScene::get_scene_full_path()
 	{
 		return m_full;
+	}
+
+
+	bool CScene::import_entity(maml::SNode* maml_node)
+	{
+
+	}
+
+
+	bool CScene::export_entity(entt::entity entity, maml::SNode* maml_node)
+	{
+		auto& view = m_registry.get_registry_view< mint::component::SSerializable >();
+
+		entt::id_type
 	}
 
 
