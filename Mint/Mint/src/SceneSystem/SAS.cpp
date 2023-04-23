@@ -13,6 +13,8 @@ namespace mint
 		m_running = false;
 		m_update = false;
 
+		m_layeredEntities.resize(MINT_SAS_RENDERING_LAYERS_MAX);
+
 		return true;
 	}
 
@@ -21,19 +23,36 @@ namespace mint
 	{
 		_set_is_running(false);
 
-		wait_for_termination();
+		_wait_for_termination();
 	}
 
 
 	void CSAS::reset()
 	{
+		m_dqtree.m_qtree.clear();
+		m_sqtree.m_qtree.clear();
 
+		for(auto& queue: m_outQueue)
+		{
+			queue.clear();
+		}
 	}
 
 
-	void CSAS::wait_for_termination()
+	void CSAS::_wait_for_termination()
 	{
+		while (true)
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
+				const bool running = m_internalLoop;
+
+			);
+
+			if (!running) return;
+
+			std::this_thread::sleep_for(std::chrono::duration< s32 >::zero());
+		}
 	}
 
 

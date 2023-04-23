@@ -58,6 +58,8 @@ namespace mint
 
 		virtual void ui_frame_begin() = 0;
 
+		virtual void ui_frame_render() = 0;
+
 		virtual void ui_frame_end() = 0;
 
 		virtual void end_frame() = 0;
@@ -73,6 +75,11 @@ namespace mint
 
 		virtual const CWindow& get_main_window_const() const = 0;
 
+		virtual f32 get_engine_fps() = 0;
+
+		virtual f32 get_engine_frametime() = 0;
+
+		virtual void set_engine_fps(f32) = 0;
 
 	protected:
 		static IMintEngine* s_engine;

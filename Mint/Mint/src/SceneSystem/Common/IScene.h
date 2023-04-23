@@ -23,7 +23,7 @@ namespace mint
 
 		virtual void on_update(f32) = 0;
 
-		virtual void on_after_frame(f32) = 0;
+		virtual void on_ui_render(f32) = 0;
 
 		virtual bool on_before_load() = 0;
 

@@ -20,7 +20,7 @@ namespace mint
 
 		virtual void on_update(f32 dt = 0.0f) override {}
 
-		virtual void on_after_frame(f32 dt = 0.0f) override {};
+		virtual void on_ui_render(f32 dt = 0.0f) override {};
 
 		virtual bool on_before_load() override { return false; };
 

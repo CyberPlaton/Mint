@@ -13,15 +13,22 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	// Check registered services after Init.
+	IService::print_registered_services();
+
+	engine.set_engine_fps(30.0f);
+	
 	// Simulate a "Run".
 	while(engine.is_running())
 	{
 		engine.on_before_update();
 
-		engine.on_update(CTimestep::get_fps());
+		engine.on_update(engine.get_engine_frametime());
 
 
 		engine.begin_rendering();
+
+
 
 		engine.begin_frame();
 
@@ -29,18 +36,25 @@ int main(int argc, char* argv[])
 
 		engine.end_frame();
 
-		
+
+
 		engine.ui_frame_begin();
 
-		MINT_ACTIVE_SCENE()->on_after_frame(CTimestep::get_fps());
+		engine.ui_frame_render();
 
 		engine.ui_frame_end();
+
+
 
 		engine.end_rendering();
 
 
-		engine.on_after_update(CTimestep::get_fps());
+
+		engine.on_after_update(engine.get_engine_frametime());
 	}
+
+	// Check registered services before Shutdown.
+	IService::print_registered_services();
 
 
 	engine.terminate();
@@ -53,14 +67,21 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 }
 
 
-void CMainScene::on_after_frame(mint::f32 dt /*= 0.0f*/)
+void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 {
 	using namespace mint;
 
 	ImGui::Begin("Debug");
-	ImGui::Text("FPS: %.5f ms", CTimestep::get_fps());
-	ImGui::Text("Frametime: %.5f ms", CTimestep::get_frametime());
- 	ImGui::End();
+	ImGui::Text("Engine FPS: %.5f ms", MINT_ENGINE()->get_engine_fps());
+	ImGui::Text("Engine Frametime: %.5f ms", MINT_ENGINE()->get_engine_frametime());
+	ImGui::Text("Real FPS: %.5f ms", CTimestep::get_real_fps());
+	ImGui::Text("Real Frametime: %.5f ms", CTimestep::get_real_frametime());
+ 	if(ImGui::Button("Quit"))
+	{
+		MINT_ENGINE()->exit();
+	}
+	ImGui::End();
+
 }
 
 

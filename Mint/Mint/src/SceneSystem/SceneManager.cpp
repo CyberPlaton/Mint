@@ -137,6 +137,7 @@ namespace mint
 	{
 		delete m_current;
 		m_current = nullptr;
+		IScene::s_activeScene = nullptr;
 
 		m_transition = false;
 		m_destination = "";

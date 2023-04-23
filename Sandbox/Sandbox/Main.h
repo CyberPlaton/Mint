@@ -8,7 +8,7 @@ public:
 
 	void on_update(mint::f32 dt = 0.0f) override final;
 
-	void on_after_frame(mint::f32 dt = 0.0f) override final;
+	void on_ui_render(mint::f32 dt = 0.0f) override final;
 
 	bool on_before_load() override final;
 

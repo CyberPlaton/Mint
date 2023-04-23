@@ -12,36 +12,16 @@ namespace mint
 		CPhysicsSystem::SDescription pdesc;
 		maml::CDocument document;
 
-		if(!CSerializer::load_maml_document(manifest_filepath, document))
-		{
-			return false;
-		}
+		if(!CSerializer::load_maml_document(manifest_filepath, document)) return false;
 
+		if(!_load_app_manifiest(document, wdesc, pdesc, initial_scene)) return false;
 
-		if(!_load_app_manifiest(document, wdesc, pdesc, initial_scene))
-		{
-			return false;
-		}
+		if(!_pre_init(wdesc, pdesc)) return false;
 
+		if(!_init()) return false;
 
-		if(!_pre_init(wdesc, pdesc))
-		{
-			return false;
-		}
+		if(!_post_init(initial_scene)) return false;
 
-
-		if(!_init())
-		{
-			return false;
-		}
-
-
-		if(!_post_init(initial_scene))
-		{
-			return false;
-		}
-
-		CPluginSystem::Get().finalize_initialize();
 
 		CSceneManager::Get().set_initial_scene(initial_scene);
 
@@ -54,7 +34,13 @@ namespace mint
 
 	void CMintEngine::terminate()
 	{
-		
+		_pre_terminate();
+
+		_terminate();
+
+		_post_terminate();
+
+		_cleanup_after_terminate();
 	}
 
 
@@ -105,6 +91,10 @@ namespace mint
 		CUI::Get().begin();
 	}
 
+	void CMintEngine::ui_frame_render()
+	{
+		MINT_ACTIVE_SCENE()->on_ui_render(get_engine_frametime());
+	}
 
 	void CMintEngine::ui_frame_end()
 	{
@@ -139,6 +129,24 @@ namespace mint
 	const mint::CWindow& CMintEngine::get_main_window_const() const
 	{
 		return m_mainWindow;
+	}
+
+
+	mint::f32 CMintEngine::get_engine_fps()
+	{
+		return m_mainTimestep.get_fps();
+	}
+
+
+	mint::f32 CMintEngine::get_engine_frametime()
+	{
+		return m_mainTimestep.get_frametime();
+	}
+
+
+	void CMintEngine::set_engine_fps(f32 fps)
+	{
+		m_mainTimestep.set_fps(fps);
 	}
 
 
@@ -307,31 +315,68 @@ namespace mint
 		}
 
 
+		CPluginSystem::Get().finalize_initialize();
+
+
 		return result;
 	}
 
 
 	void CMintEngine::_cleanup_after_terminate()
 	{
-
+		IMintEngine::delete_cuca_critical_sections();
 	}
 
 
 	void CMintEngine::_pre_terminate()
 	{
+		// Prepare plugin shutdown and terminate high level engine sub systems.
+		CPluginSystem::Get().on_pre_termination();
+		
+		// Spatial acceleration structure.
+		CSAS::Get().terminate();
 
+		// Scene rendering.
+		fx::CSceneRenderer::Get().terminate();
+
+		// Animation system.
 	}
 
 
 	void CMintEngine::_terminate()
 	{
+		// Terminate plugins and medium level engine sub systems.
+		CPluginSystem::Get().on_termination();
 
+		// Scripting engine.
+
+		// Texture Manager.
+		CTextureManager::Get().terminate();
+
+		// Shader Manager.
+		CShaderManager::Get().terminate();
+
+		// UI.
 	}
 
 
 	void CMintEngine::_post_terminate()
 	{
-		IMintEngine::delete_cuca_critical_sections();
+		// Terminate plugins and lowest level engine sub systems.
+		CPluginSystem::Get().on_post_termination();
+
+		// Scene Manager.
+		CSceneManager::Get().terminate();
+
+		// Plugin Manager.
+
+		CPluginSystem::Get().terminate();
+
+		// Event Manager.
+		CEventSystem::Get().terminate();
+
+		// Logging.
+		CLogging::Get().terminate();
 	}
 
 
@@ -341,9 +386,17 @@ namespace mint
 	}
 
 
-	void CMintEngine::_on_update(f32 dt /*= CTimestep::get_fps()*/)
+	void CMintEngine::_on_update(f32 dt)
 	{
-		
+		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().update(dt);
+
+
+		MINT_ACTIVE_SCENE()->on_update(dt);
+
+		CSceneManager::Get().update();
+
+
+
 	}
 
 

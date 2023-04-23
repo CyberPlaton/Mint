@@ -72,7 +72,7 @@ namespace mint
 	}
 
 
-	void CPhysicsSystem::update(f32 dt /*= CTimestep::get_fps()*/)
+	void CPhysicsSystem::update(f32 dt /*= 0.0f*/)
 	{
 		m_world->Step(dt, m_config.m_velocityIterations, m_config.m_positionIterations);
 

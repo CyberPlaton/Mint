@@ -34,6 +34,8 @@ namespace mint
 
 		void ui_frame_begin() override final;
 
+		void ui_frame_render() override final;
+
 		void ui_frame_end() override final;
 
 		void end_frame() override final;
@@ -50,11 +52,21 @@ namespace mint
 
 		const CWindow& get_main_window_const() const override final;
 
+		f32 get_engine_fps() override final;
+
+		f32 get_engine_frametime() override final;
+
+		void set_engine_fps(f32 fps) override final;
+
+
 
 	private:
 		bool m_running;
 
 		CWindow m_mainWindow;
+
+		CTimestep m_mainTimestep;
+
 
 
 	private:
@@ -84,7 +96,7 @@ namespace mint
 
 		void _on_pre_update();
 
-		void _on_update(f32 dt = CTimestep::get_fps());
+		void _on_update(f32 dt);
 
 		void _on_post_update();
 

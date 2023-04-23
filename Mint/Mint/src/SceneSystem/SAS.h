@@ -5,11 +5,7 @@
 #include "THST/QuadTree.h"
 #include "Utility/STL/Map.h"
 #include "Common/Rectangle.h"
-
-#include "Utility/ServiceSystem/Service.h"
-
 #include "Components/CUCA.h"
-
 #include "Common/IScene.h"
 
 
@@ -51,23 +47,18 @@ namespace mint
 
 	class IMintEngine;
 
-	class CSAS : public IService
+	class CSAS
 	{
 		friend class IMintEngine;
 	public:
 		STATIC_GET(CSAS, g_CSAS);
 
-		bool initialize() override final;
+		bool initialize();
 
-		void terminate() override final;
+		void terminate();
 
-		void reset() override final;
+		void reset();
 
-		String get_service_type() override final { return "SAS"; }
-
-
-
-		void wait_for_termination();
 
 		bool is_running();
 
@@ -96,8 +87,9 @@ namespace mint
 
 		detail::SQuadTreeContainer m_sqtree;
 
+		using EntityMatrix = Vector< Vector< entt::entity > >;
 
-		Vector< Vector< entt::entity > > m_layeredEntities;
+		EntityMatrix m_layeredEntities;
 
 		std::array< Vector< entt::entity >, MINT_SAS_OUT_QUEUE_COUNT_MAX > m_outQueue;
 
@@ -114,6 +106,9 @@ namespace mint
 		void _set_is_running(bool value);
 
 		bool _should_update();
+
+		void _wait_for_termination();
+
 	};
 
 

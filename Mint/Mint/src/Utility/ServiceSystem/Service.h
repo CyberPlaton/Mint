@@ -4,6 +4,8 @@
 
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
+#include "Utility/Logging/Logging.h"
+
 
 #include "../STL/Map.h"
 
@@ -24,6 +26,9 @@ namespace mint
 
 		static void terminate_services();
 
+#ifndef MINT_DISTR
+		static  void print_registered_services();
+#endif
 
 
 		virtual bool initialize() = 0;

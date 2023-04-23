@@ -66,6 +66,17 @@ namespace mint
 	}
 
 
+	void IService::print_registered_services()
+	{
+		const auto& services = g_Services.get_all();
+
+		for(const auto service : services)
+		{
+			MINT_LOG_INFO("[{:.4f}][IService::print_registered_services] Service Type: \"{}\"", MINT_APP_TIME, service->get_service_type());
+		}
+	}
+
+
 	bool IService::_initialize()
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);

@@ -49,7 +49,7 @@ namespace mint
 
 		void reset();
 		
-		void update(f32 dt = CTimestep::get_fps());
+		void update(f32 dt = 0.0f);
 
 
 
