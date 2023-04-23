@@ -1,6 +1,13 @@
 #include "Main.h"
 
-int main(int argc, char* argv[])
+
+#ifdef MINT_PLATFORM_WINDOWS
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
+void algorithm()
 {
 	using namespace mint;
 
@@ -8,18 +15,18 @@ int main(int argc, char* argv[])
 
 	CMintEngine engine;
 
-	if(!engine.initialize("Manifest.manifest"))
+	if (!engine.initialize("Manifest.manifest"))
 	{
-		return -1;
+		return;
 	}
 
 	// Check registered services after Init.
 	IService::print_registered_services();
 
 	engine.set_engine_fps(30.0f);
-	
+
 	// Simulate a "Run".
-	while(engine.is_running())
+	while (engine.is_running())
 	{
 		engine.on_before_update();
 
@@ -58,6 +65,18 @@ int main(int argc, char* argv[])
 
 
 	engine.terminate();
+}
+
+
+int main(int argc, char* argv[])
+{
+	algorithm();
+
+#ifdef MINT_PLATFORM_WINDOWS
+	return _CrtDumpMemoryLeaks();
+#else
+	return 0;
+#endif
 }
 
 
