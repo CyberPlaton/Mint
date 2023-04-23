@@ -265,6 +265,7 @@ namespace mint
 
 		// Scripting and Behavior engine.
 		result &= mint::scripting::CBehaviorEngine::Get().initialize();
+		result &= mint::scripting::CScriptEngine::Get().initialize();
 
 		if(result)
 		{
@@ -272,6 +273,7 @@ namespace mint
 			CPluginSystem::Get().on_initialization();
 
 			mint::scripting::CBehaviorEngine::Get().run_behavior_engine_thread();
+			mint::scripting::CScriptEngine::Get().run_script_engine_thread();
 		}
 
 		return result;
@@ -372,6 +374,8 @@ namespace mint
 		CPluginSystem::Get().on_termination();
 
 		// Scripting engine.
+		mint::scripting::CBehaviorEngine::Get().terminate();
+		mint::scripting::CScriptEngine::Get().terminate();
 
 		// Texture Manager.
 		CTextureManager::Get().terminate();
@@ -392,7 +396,6 @@ namespace mint
 		CSceneManager::Get().terminate();
 
 		// Plugin Manager.
-
 		CPluginSystem::Get().terminate();
 
 		// Event Manager.
