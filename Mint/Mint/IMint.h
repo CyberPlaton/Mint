@@ -17,6 +17,7 @@
 #include "Common/Random.h"
 #include "Graphics/Common/Camera2D.h"
 #include "Utility/Input/Input.h"
+#include "Scripting/Common/ScriptLuaBindingServiceImpl.h"
 
 #include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"

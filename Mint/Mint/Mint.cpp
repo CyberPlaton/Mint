@@ -300,6 +300,11 @@ namespace mint
 		// Service Locator.
 		result &= CServiceLocator::Get().initialize();
 
+		if(result)
+		{
+			IService::register_service(new mint::scripting::CScriptLuaBindingService(), "LuaRegistration");
+		}
+
 		return result;
 	}
 

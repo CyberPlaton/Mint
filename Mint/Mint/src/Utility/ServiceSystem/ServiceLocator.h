@@ -21,7 +21,6 @@ namespace mint
 		T* locate_service(const String& service_type);
 
 
-
 	private:
 		static CServiceLocator* s_CServiceLocator;
 

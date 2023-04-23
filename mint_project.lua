@@ -33,6 +33,7 @@
 			"Utility/PluginSystem",
 			"Utility/Profiling",
 			"Utility/Serialization",
+			"Utility/ServiceSystem/Services",
 			"Utility/ServiceSystem",
 			"Utility/STL",
 			"Utility/Input",
@@ -56,6 +57,10 @@
 			"UI/Common/imgui",
 			"UI/Common",
 			"UI",
+			"Scripting/Behavior",
+			"Scripting/Script",
+			"Scripting/Common",
+			"Scripting",
 		}
 
 
