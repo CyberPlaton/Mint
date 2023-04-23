@@ -32,11 +32,29 @@ namespace mint
 	}
 
 
+	mint::TextureHandle CTextureManager::add_texture(const String& texture_name, Texture& texture)
+	{
+		auto h = mint::algorithm::djb_hash(texture_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_textures.add(h, std::move(texture));
+
+		);
+
+		return h;
+	}
+
+
 	mint::Vec2 CTextureManager::get_texture_dimension(const String& texture_name)
 	{
 		auto h = mint::algorithm::djb_hash(texture_name);
 
-		const auto& texture = m_textures.get_const(h);
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto& texture = m_textures.get_const(h);
+
+		);
 
 		return { texture.GetWidth(), texture.GetHeight() };
 	}
@@ -44,7 +62,11 @@ namespace mint
 
 	mint::Vec2 CTextureManager::get_texture_dimension(TextureHandle handle)
 	{
-		const auto& texture = m_textures.get_const(handle);
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto & texture = m_textures.get_const(handle);
+
+		);
 
 		return { texture.GetWidth(), texture.GetHeight() };
 	}
@@ -56,13 +78,13 @@ namespace mint
 	}
 
 
-	const mint::Vector< raylib::Texture >& CTextureManager::get_all_textures()
+	const mint::Vector< Texture >& CTextureManager::get_all_textures()
 	{
 		return m_textures.get_all_const();
 	}
 
 
-	const raylib::Texture& CTextureManager::get_texture(TextureHandle handle) const
+	const Texture& CTextureManager::get_texture(TextureHandle handle) const
 	{
 		return m_textures.get_const(handle);
 	}

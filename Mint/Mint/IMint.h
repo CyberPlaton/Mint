@@ -103,4 +103,10 @@ class_name() : m_running(false) \
 } \
 
 
+namespace mint
+{
+	// Collection of useful and not so useful functions for the engine.
+}
+
+
 #endif

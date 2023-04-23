@@ -21,15 +21,18 @@ namespace mint
 
 		void reset();
 
+
+		TextureHandle add_texture(const String& texture_name, Texture& texture);
+
 		Vec2 get_texture_dimension(const String& texture_name);
 
 		Vec2 get_texture_dimension(TextureHandle handle);
 
 		TextureHandle get_texture_handle(const String& texture_name);
 
-		const Vector< raylib::Texture >& get_all_textures();
+		const Vector< Texture >& get_all_textures();
 
-		const raylib::Texture& get_texture(TextureHandle handle) const;
+		const Texture& get_texture(TextureHandle handle) const;
 
 
 	private:
@@ -38,7 +41,7 @@ namespace mint
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		CMap< raylib::Texture > m_textures;
+		CMap< Texture > m_textures;
 	};
 
 
