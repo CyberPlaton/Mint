@@ -19,6 +19,10 @@ namespace mint
 
 		static void delete_cuca_critical_sections();
 
+		static void register_component_importer_functions();
+
+		static void register_component_exporter_functions();
+
 
 		virtual bool initialize(const String&) = 0;
 

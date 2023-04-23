@@ -8,8 +8,12 @@
 
 namespace mint
 {
+	class CScene;
+
 	class CRegistry
 	{
+		friend class CScene;
+
 	public:
 		CRegistry();
 		~CRegistry();

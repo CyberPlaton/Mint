@@ -4,6 +4,8 @@
 namespace mint
 {
 	mint::IScene* IScene::s_activeScene = nullptr;
+	mint::CMap< mint::IScene::ComponentExporterFunction > IScene::s_componentExporter;
+	mint::CMap< mint::IScene::ComponentImporterFunction > IScene::s_componentImporter;
 
 
 	mint::IScene* IScene::get_active_scene()
@@ -18,4 +20,14 @@ namespace mint
 	}
 
 
+	mint::IScene::ComponentImporterFunction mint::IScene::get_component_importer(entt::id_type id)
+	{
+		return s_componentImporter.get(id);
+	}
+
+
+	mint::IScene::ComponentExporterFunction mint::IScene::get_component_exporter(entt::id_type id)
+	{
+		return s_componentExporter.get(id);
+	}
 }

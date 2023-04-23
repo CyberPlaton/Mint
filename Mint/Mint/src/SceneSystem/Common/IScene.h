@@ -17,8 +17,23 @@ namespace mint
 	{
 		friend class CSceneManager;
 	public:
+		typedef bool (*ComponentExporterFunction)(entt::entity, entt::id_type, const entt::registry&, maml::SNode*);
+		typedef bool (*ComponentImporterFunction)(entt::entity, entt::id_type, const entt::registry&, maml::SNode*);
+
+	public:
 		static IScene* get_active_scene();
 		static void set_active_scene(IScene* scene);
+		
+		template < class T >
+		static void register_component_exporter(ComponentExporterFunction function);
+
+		template < class T >
+		static void register_component_importer(ComponentImporterFunction function);
+
+		static ComponentExporterFunction get_component_exporter(entt::id_type id);
+
+		static ComponentImporterFunction get_component_importer(entt::id_type id);
+
 
 
 		virtual void on_update(f32) = 0;
@@ -79,6 +94,10 @@ namespace mint
 	private:
 		static IScene* s_activeScene;
 
+		static CMap< ComponentExporterFunction > s_componentExporter;
+
+		static CMap< ComponentImporterFunction > s_componentImporter;
+
 
 	protected:
 		virtual bool import_entity(maml::SNode*) = 0;
@@ -87,6 +106,26 @@ namespace mint
 
 
 	};
+
+
+	template < class T >
+	void mint::IScene::register_component_importer(mint::IScene::ComponentImporterFunction function)
+	{
+		auto h = entt::type_id< T >().hash();
+
+		s_componentImporter.add(h, function);
+	}
+
+
+	template < class T >
+	void mint::IScene::register_component_exporter(mint::IScene::ComponentExporterFunction function)
+	{
+		auto h = entt::type_id< T >().hash();
+
+		s_componentExporter.add(h, function);
+	}
+
+
 }
 
 

@@ -10,17 +10,11 @@
 
 namespace mint::component
 {
-	struct SSerializable
-	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) {};
 
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) {};
-	};
-
-	struct SIdentifier : public SSerializable
+	struct SIdentifier
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		u64 m_uuid = 0;
@@ -33,10 +27,10 @@ namespace mint::component
 	};
 
 
-	struct SSceneHierarchy : public SSerializable
+	struct SSceneHierarchy
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		entt::entity m_parent = entt::null;
@@ -45,16 +39,16 @@ namespace mint::component
 	};
 
 
-	struct SDynamicGameobject : public SSerializable
+	struct SDynamicGameobject
 	{
 		u8 m_placeholder = 0;
 	};
 
 
-	struct SRigidBody : public SSerializable
+	struct SRigidBody 
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		b2Body* m_body = nullptr;
@@ -65,10 +59,10 @@ namespace mint::component
 	};
 
 
-	struct STransform : public SSerializable
+	struct STransform
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		Vec2 m_position = {0.0f, 0.0f};
@@ -81,10 +75,10 @@ namespace mint::component
 	};
 
 
-	struct SSprite : public SSerializable
+	struct SSprite
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		bool m_visible = false;
@@ -105,10 +99,10 @@ namespace mint::component
 	};
 
 
-	struct SAnimatedSprite : public SSerializable
+	struct SAnimatedSprite
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		f32 m_frameCounter;
@@ -117,10 +111,10 @@ namespace mint::component
 	};
 
 
-	struct SScript : public SSerializable
+	struct SScript
 	{
-		virtual void export_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
-		virtual void import_component(entt::entity entity, SSerializable* component, maml::SNode* node) override;
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
 		ScriptHandle m_scriptHandle;

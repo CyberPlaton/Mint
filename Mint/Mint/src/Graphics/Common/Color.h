@@ -25,7 +25,7 @@ namespace mint::fx
 
 		u32 as_abgr();
 		
-		mint::Vec4 as_vec4();
+		mint::Vec4 as_vec4() const;
 
 		Color as_cliteral();
 

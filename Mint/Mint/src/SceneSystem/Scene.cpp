@@ -170,15 +170,58 @@ namespace mint
 
 	bool CScene::import_entity(maml::SNode* maml_node)
 	{
+		auto& document = *maml_node->m_document;
 
+		entt::entity entity = entt::null;
+
+		auto identifier_node = document.find_first_match_in_node(maml_node, "identifier");
+
+		MINT_ASSERT(identifier_node != nullptr, "Failed importing entity. Entity does not have a SIdentifier component!");
+
+		auto id = SCAST(u64, -1);
+
+		CSerializer::import_uint(&id, "id", identifier_node, -1);
+
+		entity = m_registry.create_entity(id);
+
+		if (entity == entt::null) return false;
+
+
+		const auto& registry = m_registry.m_registry;
+
+		bool result = true;
+
+		for (auto&& curr : registry.storage())
+		{
+			if (auto& storage = curr.second; storage.contains(entity))
+			{
+				// Ignore SIdentifier component, as it was already imported.
+				if (entt::type_id< mint::component::SIdentifier >().hash() == curr.first) continue;
+
+
+				result &= IScene::get_component_importer(curr.first)(entity, curr.first, registry, maml_node);
+			}
+		}
+
+		return result;
 	}
 
 
 	bool CScene::export_entity(entt::entity entity, maml::SNode* maml_node)
 	{
-		auto& view = m_registry.get_registry_view< mint::component::SSerializable >();
+		auto& registry = m_registry.m_registry;
 
-		entt::id_type
+		bool result = true;
+
+		for(auto&& curr: registry.storage())
+		{
+			if(auto& storage = curr.second; storage.contains(entity))
+			{
+				result &= IScene::get_component_exporter(curr.first)(entity, curr.first, registry, maml_node);
+			}
+		}
+
+		return result;
 	}
 
 

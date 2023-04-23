@@ -172,6 +172,12 @@ namespace mint
 		result &= CLogging::Get().initialize();
 
 
+		// Initialize component exporters and importers.
+		IMintEngine::register_component_exporter_functions();
+		IMintEngine::register_component_importer_functions();
+
+
+		// Initialize ressource loaders.
 		CRessourceLoaderFactory::register_ressource_loader("Texture", &CTextureLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Shader", &CShaderLoader::create);
 

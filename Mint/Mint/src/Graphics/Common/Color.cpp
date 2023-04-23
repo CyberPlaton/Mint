@@ -79,7 +79,7 @@ namespace mint::fx
 	}
 
 
-	mint::Vec4 CColor::as_vec4()
+	mint::Vec4 CColor::as_vec4() const
 	{
 		return { SCAST(f32, m_r),
 				 SCAST(f32, m_g),

@@ -38,4 +38,28 @@ namespace mint
 	}
 
 
+	void IMintEngine::register_component_importer_functions()
+	{
+		IScene::register_component_importer< mint::component::SIdentifier >(&mint::component::SIdentifier::import_component);
+		IScene::register_component_importer< mint::component::SSceneHierarchy >(&mint::component::SSceneHierarchy::import_component);
+		IScene::register_component_importer< mint::component::SRigidBody >(&mint::component::SRigidBody::import_component);
+		IScene::register_component_importer< mint::component::STransform >(&mint::component::STransform::import_component);
+		IScene::register_component_importer< mint::component::SSprite >(&mint::component::SSprite::import_component);
+		IScene::register_component_importer< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::import_component);
+		IScene::register_component_importer< mint::component::SScript >(&mint::component::SScript::import_component);
+	}
+
+
+	void IMintEngine::register_component_exporter_functions()
+	{
+		IScene::register_component_exporter< mint::component::SIdentifier >(&mint::component::SIdentifier::export_component);
+		IScene::register_component_exporter< mint::component::SSceneHierarchy >(&mint::component::SSceneHierarchy::export_component);
+		IScene::register_component_exporter< mint::component::SRigidBody >(&mint::component::SRigidBody::export_component);
+		IScene::register_component_exporter< mint::component::STransform >(&mint::component::STransform::export_component);
+		IScene::register_component_exporter< mint::component::SSprite >(&mint::component::SSprite::export_component);
+		IScene::register_component_exporter< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::export_component);
+		IScene::register_component_exporter< mint::component::SScript >(&mint::component::SScript::export_component);
+	}
+
+
 }
