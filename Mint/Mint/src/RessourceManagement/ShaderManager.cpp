@@ -35,22 +35,42 @@ namespace mint
 	}
 
 
-	bool CShaderManager::add_shader_program(const String& program_name, Shader& handle)
+	void CShaderManager::add_shader_program(const String& program_name, Shader& shader)
 	{
-		return false;
+		auto h = mint::algorithm::djb_hash(program_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_shaders.add(h, shader);
+
+		);
 	}
 
 
-	Shader CShaderManager::get_shader_program(const String& program_name)
+	const Shader& CShaderManager::get_shader_program(const String& program_name)
 	{
-		return Shader{ 0 };
+		auto h = mint::algorithm::djb_hash(program_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto& shader = m_shaders.get_const(h);
+
+		);
+
+		return shader;
 	}
 
 
 
-	Shader CShaderManager::get_shader_program(ShaderHandle handle)
+	const Shader& CShaderManager::get_shader_program(ShaderHandle handle)
 	{
-		return Shader{ 0 };
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto & shader = m_shaders.get_const(handle);
+
+		);
+
+		return shader;
 	}
 
 

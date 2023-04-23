@@ -22,10 +22,10 @@ namespace mint
 		void reset();
 
 
-		bool add_shader_program(const String& program_name, Shader& shader);
+		void add_shader_program(const String& program_name, Shader& shader);
 
-		Shader get_shader_program(const String& program_name);
-		Shader get_shader_program(ShaderHandle handle);
+		const Shader& get_shader_program(const String& program_name);
+		const Shader& get_shader_program(ShaderHandle handle);
 
 
 	private:
