@@ -49,28 +49,76 @@ namespace mint
 
 	const Shader& CShaderManager::get_shader_program(const String& program_name)
 	{
-		auto h = mint::algorithm::djb_hash(program_name);
+		auto handle = mint::algorithm::djb_hash(program_name);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+		// First check own storage.
+		bool located_in_manager = lookup_shader_program(handle);
+		if (located_in_manager)
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			const auto& shader = m_shaders.get_const(h);
+				const auto & shader = m_shaders.get_const(handle);
 
-		);
+			);
 
-		return shader;
+			return shader;
+		}
+
+		// Secondly check in embedded shaders.
+		bool located_in_embedded = fx::CEmbeddedShaders::Get().lookup_shader_program(handle);
+		if (located_in_embedded)
+		{
+			return fx::CEmbeddedShaders::Get().get_embedded_shader_program(handle);
+		}
+
+
+		if (!located_in_manager && located_in_embedded)
+		{
+			MINT_ASSERT(false, "Could not locate shader program!");
+		}
 	}
 
 
 
 	const Shader& CShaderManager::get_shader_program(ShaderHandle handle)
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+		// First check own storage.
+		bool located_in_manager = lookup_shader_program(handle);
+		if (located_in_manager)
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			const auto & shader = m_shaders.get_const(handle);
+				const auto & shader = m_shaders.get_const(handle);
 
-		);
+			);
 
-		return shader;
+			return shader;
+		}
+
+		// Secondly check in embedded shaders.
+		bool located_in_embedded = fx::CEmbeddedShaders::Get().lookup_shader_program(handle);
+		if(located_in_embedded)
+		{
+			return fx::CEmbeddedShaders::Get().get_embedded_shader_program(handle);
+		}
+
+
+		if(!located_in_manager && located_in_embedded)
+		{
+			MINT_ASSERT(false, "Could not locate shader program!");
+		}
+	}
+
+
+	bool CShaderManager::lookup_shader_program(const String& program_name)
+	{
+		return m_shaders.lookup(mint::algorithm::djb_hash(program_name));
+	}
+
+
+	bool CShaderManager::lookup_shader_program(ShaderHandle handle)
+	{
+		return m_shaders.lookup(handle);
 	}
 
 

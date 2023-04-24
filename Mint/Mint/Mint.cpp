@@ -171,7 +171,6 @@ namespace mint
 		// Initialize lowest level sub-systems.
 		result &= CLogging::Get().initialize();
 
-
 		// Initialize component exporters and importers.
 		IMintEngine::register_component_exporter_functions();
 		IMintEngine::register_component_importer_functions();
@@ -263,6 +262,9 @@ namespace mint
 		// Initialize engine sub systems.
 		bool result = true;
 
+		// Embedded shaders.
+		result &= fx::CEmbeddedShaders::Get().initialize();
+
 		// UI.
 		result &= CUI::Get().initialize();
 
@@ -270,16 +272,16 @@ namespace mint
 		result &= MINT_SCENE_REGISTRY().initialize();
 
 		// Scripting and Behavior engine.
-		result &= mint::scripting::CBehaviorEngine::Get().initialize();
-		result &= mint::scripting::CScriptEngine::Get().initialize();
+		result &= scripting::CBehaviorEngine::Get().initialize();
+		result &= scripting::CScriptEngine::Get().initialize();
 
 		if(result)
 		{
 			// Plugin System (initialize plugins).
 			CPluginSystem::Get().on_initialization();
 
-			mint::scripting::CBehaviorEngine::Get().run_behavior_engine_thread();
-			mint::scripting::CScriptEngine::Get().run_script_engine_thread();
+			scripting::CBehaviorEngine::Get().run_behavior_engine_thread();
+			scripting::CScriptEngine::Get().run_script_engine_thread();
 		}
 
 		return result;
@@ -380,8 +382,8 @@ namespace mint
 		CPluginSystem::Get().on_termination();
 
 		// Scripting engine.
-		mint::scripting::CBehaviorEngine::Get().terminate();
-		mint::scripting::CScriptEngine::Get().terminate();
+		scripting::CBehaviorEngine::Get().terminate();
+		scripting::CScriptEngine::Get().terminate();
 
 		// Texture Manager.
 		CTextureManager::Get().terminate();
@@ -390,6 +392,9 @@ namespace mint
 		CShaderManager::Get().terminate();
 
 		// UI.
+
+		// Embedded shaders.
+		fx::CEmbeddedShaders::Get().terminate();
 	}
 
 

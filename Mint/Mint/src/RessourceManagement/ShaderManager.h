@@ -2,10 +2,7 @@
 #define _MINT_SHADER_MANAGER_H_
 
 
-#include "Common/Common.h"
-#include "Utility/STL/Map.h"
-#include "Common/Algorithm.h"
-
+#include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
 
 
 namespace mint
@@ -26,6 +23,9 @@ namespace mint
 
 		const Shader& get_shader_program(const String& program_name);
 		const Shader& get_shader_program(ShaderHandle handle);
+		
+		bool lookup_shader_program(const String& program_name);
+		bool lookup_shader_program(ShaderHandle handle);
 
 
 	private:

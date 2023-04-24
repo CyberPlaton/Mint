@@ -43,6 +43,7 @@
 			"SceneSystem",
 			"Graphics/Common",
 			"Graphics/SceneRenderer",
+			"Graphics/Shaders/EmbeddedShaders",
 			"Graphics/Shaders/ShaderGraph",
 			"Graphics/Shaders/Materials",
 			"Graphics/Shaders",

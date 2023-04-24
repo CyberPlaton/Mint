@@ -14,6 +14,7 @@
 #include "Utility/PluginSystem/PluginSystem.h"
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
+#include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
 #include "Graphics/Common/Camera2D.h"
@@ -23,7 +24,6 @@
 
 #include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
-
 
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
