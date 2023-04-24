@@ -30,7 +30,7 @@ void algorithm()
 	{
 		engine.on_before_update();
 
-		engine.on_update(engine.get_engine_frametime());
+		engine.on_update(MINT_ENGINE()->get_engine_frametime());
 
 
 		engine.begin_rendering();
@@ -57,7 +57,7 @@ void algorithm()
 
 
 
-		engine.on_after_update(engine.get_engine_frametime());
+		engine.on_after_update(MINT_ENGINE()->get_engine_frametime());
 	}
 
 	// Check registered services before Shutdown.
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-
+	CUCA::transform_rotate(m_knight, dt);
 }
 
 
@@ -90,17 +90,23 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 {
 	using namespace mint;
 
+	f32 engine_dt = MINT_ENGINE()->get_engine_fps();
+
 	ImGui::Begin("Debug");
-	ImGui::Text("Engine FPS: %.5f ms", MINT_ENGINE()->get_engine_fps());
+	ImGui::Text("Engine FPS: %.5f ms", engine_dt);
 	ImGui::Text("Engine Frametime: %.5f ms", MINT_ENGINE()->get_engine_frametime());
 	ImGui::Text("Real FPS: %.5f ms", CTimestep::get_real_fps());
 	ImGui::Text("Real Frametime: %.5f ms", CTimestep::get_real_frametime());
- 	if(ImGui::Button("Quit"))
+ 	
+	CUI::edit_field_f32(engine_dt, 1.0f, 240.0f, "Edit engine FPS", "", 1000, 1001);
+
+	if(ImGui::Button("Quit"))
 	{
 		MINT_ENGINE()->exit();
 	}
 	ImGui::End();
 
+	MINT_ENGINE()->set_engine_fps(engine_dt);
 }
 
 
@@ -158,6 +164,24 @@ bool CMainScene::on_load()
 
 	// Add material for entity.
 	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, material);
+
+
+	mint::fx::CMaterial smaterial;
+
+	// Set material data and bind static uniforms once.
+	smaterial.set_shader_program("Sprite");
+	smaterial.set_texture("Knight");
+	
+	smaterial.set_blend_mode(BlendMode::BLEND_SUBTRACT_COLORS);
+	smaterial.set_blend_mode_src_factor(fx::BlendingFactor_SrcAlpha);
+	smaterial.set_blend_mode_dst_factor(fx::BlendingFactor_DstColor);
+	smaterial.set_blend_mode_equation(fx::BlendingEquation_BlendColor);
+
+	smaterial.bind_static_uniforms();
+
+	// Add material for entity.
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, smaterial);
+
 
 	m_ready = true;
 	return true;

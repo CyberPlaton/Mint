@@ -13,6 +13,45 @@
 
 namespace mint::fx
 {
+	enum BlendingFactor
+	{
+		BlendingFactor_Zero						= 0,
+		BlendingFactor_One						= 1, 
+		BlendingFactor_SrcColor					= RL_SRC_COLOR,
+		BlendingFactor_OneMinusSrcColor			= RL_ONE_MINUS_SRC_COLOR,
+		BlendingFactor_SrcAlpha					= RL_SRC_ALPHA,
+		BlendingFactor_OneMinusSrcAlpha			= RL_ONE_MINUS_SRC_ALPHA,
+		BlendingFactor_DstAlpha					= RL_DST_ALPHA,
+		BlendingFactor_DstColor					= RL_DST_COLOR,
+		BlendingFactor_OneMinusDstAlpha			= RL_ONE_MINUS_DST_ALPHA,
+		BlendingFactor_SrcAlphaSaturate			= RL_SRC_ALPHA_SATURATE,
+		BlendingFactor_ConstantColor			= RL_CONSTANT_COLOR,
+		BlendingFactor_OneMinusConstantColor	= RL_ONE_MINUS_CONSTANT_COLOR,
+		BlendingFactor_ConstantAlpha			= RL_CONSTANT_ALPHA,
+		BlendingFactor_OneMinusConstantAlpha	= RL_ONE_MINUS_CONSTANT_ALPHA,
+		
+		BlendingFactor_Count = BlendingFactor_OneMinusConstantAlpha
+	};
+
+	enum BlendingEquation
+	{
+		BlendingEquation_Add					= RL_FUNC_ADD,
+		BlendingEquation_Min					= RL_MIN,
+		BlendingEquation_Max					= RL_MAX,
+		BlendingEquation_Subtract				= RL_FUNC_SUBTRACT,
+		BlendingEquation_ReverseSubtract		= RL_FUNC_REVERSE_SUBTRACT,
+		BlendingEquation_BlendEquationRGB		= RL_BLEND_EQUATION_RGB,
+		BlendingEquation_BlendEquationAlpha		= RL_BLEND_EQUATION_ALPHA,
+		BlendingEquation_BlendDstRGB			= RL_BLEND_DST_RGB,
+		BlendingEquation_BlendSrcRGB			= RL_BLEND_SRC_RGB,
+		BlendingEquation_BlendDstAlpha			= RL_BLEND_DST_ALPHA,
+		BlendingEquation_BlendSrcAlpha			= RL_BLEND_SRC_ALPHA,
+		BlendingEquation_BlendColor				= RL_BLEND_COLOR,
+
+		BlendingEquation_Count = BlendingEquation_BlendColor
+	};
+
+
 	class CMaterial 
 	{
 	public:
@@ -33,9 +72,9 @@ namespace mint::fx
 
 
 		void set_blend_mode(BlendMode mode);
-		void set_blend_mode_src_factor(uint32_t factor);
-		void set_blend_mode_dst_factor(uint32_t factor);
-		void set_blend_mode_equation(uint32_t equation);
+		void set_blend_mode_src_factor(BlendingFactor factor);
+		void set_blend_mode_dst_factor(BlendingFactor factor);
+		void set_blend_mode_equation(BlendingEquation equation);
 		void restore_default_blend_mode();
 
 		void set_shader_program(const String& shader_program_name);

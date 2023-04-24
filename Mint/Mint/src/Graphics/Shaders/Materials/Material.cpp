@@ -26,13 +26,13 @@ namespace mint::fx
 	}
 
 
-	void CMaterial::set_blend_mode_src_factor(uint32_t factor)
+	void CMaterial::set_blend_mode_src_factor(BlendingFactor factor)
 	{
 		m_srcBlendFactor = factor;
 	}
 
 
-	void CMaterial::set_blend_mode_dst_factor(uint32_t factor)
+	void CMaterial::set_blend_mode_dst_factor(BlendingFactor factor)
 	{
 		m_dstBlendFactor = factor;
 	}
@@ -46,7 +46,7 @@ namespace mint::fx
 	}
 
 
-	void CMaterial::set_blend_mode_equation(uint32_t equation)
+	void CMaterial::set_blend_mode_equation(BlendingEquation equation)
 	{
 		m_blendingEquation = equation;
 	}
