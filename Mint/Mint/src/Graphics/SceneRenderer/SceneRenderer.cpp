@@ -54,16 +54,6 @@ namespace mint::fx
 			const auto& rotation = CUCA::transform_get_rotation(entity);
 
 
-			const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
-									  sprite.m_rect.get_width(), sprite.m_rect.get_height() };
-
-			f32 px = position.x - src.width / 2.0f;
-			f32 py = position.y - src.height / 2.0f;
-
-			const Rectangle& dst = { px + sprite.m_origin.x, py + sprite.m_origin.y,
-									 src.width * scale.x, src.height * scale.y };
-
-
 			for(const auto& material: materials)
 			{
 				material.bind_dynamic_uniforms();
@@ -71,6 +61,18 @@ namespace mint::fx
 				material.bind_shader();
 
 				material.bind_blend_mode();
+
+				const Vec2& texture_size = material.get_texture_dimension();
+
+				const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
+										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
+
+				f32 px = position.x - src.width / 2.0f;
+				f32 py = position.y - src.height / 2.0f;
+
+				const Rectangle& dst = { px + sprite.m_origin.x, py + sprite.m_origin.y,
+										 src.width * scale.x, src.height * scale.y };
+
 
 
 				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, transform.m_rotation, sprite.m_color.as_cliteral());

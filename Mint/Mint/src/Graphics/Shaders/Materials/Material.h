@@ -7,6 +7,8 @@
 #include "ShaderUniform.h"
 #include "Common/Algorithm.h"
 
+#include "RessourceManagement/ShaderManager.h"
+
 
 namespace mint::fx
 {
@@ -21,6 +23,8 @@ namespace mint::fx
 		void bind_blend_mode()  const;
 		void bind_static_uniforms()  const;
 		void bind_dynamic_uniforms()  const;
+		Vec2 get_texture_dimension() const;
+		TextureHandle get_texture_handle() const;
 
 
 		void end_shader() const;
@@ -33,19 +37,15 @@ namespace mint::fx
 		void set_blend_mode_equation(uint32_t equation);
 		void restore_default_blend_mode();
 
-
-		void set_fragment_shader(Shader shader);
+		void set_shader_program(const String& shader_program_name);
+		void set_shader_program(const Shader& shader);
+		void set_texture(TextureHandle texture_handle, const Vec2& texture_size);
 		
 		template < typename T >
 		void add_static_uniform(const String& uniform_name, const T& value, ShaderUniformDataType type);
 
 		template < typename T >
 		void add_dynamic_uniform(const String& uniform_name, const T& value, ShaderUniformDataType type);
-
-
-		Vec2 get_texture_dimension() const;
-
-		TextureHandle get_texture_handle() const;
 
 
 	private:

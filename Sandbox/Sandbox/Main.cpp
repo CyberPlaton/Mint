@@ -112,6 +112,8 @@ bool CMainScene::on_before_load()
 
 bool CMainScene::on_load()
 {
+	using namespace mint;
+
 	const auto& window = MINT_ENGINE()->get_main_window_const();
 
 	auto camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 }, 
@@ -121,6 +123,41 @@ bool CMainScene::on_load()
 	camera->set_zoom(1.0f);
 
 	push_camera(camera);
+
+
+	// Create an entity.
+	m_knight = m_registry.create_entity();
+
+	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_knight);
+	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
+	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
+	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
+
+	identifier.m_enttId = SCAST(u64, m_knight);
+	identifier.m_uuid = identifier.m_enttId;
+	hierarchy.m_parent = entt::null;
+	transform.m_scale = { 1.0f, 1.0f };
+	transform.m_rotation = 45.0f;
+	transform.m_scale = { 1.0f, 1.0f };
+	sprite.m_visible = true;
+	sprite.m_internalVisible = true;
+	sprite.m_depth = 0;
+	sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
+	sprite.m_color = { 255, 255, 255, 255 };
+	sprite.m_origin = { 0.0f, 0.0f };
+
+
+	mint::fx::CMaterial material;
+	
+	// Set material data and bind static uniforms once.
+	material.set_shader_program("ShaderName");
+	material.set_texture(0, { 180, 180 });
+	material.restore_default_blend_mode();
+	material.bind_static_uniforms();
+
+
+	// Add material for entity.
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, material);
 
 	m_ready = true;
 	return true;

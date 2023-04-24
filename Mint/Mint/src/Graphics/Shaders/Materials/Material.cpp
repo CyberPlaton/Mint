@@ -52,10 +52,17 @@ namespace mint::fx
 	}
 
 
-	void CMaterial::set_fragment_shader(Shader shader)
+	void CMaterial::set_shader_program(const Shader& shader)
 	{
 		m_shader = shader;
 	}
+
+
+	void CMaterial::set_shader_program(const String& shader_program_name)
+	{
+		m_shader = CShaderManager::Get().get_shader_program(shader_program_name);
+	}
+
 
 	void CMaterial::bind_static_uniforms()  const
 	{
@@ -151,6 +158,13 @@ namespace mint::fx
 	mint::TextureHandle CMaterial::get_texture_handle() const
 	{
 		return m_texture;
+	}
+
+
+	void CMaterial::set_texture(TextureHandle texture_handle, const Vec2& texture_size)
+	{
+		m_texture = texture_handle;
+		m_textureSize = texture_size;
 	}
 
 
