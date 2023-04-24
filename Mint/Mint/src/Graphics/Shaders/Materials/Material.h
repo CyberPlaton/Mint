@@ -8,6 +8,7 @@
 #include "Common/Algorithm.h"
 
 #include "RessourceManagement/ShaderManager.h"
+#include "RessourceManagement/TextureManager.h"
 
 
 namespace mint::fx
@@ -39,6 +40,8 @@ namespace mint::fx
 
 		void set_shader_program(const String& shader_program_name);
 		void set_shader_program(const Shader& shader);
+
+		void set_texture(const String& texture_name);
 		void set_texture(TextureHandle texture_handle, const Vec2& texture_size);
 		
 		template < typename T >

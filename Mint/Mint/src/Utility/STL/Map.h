@@ -22,6 +22,8 @@ namespace mint
 
 		T get(u64 identifier);
 
+		T& get_ref(u64 identifier);
+
 		const T& get_const(u64 identifier) const;
 
 		T get_by_index(u64 index);
@@ -55,6 +57,16 @@ namespace mint
 		void _restore_integrity_on_remove();
 
 	};
+
+
+	template < typename T >
+	T& mint::CMap<T>::get_ref(u64 identifier)
+	{
+		for (auto i = 0; i < m_indices.size(); i++)
+		{
+			if (identifier == m_indices[i].first) return m_data[m_indices[i].second];
+		}
+	}
 
 
 	template < typename T >

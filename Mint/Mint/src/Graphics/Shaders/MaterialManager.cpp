@@ -34,7 +34,7 @@ namespace mint::fx
 
 		if(!m_materials.lookup(h)) m_materials.add(h, Vector< CMaterial >{});
 
-		m_materials.get(h).push_back(material);
+		m_materials.get_ref(h).push_back(material);
 	}
 
 

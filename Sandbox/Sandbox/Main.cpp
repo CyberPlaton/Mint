@@ -150,8 +150,8 @@ bool CMainScene::on_load()
 	mint::fx::CMaterial material;
 	
 	// Set material data and bind static uniforms once.
-	material.set_shader_program("ShaderName");
-	material.set_texture(0, { 180, 180 });
+	material.set_shader_program("Sprite");
+	material.set_texture("Knight");
 	material.restore_default_blend_mode();
 	material.bind_static_uniforms();
 

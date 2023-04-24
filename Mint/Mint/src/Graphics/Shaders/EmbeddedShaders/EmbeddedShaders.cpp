@@ -97,6 +97,8 @@ namespace mint::fx
 			return true;
 		}
 
+		MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::_create_sprite_shader_program] Failed creating embedded shader program \"Sprite\"!", MINT_APP_TIME);
+
 		return false;
 	}
 

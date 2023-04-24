@@ -168,4 +168,11 @@ namespace mint::fx
 	}
 
 
+	void CMaterial::set_texture(const String& texture_name)
+	{
+		m_texture = CTextureManager::Get().get_texture_handle(texture_name);
+		m_textureSize = CTextureManager::Get().get_texture_dimension(m_texture);
+	}
+
+
 }

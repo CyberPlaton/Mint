@@ -5,6 +5,7 @@
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
 #include "Utility/STL/Map.h"
+#include "Utility/Logging/Logging.h"
 
 
 namespace mint::fx
