@@ -19,6 +19,7 @@
 
 namespace mint::scripting
 {
+
 	struct SError
 	{
 		SError(lua_State* state, s32 lua_error_value);
@@ -28,67 +29,54 @@ namespace mint::scripting
 	};
 
 
-
-	class ILuaScript
+	template< class Vector >
+	struct SLuaBridgeVectorWrapper
 	{
-	public:
-		virtual bool initialize() = 0;
+		template< unsigned int index >
+		static f32 get(Vector const* vec)
+		{
+			switch (index)
+			{
+			case 0:
+				return vec->x;
+			case 1:
+				return vec->y;
+			}
+		}
 
-		virtual void terminate() = 0;
+		template< unsigned int index >
+		static void set(Vector* vec, f32 value)
+		{
+			switch (index)
+			{
+			case 0:
+			{
+				vec->x = value;
+				return;
+			}
+			case 1:
+			{
+				vec->y = value;
+				return;
+			}
+			}
+		}
 
-		virtual bool is_ready() const = 0;
-
-		virtual bool has_error() const = 0;
-
-		virtual bool has_entity_set() const = 0;
-
-
-		virtual void on_update(f32) = 0;
-
-		virtual void on_create() = 0;
-
-		virtual void on_destroy() = 0;
 	};
 
 
-
-	class CLuaScript : public ILuaScript
+	template <typename T>
+	struct SLuaBridgeEnumWrapper
 	{
-	public:
-		CLuaScript();
-		CLuaScript(const CLuaScript& other);
-		CLuaScript& operator=(const CLuaScript& other);
-		~CLuaScript();
+		static typename std::enable_if<std::is_enum<T>::value, void>::type push(lua_State* L, T value)
+		{
+			lua_pushnumber(L, static_cast<std::size_t> (value));
+		}
 
-
-		bool initialize();
-
-		void terminate();
-
-		bool is_ready() const { return m_ready; };
-
-		bool has_error() const { return m_error; }
-
-		bool has_entity_set() const { return m_entity != entt::null; };
-
-
-		void on_update(f32 dt) {};
-
-		void on_create() {};
-
-		void on_destroy() {};
-
-
-	protected:
-		lua_State* m_state;
-
-		bool m_ready;
-		bool m_error;
-
-		entt::entity m_entity;
-
-		String m_scriptName;
-		String m_scriptPath;
+		static typename std::enable_if<std::is_enum<T>::value, T>::type get(lua_State* L, int index)
+		{
+			return static_cast <T> (lua_tointeger(L, index));
+		}
 	};
 
 }

@@ -2,7 +2,8 @@
 #define _MINTSCRIPTING_BEHAVIOR_H_
 
 
-#include "../Common/Lua.h"
+#include "../Common/LuaScript.h"
+
 #include "Utility/ServiceSystem/Services/ScriptLuaBindingService.h"
 #include "Utility/ServiceSystem/ServiceLocator.h"
 

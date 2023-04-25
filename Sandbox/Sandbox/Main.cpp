@@ -172,7 +172,7 @@ bool CMainScene::on_load()
 	smaterial.set_shader_program("Sprite");
 	smaterial.set_texture("Knight");
 	
-	smaterial.set_blend_mode(BlendMode::BLEND_SUBTRACT_COLORS);
+	smaterial.set_blend_mode(BlendMode::BLEND_ADD_COLORS);
 	smaterial.set_blend_mode_src_factor(fx::BlendingFactor_SrcAlpha);
 	smaterial.set_blend_mode_dst_factor(fx::BlendingFactor_DstColor);
 	smaterial.set_blend_mode_equation(fx::BlendingEquation_BlendColor);
