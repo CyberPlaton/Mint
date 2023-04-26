@@ -23,6 +23,8 @@ namespace mint::scripting
 		m_ready = other.m_ready;
 		m_error = other.m_error;
 		m_entity = other.m_entity;
+		m_scriptName = other.m_scriptName;
+		m_scriptPath = other.m_scriptPath;
 	}
 
 
@@ -35,6 +37,8 @@ namespace mint::scripting
 		m_ready = other.m_ready;
 		m_error = other.m_error;
 		m_entity = other.m_entity;
+		m_scriptName = other.m_scriptName;
+		m_scriptPath = other.m_scriptPath;
 
 		return *this;
 	}
@@ -102,5 +106,36 @@ namespace mint::scripting
 		m_entity = entt::null;
 		m_error = false;
 	}
+
+
+	mint::String CLuaScript::get_script_name() const
+	{
+		return m_scriptName;
+	}
+
+
+	mint::String CLuaScript::get_script_path() const
+	{
+		return m_scriptPath;
+	}
+
+
+	void CLuaScript::set_script_name(const String& name)
+	{
+		m_scriptName = name;
+	}
+
+
+	void CLuaScript::set_script_path(const String& path)
+	{
+		m_scriptPath = path;
+	}
+
+
+	void CLuaScript::set_script_entity(entt::entity entity)
+	{
+		m_entity = entity;
+	}
+
 
 }

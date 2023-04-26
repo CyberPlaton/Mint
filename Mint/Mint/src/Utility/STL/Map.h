@@ -19,6 +19,19 @@ namespace mint
 
 		void add(u64 identifier, T&& data);
 
+		template < typename... ARGS >
+		T& add_in_place(u64 identifier, const ARGS&... args)
+		{
+			MINT_VERIFY(lookup(identifier) == false, "Invalid operation. Overriding indices does not work for add_in_place!");
+
+			u64 index = m_data.size();
+
+			m_indices.emplace_back(std::make_pair(identifier, index));
+
+			m_data.emplace_back(args...);
+
+			return m_data[index];
+		}
 
 		T get(u64 identifier);
 

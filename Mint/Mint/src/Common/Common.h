@@ -131,6 +131,9 @@ assert((message, expression))
 #else
 #define MINT_ASSERT()
 #endif
+#define MINT_VERIFY(expression, message) \
+assert((message, expression))
+
 
 	// Static cast is preferred over c-style cast as it is more safer and can throw compiler errors.
 #define SCAST(type, value) static_cast< type >(value)

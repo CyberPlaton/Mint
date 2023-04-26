@@ -138,6 +138,7 @@ bool CMainScene::on_load()
 	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
 	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
+	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
 
 	identifier.m_enttId = SCAST(u64, m_knight);
 	identifier.m_uuid = identifier.m_enttId;
@@ -182,6 +183,9 @@ bool CMainScene::on_load()
 	// Add material for entity.
 	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, smaterial);
 
+
+	// Set script for entity.
+	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
 
 	m_ready = true;
 	return true;

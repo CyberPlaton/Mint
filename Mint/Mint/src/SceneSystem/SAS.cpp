@@ -22,9 +22,14 @@ namespace mint
 
 	void CSAS::terminate()
 	{
+		set_should_update(false);
 		_set_is_running(false);
 
 		_wait_for_termination();
+
+		reset();
+
+		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
 
 

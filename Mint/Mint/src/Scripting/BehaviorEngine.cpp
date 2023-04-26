@@ -21,15 +21,33 @@ namespace mint::scripting
 
 	void CBehaviorEngine::terminate()
 	{
+		set_should_update(false);
 		_set_is_running(false);
 
 		_wait_for_termination();
+
+		reset();
+
+		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
 
 
 	void CBehaviorEngine::reset()
 	{
-		m_behaviors.reset();
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			auto & behaviors = m_activeBehaviors.get_all();
+
+			while (!behaviors.empty())
+			{
+				behaviors[0].on_destroy();
+
+				behaviors.erase(behaviors.begin());
+			}
+
+		);
+
+		m_behaviorPrefabs.reset();
 	}
 
 
@@ -95,7 +113,7 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			for(auto& script : m_behaviors.get_all())
+			for(auto& script : m_activeBehaviors.get_all())
 			{
 				if (script.is_ready()) script.on_update(dt);
 			}
@@ -148,6 +166,65 @@ namespace mint::scripting
 	void CBehaviorEngine::run_behavior_engine_thread()
 	{
 		_run();
+	}
+
+
+	void CBehaviorEngine::set_behavior_for_entity(const String& script_name, entt::entity entity)
+	{
+		auto h = mint::algorithm::djb_hash(script_name);
+
+		if(m_behaviorPrefabs.lookup(h))
+		{
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				CBehavior& behavior = m_activeBehaviors.add_in_place(SCAST(u64, entity),
+																	 m_behaviorPrefabs.get(h));
+
+				behavior.initialize();
+
+				behavior.set_script_entity(entity);
+
+				behavior.on_create();
+
+ 			);
+
+		}
+	}
+
+
+	void CBehaviorEngine::create_behavior_script_prefab(const String& script_name, const String& script_file_path)
+	{
+		auto h = mint::algorithm::djb_hash(script_name);
+
+		CBehavior behavior;
+
+		behavior.set_script_entity(entt::null);
+		behavior.set_script_name(script_name);
+		behavior.set_script_path(script_file_path);
+
+		if (behavior.initialize())
+		{
+			m_behaviorPrefabs.add(h, behavior);
+		}
+	}
+
+
+	void CBehaviorEngine::remove_behavior_from_entity(const String& script_name, entt::entity entity)
+	{
+		auto h = mint::algorithm::djb_hash(script_name);
+
+		if (m_activeBehaviors.lookup(h))
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				auto& behavior = m_activeBehaviors.get_ref(h);
+
+				behavior.on_destroy();
+
+				m_activeBehaviors.remove(h);
+			);
+		}
 	}
 
 

@@ -27,6 +27,19 @@ namespace mint::scripting
 		virtual void on_create() = 0;
 
 		virtual void on_destroy() = 0;
+
+
+		virtual String get_script_name() const = 0;
+
+		virtual String get_script_path() const = 0;
+
+
+		virtual void set_script_name(const String&) = 0;
+
+		virtual void set_script_path(const String&) = 0;
+
+		virtual void set_script_entity(entt::entity) = 0;
+
 	};
 
 
@@ -56,6 +69,16 @@ namespace mint::scripting
 		void on_create() {};
 
 		void on_destroy() {};
+
+		String get_script_name() const;
+
+		String get_script_path() const;
+
+		void set_script_name(const String& name) override final;
+
+		void set_script_path(const String& path)  override final;
+
+		void set_script_entity(entt::entity entity) override final;
 
 
 	protected:

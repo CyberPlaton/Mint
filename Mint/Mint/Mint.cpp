@@ -77,6 +77,10 @@ namespace mint
 		CSceneManager::Get().update();
 
 		CPluginSystem::Get().on_update(dt);
+
+		scripting::CScriptEngine::Get().set_should_update(true);
+
+		scripting::CBehaviorEngine::Get().set_should_update(true);
 	}
 
 
@@ -179,6 +183,8 @@ namespace mint
 		// Initialize ressource loaders.
 		CRessourceLoaderFactory::register_ressource_loader("Texture", &CTextureLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Shader", &CShaderLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("Script", &CScriptLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("Behavior", &CBehaviorLoader::create);
 
 		return result;
 	}

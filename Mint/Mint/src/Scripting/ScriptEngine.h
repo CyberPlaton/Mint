@@ -27,6 +27,9 @@ namespace mint::scripting
 
 		void set_should_update(bool value);
 
+		void add_script_to_scene(const String& script_name, const String& script_file_path);
+
+		void remove_script_from_scene(const String& script_name);
 
 	private:
 		static CScriptEngine* s_CScriptEngine;

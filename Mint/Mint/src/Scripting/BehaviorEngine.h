@@ -28,9 +28,15 @@ namespace mint::scripting
 		void set_should_update(bool value);
 
 
+		void create_behavior_script_prefab(const String& script_name, const String& script_file_path);
+
+		void set_behavior_for_entity(const String& script_name, entt::entity entity);
+
+		void remove_behavior_from_entity(const String& script_name, entt::entity entity);
+
+
 	private:
 		static CBehaviorEngine* s_CBehaviorEngine;
-
 
 		bool m_internalLoop;
 
@@ -41,7 +47,9 @@ namespace mint::scripting
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 
-		CMap< CBehavior > m_behaviors;
+		CMap< CBehavior > m_activeBehaviors;
+
+		CMap< CBehavior > m_behaviorPrefabs;
 
 
 	private:

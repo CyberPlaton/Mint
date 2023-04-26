@@ -21,14 +21,32 @@ namespace mint::scripting
 
 	void CScriptEngine::terminate()
 	{
+		set_should_update(false);
 		_set_is_running(false);
 
 		_wait_for_termination();
+
+		reset();
+
+		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
 
 
 	void CScriptEngine::reset()
 	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			auto & scripts = m_scripts.get_all();
+
+			while(!scripts.empty())
+			{
+				scripts[0].on_destroy();
+
+				scripts.erase(scripts.begin());
+			}
+
+		);
+
 		m_scripts.reset();
 	}
 
@@ -148,6 +166,50 @@ namespace mint::scripting
 	void CScriptEngine::run_script_engine_thread()
 	{
 		_run();
+	}
+
+
+	void CScriptEngine::add_script_to_scene(const String& script_name, const String& script_file_path)
+	{
+		auto h = mint::algorithm::djb_hash(script_name);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			CScript & script = m_scripts.add_in_place(h);
+
+			script.set_script_entity(entt::null);
+			script.set_script_name(script_name);
+			script.set_script_path(script_file_path);
+
+			if (script.initialize())
+			{
+				script.on_create();
+			}
+			else
+			{
+				m_scripts.remove(h);
+			}
+		);
+	}
+
+
+	void CScriptEngine::remove_script_from_scene(const String& script_name)
+	{
+		auto h = mint::algorithm::djb_hash(script_name);
+
+		if(m_scripts.lookup(h))
+		{
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				auto& script = m_scripts.get_ref(h);
+
+				script.on_destroy();
+
+				m_scripts.remove(h);
+
+			);
+
+		}
 	}
 
 
