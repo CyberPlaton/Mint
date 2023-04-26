@@ -178,7 +178,7 @@ namespace mint::scripting
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				CBehavior& behavior = m_activeBehaviors.add_in_place(SCAST(u64, entity),
+				CBehavior& behavior = m_activeBehaviors.emplace_back(SCAST(u64, entity),
 																	 m_behaviorPrefabs.get(h));
 
 				behavior.initialize();

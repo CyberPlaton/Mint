@@ -175,7 +175,7 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			CScript & script = m_scripts.add_in_place(h);
+			CScript & script = m_scripts.emplace_back(h);
 
 			script.set_script_entity(entt::null);
 			script.set_script_name(script_name);

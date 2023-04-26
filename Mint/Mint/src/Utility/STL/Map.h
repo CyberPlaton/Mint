@@ -20,7 +20,7 @@ namespace mint
 		void add(u64 identifier, T&& data);
 
 		template < typename... ARGS >
-		T& add_in_place(u64 identifier, const ARGS&... args)
+		T& emplace_back(u64 identifier, const ARGS&... args)
 		{
 			MINT_VERIFY(lookup(identifier) == false, "Invalid operation. Overriding indices does not work for add_in_place!");
 
