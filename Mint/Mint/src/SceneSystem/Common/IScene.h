@@ -81,7 +81,7 @@ namespace mint
 
 		virtual void push_camera(fx::ICamera*) = 0;
 
-
+		virtual void pop_camera() = 0;
 
 		virtual CPath get_scene_assets_path() = 0;
 

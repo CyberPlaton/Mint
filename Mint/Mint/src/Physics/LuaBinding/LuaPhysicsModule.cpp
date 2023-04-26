@@ -6,11 +6,11 @@ namespace mint::luaglue
 	{
 
 
-		bool physics(lua_State* state)
+		bool luamodule_physics(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= common(state);
+			initialization &= physics_common(state);
 
 			return initialization;
 		}
@@ -22,11 +22,11 @@ namespace mint::luaglue
 	{
 
 
-		bool physics(lua_State* state)
+		bool luamodule_physics(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= script::common(state);
+			initialization &= script::physics_common(state);
 
 			initialization &= rigid_body(state);
 

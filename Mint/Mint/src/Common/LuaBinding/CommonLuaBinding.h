@@ -5,23 +5,20 @@
 
 #include "Common/Common.h"
 
-#include "Scripting/ScriptGlue.h"
+#include "Scripting/Common/Lua.h"
 
 
 namespace mint::luaglue
 {
 
-	namespace ubound
+	namespace script
 	{
 
 	}
 
 
-	namespace bound
+	namespace behavior
 	{
-		////////////////////////////////////////////////////////////////////////////////////
-		// Common Helpers
-		////////////////////////////////////////////////////////////////////////////////////
 		raylib::Vector2 Vector2DivideV(const raylib::Vector2& u, const raylib::Vector2& v);
 		raylib::Vector2 Vector2MultiplyV(const raylib::Vector2& u, const raylib::Vector2& v);
 		raylib::Vector2 Vector2AddV(const raylib::Vector2& u, const raylib::Vector2& v);
@@ -32,11 +29,8 @@ namespace mint::luaglue
 		raylib::Vector2 Vector2AddN(const raylib::Vector2& u, f32 v);
 		raylib::Vector2 Vector2SubtractN(const raylib::Vector2& u, f32 v);
 
-		////////////////////////////////////////////////////////////////////////////////////
-		// Registration
-		////////////////////////////////////////////////////////////////////////////////////
-
-		bool CommonDependencies(lua_State* state);
+		
+		bool dependencies(lua_State* state);
 	}
 }
 

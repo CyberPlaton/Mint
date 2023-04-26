@@ -144,6 +144,12 @@ namespace mint
 	}
 
 
+	void CScene::pop_camera()
+	{
+
+	}
+
+
 	mint::CPath CScene::get_scene_assets_path()
 	{
 		return m_assets;

@@ -4,7 +4,7 @@ namespace mint::luaglue
 {
 	namespace script
 	{
-		bool common(lua_State* state)
+		bool luamodule_scene(lua_State* state)
 		{
 			bool initialization = true;
 
@@ -20,7 +20,7 @@ namespace mint::luaglue
 
 	namespace behavior
 	{
-		bool common(lua_State* state)
+		bool luamodule_scene(lua_State* state)
 		{
 			bool initialization = true;
 

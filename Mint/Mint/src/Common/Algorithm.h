@@ -22,8 +22,34 @@ namespace mint::algorithm
 	template< typename T >
 	void vector_push_back(Vector< T >& destination, Vector< T >& source);
 
+	template< typename T >
+	void vector_push_back(Vector< T >& destination, T element);
+
+	template < typename T >
+	void vector_erase(Vector< T >& from, T element);
 }
 
+
+template< typename T >
+void mint::algorithm::vector_push_back(Vector< T >& destination, T element)
+{
+	destination.push_back(element);
+}
+
+
+template < typename T >
+void mint::algorithm::vector_erase(Vector< T >& from, T element)
+{
+	u64 i = 0;
+	for (const auto& __element : from)
+	{
+		if (__element == element)
+		{
+			from.erase(from.begin() + i); return;
+		}
+		i++;
+	}
+}
 
 
 template< typename T >

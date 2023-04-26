@@ -5,7 +5,7 @@ namespace mint::luaglue
 	namespace script
 	{
 
-		bool register_components(lua_State* state)
+		bool luamodule_components(lua_State* state)
 		{
 			bool initialization = true;
 
@@ -29,7 +29,7 @@ namespace mint::luaglue
 	{
 
 
-		bool register_components(lua_State* state)
+		bool luamodule_components(lua_State* state)
 		{
 			bool initialization = true;
 

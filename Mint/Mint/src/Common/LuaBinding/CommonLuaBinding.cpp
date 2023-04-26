@@ -4,16 +4,13 @@ namespace mint::luaglue
 {
 
 
-	namespace ubound
+	namespace script
 	{
 
 	}
 
-	namespace bound
+	namespace behavior
 	{
-		////////////////////////////////////////////////////////////////////////////////////
-		// Common Helpers
-		////////////////////////////////////////////////////////////////////////////////////
 		raylib::Vector2 Vector2DivideV(const raylib::Vector2& u, const raylib::Vector2& v)
 		{
 			return u.Divide(v);
@@ -62,17 +59,9 @@ namespace mint::luaglue
 		}
 
 
-		////////////////////////////////////////////////////////////////////////////////////
-		// Registration
-		////////////////////////////////////////////////////////////////////////////////////
-
-		bool CommonDependencies(lua_State* state)
+		bool dependencies(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-
-				////////////////////////////////////////////////////////////////////////////
-				// Defining underlying raylib types
-				////////////////////////////////////////////////////////////////////////////
 
 				.beginClass< Vector2 >("__Vector2__")
 				.addConstructor< void(*)() >()
@@ -103,10 +92,6 @@ namespace mint::luaglue
 				.addData("width", &Rectangle::width, true)
 				.addData("height", &Rectangle::height, true)
 				.endClass()
-
-				////////////////////////////////////////////////////////////////////////////
-				// Defining derived raylib cpp types used in the engine
-				////////////////////////////////////////////////////////////////////////////
 
 				.deriveClass< raylib::Vector2, Vector2 >("Vec2")
 				.addConstructor< void(*)() >()
@@ -144,12 +129,6 @@ namespace mint::luaglue
 				.addProperty("Height", &raylib::Rectangle::GetHeight, &raylib::Rectangle::SetHeight)
 				.endClass()
 
-
-
-
-				////////////////////////////////////////////////////////////////////////////
-				// Registering helper functions
-				////////////////////////////////////////////////////////////////////////////
 
 				.beginNamespace("Vec2")
 				.addFunction("DivV", Vector2DivideV)

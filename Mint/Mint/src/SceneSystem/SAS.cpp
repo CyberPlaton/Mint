@@ -130,7 +130,7 @@ namespace mint
 			node.m_entity = entity;
 
 			Vec2 position = CUCA::transform_get_position(entity);
-			Vec2 dimension = CUCA::sprite_get_texture_dimension(entity);
+			Vec2 dimension = CUCA::sprite_get_size(entity);
 
 			f32 emin[2] = { 0 };
 			f32 emax[2] = { 0 };

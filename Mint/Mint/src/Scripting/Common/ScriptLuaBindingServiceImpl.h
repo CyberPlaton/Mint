@@ -3,6 +3,7 @@
 
 
 #include "Utility/ServiceSystem/Services/ScriptLuaBindingService.h"
+#include "../LuaBinding/ScriptingAllModules.h"
 
 namespace mint::scripting
 {

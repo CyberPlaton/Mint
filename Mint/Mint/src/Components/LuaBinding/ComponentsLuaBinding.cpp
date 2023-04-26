@@ -17,11 +17,14 @@ namespace mint::luaglue
 				.endClass();
 
 			luabridge::getGlobalNamespace(state)
-				.beginNamespace("Identifier")
-					.addFunction("GetDebugName", &CUCA::SIdentifier_GetDebugName)
-					.addFunction("SetDebugName", &CUCA::SIdentifier_SetDebugName)
-					.addFunction("GetUUID", &CUCA::SIdentifier_GetUUID)
-					.addFunction("GetIdentifier", &CUCA::SIdentifier_GetIdentifier)
+				.beginNamespace("entity")
+
+#ifndef MINT_DISTR
+					.addFunction("get_debug_name", &CUCA::identifier_get_debug_name)				
+					.addFunction("set_debug_name", &CUCA::identifier_set_debug_name)
+#endif
+					.addFunction("get_uuid", &CUCA::identifier_get_uuid)
+					.addFunction("get_identifier", &CUCA::identifier_get_identifier)
  				.endNamespace();
 			
 			return true;
@@ -31,13 +34,14 @@ namespace mint::luaglue
 		bool scene_hierarchy(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginNamespace("Hierarchy")
-					.addFunction("HasParent", &CUCA::SSceneHierarchy_HasParent)
-					.addFunction("HasChildren", &CUCA::SSceneHierarchy_HasChildren)
-					.addFunction("GetParent", &CUCA::SSceneHierarchy_GetParentEntity)
-					.addFunction("SetParent", &CUCA::SSceneHierarchy_SetParentEntity)
-					.addFunction("GetChildren", &CUCA::SSceneHierarchy_GetChildEntities)
-					.addFunction("AddChild", &CUCA::SSceneHierarchy_AddChildEntity)
+				.beginNamespace("entity")
+					.addFunction("has_parent", &CUCA::hierarchy_has_parent)
+					.addFunction("has_children", &CUCA::hierarchy_has_children)
+					.addFunction("get_parent", &CUCA::hierarchy_get_parent)
+					.addFunction("set_parent", &CUCA::hierarchy_set_parent)
+					.addFunction("get_children", &CUCA::hierarchy_get_children)
+					.addFunction("add_child", &CUCA::hierarchy_add_child)
+					.addFunction("remove_child", &CUCA::hierarchy_remove_child)
 				.endNamespace();
 
 			return true;
@@ -47,19 +51,29 @@ namespace mint::luaglue
 		bool transform(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginNamespace("Transform")
-				.addFunction("SetTranslationLocal", &CUCA::STransform_SetTranslationLocal)
-				.addFunction("SetRotationLocal", &CUCA::STransform_SetRotationLocal)
+				.beginNamespace("entity")
+				
+				.addFunction("get_position", &CUCA::transform_get_position)
+				.addFunction("get_rotation", &CUCA::transform_get_rotation)
+				.addFunction("get_scale", &CUCA::transform_get_scale)
 
-				.addFunction("Translate", &CUCA::STransform_Translate)
-				.addFunction("SetTranslation", &CUCA::STransform_SetTranslation)
+				.addFunction("set_position_local", &CUCA::transform_set_position_local)
+				.addFunction("set_rotation_local", &CUCA::transform_set_rotation_local)
+				.addFunction("set_scale_local", &CUCA::transform_set_scale_local)
 
-				.addFunction("Rotate", &CUCA::STransform_Rotate)
-				.addFunction("SetRotation", &CUCA::STransform_SetRotation)
+				.addFunction("set_position", &CUCA::transform_set_position)
+				.addFunction("set_rotation", &CUCA::transform_set_rotation)
+				.addFunction("set_scale", &CUCA::transform_set_scale)
 
-				.addFunction("GetPosition", &CUCA::STransform_GetPosition)
-				.addFunction("GetRotation", &CUCA::STransform_GetRotation)
+				.addFunction("translate_local", &CUCA::transform_translate_local)
+				.addFunction("rotate_local", &CUCA::transform_rotate_local)
+				.addFunction("scale_local", &CUCA::transform_scale_local)
 
+				.addFunction("translate", &CUCA::transform_translate)
+				.addFunction("rotate", &CUCA::transform_rotate)
+				.addFunction("scale", &CUCA::transform_scale)
+
+				
 				.endNamespace();
 
 			return true;
@@ -69,42 +83,29 @@ namespace mint::luaglue
 		bool sprite(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginNamespace("Sprite")
-				.addFunction("IsVisible", &CUCA::SSprite_GetVisible)
-				.addFunction("SetVisible", &CUCA::SSprite_SetVisible)
-				.addFunction("__IsVisible__", &CUCA::SSprite_GetInternalVisible)
+				.beginNamespace("entity")
+				.addFunction("is_visible", &CUCA::sprite_is_visible)
+				.addFunction("set_is_visible", &CUCA::sprite_set_is_visible)
+				.addFunction("__is_internal_visible__", &CUCA::sprite_is_internal_visible)
 
-				.addFunction("GetDepth", &CUCA::SSprite_GetDepth)
-				.addFunction("SetDepth", &CUCA::SSprite_SetDepth)
+				.addFunction("get_depth", &CUCA::sprite_get_depth)
+				.addFunction("set_depth", &CUCA::sprite_set_depth)
 
-				.addFunction("GetScale", &CUCA::SSprite_GetScale)
-				.addFunction("SetScale", &CUCA::SSprite_SetScale)
+				.addFunction("get_sprite_size", &CUCA::sprite_get_size)
+				
+				.addFunction("get_sprite_origin", &CUCA::sprite_get_origin)
+				.addFunction("set_sprite_origin", &CUCA::sprite_set_origin)
 
-				.addFunction("GetSize", &CUCA::SSprite_GetSpriteDimension)
-				.addFunction("GetSourceTextureSize", &CUCA::SSprite_GetTextureDimension)
+				.addFunction("get_sprite_color", &CUCA::sprite_get_color)
+				.addFunction("set_sprite_color", &CUCA::sprite_set_color)
 
-				.addFunction("GetOrigin", &CUCA::SSprite_GetTextureOrigin)
-				.addFunction("SetOrigin", &CUCA::SSprite_SetTextureOrigin)
+				.addFunction("get_source_rect", &CUCA::sprite_get_source_rect)
+				.addFunction("set_source_rect", &CUCA::sprite_set_source_rect)
 
-				.addFunction("GetColor", &CUCA::SSprite_GetColorTint)
-				.addFunction("SetColor", &CUCA::SSprite_SetColorTint)
-
-				.addFunction("UsingShader", &CUCA::SSprite_GetUseShader)
-				.addFunction("SetUsingShader", &CUCA::SSprite_SetUseShader)
-
-				.addFunction("GetSourceRect", &CUCA::SSprite_GetSourceRectangle)
-				.addFunction("SetSourceRect", &CUCA::SSprite_SetSourceRectangle)
-
-				.addFunction("IsFlippedVertical", &CUCA::SSprite_GetFlipTextureVertical)
-				.addFunction("IsFlippedHorizontal", &CUCA::SSprite_GetFlipTextureHorizontal)
-				.addFunction("SetFlippedVertical", &CUCA::SSprite_FlipTextureVertical)
-				.addFunction("SetFlippedHorizontal", &CUCA::SSprite_FlipTextureHorizontal)
-
-#ifndef MINT_DISTR
-				.addFunction("__RenderOutline__", &CUCA::SSprite_SetRenderOutline)
-				.addFunction("__RenderDestRect__", &CUCA::SSprite_SetRenderDestinationRect)
-				.addFunction("__RenderOrigin__", &CUCA::SSprite_SetRenderTextureOrigin)
-#endif
+				.addFunction("is_flipped_x", &CUCA::sprite_is_flipped_x)
+				.addFunction("is_flipped_y", &CUCA::sprite_is_flipped_y)
+				.addFunction("set_is_flipped_x", &CUCA::sprite_set_is_flipped_x)
+				.addFunction("set_is_flipped_y", &CUCA::sprite_set_is_flipped_y)
 
 				.endNamespace();
 
@@ -115,13 +116,10 @@ namespace mint::luaglue
 		bool animated_sprite(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginNamespace("Animation")
-				.addFunction("GetAnimationSpeed", &CUCA::SAnimatedSprite_GetAnimationSpeed)
-				.addFunction("SetAnimationSpeed", &CUCA::SAnimatedSprite_SetAnimationSpeed)
+				.beginNamespace("entity")
 
-				.addFunction("GetFrameCount", &CUCA::SAnimatedSprite_GetFrameCount)
-
-				.addFunction("GetAnimatorIdentifier", &CUCA::SAnimatedSprite_GetAnimatorIdentifier)
+				.addFunction("get_animation_speed", &CUCA::animated_sprite_get_animation_speed)
+				.addFunction("set_animation_speed", &CUCA::animated_sprite_set_animation_speed)
 
 				.endNamespace();
 

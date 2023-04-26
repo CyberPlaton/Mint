@@ -27,7 +27,11 @@ namespace mint::scripting
 	{
 		bool reg = true;
 
-
+		reg &= mint::luaglue::script::luamodule_common(state);
+		reg &= mint::luaglue::script::luamodule_components(state);
+		reg &= mint::luaglue::script::luamodule_scene(state);
+		reg &= mint::luaglue::script::luamodule_input(state);
+		reg &= mint::luaglue::script::luamodule_physics(state);
 
 		return reg;
 	}
@@ -37,7 +41,11 @@ namespace mint::scripting
 	{
 		bool reg = true;
 
-
+		reg &= mint::luaglue::behavior::luamodule_common(state);
+		reg &= mint::luaglue::behavior::luamodule_components(state);
+		reg &= mint::luaglue::behavior::luamodule_scene(state);
+		reg &= mint::luaglue::behavior::luamodule_input(state);
+		reg &= mint::luaglue::behavior::luamodule_physics(state);
 
 		return reg;
 	}

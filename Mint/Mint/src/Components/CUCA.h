@@ -20,6 +20,43 @@ namespace mint::component
 		friend class IMintEngine;
 	public:
 
+		static u64 animated_sprite_get_animation_speed(entt::entity entity);
+		static void animated_sprite_set_animation_speed(entt::entity entity, u64 value);
+
+		static bool sprite_is_internal_visible(entt::entity entity);
+		static void sprite_set_is_internal_visible(entt::entity entity, bool value);
+		static void sprite_add_material(entt::entity entity, const fx::CMaterial& material);
+		static const Vector< fx::CMaterial >& sprite_get_all_materials(entt::entity entity);
+		static bool sprite_is_visible(entt::entity entity);
+		static void sprite_set_is_visible(entt::entity entity, bool value);
+		static u64 sprite_get_depth(entt::entity entity);
+		static void sprite_set_depth(entt::entity entity, u64 value);
+		static Vec2 sprite_get_size(entt::entity entity);
+		static Vec2 sprite_get_origin(entt::entity entity);
+		static void sprite_set_origin(entt::entity entity, const Vec2& value);
+		static CRect sprite_get_source_rect(entt::entity entity);
+		static void sprite_set_source_rect(entt::entity entity, const CRect& value);
+		static bool sprite_is_flipped_x(entt::entity entity);
+		static void sprite_set_is_flipped_x(entt::entity entity, bool value);
+		static bool sprite_is_flipped_y(entt::entity entity);
+		static void sprite_set_is_flipped_y(entt::entity entity, bool value);
+		static fx::CColor sprite_get_color(entt::entity entity);
+		static void sprite_set_color(entt::entity entity, const fx::CColor& value);
+
+		static String identifier_get_debug_name(entt::entity entity);
+		static void identifier_set_debug_name(entt::entity entity, const String& name);
+		static u64 identifier_get_identifier(entt::entity entity);
+		static u64 identifier_get_uuid(entt::entity entity);
+
+
+		static bool hierarchy_has_parent(entt::entity entity);
+		static bool hierarchy_has_children(entt::entity entity);
+		static entt::entity hierarchy_get_parent(entt::entity entity);
+		static Vector< entt::entity > hierarchy_get_children(entt::entity entity);
+		static void hierarchy_set_parent(entt::entity entity, entt::entity parent);
+		static void hierarchy_add_child(entt::entity entity, entt::entity child);
+		static void hierarchy_remove_child(entt::entity entity, entt::entity child);
+
 		static Mat4 transform_get_world_transform_matrix(entt::entity entity);
 		static Mat4 transform_get_local_transform_matrix(entt::entity entity);
 		static Vec2 transform_get_position(entt::entity entity);
@@ -50,13 +87,6 @@ namespace mint::component
 		static void transform_set_rotation_local(entt::entity entity, f32 value);
 		static void transform_rotate_local(entt::entity entity, f32 value);
 		
-
-
-
-		static Vec2 sprite_get_texture_dimension(entt::entity entity);
-		static u32 sprite_get_depth(entt::entity entity);
-		static void sprite_add_material(entt::entity entity, const fx::CMaterial& material);
-		static const Vector< fx::CMaterial >& sprite_get_all_materials(entt::entity entity);
 
 	private:
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);

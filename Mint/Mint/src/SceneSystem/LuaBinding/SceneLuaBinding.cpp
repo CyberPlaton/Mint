@@ -10,23 +10,21 @@ namespace mint::luaglue
 		bool camera(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginClass< CCamera >("Camera")
+				.beginClass< mint::fx::ICamera >("Camera")
 
-				.addFunction("SetTarget", &CCamera::SetTarget)
-				.addFunction("GetTarget", &CCamera::GetTarget)
+				.addFunction("set_translation", &mint::fx::ICamera::set_translation)
+				.addFunction("set_translation_offset", &mint::fx::ICamera::set_translation_offset)
+				.addFunction("set_rotation", &mint::fx::ICamera::set_rotation)
+				.addFunction("set_zoom", &mint::fx::ICamera::set_zoom)
 
-				.addFunction("GetWorldTL", &CCamera::GetWorldTL)
-				.addFunction("GetWorldBR", &CCamera::GetWorldBR)
+				.addFunction("get_world_visible_area", &mint::fx::ICamera::get_world_visible_area)
 
-				.addFunction("GetWorldVisibleArea", &CCamera::GetWorldVisibleArea)
+				.addFunction("get_viewport_x", &mint::fx::ICamera::get_viewport_x)
+				.addFunction("get_viewport_y", &mint::fx::ICamera::get_viewport_y)
+				.addFunction("get_viewport_width", &mint::fx::ICamera::get_viewport_width)
+				.addFunction("get_viewport_height", &mint::fx::ICamera::get_viewport_height)
 
-				.addFunction("Zoom", &CCamera::Zoom)
-				.addFunction("SetZoom", &CCamera::SetZoom)
-				.addFunction("GetZoom", &CCamera::GetZoom)
-
-				.addFunction("Rotate", &CCamera::Rotate)
-				.addFunction("SetRotation", &CCamera::SetRotation)
-				.addFunction("GetRotation", &CCamera::GetRotation)
+				.addFunction("get_clear_color", &mint::fx::ICamera::get_clear_color)
 
 				.endClass();
 
@@ -37,19 +35,15 @@ namespace mint::luaglue
 		bool scene_common(lua_State* state)
 		{
 			luabridge::getGlobalNamespace(state)
-				.beginClass< IScene >("Scene")
-				.addStaticFunction("GetActiveScene", &IScene::GetActiveScene)
+				.beginClass< mint::IScene >("Scene")
+				.addStaticFunction("get_active_scene", &IScene::get_active_scene)
 
-				.addFunction("IsReady", &IScene::IsReady)
-				.addFunction("GetSceneName", &IScene::GetSceneName)
+				.addFunction("is_ready", &IScene::is_ready)
+				.addFunction("get_scene_name", &IScene::get_scene_name)
 
-				.addFunction("GetActiveCamera", &IScene::GetActiveCamera)
-				.addFunction("PushCamera", &IScene::PushCamera)
-				.addFunction("PopCamera", &IScene::PopCamera)
-
-				.addFunction("RemoveEntity", &IScene::RemoveEntity)
-				.addFunction("AddEntity", &IScene::AddEntity)
-				.addFunction("GetEntities", &IScene::GetEntities)
+				.addFunction("get_active_camera", &IScene::get_active_camera)
+				.addFunction("push_camera", &IScene::push_camera)
+				.addFunction("pop_camera", &IScene::pop_camera)
 
 				.endClass();
 

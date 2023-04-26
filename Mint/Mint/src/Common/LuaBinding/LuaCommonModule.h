@@ -8,20 +8,14 @@
 
 namespace mint::luaglue
 {
-	namespace ubound
+	namespace script
 	{
-		/// @brief Register all common functionality not bound to an Entity to a Lua state.
-		/// @param state Lua state.
-		/// @return True on success.
-		bool RegisterCommonUbound(lua_State* state);
+		bool luamodule_common(lua_State* state);
 	}
 
-	namespace bound
+	namespace behavior
 	{
-		/// @brief Register all Entity bound common functionality to a Lua state.
-		/// @param state Lua state.
-		/// @return True on success.
-		bool RegisterCommonBound(lua_State* state);
+		bool luamodule_common(lua_State* state);
 	}
 }
 

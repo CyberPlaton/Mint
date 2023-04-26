@@ -25,7 +25,7 @@ namespace mint::component
 	}
 
 
-	mint::Vec2 CUCA::sprite_get_texture_dimension(entt::entity entity)
+	mint::Vec2 CUCA::sprite_get_size(entt::entity entity)
 	{
 		const auto& materials = CUCA::sprite_get_all_materials(entity);
 
@@ -39,7 +39,7 @@ namespace mint::component
 	}
 
 
-	mint::u32 CUCA::sprite_get_depth(entt::entity entity)
+	mint::u64 CUCA::sprite_get_depth(entt::entity entity)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -515,7 +515,7 @@ namespace mint::component
 
 			rb.m_body->DestroyFixture(rb.m_body->GetFixtureList());
 
-			const auto& dimensions = CUCA::sprite_get_texture_dimension(entity);
+			const auto& dimensions = CUCA::sprite_get_size(entity);
 
 			rb.m_bodyShape.SetAsBox(value.x * dimensions.x, value.y * dimensions.y);
 
@@ -544,6 +544,372 @@ namespace mint::component
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
 			fx::CMaterialManager::Get().add_material_for_entity(entity, material);
+
+		);
+	}
+
+
+	mint::String CUCA::identifier_get_debug_name(entt::entity entity)
+	{
+		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			auto name = id.m_debugName;
+
+		);
+
+		return name;
+	}
+
+
+	void CUCA::identifier_set_debug_name(entt::entity entity, const String& name)
+	{
+		auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			id.m_debugName = name;
+
+		);
+	}
+
+
+	u64 CUCA::identifier_get_identifier(entt::entity entity)
+	{
+		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			auto entt_id = id.m_enttId;
+
+		);
+
+		return entt_id;
+	}
+
+
+	u64 CUCA::identifier_get_uuid(entt::entity entity)
+	{
+		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			auto uuid = id.m_uuid;
+
+		);
+
+		return uuid;
+	}
+
+
+	bool CUCA::hierarchy_has_parent(entt::entity entity)
+	{
+		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			auto result = hierarchy.m_parent == entt::null;
+
+		);
+
+		return result;
+	}
+
+
+	bool CUCA::hierarchy_has_children(entt::entity entity)
+	{
+		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			auto result = !hierarchy.m_children.empty();
+
+		);
+
+		return result;
+	}
+
+
+	entt::entity CUCA::hierarchy_get_parent(entt::entity entity)
+	{
+		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			auto parent = hierarchy.m_parent;
+
+		);
+
+		return parent;
+	}
+
+
+	mint::Vector< entt::entity > CUCA::hierarchy_get_children(entt::entity entity)
+	{
+		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			auto kids = hierarchy.m_children;
+
+		);
+
+		return kids;
+	}
+
+
+	void CUCA::hierarchy_set_parent(entt::entity entity, entt::entity parent)
+	{
+		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			hierarchy.m_parent = parent;
+
+		);
+	}
+
+
+	void CUCA::hierarchy_add_child(entt::entity entity, entt::entity child)
+	{
+		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			mint::algorithm::vector_push_back(hierarchy.m_children, child);
+
+		);
+	}
+
+
+	void CUCA::hierarchy_remove_child(entt::entity entity, entt::entity child)
+	{
+		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
+
+			mint::algorithm::vector_erase(hierarchy.m_children, child);
+
+		);
+	}
+
+
+	bool CUCA::sprite_is_visible(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_visible;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_is_visible(entt::entity entity, bool value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_visible = value;
+
+		);
+	}
+
+
+	bool CUCA::sprite_is_internal_visible(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_internalVisible;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_depth(entt::entity entity, u64 value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_depth = value;
+
+		);
+	}
+
+
+	mint::Vec2 CUCA::sprite_get_origin(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_origin;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_origin(entt::entity entity, const Vec2& value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_origin = value;
+
+		);
+	}
+
+
+	mint::CRect CUCA::sprite_get_source_rect(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_rect;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_source_rect(entt::entity entity, const CRect& value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_rect = value;
+
+		);
+	}
+
+
+	bool CUCA::sprite_is_flipped_x(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_flipX;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_is_flipped_x(entt::entity entity, bool value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_flipX = value;
+
+		);
+	}
+
+
+	bool CUCA::sprite_is_flipped_y(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_flipY;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_is_flipped_y(entt::entity entity, bool value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_flipY = value;
+
+		);
+	}
+
+
+	void CUCA::sprite_set_is_internal_visible(entt::entity entity, bool value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_internalVisible = value;
+
+		);
+	}
+
+
+	mint::fx::CColor CUCA::sprite_get_color(entt::entity entity)
+	{
+		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto value = sprite.m_color;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::sprite_set_color(entt::entity entity, const fx::CColor& value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_color = value;
+
+		);
+	}
+
+
+	u64 CUCA::animated_sprite_get_animation_speed(entt::entity entity)
+	{
+		const auto& animsprite = MINT_SCENE_REGISTRY().get_component< SAnimatedSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_animatedSpriteCriticalSection,
+
+			auto value = animsprite.m_animationSpeed;
+
+		);
+
+		return value;
+	}
+
+
+	void CUCA::animated_sprite_set_animation_speed(entt::entity entity, u64 value)
+	{
+		auto& animsprite = MINT_SCENE_REGISTRY().get_component< SAnimatedSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_animatedSpriteCriticalSection,
+
+			animsprite.m_animationSpeed = value;
 
 		);
 	}

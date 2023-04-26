@@ -5,6 +5,7 @@
 
 #include "Scripting/Common/Lua.h"
 
+#include "../Common/Collision.h"
 #include "../PhysicsSystem.h"
 
 
@@ -13,7 +14,7 @@ namespace mint::luaglue
 
 	namespace script
 	{
-		bool common(lua_State* state);
+		bool physics_common(lua_State* state);
 	}
 
 

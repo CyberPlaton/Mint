@@ -59,6 +59,7 @@ namespace mint
 
 		void push_camera(fx::ICamera* camera) override final;
 
+		void pop_camera() override final;
 
 
 		CPath get_scene_assets_path() override final;

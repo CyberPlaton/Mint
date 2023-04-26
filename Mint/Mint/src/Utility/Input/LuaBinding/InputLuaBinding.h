@@ -13,7 +13,7 @@ namespace mint::luaglue
 
 	namespace script
 	{
-		bool common(lua_State* state);
+		bool input(lua_State* state);
 	}
 }
 

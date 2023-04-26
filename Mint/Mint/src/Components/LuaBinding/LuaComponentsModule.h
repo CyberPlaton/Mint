@@ -9,12 +9,12 @@ namespace mint::luaglue
 
 	namespace script
 	{
-		bool register_components(lua_State* state);
+		bool luamodule_components(lua_State* state);
 	}
 
 	namespace behavior
 	{
-		bool register_components(lua_State* state);
+		bool luamodule_components(lua_State* state);
 	}
 
 }

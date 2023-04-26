@@ -3,15 +3,15 @@
 
 namespace mint::luaglue
 {
-	namespace ubound
+	namespace script
 	{
 
 
-		bool RegisterCommonUbound(lua_State* state)
+		bool luamodule_common(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= bound::CommonDependencies(state);
+			initialization &= behavior::dependencies(state);
 
 			return initialization;
 		}
@@ -19,15 +19,14 @@ namespace mint::luaglue
 
 	}
 
-	namespace bound
+	namespace behavior
 	{
 
-
-		bool RegisterCommonBound(lua_State* state)
+		bool luamodule_common(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= CommonDependencies(state);
+			initialization &= dependencies(state);
 
 			return initialization;
 		}

@@ -4,11 +4,11 @@ namespace mint::luaglue
 {
 	namespace script
 	{
-		bool common(lua_State* state)
+		bool luamodule_input(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= common(state);
+			initialization &= input(state);
 
 			return initialization;
 		}
@@ -18,11 +18,11 @@ namespace mint::luaglue
 
 	namespace behavior
 	{
-		bool common(lua_State* state)
+		bool luamodule_input(lua_State* state)
 		{
 			bool initialization = true;
 
-			initialization &= script::common(state);
+			initialization &= script::input(state);
 
 			return initialization;
 		}

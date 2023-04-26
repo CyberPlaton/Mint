@@ -10,12 +10,12 @@ namespace mint::luaglue
 {
 	namespace script
 	{
-		bool physics(lua_State* state);
+		bool luamodule_physics(lua_State* state);
 	}
 
 	namespace behavior
 	{
-		bool physics(lua_State* state);
+		bool luamodule_physics(lua_State* state);
 	}
 }
 

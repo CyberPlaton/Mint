@@ -10,12 +10,12 @@ namespace mint::luaglue
 {
 	namespace script
 	{
-		bool common(lua_State* state);
+		bool luamodule_input(lua_State* state);
 	}
 
 	namespace behavior
 	{
-		bool common(lua_State* state);
+		bool luamodule_input(lua_State* state);
 	}
 }
 
