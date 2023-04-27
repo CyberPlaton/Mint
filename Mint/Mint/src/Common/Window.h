@@ -73,6 +73,8 @@ namespace mint
 
 		void toggle_fullscreen();
 
+		void set_title(const String& title);
+
 		f32 get_x() const;
 
 		f32 get_y() const;

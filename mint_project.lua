@@ -78,6 +78,8 @@
 		print("Loading files from " .. mint_abs_path)
 		-- Load project interface files
 		files{
+				mint_location .. "/Application.h", 
+				mint_location .. "/Application.cpp",
 				mint_location .. "/Mint.h", 
 				mint_location .. "/Mint.cpp",
 				mint_location .. "/IMint.h", 

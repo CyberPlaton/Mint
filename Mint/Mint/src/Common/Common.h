@@ -91,6 +91,7 @@ namespace mint
 	using String = std::string;
 	using Window = raylib::Window;
 	using Texture = raylib::Texture;
+	using Shader = raylib::Shader;
 
 	template< typename T >
 	using Vector = std::vector< T >;

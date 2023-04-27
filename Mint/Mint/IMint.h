@@ -69,6 +69,8 @@ namespace mint
 
 		virtual void set_engine_fps(f32) = 0;
 
+		virtual void set_engine_window_title(const String&) = 0;
+
 	protected:
 		static IMintEngine* s_engine;
 

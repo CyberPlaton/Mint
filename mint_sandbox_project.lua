@@ -27,11 +27,12 @@
 		print("Include Mint engine header and source files at: " .. mint_engine_path .. "/Mint, " .. mint_engine_path .. "/Mint/src")
 
 
-		scenes_and_plugins_path = os.getcwd() .. "/Sandbox/Sandbox/src"
+		scenes_and_plugins_path = os.getcwd() .. "/Sandbox/Sandbox"
 		scenes_and_plugins = {
-			"BuiltinPlugins",
-			"CustomPlugins",
-			"Scenes",
+			"src/BuiltinPlugins",
+			"src/CustomPlugins",
+			"src/Scenes",
+			"src"
 		}
 		print("Include scene and plugins sources and create virtual paths for them at: " .. scenes_and_plugins_path)
 
@@ -39,17 +40,40 @@
 		print("Loading scenes and plugins:")
 		for index = 1, #scenes_and_plugins do
 			fldr = scenes_and_plugins[index]
-			print("[" .. fldr.."]" .. " = " .. scenes_and_plugins_path .. "/" .. fldr)
+			print("Loading folder: " .. "[" .. fldr.."]" .. " = " .. scenes_and_plugins_path .. "/" .. fldr)
+
+			
+			print("Create Virtual folder: [" .. fldr .. "] = " .. scenes_and_plugins_path)
 			vpaths{
 				[fldr] = {scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"}
 			}
+			-- Load files to project
 			files{
-				scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"
+				scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp",
 			}
+			-- Allow including folder headers across project
+			print("Create Include folder: " .. fldr)
 			includedirs{
 				fldr
 			}
 		end
+		--for index = 1, #scenes_and_plugins do
+		--	fldr = scenes_and_plugins[index]
+		--	print("[" .. fldr.."]" .. " = " .. scenes_and_plugins_path .. "/" .. fldr)
+		--
+		--	print("Create virtual path: = " .. fldr)
+		--	vpaths{
+		--		[fldr] = {scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"}
+		--	}
+		--	
+		--	print("Include files: = " .. scenes_and_plugins_path .. "/" .. fldr .. "/**.h and " .. scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp")
+		--	files{
+		--		scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"
+		--	}
+		--	includedirs{
+		--		fldr
+		--	}
+		--end
 
 
 		files{

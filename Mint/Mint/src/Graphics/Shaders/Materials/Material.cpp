@@ -6,7 +6,7 @@ namespace mint::fx
 
 
 	CMaterial::CMaterial() : 
-		m_texture(MINT_INVALID_HANDLE)
+		m_texture(MINT_INVALID_HANDLE), m_shader(nullptr)
 	{
 	}
 
@@ -54,13 +54,15 @@ namespace mint::fx
 
 	void CMaterial::set_shader_program(const Shader& shader)
 	{
-		m_shader = shader;
+		m_shader = new mint::Shader(shader.GetId(), shader.GetLocs());
 	}
 
 
 	void CMaterial::set_shader_program(const String& shader_program_name)
 	{
-		m_shader = CShaderManager::Get().get_shader_program(shader_program_name);
+		const auto& shader = CShaderManager::Get().get_shader_program(shader_program_name);
+
+		set_shader_program(shader);
 	}
 
 
@@ -83,7 +85,7 @@ namespace mint::fx
 
 		for (const auto& uniform: uniforms.get_all_const())
 		{
-			uniform_loc = GetShaderLocation(m_shader, uniform.get_c_name());
+			uniform_loc = GetShaderLocation(*m_shader, uniform.get_c_name());
 
 			switch (uniform.get_type())
 			{
@@ -126,14 +128,14 @@ namespace mint::fx
 			}
 			}
 
-			SetShaderValue(m_shader, uniform_loc, uniform.m_data, uniform_type);
+			SetShaderValue(*m_shader, uniform_loc, uniform.m_data, uniform_type);
 		}
 	}
 
 
 	void CMaterial::bind_shader()  const
 	{
-		BeginShaderMode(m_shader);
+		BeginShaderMode(*m_shader);
 	}
 
 

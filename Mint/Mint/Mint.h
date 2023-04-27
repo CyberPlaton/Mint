@@ -85,7 +85,7 @@ namespace mint
 
 		void set_engine_fps(f32 fps) override final;
 
-
+		void set_engine_window_title(const String& title) override final;
 
 	private:
 		bool m_running;

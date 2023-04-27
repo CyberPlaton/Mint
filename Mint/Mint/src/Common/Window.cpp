@@ -89,6 +89,12 @@ namespace mint
 	}
 
 
+	void CWindow::set_title(const String& title)
+	{
+		m_window.SetTitle(title);
+	}
+
+
 	mint::f32 CWindow::get_x() const
 	{
 		return m_window.GetPosition().x;

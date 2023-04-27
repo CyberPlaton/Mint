@@ -165,6 +165,12 @@ namespace mint
 	}
 
 
+	void CMintEngine::set_engine_window_title(const String& title)
+	{
+		m_mainWindow.set_title(title);
+	}
+
+
 	bool CMintEngine::_prepare_for_init()
 	{
 		IMintEngine::initialize_cuca_critical_sections();
@@ -268,11 +274,11 @@ namespace mint
 		// Initialize engine sub systems.
 		bool result = true;
 
-		// Embedded shaders.
-		result &= fx::CEmbeddedShaders::Get().initialize();
-
 		// UI.
 		result &= CUI::Get().initialize();
+
+		// Embedded shaders.
+		result &= fx::CEmbeddedShaders::Get().initialize();
 
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
@@ -299,6 +305,7 @@ namespace mint
 		if (!m_mainWindow.initialize(wdesc)) return false;
 		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
 
+		set_engine_fps(SCAST(f32, wdesc.m_targetFPS));
 
 		// Initialize medium level engine systems.
 		bool result = true;

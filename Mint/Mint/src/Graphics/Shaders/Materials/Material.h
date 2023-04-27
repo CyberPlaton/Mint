@@ -78,7 +78,7 @@ namespace mint::fx
 		void restore_default_blend_mode();
 
 		void set_shader_program(const String& shader_program_name);
-		void set_shader_program(const Shader& shader);
+		void set_shader_program(const mint::Shader& shader);
 
 		void set_texture(const String& texture_name);
 		void set_texture(TextureHandle texture_handle, const Vec2& texture_size);
@@ -95,7 +95,7 @@ namespace mint::fx
 		
 		Vec2 m_textureSize;
 		
-		Shader m_shader;
+		mint::Shader* m_shader;
 
 		BlendMode m_blendMode = BLEND_ALPHA;
 		uint32_t m_srcBlendFactor = RL_SRC_ALPHA;
