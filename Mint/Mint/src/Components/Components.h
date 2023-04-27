@@ -21,9 +21,7 @@ namespace mint::component
 
 		u64 m_enttId = 0;
 
-#ifndef MINT_DISTR
 		String m_debugName;
-#endif
 	};
 
 

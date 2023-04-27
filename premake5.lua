@@ -30,7 +30,3 @@ workspace "Mint Engine"
 	group "Sandbox"
 		include "mint_sandbox_project.lua"
 	group ""
-
-	group "Editor"
-		include "mint_editor_project.lua"
-	group ""

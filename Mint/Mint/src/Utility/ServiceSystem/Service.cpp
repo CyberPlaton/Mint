@@ -65,7 +65,6 @@ namespace mint
 		);
 	}
 
-
 	void IService::print_registered_services()
 	{
 		const auto& services = g_Services.get_all();

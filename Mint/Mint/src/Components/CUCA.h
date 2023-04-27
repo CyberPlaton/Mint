@@ -45,6 +45,7 @@ namespace mint::component
 
 		static String identifier_get_debug_name(entt::entity entity);
 		static void identifier_set_debug_name(entt::entity entity, const String& name);
+
 		static u64 identifier_get_identifier(entt::entity entity);
 		static u64 identifier_get_uuid(entt::entity entity);
 

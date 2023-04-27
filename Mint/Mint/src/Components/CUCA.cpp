@@ -548,7 +548,6 @@ namespace mint::component
 		);
 	}
 
-
 	mint::String CUCA::identifier_get_debug_name(entt::entity entity)
 	{
 		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
@@ -573,7 +572,6 @@ namespace mint::component
 
 		);
 	}
-
 
 	u64 CUCA::identifier_get_identifier(entt::entity entity)
 	{
