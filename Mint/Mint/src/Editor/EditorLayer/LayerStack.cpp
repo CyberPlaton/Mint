@@ -95,4 +95,23 @@ namespace mint::editor
 	}
 
 
+	void CLayerStack::print_registered_layers()
+	{
+		mint::u32 i = m_layers.size();
+
+		MINT_LOG_INFO("[{:.4f}][CLayerStack::print_registered_layers] Dumping registered layers from top to bottom:", MINT_APP_TIME);
+
+		for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
+		{
+			auto layer = *it;
+
+			auto name = layer->get_layer_name();
+
+			MINT_LOG_INFO("\t#{} = \"{}\".", i, name);
+
+			i--;
+		}
+	}
+
+
 }

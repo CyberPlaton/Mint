@@ -3,6 +3,7 @@
 
 
 #include "Common/Layer.h"
+#include "Utility/Logging/Logging.h"
 
 
 namespace mint::editor
@@ -17,6 +18,7 @@ namespace mint::editor
 
 		void clear_all_layers();
 
+		void print_registered_layers();
 
 
 		void on_ui_frame();

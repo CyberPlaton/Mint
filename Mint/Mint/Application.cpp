@@ -82,6 +82,11 @@ namespace mint
 			result &= editor::CEditorIconManager::Get().initialize();
 			result &= create_layer_stack();
 
+			if(result)
+			{
+				m_layerStack.print_registered_layers();
+			}
+
 			return result;
 		}
 
@@ -136,8 +141,6 @@ namespace mint
 	void CEditor::on_editor_ui_frame_begin()
 	{
 		ui_frame_begin();
-
-		
 	}
 
 
@@ -147,25 +150,23 @@ namespace mint
 
 		if (!m_editingMode) return;
 
-
 		if (m_showMainMenuBar) show_main_menu_bar();
 
+		m_layerStack.on_ui_frame();
 	}
 
 
 	void CEditor::on_editor_ui_frame_end()
 	{
-
-
 		ui_frame_end();
 	}
 
 
 	void CEditor::on_editor_before_update()
 	{
-
-
 		on_before_update();
+
+		m_layerStack.on_before_update();
 	}
 
 
@@ -194,14 +195,16 @@ namespace mint
 		}
 
 		on_update(dt);
+
+		m_layerStack.on_update(dt);
 	}
 
 
 	void CEditor::on_editor_after_update(f32 dt)
 	{
-
-
 		on_after_update(dt);
+
+		m_layerStack.on_after_update(dt);
 	}
 
 
@@ -209,25 +212,27 @@ namespace mint
 	{
 		begin_frame();
 
-
-
+		if (m_editingMode)
+		{
+			rlPushMatrix();
+				rlTranslatef(0, 0, 0);
+				rlRotatef(-90, 1, 0, 0);
+				DrawGrid(1000, editor::s_DefaultGridcellSize);
+			rlPopMatrix();
+		}
 	}
 
 
 	void CEditor::on_editor_frame_render()
 	{
-
-
-
 		frame();
+
+		m_layerStack.on_frame();
 	}
 
 
 	void CEditor::on_editor_frame_end()
 	{
-
-
-
 		end_frame();
 	}
 
