@@ -22,11 +22,6 @@ namespace mint
 
 	void CSAS::terminate()
 	{
-		set_should_update(false);
-		_set_is_running(false);
-
-		_wait_for_termination();
-
 		reset();
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
@@ -48,6 +43,17 @@ namespace mint
 	void CSAS::run_sas_thread()
 	{
 		_run();
+	}
+
+
+	void CSAS::stop_sas_thread()
+	{
+		set_should_update(false);
+
+		_set_is_running(false);
+
+		_wait_for_termination();
+
 	}
 
 

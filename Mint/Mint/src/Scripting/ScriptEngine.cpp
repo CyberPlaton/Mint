@@ -21,11 +21,6 @@ namespace mint::scripting
 
 	void CScriptEngine::terminate()
 	{
-		set_should_update(false);
-		_set_is_running(false);
-
-		_wait_for_termination();
-
 		reset();
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
@@ -53,13 +48,13 @@ namespace mint::scripting
 
 	bool CScriptEngine::is_running()
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+// 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+// 
+// 			bool v = m_running;
+// 
+// 		);
 
-			bool v = m_running;
-
-		);
-
-		return v;
+		return m_running;
 	}
 
 
@@ -126,11 +121,13 @@ namespace mint::scripting
 
 	void CScriptEngine::_set_is_running(bool value)
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+// 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+// 
+// 			m_running = value;
+// 
+// 		);
 
-			m_running = value;
-
-		);
+		m_running = value;
 	}
 
 
@@ -210,6 +207,16 @@ namespace mint::scripting
 			);
 
 		}
+	}
+
+
+	void CScriptEngine::stop_script_engine_thread()
+	{
+		set_should_update(false);
+
+		_set_is_running(false);
+		
+		_wait_for_termination();
 	}
 
 

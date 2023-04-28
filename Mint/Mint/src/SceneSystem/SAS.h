@@ -57,7 +57,11 @@ namespace mint
 
 		void reset();
 
+		
 		void run_sas_thread();
+
+		void stop_sas_thread();
+
 
 		bool is_running();
 

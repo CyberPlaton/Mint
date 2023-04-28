@@ -20,7 +20,10 @@ namespace mint::scripting
 
 		void reset();
 
+		
 		void run_script_engine_thread();
+
+		void stop_script_engine_thread();
 
 
 		bool is_running();
@@ -37,7 +40,7 @@ namespace mint::scripting
 
 		bool m_internalLoop;
 
-		bool m_running;
+		std::atomic_bool m_running;
 
 		bool m_update;
 

@@ -380,7 +380,10 @@ namespace mint
 		CPluginSystem::Get().on_pre_termination();
 		
 		// Spatial acceleration structure.
+		CSAS::Get().stop_sas_thread();
+
 		CSAS::Get().terminate();
+
 
 		// Scene rendering.
 		fx::CSceneRenderer::Get().terminate();
@@ -394,9 +397,14 @@ namespace mint
 		// Terminate plugins and medium level engine sub systems.
 		CPluginSystem::Get().on_termination();
 
+
 		// Scripting engine.
+		scripting::CBehaviorEngine::Get().stop_behavior_engine_thread();
+		scripting::CScriptEngine::Get().stop_script_engine_thread();
+		
 		scripting::CBehaviorEngine::Get().terminate();
 		scripting::CScriptEngine::Get().terminate();
+
 
 		// Texture Manager.
 		CTextureManager::Get().terminate();

@@ -22,6 +22,8 @@ namespace mint::scripting
 
 		void run_behavior_engine_thread();
 
+		void stop_behavior_engine_thread();
+
 
 		bool is_running();
 

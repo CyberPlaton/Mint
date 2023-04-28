@@ -28,8 +28,6 @@ namespace mint::fx
 
 		while(!shaders.empty())
 		{
-			UnloadShader(shaders[0]);
-
 			shaders.erase(shaders.begin());
 		}
 	}

@@ -21,11 +21,6 @@ namespace mint::scripting
 
 	void CBehaviorEngine::terminate()
 	{
-		set_should_update(false);
-		_set_is_running(false);
-
-		_wait_for_termination();
-
 		reset();
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
@@ -225,6 +220,16 @@ namespace mint::scripting
 				m_activeBehaviors.remove(h);
 			);
 		}
+	}
+
+
+	void CBehaviorEngine::stop_behavior_engine_thread()
+	{
+		set_should_update(false);
+
+		_set_is_running(false);
+
+		_wait_for_termination();
 	}
 
 
