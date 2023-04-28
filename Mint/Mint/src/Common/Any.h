@@ -21,12 +21,12 @@ namespace mint
 
 		u64 get_type();
 
-		std::string get_type_name();
+		mint::String get_type_name();
 
-		bool is_empty();
+		bool is_empty() const noexcept;
 
 		template< typename T >
-		bool is();
+		bool is() const noexcept;
 
 		void set(std::any& data);
 
@@ -50,7 +50,7 @@ namespace mint
 
 
 	template< typename T >
-	bool mint::CAny::is()
+	bool mint::CAny::is() const noexcept
 	{
 		return typeid(T).hash_code() == m_data.type().hash_code();
 	}

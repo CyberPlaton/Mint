@@ -73,12 +73,14 @@ namespace mint
 			set_engine_fps(60.0f);
 			set_engine_window_title("Mint Engine Editor");
 
+
+			m_editorCamera = new mint::fx::CCamera2D({ 255, 150, 50, 255 }, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
+
 			
 			bool result = true;
 
-			
+			result &= editor::CEditorIconManager::Get().initialize();
 			result &= create_layer_stack();
-
 
 			return result;
 		}
@@ -178,12 +180,16 @@ namespace mint
 				set_engine_fps(0.0f);
 
 				set_engine_window_title("Mint Engine Editor: Editing Mode");
+
+				MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
 			}
 			else
 			{
 				set_engine_fps(30.0f);
 
 				set_engine_window_title("Mint Engine Editor");
+
+				MINT_ACTIVE_SCENE()->pop_camera();
 			}
 		}
 
@@ -228,6 +234,11 @@ namespace mint
 
 	bool CEditor::create_layer_stack()
 	{
+		if(!m_layerStack.try_push_layer(new editor::CCameraControllerLayer(m_editorCamera)))
+		{
+			MINT_LOG_CRITICAL("[{:.4f}][CEditor::create_layer_stack] Failed creating editor layer \"{}\"!", MINT_APP_TIME, STRING(CCameraControllerLayer));
+		}
+
 
 		return true;
 	}

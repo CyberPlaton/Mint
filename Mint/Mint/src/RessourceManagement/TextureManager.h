@@ -32,7 +32,7 @@ namespace mint
 
 		const Vector< Texture >& get_all_textures();
 
-		const Texture& get_texture(TextureHandle handle) const;
+		const Texture& get_texture(TextureHandle handle);
 
 
 	private:

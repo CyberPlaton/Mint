@@ -40,13 +40,13 @@ namespace mint
 	}
 
 
-	std::string CAny::get_type_name()
+	mint::String CAny::get_type_name()
 	{
 		return m_data.type().name();
 	}
 
 
-	bool CAny::is_empty()
+	bool CAny::is_empty() const noexcept
 	{
 		return !m_data.has_value();
 	}

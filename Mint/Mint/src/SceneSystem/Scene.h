@@ -74,7 +74,7 @@ namespace mint
 	protected:
 		Vector< entt::entity > m_entities;
 
-		fx::ICamera* m_camera;
+		Vector< fx::ICamera* > m_cameraStack;
 
 		CRegistry m_registry;
 

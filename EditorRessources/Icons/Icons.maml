@@ -1,0 +1,7 @@
+icons:
+	plus="button_circle_round_add.png"
+	minus="button_circle_round_remove.png"
+	save="floppy_disc_storage.png"
+	pause="media_player_ui_button_pause.png"
+	play="media_player_ui_button_play.png"
+end

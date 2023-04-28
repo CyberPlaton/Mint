@@ -85,6 +85,7 @@ namespace maml
 
 		static mint::Vector< mint::CAny > get_array_property(SNode* node, const mint::String& property_name, mint::Vector< mint::CAny > default_value = mint::Vector< mint::CAny >{});
 
+		static mint::Vector< SProperty >& get_all_node_properties(SNode* node);
 
 	private:
 		CNodeAllocator< SNode > m_nodes;

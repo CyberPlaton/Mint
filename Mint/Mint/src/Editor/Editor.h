@@ -5,6 +5,8 @@
 #if MINT_DISTR
 #else
 #include "EditorLayer/LayerStack.h"
+#include "RessourceManagement/EditorIconManager.h"
+#include "EditorLayer/Layers/EditorLayerCameraController.h"
 
 namespace mint::editor
 {

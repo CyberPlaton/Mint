@@ -62,6 +62,7 @@ namespace mint
 
 	protected:
 		editor::CLayerStack m_layerStack;
+		mint::fx::CCamera2D* m_editorCamera = nullptr;
 
 		bool m_editingMode = false;
 		bool m_showMainMenuBar = true;

@@ -177,4 +177,10 @@ namespace maml
 	}
 
 
+	mint::Vector< maml::SProperty >& CDocument::get_all_node_properties(SNode* node)
+	{
+		return node->m_properties.get_all();
+	}
+
+
 }

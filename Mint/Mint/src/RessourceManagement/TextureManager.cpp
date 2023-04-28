@@ -84,9 +84,15 @@ namespace mint
 	}
 
 
-	const Texture& CTextureManager::get_texture(TextureHandle handle) const
+	const Texture& CTextureManager::get_texture(TextureHandle handle)
 	{
-		return m_textures.get_const(handle);
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto & texture = m_textures.get_const(handle);
+
+		);
+
+		return texture;
 	}
 
 

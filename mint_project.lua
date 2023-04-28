@@ -73,6 +73,8 @@
 			"Editor/EditorLayer/Common",
 			"Editor/EditorLayer/Layers",
 			"Editor/EditorLayer",
+			"Editor/RessourceManagement",
+			"Editor/Common",
 			"Editor",
 		}
 

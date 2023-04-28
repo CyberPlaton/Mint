@@ -39,4 +39,10 @@ namespace maml
 	}
 
 
+	mint::String SProperty::get_property_name()
+	{
+		return m_name;
+	}
+
+
 }

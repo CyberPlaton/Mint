@@ -27,6 +27,48 @@ namespace mint::algorithm
 
 	template < typename T >
 	void vector_erase(Vector< T >& from, T element);
+
+	template < typename T >
+	void vector_erase_first(Vector< T >& from);
+
+	template < typename T >
+	void vector_erase_last(Vector< T >& from);
+
+	template < typename R, typename T >
+	R vector_get_last_element_as(Vector< T >& from);
+
+	template < typename R, typename T >
+	R vector_get_first_element_as(Vector< T >& from);
+
+}
+
+
+template < typename T >
+void mint::algorithm::vector_erase_last(Vector< T >& from)
+{
+	from.erase(from.begin() + from.size() - 1);
+}
+
+
+template < typename T >
+void mint::algorithm::vector_erase_first(Vector< T >& from)
+{
+	from.erase(from.begin());
+}
+
+
+template < typename R, typename T >
+R mint::algorithm::vector_get_first_element_as(Vector< T >& from)
+{
+	MINT_ASSERT(from.empty() == false, "Invalid operation! Can not access element in an empty Vector.");
+	return reinterpret_cast<R>(from[0]);
+}
+
+
+template < typename R, typename T >
+R mint::algorithm::vector_get_last_element_as(Vector< T >& from)
+{
+	return reinterpret_cast<R>(from[from.size() - 1]);
 }
 
 
