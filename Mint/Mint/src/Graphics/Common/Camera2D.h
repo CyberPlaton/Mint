@@ -21,11 +21,29 @@ namespace mint::fx
 
 		void set_translation(Vec2 value) override final;
 
+		void translate(Vec2 value) override final;
+
 		void set_translation_offset(Vec2 value) override final;
+
+		void translate_offset(Vec2 value) override final;
 
 		void set_rotation(f32 value) override final;
 
+		void rotate(f32 value) override final;
+
 		void set_zoom(f32 value) override final;
+
+		void zoom(f32 value) override final;
+
+
+		mint::Vec2 get_position();
+
+		mint::Vec2 get_position_offset();
+
+		mint::f32 get_rotation();
+
+		mint::f32 get_zoom();
+
 
 	private:
 		raylib::Camera2D m_camera;

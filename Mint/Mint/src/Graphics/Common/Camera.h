@@ -27,13 +27,19 @@ namespace mint::fx
 		
 		virtual void set_translation(Vec2 value) { m_translation = value; };
 
+		virtual void translate(Vec2 value) { m_translation += value; }
+
 		virtual void set_translation_offset(Vec2 value)  { m_translationOffset = value; };
+
+		virtual void translate_offset(Vec2 value) { m_translationOffset += value; }
 
 		virtual void set_rotation(f32 value) { m_rotation = value; };
 
+		virtual void rotate(f32 value) { m_rotation += value; }
+
 		virtual void set_zoom(f32 value) { m_zoom = value; };
 
-
+		virtual void zoom(f32 value) { m_zoom += value; }
 
 		f32 get_viewport_x() { return m_viewportRect.get_x(); }
 

@@ -3,7 +3,7 @@
 
 
 #include "Common/Common.h"
-
+#include "../../Common/EditorCommon.h"
 
 namespace mint::editor
 {

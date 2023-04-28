@@ -67,4 +67,72 @@ namespace mint::fx
 	}
 
 
+	void CCamera2D::translate(Vec2 value)
+	{
+		ICamera::translate(value);
+
+		auto vec = m_camera.GetTarget();
+
+		m_camera.SetTarget({ value.x + vec.x, value.y + vec.y });
+	}
+
+
+	void CCamera2D::rotate(f32 value)
+	{
+		ICamera::zoom(value);
+
+		auto r = m_camera.GetRotation();
+
+		m_camera.SetRotation(r + value);
+	}
+
+
+	void CCamera2D::zoom(f32 value)
+	{
+		ICamera::zoom(value);
+
+		auto z = m_camera.GetZoom();
+
+		m_camera.SetZoom(z + value);
+	}
+
+
+	void CCamera2D::translate_offset(Vec2 value)
+	{
+		ICamera::translate_offset(value);
+
+		auto vec = m_camera.GetOffset();
+
+		m_camera.SetOffset({ vec.x + value.x, vec.y + value.y });
+	}
+
+
+	mint::Vec2 CCamera2D::get_position()
+	{
+		auto target = m_camera.GetTarget();
+
+		return {target.x, target.y};
+	}
+
+
+	mint::Vec2 CCamera2D::get_position_offset()
+	{
+		auto offset = m_camera.GetOffset();
+
+		return { offset.x, offset.y };
+	}
+
+
+	mint::f32 CCamera2D::get_rotation()
+	{
+		return m_camera.GetRotation();
+	}
+
+
+	mint::f32 CCamera2D::get_zoom()
+	{
+		return m_camera.GetZoom();
+	}
+
+
 }

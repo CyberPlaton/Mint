@@ -4,6 +4,8 @@
 
 #include "../Common/Layer.h"
 #include "Graphics/Common/Camera2D.h"
+#include "Utility/Input/Input.h"
+#include "Common/Timestep.h"
 
 
 namespace mint::editor
@@ -17,6 +19,8 @@ namespace mint::editor
 		bool on_initialize() override final;
 
 		void on_update(f32 dt) override final;
+
+		void on_ui_frame() override final;
 
 		String get_layer_name() override final;
 
