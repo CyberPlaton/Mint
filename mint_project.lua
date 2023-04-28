@@ -69,6 +69,11 @@
 			"Scripting/Script",
 			"Scripting/Common",
 			"Scripting",
+
+			"Editor/EditorLayer/Common",
+			"Editor/EditorLayer/Layers",
+			"Editor/EditorLayer",
+			"Editor",
 		}
 
 

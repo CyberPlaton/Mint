@@ -19,7 +19,15 @@ namespace mint
 	void CTimestep::set_fps(f32 fps)
 	{
 		m_fps = fps;
-		m_frametime = 1 / m_fps;
+
+		if(fps > 0.0f)
+		{
+			m_frametime = 1.0f / m_fps;
+		}
+		else
+		{
+			m_frametime = 0.0f;
+		}
 	}
 
 

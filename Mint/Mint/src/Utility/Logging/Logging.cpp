@@ -15,7 +15,7 @@ namespace mint
 		m_mode = Mode_Console;
 
 
-#ifdef MINT_DEBUG
+#if MINT_DEBUG
 		spdlog::set_pattern("%^[%n] %v%$");
 		s_consoleLog = spdlog::stdout_color_mt("DEBUG");
 #else
@@ -23,10 +23,10 @@ namespace mint
 		spdlog::flush_every(std::chrono::seconds(1));
 		spdlog::flush_on(spdlog::level::level_enum::trace);
 
-#ifdef MINT_RELEASE
+#if MINT_RELEASE
 		s_fileLog = spdlog::basic_logger_mt("RELEASE", "ApplicationLog.log");
 #endif
-#ifdef MINT_DISTR
+#if MINT_DISTR
 		s_fileLog = spdlog::basic_logger_mt("DISTR", "ApplicationLog.log");
 #endif
 #endif

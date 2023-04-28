@@ -78,21 +78,21 @@ namespace mint
 		{
 		case Verbosity_Debug:
 		{
-#ifdef MINT_DEBUG
+#if MINT_DEBUG
 			logger->critical(args...);
 #endif
 			break;
 		}
 		case Verbosity_Release:
 		{
-#ifdef MINT_RELEASE
+#if MINT_RELEASE
 			logger->critical(args...);
 #endif
 			break;
 		}
 		case Verbosity_Distr:
 		{
-#ifdef MINT_DISTR
+#if MINT_DISTR
 			logger->critical(args...);
 #endif
 			break;
@@ -108,21 +108,21 @@ namespace mint
 		{
 		case Verbosity_Debug:
 		{
-#ifdef MINT_DEBUG
+#if MINT_DEBUG
 			logger->error(args...);
 #endif
 			break;
 		}
 		case Verbosity_Release:
 		{
-#ifdef MINT_RELEASE
+#if MINT_RELEASE
 			logger->error(args...);
 #endif
 			break;
 		}
 		case Verbosity_Distr:
 		{
-#ifdef MINT_DISTR
+#if MINT_DISTR
 			logger->error(args...);
 #endif
 			break;
@@ -138,21 +138,21 @@ namespace mint
 		{
 		case Verbosity_Debug:
 		{
-#ifdef MINT_DEBUG
+#if MINT_DEBUG
 			logger->warn(args...);
 #endif
 			break;
 		}
 		case Verbosity_Release:
 		{
-#ifdef MINT_RELEASE
+#if MINT_RELEASE
 			logger->warn(args...);
 #endif
 			break;
 		}
 		case Verbosity_Distr:
 		{
-#ifdef MINT_DISTR
+#if MINT_DISTR
 			logger->warn(args...);
 #endif
 			break;
@@ -168,21 +168,21 @@ namespace mint
 		{
 		case Verbosity_Debug:
 		{
-#ifdef MINT_DEBUG
+#if MINT_DEBUG
 			logger->info(args...);
 #endif
 			break;
 		}
 		case Verbosity_Release:
 		{
-#ifdef MINT_RELEASE
+#if MINT_RELEASE
 			logger->info(args...);
 #endif
 			break;
 		}
 		case Verbosity_Distr:
 		{
-#ifdef MINT_DISTR
+#if MINT_DISTR
 			logger->info(args...);
 #endif
 			break;

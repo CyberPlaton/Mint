@@ -32,6 +32,9 @@
 #include "Scripting/ScriptEngine.h"
 
 
+#include "Editor/Editor.h"
+
+
 namespace mint
 {
 

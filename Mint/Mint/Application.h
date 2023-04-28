@@ -11,6 +11,7 @@ extern void register_scenes();
 namespace mint
 {
 
+#if MINT_DISTR
 	class CApplication : public mint::CMintEngine
 	{
 	public:
@@ -25,8 +26,7 @@ namespace mint
 	protected:
 
 	};
-
-
+#else
 	class CEditor : public mint::CMintEngine
 	{
 	public:
@@ -61,12 +61,25 @@ namespace mint
 
 
 	protected:
+		editor::CLayerStack m_layerStack;
 
+		bool m_editingMode = false;
+		bool m_showMainMenuBar = true;
+
+
+	protected:
+		bool create_layer_stack();
+
+		void show_main_menu_bar();
+
+		void toggle(bool& value);
 	};
+
+#endif
 }
 
 
-#ifdef MINT_DISTR
+#if MINT_DISTR
 #define MINT_MAIN() \
 int main(int argc, char* argv[]) \
 { \
