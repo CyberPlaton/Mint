@@ -26,7 +26,7 @@ namespace mint::editor
 
 		if(ImGui::BeginMenuBar())
 		{
-			if(ImGui::BeginMenu("Hierarchy"))
+			if(ImGui::BeginMenu(lang::get_word(lang::Word_Hierarchy)))
 			{
 				ImGui::EndMenu();
 			}

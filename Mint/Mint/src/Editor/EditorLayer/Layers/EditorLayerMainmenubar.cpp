@@ -21,12 +21,33 @@ namespace mint::editor
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("File"))
+			if (ImGui::BeginMenu("Menu"))
 			{
+				if (ImGui::BeginMenu("Language"))
+				{
+					if (ImGui::MenuItem("English"))
+					{
+						set_used_language(lang::Language_English);
+					}
+					if (ImGui::MenuItem("German"))
+					{
+						set_used_language(lang::Language_German);
+					}
+					if (ImGui::MenuItem("Russian"))
+					{
+						set_used_language(lang::Language_Russian);
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Exit"))
 				{
 					MINT_ENGINE()->exit();
 				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("File"))
+			{
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Edit"))

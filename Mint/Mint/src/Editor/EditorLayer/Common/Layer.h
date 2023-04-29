@@ -5,7 +5,7 @@
 #include "Common/Common.h"
 #include "../../Common/EditorCommon.h"
 #include "../../IMint.h"
-
+#include "../../Common/EditorInternationalization.h"
 
 namespace mint::editor
 {
