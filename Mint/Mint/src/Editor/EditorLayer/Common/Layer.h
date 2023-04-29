@@ -29,6 +29,12 @@ namespace mint::editor
 		virtual void on_after_update(f32) = 0;
 
 		virtual void on_frame() = 0;
+
+		virtual mint::f32 get_window_width() = 0;
+
+		virtual mint::f32 get_window_height() = 0;
+
+		virtual ImGuiWindowFlags get_flags() = 0;
 	};
 
 
@@ -53,7 +59,13 @@ namespace mint::editor
 
 		virtual void on_frame() {};
 
+		virtual ImGuiWindowFlags get_flags() { return ImGuiWindowFlags_None; }
 
+		mint::f32 get_window_width();
+
+		mint::f32 get_window_height();
+
+		mint::f32 percent(mint::f32 value, mint::u32 p);
 
 		virtual String get_layer_name() { return "None"; }
 	};
