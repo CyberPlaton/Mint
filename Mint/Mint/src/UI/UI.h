@@ -3,7 +3,8 @@
 
 
 #include "Common/UICommon.h"
-
+#include "Utility/FileSystem/Filesystem.h"
+#include "Utility/Logging/Logging.h"
 
 namespace mint
 {
@@ -50,6 +51,7 @@ namespace mint
 		static void help_marker_no_question_mark(const String& desc);
 
 		static bool ui_has_focus();
+
 
 	private:
 		static CUI* s_CUI;

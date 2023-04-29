@@ -144,6 +144,8 @@ namespace mint
 	void CEditor::on_editor_ui_frame_begin()
 	{
 		ui_frame_begin();
+
+		ImGui::ShowDemoWindow();
 	}
 
 

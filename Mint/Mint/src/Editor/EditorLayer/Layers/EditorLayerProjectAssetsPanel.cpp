@@ -1,4 +1,4 @@
-#include "EditorLayerProjectAssetsPanel.h"
+﻿#include "EditorLayerProjectAssetsPanel.h"
 
 
 namespace mint::editor
@@ -28,6 +28,14 @@ namespace mint::editor
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Project Assets"))
+			{
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu(u8"Лфтвофы"))
+			{
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu(u8"Übungsgruppe"))
 			{
 				ImGui::EndMenu();
 			}

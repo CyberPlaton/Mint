@@ -60,7 +60,6 @@
 			"Physics/Common",
 			"Physics/LuaBinding",
 			"Physics",
-			"UI/Common/imgui/extras",
 			"UI/Common/imgui",
 			"UI/Common",
 			"UI",

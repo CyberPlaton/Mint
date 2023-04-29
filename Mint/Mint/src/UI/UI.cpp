@@ -7,13 +7,38 @@ namespace mint
 	CUI* CUI::s_CUI = nullptr;
 	f32 CUI::s_editDragFieldWidth = 150.0f;
 	f32 CUI::s_editScalarFieldWidth = 100.0f;
-
-
+	
 	bool CUI::initialize()
 	{
 		rlImGuiSetup(true);
 
-		return true;
+		CFileystem fs(CFileystem::get_working_directory());
+
+		if(fs.forward("EditorRessources") && fs.forward("Fonts"))
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			static const ImWchar ranges[] =
+			{
+			0x0020, 0x04ff, 0x0FFF,
+			0,
+			};
+			ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
+			
+			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "DroidSans.ttf").as_string();
+
+			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 14.0f, &icons_config, ranges);
+
+			rlImGuiReloadFonts();
+
+			ImGui::GetIO().FontDefault = font;
+
+			return true;
+		}
+		
+		MINT_LOG_CRITICAL("[{:.4f}][CUI::initialize] Failed loading fonts at \"{}\"!", MINT_APP_TIME, fs.get_current_directory().as_string());
+		
+		return false;
 	}
 
 
