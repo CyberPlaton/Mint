@@ -73,6 +73,9 @@ namespace mint::editor
 
 	void CCameraControllerLayer::on_ui_frame()
 	{
+		const char* text = TextFormat("Zoom: %.3f", m_camera->get_zoom());
+
+		DrawText(text, 1, 20, 24, RAYWHITE);
 	}
 
 
