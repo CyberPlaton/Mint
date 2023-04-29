@@ -30,7 +30,6 @@ namespace mint
 	class CEditor : public mint::CMintEngine
 	{
 	public:
-
 		bool initialize_editor(const String& manifest_filepath);
 
 		void terminate_editor();

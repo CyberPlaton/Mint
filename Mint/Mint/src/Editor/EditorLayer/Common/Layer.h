@@ -4,6 +4,8 @@
 
 #include "Common/Common.h"
 #include "../../Common/EditorCommon.h"
+#include "../../IMint.h"
+
 
 namespace mint::editor
 {
