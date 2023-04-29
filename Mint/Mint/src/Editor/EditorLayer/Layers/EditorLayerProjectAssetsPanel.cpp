@@ -19,18 +19,22 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_ui_frame()
 	{
-		ImGui::SetNextWindowSize({ percent(get_window_width(), 30), percent(get_window_height(), 25) }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos({ 0.0f, percent(get_window_height(), 75) }, ImGuiCond_FirstUseEver);
-		ImGui::Begin("Project Assets", &m_enabled, get_flags());
+		auto width = ImGui::GetWindowWidth();
+		auto height = ImGui::GetWindowHeight();
 
-		ImGui::BeginMenuBar();
-		if (ImGui::BeginMenu("Project Assets"))
+		
+		ImGui::BeginChild("Project Assets", { width, percent(height, 30) }, true, get_flags());
+
+		if (ImGui::BeginMenuBar())
 		{
+			if (ImGui::BeginMenu("Project Assets"))
+			{
+				ImGui::EndMenu();
+			}
 		}
 		ImGui::EndMenuBar();
 
-
-		ImGui::End();
+		ImGui::EndChild();
 	}
 
 
@@ -42,7 +46,7 @@ namespace mint::editor
 
 	ImGuiWindowFlags CProjectAssetsPanelLayer::get_flags()
 	{
-		return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 	}
 
 

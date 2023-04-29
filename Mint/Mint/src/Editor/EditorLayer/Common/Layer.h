@@ -53,7 +53,7 @@ namespace mint::editor
 	{
 	public:
 		virtual bool on_initialize() { MINT_ASSERT(false, "Invalid operation. Using interface Layer object!"); return false; };
-		virtual void on_terminate() {};
+		virtual void on_terminate();
 
 		bool is_enabled() { return m_enabled; };
 		void set_is_enabled(bool enabled) { m_enabled = enabled; };
@@ -75,7 +75,7 @@ namespace mint::editor
 
 		mint::f32 get_window_height();
 
-		mint::f32 percent(mint::f32 value, mint::u32 p);
+		mint::f32 percent(mint::f32 value, mint::f32 p);
 
 		void add_child_layer(ILayer* layer);
 

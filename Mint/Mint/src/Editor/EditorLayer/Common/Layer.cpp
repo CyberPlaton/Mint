@@ -14,12 +14,12 @@ namespace mint::editor
 	}
 
 
-	mint::f32 CLayer::percent(mint::f32 value, mint::u32 p)
+	mint::f32 CLayer::percent(mint::f32 value, mint::f32 p)
 	{
 		if (p < 1) p = 1;
 		if (p > 100) p = 100;
 
-		return value * ((mint::f32)p / 100.0f);
+		return value * (p / 100.0f);
 	}
 
 

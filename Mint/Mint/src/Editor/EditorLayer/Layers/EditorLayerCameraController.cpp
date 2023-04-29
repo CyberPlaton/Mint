@@ -14,6 +14,9 @@ namespace mint::editor
 
 	void CCameraControllerLayer::on_update(f32 dt)
 	{
+		if (mint::CUI::ui_has_focus()) return;
+
+
 		dt = mint::CTimestep::get_real_frametime(); // Ignore editor frametime, as we pause it during edit.
 		f32 speed = editor::s_DefaultEditorCameraSpeed;
 		f32 zoom_speed = editor::s_DefaultEditorCameraZoomSpeed;

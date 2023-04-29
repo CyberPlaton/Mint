@@ -266,8 +266,9 @@ namespace mint
 		}
 
 		auto leftmost_panel = new editor::CLeftmostPanelLayer();
-		leftmost_panel->add_child_layer(new editor::CProjectAssetsPanelLayer());
 		leftmost_panel->add_child_layer(new editor::CHierarchyPanelLayer());
+		leftmost_panel->add_child_layer(new editor::CProjectAssetsPanelLayer());
+
 
 		if (!m_layerStack.try_push_layer(leftmost_panel))
 		{

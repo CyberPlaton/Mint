@@ -31,13 +31,19 @@ namespace mint
 
 		if (desc.m_fullscreen)
 		{
-			m_window.SetFullscreen(true);
-
 			_setWindowState(FLAG_WINDOW_MAXIMIZED, true);
 
 			_setWindowState(FLAG_WINDOW_TOPMOST, true);
 
 			_setWindowState(FLAG_WINDOW_UNFOCUSED, false);
+
+			auto w = GetMonitorWidth(GetCurrentMonitor());
+			auto h = GetMonitorHeight(GetCurrentMonitor());
+
+			SetWindowPosition(0, 0);
+			SetWindowSize(w, h);
+
+			ToggleFullscreen();
 		}
 
 

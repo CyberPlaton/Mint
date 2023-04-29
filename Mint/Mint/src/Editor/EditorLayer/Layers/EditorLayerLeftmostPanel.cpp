@@ -26,7 +26,13 @@ namespace mint::editor
 
 	void CLeftmostPanelLayer::on_ui_frame()
 	{
+		ImGui::SetNextWindowSize({ percent(get_window_width(), 30), percent(get_window_height(), 85) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ 0.0f, percent(get_window_height(), 2.5f) }, ImGuiCond_Appearing);
+		ImGui::Begin("Leftmost Panel", &m_enabled, get_flags());
+
 		CLayer::on_ui_frame();
+
+		ImGui::End();
 	}
 
 
@@ -38,7 +44,7 @@ namespace mint::editor
 
 	ImGuiWindowFlags CLeftmostPanelLayer::get_flags()
 	{
-		return ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+		return ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 	}
 
 

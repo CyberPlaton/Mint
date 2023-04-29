@@ -19,27 +19,21 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::on_ui_frame()
 	{
-		ImGui::SetNextWindowSize({ percent(get_window_width(), 30), percent(get_window_height(), 75) }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos({ 0.0f, 20.0f }, ImGuiCond_FirstUseEver);
-		ImGui::Begin("Hierarchy", &m_enabled, get_flags());
+		auto width = ImGui::GetWindowWidth();
+		auto height = ImGui::GetWindowHeight();
 
-		ImGui::BeginMenuBar();
-		if (ImGui::BeginMenu("Hierarchy"))
+		ImGui::BeginChild("Hierarchy", { width, percent(height, 50) }, true, get_flags());
+
+		if(ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("Create entity"))
+			if(ImGui::BeginMenu("Hierarchy"))
 			{
 				ImGui::EndMenu();
 			}
-			if(ImGui::MenuItem("Create empty entity"))
-			{
-
-			}
-			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
 
-
-		ImGui::End();
+		ImGui::EndChild();
 	}
 
 
@@ -51,7 +45,7 @@ namespace mint::editor
 
 	ImGuiWindowFlags CHierarchyPanelLayer::get_flags()
 	{
-		return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 	}
 
 
