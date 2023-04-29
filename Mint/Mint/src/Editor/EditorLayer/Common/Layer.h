@@ -35,6 +35,16 @@ namespace mint::editor
 		virtual mint::f32 get_window_height() = 0;
 
 		virtual ImGuiWindowFlags get_flags() = 0;
+
+		virtual String get_layer_name() = 0;
+
+		virtual void add_child_layer(ILayer*) = 0;
+
+		virtual bool has_children_layers() const = 0;
+
+		virtual bool has_parent_layer() const = 0;
+
+		virtual mint::Vector< ILayer* >& get_children_layers() = 0;
 	};
 
 
@@ -49,15 +59,15 @@ namespace mint::editor
 		void set_is_enabled(bool enabled) { m_enabled = enabled; };
 
 
-		virtual void on_ui_frame() {};
+		virtual void on_ui_frame();
 
-		virtual void on_before_update() {};
+		virtual void on_before_update();
 
-		virtual void on_update(f32 dt) {};
+		virtual void on_update(f32 dt);
 
-		virtual void on_after_update(f32 dt) {};
+		virtual void on_after_update(f32 dt);
 
-		virtual void on_frame() {};
+		virtual void on_frame();
 
 		virtual ImGuiWindowFlags get_flags() { return ImGuiWindowFlags_None; }
 
@@ -67,10 +77,21 @@ namespace mint::editor
 
 		mint::f32 percent(mint::f32 value, mint::u32 p);
 
+		void add_child_layer(ILayer* layer);
+
+		bool has_children_layers() const;
+
+		bool has_parent_layer() const;
+
+		mint::Vector< ILayer* >& get_children_layers() { return m_childrenLayers; }
+
 		virtual String get_layer_name() { return "None"; }
 
 	protected:
 		bool m_enabled = true;
+
+		ILayer* m_parentLayer = nullptr;
+		mint::Vector< ILayer* > m_childrenLayers;
 	};
 }
 

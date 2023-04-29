@@ -23,6 +23,84 @@ namespace mint::editor
 	}
 
 
+	void CLayer::add_child_layer(ILayer* layer)
+	{
+		mint::algorithm::vector_push_back(m_childrenLayers, layer);
+	}
+
+
+	bool CLayer::has_children_layers() const
+	{
+		return !m_childrenLayers.empty();
+	}
+
+
+	bool CLayer::has_parent_layer() const
+	{
+		return m_parentLayer != nullptr;
+	}
+
+
+	void CLayer::on_ui_frame()
+	{
+		for(const auto& layer : get_children_layers())
+		{
+			layer->on_ui_frame();
+		}
+	}
+
+
+	void CLayer::on_before_update()
+	{
+		for (const auto& layer : get_children_layers())
+		{
+			layer->on_before_update();
+		}
+	}
+
+
+	void CLayer::on_update(f32 dt)
+	{
+		for (const auto& layer : get_children_layers())
+		{
+			layer->on_update(dt);
+		}
+	}
+
+
+	void CLayer::on_after_update(f32 dt)
+	{
+		for (const auto& layer : get_children_layers())
+		{
+			layer->on_after_update(dt);
+		}
+	}
+
+
+	void CLayer::on_frame()
+	{
+		for (const auto& layer : get_children_layers())
+		{
+			layer->on_frame();
+		}
+	}
+
+
+	void CLayer::on_terminate()
+	{
+		auto& children = get_children_layers();
+
+		while(!children.empty())
+		{
+			auto kid = children[0];
+
+			children.erase(children.begin());
+
+			delete kid; kid = nullptr;
+		}
+	}
+
+
 }
 
 

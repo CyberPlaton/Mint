@@ -33,6 +33,8 @@ namespace mint::editor
 
 		Vector< CLayer* >& get_all_layers();
 
+		void print_layer_recursive(ILayer* layer, mint::u32 depth = 0);
+
 	private:
 		Vector< CLayer* > m_layers;
 

@@ -258,24 +258,24 @@ namespace mint
 			failed_count++;
 			failed = true;
 		}
-		if (!m_layerStack.try_push_layer(new editor::CHierarchyPanelLayer()))
-		{
-			if (failed_on.empty()) failed_on = "CHierarchyPanelLayer";
-			failed_count++;
-			failed = true;
-		}
 		if (!m_layerStack.try_push_layer(new editor::CInspectorPanelLayer()))
 		{
 			if (failed_on.empty()) failed_on = "CInspectorPanelLayer";
 			failed_count++;
 			failed = true;
 		}
-		if (!m_layerStack.try_push_layer(new editor::CProjectAssetsPanelLayer()))
+
+		auto leftmost_panel = new editor::CLeftmostPanelLayer();
+		leftmost_panel->add_child_layer(new editor::CProjectAssetsPanelLayer());
+		leftmost_panel->add_child_layer(new editor::CHierarchyPanelLayer());
+
+		if (!m_layerStack.try_push_layer(leftmost_panel))
 		{
-			if (failed_on.empty()) failed_on = "CProjectAssetsPanelLayer";
+			if (failed_on.empty()) failed_on = "CLeftmostPanelLayer";
 			failed_count++;
 			failed = true;
 		}
+		
 		if (!m_layerStack.try_push_layer(new editor::CViewportPanelLayer()))
 		{
 			if (failed_on.empty()) failed_on = "CViewportPanelLayer";
