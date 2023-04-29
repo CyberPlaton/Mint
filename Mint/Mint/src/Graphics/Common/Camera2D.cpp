@@ -79,7 +79,7 @@ namespace mint::fx
 
 	void CCamera2D::rotate(f32 value)
 	{
-		ICamera::zoom(value);
+		ICamera::rotate(value);
 
 		auto r = m_camera.GetRotation();
 
@@ -93,7 +93,9 @@ namespace mint::fx
 
 		auto z = m_camera.GetZoom();
 
-		m_camera.SetZoom(z + value);
+		auto _zoom = (z + value <= 0.1f) ? 0.1f : z + value;
+
+		m_camera.SetZoom(_zoom);
 	}
 
 

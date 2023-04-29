@@ -58,7 +58,6 @@ namespace mint
 		void on_editor_frame_end();
 
 
-
 	protected:
 		editor::CLayerStack m_layerStack;
 		mint::fx::CCamera2D* m_editorCamera = nullptr;
@@ -69,7 +68,30 @@ namespace mint
 		bool create_layer_stack();
 
 		void toggle(bool& value);
+	
+		template < class T >
+		T* get_layer_as(const String& name);
+
 	};
+
+
+	template < class T >
+	T* mint::CEditor::get_layer_as(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		for(auto layer : m_layerStack.get_all_layers())
+		{
+			auto lh = mint::algorithm::djb_hash(layer->get_layer_name());
+
+			if(h == lh)
+			{
+				return reinterpret_cast<T*>(layer);
+			}
+		}
+
+		return nullptr;
+	}
 
 #endif
 }

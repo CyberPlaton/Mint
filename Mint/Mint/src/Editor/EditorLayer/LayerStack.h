@@ -31,6 +31,7 @@ namespace mint::editor
 
 		void on_frame();
 
+		Vector< CLayer* >& get_all_layers();
 
 	private:
 		Vector< CLayer* > m_layers;

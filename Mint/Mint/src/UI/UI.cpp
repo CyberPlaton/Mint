@@ -35,6 +35,17 @@ namespace mint
 	}
 
 
+	bool CUI::image_button(const Texture* texture, const Vec2& size, const Vec2& position, const fx::CColor& bg /*= MINT_WHITE()*/, const fx::CColor& tint /*= MINT_WHITE()*/, s32 padding /*= -1*/)
+	{
+		auto bg4 = bg.as_vec4();
+		auto tint4 = tint.as_vec4();
+
+		ImGui::SetNextWindowPos({ position.x, position.y }, ImGuiCond_Appearing);
+		return ImGui::ImageButton((ImTextureID)texture, { size.x, size.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f },
+								  padding, { bg4.r, bg4.g, bg4.b, bg4.a }, { tint4.r, tint4.g, tint4.b, tint4.a });
+	}
+
+
 	bool CUI::edit_field_sint32(s32& value, s32 min, s32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
 	{
 		if (ImGui::CollapsingHeader(field_text.c_str()))

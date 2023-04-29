@@ -40,4 +40,32 @@ namespace mint::fx
 }
 
 
+#define MINT_BLACK() mint::fx::CColor(0, 0, 0, 0)
+#define MINT_WHITE() mint::fx::CColor(255, 255, 255, 255)
+
+#define MINT_GREY_LIGHT() mint::fx::CColor(255, 255, 255, 255)
+#define MINT_GREY() mint::fx::CColor(255, 255, 255, 255)
+#define MINT_GREY_DARK() mint::fx::CColor(255, 255, 255, 255)
+
+#define MINT_BLUE_LIGHT() mint::fx::CColor(102, 178, 255, 255)
+#define MINT_BLUE() mint::fx::CColor(0, 128, 255, 255)
+#define MINT_BLUE_DARK() mint::fx::CColor(0, 0, 153, 255)
+
+#define MINT_RED_LIGHT() mint::fx::CColor(255, 102, 102, 255)
+#define MINT_RED() mint::fx::CColor(255, 0, 0, 255)
+#define MINT_RED_DARK() mint::fx::CColor(153, 0, 0, 255)
+
+#define MINT_GREEN_LIGHT() mint::fx::CColor(102, 255, 102, 255)
+#define MINT_GREEN() mint::fx::CColor(0, 204, 0, 255)
+#define MINT_GREEN_DARK() mint::fx::CColor(0, 102, 0, 255)
+
+#define MINT_YELLOW_LIGHT() mint::fx::CColor(255, 255, 102, 255)
+#define MINT_YELLOW() mint::fx::CColor(255, 255, 0, 255)
+#define MINT_YELLOW_DARK() mint::fx::CColor(153, 153, 0, 255)
+
+#define MINT_PURPLE_LIGHT() mint::fx::CColor(204, 153, 255, 255)
+#define MINT_PURPLE() mint::fx::CColor(127, 0, 255, 255)
+#define MINT_PURPLE_DARK() mint::fx::CColor(51, 0, 102, 255)
+
+
 #endif

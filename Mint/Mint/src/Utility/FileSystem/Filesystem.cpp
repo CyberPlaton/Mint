@@ -253,6 +253,29 @@ namespace mint
 	}
 
 
+	bool CFileystem::forward_pretend(CPath path)
+	{
+		CPath p(path);
+
+		return forward_pretend(p);
+	}
+
+
+	bool CFileystem::forward_pretend(const String& path)
+	{
+		CPath p = m_currentPath;
+
+		p /= path;
+
+		if (p.does_exist())
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
 	bool CFileystem::back()
 	{
 		if(m_currentPath.as_path().has_parent_path())

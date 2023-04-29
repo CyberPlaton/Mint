@@ -57,14 +57,21 @@ namespace mint::editor
 		mint::CFileystem fs(mint::CFileystem::get_working_directory());
 
 		if(fs.forward(icon_ressources_path) &&
-		   fs.forward("Icons.maml"))
+		   fs.forward_pretend("Icons.maml"))
 		{
+			mint::CFileystem document_fs(fs.get_current_directory()); document_fs.append_path("Icons.maml");
+
 			maml::CDocument document(MAML_DOCUMENT_SIZE_BIG);
 			maml::SNode* root = nullptr;
+			maml::SNode* icons = nullptr;
 
-			if(root = CSerializer::load_maml_document(fs.get_current_directory().as_string(), document); root != nullptr)
+			if(root = CSerializer::load_maml_document(document_fs.get_current_directory().as_string(), document); root != nullptr)
 			{
-				for(auto& property : maml::CDocument::get_all_node_properties(root))
+				icons = maml::CDocument::find_first_match_in_node(root, "icons");
+
+				MINT_ASSERT(icons != nullptr, "Invalid operation! MAML icons file does not have \"icons\" node!");
+
+				for(auto& property : maml::CDocument::get_all_node_properties(icons))
 				{
 					MINT_ASSERT(property.is< mint::String >() == true, "Invalid data type for icon name provided! Names must be \"strings\" only.");
 
@@ -85,7 +92,7 @@ namespace mint::editor
 						}
 						else
 						{
-							MINT_LOG_ERROR("[{:.4f}][CEditorIconManager::initialize] Failed loading editor icon  \"{}\"!", MINT_APP_TIME, icon_name);
+							MINT_LOG_ERROR("[{:.4f}][CEditorIconManager::initialize] Failed loading editor icon  \"{}\" at \"{}\"!", MINT_APP_TIME, icon_name, icon_file_path.get_current_directory().as_string());
 						}
 					}
 					catch (const raylib::RaylibException& e)
@@ -115,6 +122,16 @@ namespace mint::editor
 		);
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
+	}
+
+
+	const Texture* CEditorIconManager::get_texture_imgui(const String& texture_name)
+	{
+		auto h = mint::algorithm::djb_hash(texture_name);
+
+		const auto& texture = get_texture(h);
+
+		return &texture;
 	}
 
 

@@ -177,8 +177,12 @@ namespace mint
 		{
 			toggle(m_editingMode);
 
-			if(m_editingMode)
+			if (m_editingMode)
 			{
+				auto viewport = get_layer_as< editor::CViewportPanelLayer >("Viewport Panel");
+
+				viewport->set_is_enabled(true);
+
 				set_engine_fps(0.0f);
 
 				set_engine_window_title("Mint Engine Editor: Editing Mode");
@@ -187,6 +191,10 @@ namespace mint
 			}
 			else
 			{
+				auto viewport = get_layer_as< editor::CViewportPanelLayer >("Viewport Panel");
+
+				viewport->set_is_enabled(false);
+
 				set_engine_fps(30.0f);
 
 				set_engine_window_title("Mint Engine Editor");
@@ -265,6 +273,12 @@ namespace mint
 		if (!m_layerStack.try_push_layer(new editor::CProjectAssetsPanelLayer()))
 		{
 			if (failed_on.empty()) failed_on = "CProjectAssetsPanelLayer";
+			failed_count++;
+			failed = true;
+		}
+		if (!m_layerStack.try_push_layer(new editor::CViewportPanelLayer()))
+		{
+			if (failed_on.empty()) failed_on = "CViewportPanelLayer";
 			failed_count++;
 			failed = true;
 		}

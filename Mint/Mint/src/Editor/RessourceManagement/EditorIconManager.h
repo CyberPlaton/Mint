@@ -28,6 +28,8 @@ namespace mint::editor
 
 		const mint::Texture& get_texture(TextureHandle texture_handle);
 
+		const Texture* get_texture_imgui(const String& texture_name);
+
 		Vec2 get_texture_dimension(const String& texture_name);
 
 		Vec2 get_texture_dimension(TextureHandle handle);

@@ -21,7 +21,7 @@ namespace mint
 
 		void end();
 
-
+		static bool image_button(const Texture* texture, const Vec2& size, const Vec2& position, const fx::CColor& bg = MINT_WHITE(), const fx::CColor& tint = MINT_WHITE(), s32 padding = -1);
 
 		static bool edit_field_sint32(s32& value, s32 min, s32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 

@@ -49,6 +49,10 @@ namespace mint
 
 		bool forward(const String& path);
 
+		bool forward_pretend(CPath path);
+
+		bool forward_pretend(const String& path);
+
 		bool back();
 
 

@@ -114,4 +114,10 @@ namespace mint::editor
 	}
 
 
+	mint::Vector< CLayer* >& CLayerStack::get_all_layers()
+	{
+		return m_layers;
+	}
+
+
 }
