@@ -53,7 +53,6 @@ namespace mint
 		_set_is_running(false);
 
 		_wait_for_termination();
-
 	}
 
 

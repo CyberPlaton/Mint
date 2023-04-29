@@ -18,6 +18,8 @@ namespace mint::editor
 
 		bool on_initialize() override final;
 
+		bool is_enabled() override final { return true; }
+
 		void on_update(f32 dt) override final;
 
 		void on_ui_frame() override final;
@@ -26,6 +28,7 @@ namespace mint::editor
 
 	private:
 		mint::fx::CCamera2D* m_camera;
+
 
 	};
 

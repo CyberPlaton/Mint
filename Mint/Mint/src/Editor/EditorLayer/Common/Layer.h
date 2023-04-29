@@ -14,6 +14,10 @@ namespace mint::editor
 		virtual bool on_initialize() = 0;
 		virtual void on_terminate() = 0;
 
+		virtual bool is_enabled() = 0;
+		virtual void set_is_enabled(bool) = 0;
+
+
 		virtual void on_ui_frame() = 0;
 
 		virtual void on_before_update() = 0;
@@ -32,6 +36,10 @@ namespace mint::editor
 	public:
 		virtual bool on_initialize() { MINT_ASSERT(false, "Invalid operation. Using interface Layer object!"); return false; };
 		virtual void on_terminate() {};
+
+		virtual bool is_enabled() { return false; };
+		virtual void set_is_enabled(bool enabled) {};
+
 
 		virtual void on_ui_frame() {};
 

@@ -82,10 +82,9 @@ namespace mint
 			result &= editor::CEditorIconManager::Get().initialize();
 			result &= create_layer_stack();
 
-			if(result)
-			{
-				m_layerStack.print_registered_layers();
-			}
+
+			if(result) m_layerStack.print_registered_layers();
+
 
 			return result;
 		}
@@ -96,6 +95,10 @@ namespace mint
 
 	void CEditor::terminate_editor()
 	{
+		m_layerStack.clear_all_layers();
+
+		delete m_editorCamera; m_editorCamera = nullptr;
+
 		terminate();
 	}
 
@@ -149,8 +152,6 @@ namespace mint
 		ui_frame_render();
 
 		if (!m_editingMode) return;
-
-		if (m_showMainMenuBar) show_main_menu_bar();
 
 		m_layerStack.on_ui_frame();
 	}
@@ -239,133 +240,48 @@ namespace mint
 
 	bool CEditor::create_layer_stack()
 	{
+		mint::String failed_on;
+		mint::u32 failed_count = 0;
+		bool failed = false;
+
 		if(!m_layerStack.try_push_layer(new editor::CCameraControllerLayer(m_editorCamera)))
 		{
-			MINT_LOG_CRITICAL("[{:.4f}][CEditor::create_layer_stack] Failed creating editor layer \"{}\"!", MINT_APP_TIME, STRING(CCameraControllerLayer));
+			if(failed_on.empty()) failed_on = "CCameraControllerLayer";
+			failed_count++;
+			failed = true;
 		}
-
-
-		return true;
-	}
-
-
-	void CEditor::show_main_menu_bar()
-	{
-		if (ImGui::BeginMainMenuBar())
+		if (!m_layerStack.try_push_layer(new editor::CHierarchyPanelLayer()))
 		{
-			if (ImGui::BeginMenu("Menu"))
-			{
-				if (ImGui::MenuItem("Save As..."))
-				{
-				}
-				if (ImGui::MenuItem("Load From..."))
-				{
-				}
-				if (ImGui::MenuItem("Exit"))
-				{
-				}
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Project"))
-			{
-				if (ImGui::MenuItem("Decal Database"))
-				{
-				}
-
-				if (ImGui::MenuItem("Prefab Database"))
-				{
-				}
-
-				if (ImGui::MenuItem("Rendering Layers"))
-				{
-				}
-
-				if (ImGui::MenuItem("Entity Database"))
-				{
-				}
-
-				if (ImGui::MenuItem("Rendering Grid"))
-				{
-				}
-
-				if (ImGui::MenuItem("Rendering City Territory"))
-				{
-				}
-
-				if (ImGui::MenuItem("Rendering City Buildind Slots"))
-				{
-				}
-
-				if (ImGui::MenuItem("Camera Position At Mouse Position"))
-				{
-				}
-
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Map"))
-			{
-				if (ImGui::BeginMenu("Add"))
-				{
-					if (ImGui::MenuItem("Townhall"))
-					{
-					}
-					if (ImGui::MenuItem("Fort"))
-					{
-					}
-					if (ImGui::MenuItem("Building Slot"))
-					{
-					}
-					if (ImGui::MenuItem("Territory"))
-					{
-					}
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenu();
-			}
-
-
-			if (ImGui::BeginMenu("Audio"))
-			{
-				ImGui::EndMenu();
-			}
-
-
-
-			if (ImGui::BeginMenu("Unit"))
-			{
-				if (ImGui::BeginMenu("Unit 1"))
-				{
-					if (ImGui::MenuItem("Unit 1.1"))
-					{
-					}
-
-					if (ImGui::MenuItem("Unit 1.2"))
-					{
-					}
-					
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::MenuItem("Prefab Editor"))
-				{
-				}
-
-
-				if (ImGui::MenuItem("Status Effect Editor"))
-				{
-				}
-
-
-				if (ImGui::MenuItem("Ability Editor"))
-				{
-				}
-
-
-				ImGui::EndMenu();
-
-			}
+			if (failed_on.empty()) failed_on = "CHierarchyPanelLayer";
+			failed_count++;
+			failed = true;
 		}
-		ImGui::EndMainMenuBar();
+		if (!m_layerStack.try_push_layer(new editor::CInspectorPanelLayer()))
+		{
+			if (failed_on.empty()) failed_on = "CInspectorPanelLayer";
+			failed_count++;
+			failed = true;
+		}
+		if (!m_layerStack.try_push_layer(new editor::CProjectAssetsPanelLayer()))
+		{
+			if (failed_on.empty()) failed_on = "CProjectAssetsPanelLayer";
+			failed_count++;
+			failed = true;
+		}
+		if (!m_layerStack.try_push_layer(new editor::CMainmenubarLayer()))
+		{
+			if (failed_on.empty()) failed_on = "CMainmenubarLayer";
+			failed_count++;
+			failed = true;
+		}
+		
+
+		if(failed)
+		{
+			MINT_LOG_CRITICAL("[{:.4f}][CEditor::create_layer_stack] Failed creating \"{}\" editor layers, first to fail was \"{}\"!", MINT_APP_TIME, failed_count, failed_on);
+		}
+
+		return !failed;
 	}
 
 

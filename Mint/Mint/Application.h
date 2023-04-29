@@ -65,13 +65,9 @@ namespace mint
 		mint::fx::CCamera2D* m_editorCamera = nullptr;
 
 		bool m_editingMode = false;
-		bool m_showMainMenuBar = true;
-
 
 	protected:
 		bool create_layer_stack();
-
-		void show_main_menu_bar();
 
 		void toggle(bool& value);
 	};

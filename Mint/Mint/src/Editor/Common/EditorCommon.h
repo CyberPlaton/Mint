@@ -2,6 +2,9 @@
 #define _MINTEDITOR_EDITOR_COMMON_H_
 
 
+#include "UI/UI.h"
+
+
 namespace mint::editor
 {
 
