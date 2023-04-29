@@ -45,8 +45,8 @@ namespace mint::editor
 		virtual bool on_initialize() { MINT_ASSERT(false, "Invalid operation. Using interface Layer object!"); return false; };
 		virtual void on_terminate() {};
 
-		virtual bool is_enabled() { return false; };
-		virtual void set_is_enabled(bool enabled) {};
+		bool is_enabled() { return m_enabled; };
+		void set_is_enabled(bool enabled) { m_enabled = enabled; };
 
 
 		virtual void on_ui_frame() {};
@@ -68,6 +68,9 @@ namespace mint::editor
 		mint::f32 percent(mint::f32 value, mint::u32 p);
 
 		virtual String get_layer_name() { return "None"; }
+
+	protected:
+		bool m_enabled = true;
 	};
 }
 
