@@ -40,8 +40,9 @@ namespace mint::editor
 
 		ImGui::EndChild();
 
-		if (m_createDialog) show_create_file_or_folder_dialog();
-		if (m_removeDialog) show_remove_file_or_folder_dialog();
+		if (m_createFolderDialog) show_create_folder_dialog();
+		if (m_createFileDialog) show_create_file_dialog();
+		if (m_removeDialog) show_delete_folder_dialog();
 	}
 
 
@@ -145,21 +146,34 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_options(CPath& path)
 	{
-		auto add = CEditorIconManager::Get().get_texture_imgui("plus");
-		auto remove = CEditorIconManager::Get().get_texture_imgui("minus");
-
+		static int item_current = 0;
 		ImGui::SameLine();
 
-		if (CUI::image_button(add, { s_DefaultIconSize, s_DefaultIconSize }))
+		ImGui::SetNextItemWidth(25.0f);
+		if(ImGui::Combo("|", &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
 		{
-			m_createDialog = true;
-			m_createDirectory = path;
-		}
-		ImGui::SameLine();
-		if (CUI::image_button(remove, { s_DefaultIconSize, s_DefaultIconSize }))
-		{
-			m_removeDialog = true;
-			m_removeDirectory = path;
+			switch(item_current)
+			{
+			case FolderOptions_NewFolder:
+			{
+				m_createFolderDialog = true;
+				m_createDirectory = path;
+				break;
+			}
+			case FolderOptions_NewFile:
+			{
+				m_createFileDialog = true;
+				m_createDirectory = path;
+				break;
+			}
+			case FolderOptions_Delete:
+			{
+				m_removeDialog = true;
+				m_removeDirectory = path;
+				break;
+			}
+			default: break;
+			}
 		}
 	}
 
@@ -170,14 +184,14 @@ namespace mint::editor
 	}
 
 
-	void CProjectAssetsPanelLayer::show_create_file_or_folder_dialog()
+	void CProjectAssetsPanelLayer::show_create_folder_dialog()
 	{
 		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
 		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
 
-		String text = "Create at " + m_createDirectory.get_stem();
+		String text = "New folder at " + m_createDirectory.get_stem();
 
-		ImGui::Begin(text.c_str(), &m_createDialog);
+		ImGui::Begin(text.c_str(), &m_createFolderDialog);
 
 		ImGui::InputText("|", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
 
@@ -188,17 +202,21 @@ namespace mint::editor
 
 			if(!name.empty())
 			{
-				// create file or folder
+				// create folder
+				auto path = CFileystem::construct_from(m_createDirectory, name);
+				
+				if(CFileystem::create_directory(path))
+				{
+				}
 			}
 
-			m_createDialog = false;
+			m_createFolderDialog = false;
 			m_createDirectory = CPath();
 			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
 		}
 		if (ImGui::SmallButton("Cancel"))
 		{
-
-			m_createDialog = false;
+			m_createFolderDialog = false;
 			m_createDirectory = CPath();
 			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
 		}
@@ -208,7 +226,59 @@ namespace mint::editor
 	}
 
 
-	void CProjectAssetsPanelLayer::show_remove_file_or_folder_dialog()
+	void CProjectAssetsPanelLayer::show_create_file_dialog()
+	{
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
+		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
+
+		String text = "New file at " + m_createDirectory.get_stem();
+
+		ImGui::Begin(text.c_str(), &m_createFileDialog);
+
+		ImGui::InputText("|", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
+
+		static int item_current = 0;
+		String extension;
+		ImGui::SameLine();
+
+		ImGui::SetNextItemWidth(25.0f);
+		ImGui::Combo(s_EditorAssetPanelFileTypes[item_current], &item_current, s_EditorAssetPanelFileTypes, IM_ARRAYSIZE(s_EditorAssetPanelFileTypes));
+		
+		ImGui::SameLine();
+		CUI::help_marker("Select the Type of the File to be created!");
+
+		if (ImGui::SmallButton("OK"))
+		{
+			mint::String name = mint::String(m_createDialogBuffer);
+
+			if (!name.empty())
+			{
+				extension = String(s_EditorAssetPanelFileTypeExtensions[item_current]);
+
+				// create file
+				if(CFileystem::create_file(m_createDirectory, name, extension))
+				{
+				}
+			}
+
+			m_createFileDialog = false;
+			m_createDirectory = CPath();
+			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
+		}
+		if (ImGui::SmallButton("Cancel"))
+		{
+			m_createFileDialog = false;
+			m_createDirectory = CPath();
+			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
+		}
+
+
+		ImGui::End();
+	}
+
+
+
+	void CProjectAssetsPanelLayer::show_delete_folder_dialog()
 	{
 		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
 		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
@@ -219,6 +289,10 @@ namespace mint::editor
 
 		if (ImGui::SmallButton("OK"))
 		{
+			if(CFileystem::delete_directory_or_file(m_removeDirectory))
+			{
+			}
+
 			m_removeDialog = false;
 			m_removeDirectory = CPath();
 		}
@@ -230,6 +304,5 @@ namespace mint::editor
 
 		ImGui::End();
 	}
-
 
 }

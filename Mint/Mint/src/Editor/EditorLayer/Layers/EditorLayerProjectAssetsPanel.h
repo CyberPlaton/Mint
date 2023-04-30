@@ -30,11 +30,12 @@ namespace mint::editor
 		mint::String m_currentScenePathRelative;
 		mint::String m_currentScenePathFull;
 
-		bool m_createDialog = false;
+		bool m_createFolderDialog = false;
+		bool m_createFileDialog = false;
 		CPath m_createDirectory;
+
 		bool m_removeDialog = false;
 		CPath m_removeDirectory;
-
 
 		char m_createDialogBuffer[128];
 
@@ -52,9 +53,10 @@ namespace mint::editor
 
 		void show_file_options(CPath& path);
 
-		void show_create_file_or_folder_dialog();
+		void show_create_file_dialog();
+		void show_create_folder_dialog();
 
-		void show_remove_file_or_folder_dialog();
+		void show_delete_folder_dialog();
 	};
 
 }

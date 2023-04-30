@@ -93,17 +93,43 @@ namespace mint
 	}
 
 
+	bool CFileystem::delete_directory_or_file(CPath entry_path, const String& entry_full_name)
+	{
+		CFileystem fs(entry_path);
+
+		fs.get_current_directory().operator/=(entry_full_name);
+
+		return delete_directory_or_file(fs.get_current_directory());
+	}
+
+
+	bool CFileystem::delete_directory_or_file(CPath complete_entry_path)
+	{
+		std::error_code ec;
+
+		if (complete_entry_path.does_exist())
+		{
+			auto result = std::filesystem::remove_all(complete_entry_path.as_path(), ec);
+
+			return result > 0; // result == 1 means we deleted the folder/file, result > 1 means we deleted the folder with a bunch of files/folders.
+		}
+
+		return false;
+	}
+
+
 	bool CFileystem::create_file(CPath directory_path, String& file_name, String& file_extension)
 	{
 		if(directory_path.does_exist())
 		{
 			String name;
 			name.append(file_name.c_str());
+			name.append(".");
 			name.append(file_extension.c_str());
 
 			directory_path /= name;
 
-			if(directory_path.does_exist())
+			if(!directory_path.does_exist())
 			{
 				std::ofstream out(directory_path.as_string().c_str());
 

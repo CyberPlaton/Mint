@@ -48,13 +48,13 @@ namespace mint::scripting
 
 	bool CScriptEngine::is_running()
 	{
-// 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-// 
-// 			bool v = m_running;
-// 
-// 		);
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-		return m_running;
+			bool v = m_running;
+
+ 		);
+
+		return v;
 	}
 
 
@@ -121,13 +121,11 @@ namespace mint::scripting
 
 	void CScriptEngine::_set_is_running(bool value)
 	{
-// 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-// 
-// 			m_running = value;
-// 
-// 		);
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-		m_running = value;
+			m_running = value;
+
+ 		);
 	}
 
 
