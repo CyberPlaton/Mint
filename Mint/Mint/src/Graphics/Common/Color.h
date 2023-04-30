@@ -17,7 +17,7 @@ namespace mint::fx
 		
 		void set_color(u8 r, u8 g, u8 b, u8 a);
 
-		mint::Vec4 to_normalized_color_vec4();
+		mint::Vec4 to_normalized_color_vec4() const;
 
 		u32 as_rgba();
 

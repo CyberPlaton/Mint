@@ -10,7 +10,7 @@ namespace mint
 	
 	bool CUI::initialize()
 	{
-		rlImGuiSetup(true);
+		rlImGuiSetup(false);
 
 		CFileystem fs(CFileystem::get_working_directory());
 
@@ -27,7 +27,7 @@ namespace mint
 			
 			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "DroidSans.ttf").as_string();
 
-			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 14.0f, &icons_config, ranges);
+			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 18.0f, &icons_config, ranges);
 
 			rlImGuiReloadFonts();
 
@@ -60,13 +60,19 @@ namespace mint
 	}
 
 
-	bool CUI::image_button(const Texture* texture, const Vec2& size, const fx::CColor& bg /*= MINT_BLACK()*/, const fx::CColor& tint /*= MINT_WHITE()*/, s32 padding /*= -1*/)
+	bool CUI::image_button(const Texture* texture, const Vec2& size, const fx::CColor& bg /*= MINT_BLACK()*/, const fx::CColor& tint /*= MINT_WHITE()*/, s32 padding /*= 0*/)
 	{
-		auto bg4 = bg.as_vec4();
-		auto tint4 = tint.as_vec4();
+		auto bg4 = bg.to_normalized_color_vec4();
+		auto tint4 = tint.to_normalized_color_vec4();
 
-		return ImGui::ImageButton((ImTextureID)texture, { size.x, size.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f },
+		ImGui::PushStyleColor(ImGuiCol_Button, { bg4.r, bg4.g, bg4.b, 0.0f });
+		
+		bool result = ImGui::ImageButton((ImTextureID)texture, { size.x, size.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f },
 								  padding, { bg4.r, bg4.g, bg4.b, bg4.a }, { tint4.r, tint4.g, tint4.b, tint4.a });
+
+		ImGui::PopStyleColor();
+		
+		return result;
 	}
 
 
@@ -503,7 +509,7 @@ namespace mint
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * desc.size());
 			ImGui::TextUnformatted(desc.c_str());
 			ImGui::PopTextWrapPos();
 			ImGui::EndTooltip();

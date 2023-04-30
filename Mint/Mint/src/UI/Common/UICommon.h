@@ -6,7 +6,7 @@
 #include "Common/Rectangle.h"
 #include "Graphics/Common/Color.h"
 
-#define NO_FONT_AWESOME
+#define FONT_AWESOME_ICON_SIZE 12
 #include "imgui/rlImGui.h"
 #include "imgui/imgui.h"
 

@@ -58,12 +58,12 @@ namespace mint::fx
 	}
 
 
-	mint::Vec4 CColor::to_normalized_color_vec4()
+	mint::Vec4 CColor::to_normalized_color_vec4() const
 	{
-		return { SCAST(f32, m_r) * 255.0f,
-				 SCAST(f32, m_g) * 255.0f,
-				 SCAST(f32, m_b) * 255.0f,
-				 SCAST(f32, m_a) * 255.0f };
+		return { SCAST(f32, m_r) / 255.0f,
+				 SCAST(f32, m_g) / 255.0f,
+				 SCAST(f32, m_b) / 255.0f,
+				 SCAST(f32, m_a) / 255.0f };
 	}
 
 
