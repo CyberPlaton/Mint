@@ -149,8 +149,8 @@ namespace mint::editor
 		static int item_current = 0;
 		ImGui::SameLine();
 
-		ImGui::SetNextItemWidth(25.0f);
-		if(ImGui::Combo("|", &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
+		ImGui::SetNextItemWidth(s_DefaultComboWidth);
+		if(ImGui::Combo(ICON_FA_FOLDER_TREE, &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
 		{
 			switch(item_current)
 			{
@@ -214,6 +214,7 @@ namespace mint::editor
 			m_createDirectory = CPath();
 			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
 		}
+		ImGui::SameLine();
 		if (ImGui::SmallButton("Cancel"))
 		{
 			m_createFolderDialog = false;
@@ -241,7 +242,7 @@ namespace mint::editor
 		String extension;
 		ImGui::SameLine();
 
-		ImGui::SetNextItemWidth(25.0f);
+		ImGui::SetNextItemWidth(s_DefaultComboWidth);
 		ImGui::Combo(s_EditorAssetPanelFileTypes[item_current], &item_current, s_EditorAssetPanelFileTypes, IM_ARRAYSIZE(s_EditorAssetPanelFileTypes));
 		
 		ImGui::SameLine();
@@ -265,6 +266,7 @@ namespace mint::editor
 			m_createDirectory = CPath();
 			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
 		}
+		ImGui::SameLine();
 		if (ImGui::SmallButton("Cancel"))
 		{
 			m_createFileDialog = false;
@@ -296,6 +298,7 @@ namespace mint::editor
 			m_removeDialog = false;
 			m_removeDirectory = CPath();
 		}
+		ImGui::SameLine();
 		if (ImGui::SmallButton("Cancel"))
 		{
 			m_removeDialog = false;

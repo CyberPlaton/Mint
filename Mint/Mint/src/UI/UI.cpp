@@ -31,7 +31,7 @@ namespace mint
 
 			rlImGuiReloadFonts();
 
-			ImGui::GetIO().FontDefault = font;
+			//ImGui::GetIO().FontDefault = font;
 
 			return true;
 		}
