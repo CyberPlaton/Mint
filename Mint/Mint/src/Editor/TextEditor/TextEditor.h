@@ -15,11 +15,15 @@ namespace mint::editor
 		CTextEditor(mint::CPath path);
 		~CTextEditor();
 
+		bool is_valid_file(mint::CPath path);
+
 		void on_ui_frame();
 
 		bool is_ready();
 
 		bool is_saved();
+
+		bool save_file();
 
 		mint::f32 get_current_max_text_width();
 

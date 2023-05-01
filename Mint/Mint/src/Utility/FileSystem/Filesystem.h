@@ -5,8 +5,6 @@
 #include "Path.h"
 #include "FileIO.h"
 
-#include <fstream>
-
 
 namespace mint
 {
@@ -50,6 +48,7 @@ namespace mint
 		static char* read_file_data_from_file_handle(FILE* file, u32 file_size);
 
 		static CPath get_relative_path_to_working_directory(CPath complete_path);
+
 
 		bool forward_brute_force(CPath path);
 

@@ -36,6 +36,8 @@ namespace mint
 			{
 				*file_size = static_cast<uint32_t>(path.file_size());
 
+				MINT_LOG_WARN("[{:.4f}][CFileReaderWriter::open] Opened FILE without closing \"{}\"!", MINT_APP_TIME, file_path);
+
 				return file;
 			}
 
@@ -58,4 +60,38 @@ namespace mint
 
 		return file_size;
 	}
+
+
+	bool CFileReaderWriter::write_to_file_at_path(const String& file_path, void* data_buffer, u32 data_buffer_size)
+	{
+		bool result = false;
+
+		std::ofstream out(file_path.c_str(), std::ios_base::out);
+
+		if(out.is_open())
+		{
+			result = write_to_file_at_path(out, data_buffer, data_buffer_size);
+		}
+		else
+		{
+			const char* error = strerror(errno);
+			MINT_LOG_ERROR("[{:.4f}][CFileReaderWriter::write_to_file_at_path] Failed writing to file \"{}\", reason: \"{}\"!", MINT_APP_TIME, file_path, error);
+		}
+
+		out.close();
+
+		return result;
+	}
+
+
+	bool CFileReaderWriter::write_to_file_at_path(std::ofstream& stream, void* data_buffer, u32 data_buffer_size)
+	{
+		stream.write(reinterpret_cast< const char* >(data_buffer), data_buffer_size);
+		
+		// Closing and "writing" to file happens automatically
+		// on std::ofstream destruction.
+		return true;
+	}
+
+
 }

@@ -133,6 +133,10 @@ namespace mint
 			{
 				std::ofstream out(directory_path.as_string().c_str());
 
+				std::filesystem::permissions(directory_path.as_string().c_str(),
+											 std::filesystem::perms::owner_all 
+										   | std::filesystem::perms::group_all,
+											 std::filesystem::perm_options::add);
 				out.close();
 
 				return true;
@@ -237,9 +241,32 @@ namespace mint
 		if(file = CFileReaderWriter::open(complete_path.as_string(), &file_size);
 		   file != nullptr)
 		{
+			// Intercept edge case of empty file.
+			if (file_size == 0)
+			{
+				void* buffer = malloc(256);
+
+				std::memset(buffer, '\0', 256);
+
+				*out_file_size = 256;
+
+				fclose(file);
+
+				MINT_LOG_WARN("[{:.4f}][CFileystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
+
+				return reinterpret_cast<char*>(buffer);
+			}
+
+
 			*out_file_size = file_size;
 
-			return read_file_data_from_file_handle(file, file_size);
+			auto out_data = read_file_data_from_file_handle(file, file_size);
+
+			fclose(file);
+
+			MINT_LOG_WARN("[{:.4f}][CFileystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
+
+			return out_data;
 		}
 
 		return nullptr;
@@ -248,21 +275,21 @@ namespace mint
 
 	char* CFileystem::read_file_data_from_file_handle(FILE* file, u32 file_size)
 	{
-		if (file != nullptr)
+		if (file != nullptr && file_size > 0)
 		{
 			auto file_size = CFileReaderWriter::get_file_size(file);
 
 			void* buffer = malloc(file_size);
 
-			std::memset(buffer, NULL, file_size);
+			std::memset(buffer, '\0', file_size);
 
 			if (auto read_bytes = fread(buffer, sizeof(char), file_size, file);
 				read_bytes > 0)
 			{
-				char* cbuffer = reinterpret_cast<char*>(buffer);
-				cbuffer[read_bytes + 1] = '\0';
+				//char* cbuffer = reinterpret_cast<char*>(buffer);
+				//cbuffer[read_bytes] = '\0';
 
-				return cbuffer;
+				return reinterpret_cast<char*>(buffer);
 			}
 
 			free(buffer);

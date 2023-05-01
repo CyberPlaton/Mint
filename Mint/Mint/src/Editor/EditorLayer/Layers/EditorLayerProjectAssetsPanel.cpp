@@ -145,10 +145,26 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file(CPath& path)
 	{
-		mint::String file = path.get_stem() + path.get_extension();
-		ImGui::Text(file.c_str());
+		mint::String text = mint::String(ICON_FA_PEN_TO_SQUARE) + " " + path.get_stem() + path.get_extension();
 
-		show_file_options(path);
+		if (ImGui::SmallButton(text.c_str()))
+		{
+			CPath relative = CFileystem::get_relative_path_to_working_directory(path);
+
+			m_textEditorStack.emplace_back( relative );
+
+			auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
+
+			if (!texteditor.is_ready())
+			{
+				mint::algorithm::vector_erase_last(m_textEditorStack);
+			}
+		}
+
+// 		mint::String file = path.get_stem() + path.get_extension();
+// 		ImGui::Text(file.c_str());
+// 
+// 		show_file_options(path);
 	}
 
 
@@ -188,20 +204,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file_options(CPath& path)
 	{
-		ImGui::SameLine();
-		if(ImGui::SmallButton(ICON_FA_PEN_TO_SQUARE))
-		{
-			CPath relative = CFileystem::get_relative_path_to_working_directory(path);
-
-			m_textEditorStack.emplace_back(relative);
-
-			auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
-
-			if(!texteditor.is_ready())
-			{
-				mint::algorithm::vector_erase_last(m_textEditorStack);
-			}
-		}
 	}
 
 
