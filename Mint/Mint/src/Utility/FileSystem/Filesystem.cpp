@@ -229,6 +229,57 @@ namespace mint
 	}
 
 
+	char* CFileystem::read_file_at_path(CPath complete_path, u32* out_file_size)
+	{
+		FILE* file = NULL;
+		u32 file_size = 0;
+
+		if(file = CFileReaderWriter::open(complete_path.as_string(), &file_size);
+		   file != nullptr)
+		{
+			*out_file_size = file_size;
+
+			return read_file_data_from_file_handle(file, file_size);
+		}
+
+		return nullptr;
+	}
+
+
+	char* CFileystem::read_file_data_from_file_handle(FILE* file, u32 file_size)
+	{
+		if (file != nullptr)
+		{
+			auto file_size = CFileReaderWriter::get_file_size(file);
+
+			void* buffer = malloc(file_size);
+
+			std::memset(buffer, NULL, file_size);
+
+			if (auto read_bytes = fread(buffer, sizeof(char), file_size, file);
+				read_bytes > 0)
+			{
+				char* cbuffer = reinterpret_cast<char*>(buffer);
+				cbuffer[read_bytes + 1] = '\0';
+
+				return cbuffer;
+			}
+
+			free(buffer);
+		}
+
+		return nullptr;
+	}
+
+
+	mint::CPath CFileystem::get_relative_path_to_working_directory(CPath complete_path)
+	{
+		CPath wdir_absolute = std::filesystem::absolute(CFileystem::get_working_directory().as_path());
+
+		return std::filesystem::relative(complete_path.as_path(), wdir_absolute.as_path());
+	}
+
+
 	bool CFileystem::forward_brute_force(CPath path)
 	{
 		CPath p = get_current_directory();

@@ -74,6 +74,7 @@
 			"Editor/EditorLayer",
 			"Editor/RessourceManagement",
 			"Editor/Common",
+			"Editor/TextEditor",
 			"Editor",
 		}
 

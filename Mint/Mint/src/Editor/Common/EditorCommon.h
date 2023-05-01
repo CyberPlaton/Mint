@@ -19,6 +19,10 @@ namespace mint::editor
 	static mint::f32 s_DefaultEditorCameraZoomSpeedDecreased = 0.05f;
 	static const mint::f32 s_DefaultEditorDialogWidth = 500.0f;
 	static const mint::f32 s_DefaultEditorDialogHeight = 200.0f;
+	static const mint::f32 s_DefaultEditorTextEditorWidth = 500.0f;
+	static const mint::f32 s_DefaultEditorTextEditorHeight = 500.0f;
+	static const mint::f32 s_DefaultEditorCharacterSize = 13.0f;
+	static const mint::u64 s_DefaultEditorTextEditorBufferSize = 1024 * s_DefaultEditorCharacterSize;
 
 
 	enum FolderOptions
@@ -47,6 +51,7 @@ namespace mint::editor
 		"Fragment Shader",
 		"Behavior",
 		"Script",
+		"Scene",
 	};
 	static const char* s_EditorAssetPanelFileTypeExtensions[] = {
 		"texture",
@@ -54,6 +59,15 @@ namespace mint::editor
 		"fsh",
 		"behavior",
 		"script",
+		"scene",
+	};
+	static const char* s_EditorDefaultFileSourceFileIcon[] = {
+		ICON_FA_PANORAMA,
+		ICON_FA_IMAGE,
+		ICON_FA_IMAGE,
+		ICON_FA_PEOPLE_ROBBERY,
+		ICON_FA_FILE_CODE,
+		ICON_FA_FILE_LINES
 	};
 
 }

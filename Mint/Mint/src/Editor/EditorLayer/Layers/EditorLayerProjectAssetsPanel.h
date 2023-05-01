@@ -3,7 +3,9 @@
 
 
 #include "../Common/Layer.h"
+#include "Common/Algorithm.h"
 #include "../../RessourceManagement/EditorIconManager.h"
+#include "../../TextEditor/TextEditor.h"
 
 
 namespace mint::editor
@@ -39,6 +41,7 @@ namespace mint::editor
 
 		char m_createDialogBuffer[128];
 
+		mint::Vector< editor::CTextEditor > m_textEditorStack;
 
 	protected:
 		void menu_bar();

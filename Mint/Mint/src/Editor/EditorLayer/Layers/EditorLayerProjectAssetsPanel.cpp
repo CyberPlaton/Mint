@@ -43,6 +43,12 @@ namespace mint::editor
 		if (m_createFolderDialog) show_create_folder_dialog();
 		if (m_createFileDialog) show_create_file_dialog();
 		if (m_removeDialog) show_delete_folder_dialog();
+
+
+		for (auto& texteditor : m_textEditorStack)
+		{
+			texteditor.on_ui_frame();
+		}
 	}
 
 
@@ -141,6 +147,8 @@ namespace mint::editor
 	{
 		mint::String file = path.get_stem() + path.get_extension();
 		ImGui::Text(file.c_str());
+
+		show_file_options(path);
 	}
 
 
@@ -180,7 +188,20 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file_options(CPath& path)
 	{
-		
+		ImGui::SameLine();
+		if(ImGui::SmallButton(ICON_FA_PEN_TO_SQUARE))
+		{
+			CPath relative = CFileystem::get_relative_path_to_working_directory(path);
+
+			m_textEditorStack.emplace_back(relative);
+
+			auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
+
+			if(!texteditor.is_ready())
+			{
+				mint::algorithm::vector_erase_last(m_textEditorStack);
+			}
+		}
 	}
 
 

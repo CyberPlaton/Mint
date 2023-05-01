@@ -3,6 +3,7 @@
 
 
 #include "Path.h"
+#include "FileIO.h"
 
 #include <fstream>
 
@@ -44,6 +45,11 @@ namespace mint
 
 		static bool find_file_by_extension(CPath query_directory, const String& file_extension);
 
+		static char* read_file_at_path(CPath complete_path, u32* out_file_size);
+
+		static char* read_file_data_from_file_handle(FILE* file, u32 file_size);
+
+		static CPath get_relative_path_to_working_directory(CPath complete_path);
 
 		bool forward_brute_force(CPath path);
 
