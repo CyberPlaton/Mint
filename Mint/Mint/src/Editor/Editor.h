@@ -14,6 +14,7 @@
 #include "EditorLayer/Layers/EditorLayerProjectAssetsPanel.h"
 #include "EditorLayer/Layers/EditorLayerViewportPanel.h"
 #include "EditorLayer/Layers/EditorLayerLeftmostPanel.h"
+#include "EditorLayer/Layers/EditorLayerRightmostPanel.h"
 #include "TextEditor/TextEditor.h"
 
 namespace mint::editor

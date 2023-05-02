@@ -22,7 +22,7 @@ namespace mint::editor
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
-		ImGui::BeginChild("Hierarchy", { width, percent(height, 50) }, true, get_flags());
+		ImGui::BeginChild("Hierarchy", { width - 17.5f, percent(height, 50) }, true, get_flags());
 
 		if(ImGui::BeginMenuBar())
 		{

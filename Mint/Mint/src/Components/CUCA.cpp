@@ -3,7 +3,7 @@
 
 namespace mint::component
 {
-
+	MINT_CRITICAL_SECTION(CUCA::m_entityCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_animatedSpriteCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_spriteCriticalSection);

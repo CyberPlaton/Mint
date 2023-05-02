@@ -32,7 +32,7 @@ namespace mint::editor
 		auto height = ImGui::GetWindowHeight();
 
 		
-		ImGui::BeginChild("Project Assets", { width, percent(height, 30) }, true, get_flags());
+		ImGui::BeginChild("Project Assets", { width - 17.5f, percent(height, 48) }, true, get_flags());
 
 		menu_bar();
 

@@ -20,6 +20,21 @@ namespace mint::component
 		friend class IMintEngine;
 	public:
 
+		template< typename T >
+		static bool entity_has_component(entt::entity entity);
+
+		template < typename T >
+		static T& entity_get_component(entt::entity entity);
+
+		template< typename T >
+		static T& entity_add_component(entt::entity entity);
+
+		template< typename T >
+		static void entity_remove_component(entt::entity entity);
+
+
+
+
 		static u64 animated_sprite_get_animation_speed(entt::entity entity);
 		static void animated_sprite_set_animation_speed(entt::entity entity, u64 value);
 
@@ -90,6 +105,7 @@ namespace mint::component
 		
 
 	private:
+		static MINT_CRITICAL_SECTION(m_entityCriticalSection);
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);
 		static MINT_CRITICAL_SECTION(m_hierarchyCriticalSection);
 		static MINT_CRITICAL_SECTION(m_transformCriticalSection);
@@ -113,6 +129,57 @@ namespace mint::component
 	};
 
 
+}
+
+template< typename T >
+bool mint::component::CUCA::entity_has_component(entt::entity entity)
+{
+	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
+
+		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+
+		const bool result = registry.has_component< T >();
+	);
+
+	return result;
+}
+
+template < typename T >
+T& mint::component::CUCA::entity_get_component(entt::entity entity)
+{
+	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
+
+		auto & registry = MINT_ACTIVE_SCENE()->get_registry();
+
+		const auto& component = registry.get_component< T >();
+	);
+
+	return component;
+}
+
+template< typename T >
+T& mint::component::CUCA::entity_add_component(entt::entity entity)
+{
+	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
+
+		auto & registry = MINT_ACTIVE_SCENE()->get_registry();
+
+		const auto & component = registry.add_component< T >();
+	);
+
+	return component;
+}
+
+
+template< typename T >
+void mint::component::CUCA::entity_remove_component(entt::entity entity)
+{
+	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
+
+		auto & registry = MINT_ACTIVE_SCENE()->get_registry();
+
+		registry.remove_component< T >();
+	);
 }
 
 

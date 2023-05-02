@@ -14,6 +14,7 @@ namespace mint
 
 	void IMintEngine::initialize_cuca_critical_sections()
 	{
+		INITIALIZE_CRITICAL_SECTION(CUCA::m_entityCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_transformCriticalSection);
@@ -27,6 +28,7 @@ namespace mint
 
 	void IMintEngine::delete_cuca_critical_sections()
 	{
+		DELETE_CRITICAL_SECTION(CUCA::m_entityCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_transformCriticalSection);

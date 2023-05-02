@@ -260,9 +260,12 @@ namespace mint
 			failed_count++;
 			failed = true;
 		}
-		if (!m_layerStack.try_push_layer(new editor::CInspectorPanelLayer()))
+
+		auto rightmost_panel = new editor::CRightmostPanelLayer();
+		rightmost_panel->add_child_layer(new editor::CInspectorPanelLayer());
+		if (!m_layerStack.try_push_layer(rightmost_panel))
 		{
-			if (failed_on.empty()) failed_on = "CInspectorPanelLayer";
+			if (failed_on.empty()) failed_on = "CRightmostPanelLayer";
 			failed_count++;
 			failed = true;
 		}
@@ -270,8 +273,6 @@ namespace mint
 		auto leftmost_panel = new editor::CLeftmostPanelLayer();
 		leftmost_panel->add_child_layer(new editor::CHierarchyPanelLayer());
 		leftmost_panel->add_child_layer(new editor::CProjectAssetsPanelLayer());
-
-
 		if (!m_layerStack.try_push_layer(leftmost_panel))
 		{
 			if (failed_on.empty()) failed_on = "CLeftmostPanelLayer";
