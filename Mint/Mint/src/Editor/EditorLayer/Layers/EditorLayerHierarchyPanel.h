@@ -21,6 +21,15 @@ namespace mint::editor
 
 		String get_layer_name() override final;
 
+
+	private:
+		mint::String m_currentSceneName;
+
+
+	private:
+		void show_main_frame();
+
+		void show_entity_recursive(entt::entity entity);
 	};
 
 }

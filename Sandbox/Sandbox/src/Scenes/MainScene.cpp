@@ -62,6 +62,7 @@ bool CMainScene::on_load()
 
 	identifier.m_enttId = SCAST(u64, m_knight);
 	identifier.m_uuid = identifier.m_enttId;
+	identifier.m_debugName = "Knight";
 	hierarchy.m_parent = entt::null;
 	transform.m_scale = { 1.0f, 1.0f };
 	transform.m_rotation = 45.0f;
@@ -106,6 +107,10 @@ bool CMainScene::on_load()
 
 	// Set script for entity.
 	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
+
+
+	add_entity(m_knight);
+
 
 	m_ready = true;
 	return true;

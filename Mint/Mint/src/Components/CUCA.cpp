@@ -607,7 +607,7 @@ namespace mint::component
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
-			auto result = hierarchy.m_parent == entt::null;
+			auto result = hierarchy.m_parent != entt::null;
 
 		);
 
