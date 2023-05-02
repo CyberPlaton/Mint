@@ -18,6 +18,12 @@ namespace mint::editor
 		void on_ui_frame() override final;
 
 		String get_layer_name() override final;
+
+		ImGuiWindowFlags get_flags() override final;
+
+	private:
+		void show_main_frame();
+
 	};
 
 }

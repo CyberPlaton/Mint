@@ -45,6 +45,8 @@ namespace mint::editor
 
 		virtual bool has_parent_layer() const = 0;
 
+		virtual void set_parent_layer(ILayer*) = 0;
+
 		virtual mint::Vector< ILayer* >& get_children_layers() = 0;
 	};
 
@@ -83,6 +85,8 @@ namespace mint::editor
 		bool has_children_layers() const;
 
 		bool has_parent_layer() const;
+
+		void set_parent_layer(ILayer* layer);
 
 		mint::Vector< ILayer* >& get_children_layers() { return m_childrenLayers; }
 

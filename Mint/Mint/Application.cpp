@@ -85,7 +85,6 @@ namespace mint
 
 			if(result) m_layerStack.print_registered_layers();
 
-
 			return result;
 		}
 

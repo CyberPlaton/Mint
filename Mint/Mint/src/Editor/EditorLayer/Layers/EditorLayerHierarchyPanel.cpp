@@ -77,8 +77,22 @@ namespace mint::editor
 	void CHierarchyPanelLayer::show_entity_recursive(entt::entity entity)
 	{
 		// Show entity name
-		if(ImGui::TreeNode(CUCA::identifier_get_debug_name(entity).c_str()))
+		bool inspected = false;
+		if(editor::s_EditorInspectedEntity == entity)
 		{
+			inspected = true;
+		}
+
+		if(inspected) ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f, 0.6f, 0.0f, 1.0f });
+
+		bool open = ImGui::TreeNode(CUCA::identifier_get_debug_name(entity).c_str());
+
+		if (inspected) ImGui::PopStyleColor();
+
+		if(open)
+		{
+			editor::s_EditorInspectedEntity = entity;
+
 			// Show entities´ children if he has any
 			if(CUCA::hierarchy_has_children(entity))
 			{

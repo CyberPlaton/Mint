@@ -23,6 +23,7 @@ namespace mint::editor
 	static const mint::f32 s_DefaultEditorTextEditorHeight = 400.0f;
 	static const mint::f32 s_DefaultEditorCharacterSize = 13.0f;
 	static const mint::u64 s_DefaultEditorTextEditorBufferSize = 1024 * 13.0f;
+	static entt::entity s_EditorInspectedEntity = entt::null;
 
 
 	enum FolderOptions

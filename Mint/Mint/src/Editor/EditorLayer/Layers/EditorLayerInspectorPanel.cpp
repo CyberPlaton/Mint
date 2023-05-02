@@ -19,7 +19,23 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::on_ui_frame()
 	{
+		auto width = ImGui::GetWindowWidth();
+		auto height = ImGui::GetWindowHeight();
 
+		ImGui::BeginChild("Inspector", { width - 17.5f, percent(height, 98) }, true, get_flags());
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Inspector"))
+			{
+				ImGui::EndMenu();
+			}
+		}
+		ImGui::EndMenuBar();
+
+		show_main_frame();
+
+		ImGui::EndChild();
 	}
 
 
@@ -28,5 +44,20 @@ namespace mint::editor
 		return "Entity Inspector Panel";
 	}
 
+
+	void CInspectorPanelLayer::show_main_frame()
+	{
+		if(editor::s_EditorInspectedEntity != entt::null) // BUG: Does not evaluate as expected.
+		{
+			auto entity_name = CUCA::identifier_get_debug_name(s_EditorInspectedEntity);
+
+			ImGui::Text(entity_name.c_str());
+		}
+	}
+
+	ImGuiWindowFlags CInspectorPanelLayer::get_flags()
+	{
+		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+	}
 
 }

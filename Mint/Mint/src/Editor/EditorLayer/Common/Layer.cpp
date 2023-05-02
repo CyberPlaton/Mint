@@ -26,6 +26,8 @@ namespace mint::editor
 	void CLayer::add_child_layer(ILayer* layer)
 	{
 		mint::algorithm::vector_push_back(m_childrenLayers, layer);
+
+		layer->set_parent_layer(this);
 	}
 
 
@@ -98,6 +100,12 @@ namespace mint::editor
 
 			delete kid; kid = nullptr;
 		}
+	}
+
+
+	void CLayer::set_parent_layer(ILayer* layer)
+	{
+		m_parentLayer = layer;
 	}
 
 
