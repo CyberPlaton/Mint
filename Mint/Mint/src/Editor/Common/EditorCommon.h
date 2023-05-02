@@ -19,8 +19,8 @@ namespace mint::editor
 	static mint::f32 s_DefaultEditorCameraZoomSpeedDecreased = 0.05f;
 	static const mint::f32 s_DefaultEditorDialogWidth = 500.0f;
 	static const mint::f32 s_DefaultEditorDialogHeight = 200.0f;
-	static const mint::f32 s_DefaultEditorTextEditorWidth = 500.0f;
-	static const mint::f32 s_DefaultEditorTextEditorHeight = 500.0f;
+	static const mint::f32 s_DefaultEditorTextEditorWidth = 600.0f;
+	static const mint::f32 s_DefaultEditorTextEditorHeight = 400.0f;
 	static const mint::f32 s_DefaultEditorCharacterSize = 13.0f;
 	static const mint::u64 s_DefaultEditorTextEditorBufferSize = 1024 * 13.0f;
 
@@ -44,6 +44,10 @@ namespace mint::editor
 		FileType_FragmentShader,
 		FileType_Behavior,
 		FileType_Script,
+
+
+
+		FileType_Lua
 	};
 	static const char* s_EditorAssetPanelFileTypes[] = {
 		"Texture",
@@ -52,6 +56,10 @@ namespace mint::editor
 		"Behavior",
 		"Script",
 		"Scene",
+		"MAML",
+
+
+		"Lua"
 	};
 	static const char* s_EditorAssetPanelFileTypeExtensions[] = {
 		"texture",
@@ -60,6 +68,10 @@ namespace mint::editor
 		"behavior",
 		"script",
 		"scene",
+		"maml",
+
+
+		"lua"
 	};
 	static const char* s_EditorDefaultFileSourceFileIcon[] = {
 		ICON_FA_PANORAMA,
@@ -67,7 +79,11 @@ namespace mint::editor
 		ICON_FA_IMAGE,
 		ICON_FA_PEOPLE_ROBBERY,
 		ICON_FA_FILE_CODE,
-		ICON_FA_FILE_LINES
+		ICON_FA_FILE_LINES,
+		ICON_FA_FILE,
+
+
+		ICON_FA_FILE_CODE,
 	};
 
 }

@@ -45,9 +45,18 @@ namespace mint::editor
 		if (m_removeDialog) show_delete_folder_dialog();
 
 
-		for (auto& texteditor : m_textEditorStack)
+		for (auto i = 0; i < m_textEditorStack.size(); i++)
 		{
+			auto& texteditor = m_textEditorStack[i];
+
 			texteditor.on_ui_frame();
+
+			if(!texteditor.is_active())
+			{
+				m_textEditorStack.erase(m_textEditorStack.begin() + i);
+				break;
+			}
+
 		}
 	}
 

@@ -31,25 +31,29 @@ namespace mint::editor
 			m_currentFileSize = m_lastSavedFileSize;
 
 			m_windowFlags = ImGuiWindowFlags_None;
-			m_inputFlags = ImGuiInputTextFlags_None;
+			m_inputFlags = ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_CtrlEnterForNewLine;
 
 			m_ready = true;
+			m_active = true;
 		}
 	}
 
 
 	void CTextEditor::on_ui_frame()
 	{
-		ImGui::Begin(m_fileName.c_str(), NULL, m_windowFlags);
+		ImGui::SetNextWindowSize({s_DefaultEditorTextEditorWidth, s_DefaultEditorTextEditorHeight}, ImGuiCond_Once);
+		ImGui::Begin(m_fileName.c_str(), &m_active, m_windowFlags);
 
-		ImGui::InputTextMultiline("Source", m_buffer, IM_ARRAYSIZE(m_buffer), { std::max(get_current_max_text_width(), s_DefaultEditorTextEditorWidth), s_DefaultEditorTextEditorHeight }, m_inputFlags);
-		
 		ImGui::SameLine();
+		ImGui::Text(is_saved() == true ? ICON_FA_CHECK : ICON_FA_STAR_OF_LIFE);
 
-		if(ImGui::SmallButton("Save"))
+		ImGui::SameLine();
+		if (ImGui::SmallButton("Save File"))
 		{
-			if(!is_saved()) save_file();
+			if (!is_saved()) save_file();
 		}
+
+		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { s_DefaultEditorTextEditorWidth - 50.0f, s_DefaultEditorTextEditorHeight - 50.0f}, m_inputFlags);
 
 		ImGui::End();
 
@@ -100,7 +104,7 @@ namespace mint::editor
 			character = m_buffer[index];
 		}
 
-		return SCAST(mint::f32, max) + s_DefaultEditorTextEditorWidth;
+		return SCAST(mint::f32, max) + s_DefaultEditorTextEditorWidth + 50.0f;
 	}
 
 
@@ -129,6 +133,15 @@ namespace mint::editor
 
 		free(out_data);
 
+		if(result)
+		{
+			m_lastSavedFileSize = m_currentFileSize;
+		}
+		else
+		{
+			MINT_LOG_WARN("[{:.4f}][CTextEditor::save_file] Unable to save file \"{}\"!", MINT_APP_TIME, m_filepath.as_string());
+		}
+
 		return result;
 	}
 
@@ -148,6 +161,12 @@ namespace mint::editor
 		MINT_LOG_WARN("[{:.4f}][CTextEditor::is_valid_file] Unable to open file \"{}\" with invalid type: \"{}\"!", MINT_APP_TIME, path.as_string(), substr);
 
 		return false;
+	}
+
+
+	bool CTextEditor::is_active()
+	{
+		return m_active;
 	}
 
 

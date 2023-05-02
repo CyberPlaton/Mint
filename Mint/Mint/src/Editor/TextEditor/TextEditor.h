@@ -21,6 +21,8 @@ namespace mint::editor
 
 		bool is_ready();
 
+		bool is_active();
+
 		bool is_saved();
 
 		bool save_file();
@@ -32,6 +34,8 @@ namespace mint::editor
 	private:
 		ImGuiWindowFlags m_windowFlags;
 		ImGuiInputTextFlags m_inputFlags;
+
+		bool m_active;
 
 		bool m_ready;
 
