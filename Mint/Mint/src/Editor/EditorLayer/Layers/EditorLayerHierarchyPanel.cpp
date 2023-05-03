@@ -83,16 +83,22 @@ namespace mint::editor
 			inspected = true;
 		}
 
-		if(inspected) ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f, 0.6f, 0.0f, 1.0f });
+		if(inspected)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0.25f, 0.5f, 1.0f, 1.0f });
+		}
 
 		bool open = ImGui::TreeNode(CUCA::identifier_get_debug_name(entity).c_str());
+
+		if(ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			GlobalData::Get().s_EditorInspectedEntity = entity;
+		}
 
 		if (inspected) ImGui::PopStyleColor();
 
 		if(open)
 		{
-			GlobalData::Get().s_EditorInspectedEntity = entity;
-
 			// Show entities´ children if he has any
 			if(CUCA::hierarchy_has_children(entity))
 			{

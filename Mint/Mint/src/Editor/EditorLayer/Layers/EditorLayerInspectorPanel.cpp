@@ -30,6 +30,10 @@ namespace mint::editor
 			{
 				ImGui::EndMenu();
 			}
+			if(ImGui::MenuItem("X"))
+			{
+				GlobalData().Get().s_EditorInspectedEntity = entt::null;
+			}
 		}
 		ImGui::EndMenuBar();
 
