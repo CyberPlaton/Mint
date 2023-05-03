@@ -78,7 +78,7 @@ namespace mint::editor
 	{
 		// Show entity name
 		bool inspected = false;
-		if(editor::s_EditorInspectedEntity == entity)
+		if(GlobalData::Get().s_EditorInspectedEntity == entity)
 		{
 			inspected = true;
 		}
@@ -91,7 +91,7 @@ namespace mint::editor
 
 		if(open)
 		{
-			editor::s_EditorInspectedEntity = entity;
+			GlobalData::Get().s_EditorInspectedEntity = entity;
 
 			// Show entities´ children if he has any
 			if(CUCA::hierarchy_has_children(entity))

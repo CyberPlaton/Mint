@@ -227,7 +227,7 @@ namespace mint
 			rlPushMatrix();
 				rlTranslatef(0, 0, 0);
 				rlRotatef(-90, 1, 0, 0);
-				DrawGrid(1000, editor::s_DefaultGridcellSize);
+				DrawGrid(1000, editor::GlobalData::Get().s_DefaultGridcellSize);
 			rlPopMatrix();
 		}
 	}

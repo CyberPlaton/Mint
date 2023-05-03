@@ -99,9 +99,9 @@ namespace mint::editor
 		CFileystem fs(m_currentScenePathFull);
 
 		// Create "assets" folder if not already there.
-		if(!fs.forward_pretend(editor::s_EditorDefaultSceneRessourcesPath))
+		if(!fs.forward_pretend(GlobalData::Get().s_EditorDefaultSceneRessourcesPath))
 		{
-			CFileystem::create_directory(CFileystem::construct_from(fs.get_current_directory().as_string(), editor::s_EditorDefaultSceneRessourcesPath));
+			CFileystem::create_directory(CFileystem::construct_from(fs.get_current_directory().as_string(), GlobalData::Get().s_EditorDefaultSceneRessourcesPath));
 		}
 
 		const bool open = ImGui::TreeNode(m_currentSceneName.c_str());
@@ -182,7 +182,7 @@ namespace mint::editor
 		static int item_current = 0;
 		ImGui::SameLine();
 
-		ImGui::SetNextItemWidth(s_DefaultComboWidth);
+		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
 		if(ImGui::Combo(ICON_FA_FOLDER_TREE, &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
 		{
 			switch(item_current)
@@ -218,8 +218,12 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_create_folder_dialog()
 	{
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
-		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+
+
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
+		ImGui::SetNextWindowSize({ w, h });
 
 		String text = "New folder at " + m_createDirectory.get_stem();
 
@@ -261,8 +265,11 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_create_file_dialog()
 	{
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
-		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
+		ImGui::SetNextWindowSize({ w, h });
 
 		String text = "New file at " + m_createDirectory.get_stem();
 
@@ -274,7 +281,7 @@ namespace mint::editor
 		String extension;
 		ImGui::SameLine();
 
-		ImGui::SetNextItemWidth(s_DefaultComboWidth);
+		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
 		ImGui::Combo(s_EditorAssetPanelFileTypes[item_current], &item_current, s_EditorAssetPanelFileTypes, IM_ARRAYSIZE(s_EditorAssetPanelFileTypes));
 		
 		ImGui::SameLine();
@@ -314,8 +321,12 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_delete_folder_dialog()
 	{
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - s_DefaultEditorDialogWidth, get_window_height() / 2.0f - s_DefaultEditorDialogHeight });
-		ImGui::SetNextWindowSize({ s_DefaultEditorDialogWidth, s_DefaultEditorDialogHeight });
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+
+
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
+		ImGui::SetNextWindowSize({ w, h });
 
 		String text = "Delete " + m_removeDirectory.get_stem() + " with all contents?";
 

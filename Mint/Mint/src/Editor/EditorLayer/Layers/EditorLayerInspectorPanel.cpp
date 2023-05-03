@@ -47,9 +47,9 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::show_main_frame()
 	{
-		if(editor::s_EditorInspectedEntity != entt::null) // BUG: Does not evaluate as expected.
+		if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
 		{
-			auto entity_name = CUCA::identifier_get_debug_name(s_EditorInspectedEntity);
+			auto entity_name = CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
 
 			ImGui::Text(entity_name.c_str());
 		}

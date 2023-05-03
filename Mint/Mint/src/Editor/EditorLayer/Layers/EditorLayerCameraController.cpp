@@ -16,15 +16,14 @@ namespace mint::editor
 	{
 		if (mint::CUI::ui_has_focus()) return;
 
-
 		dt = mint::CTimestep::get_real_frametime(); // Ignore editor frametime, as we pause it during edit.
-		f32 speed = editor::s_DefaultEditorCameraSpeed;
-		f32 zoom_speed = editor::s_DefaultEditorCameraZoomSpeed;
+		f32 speed = GlobalData::Get().s_DefaultEditorCameraSpeed;
+		f32 zoom_speed = GlobalData::Get().s_DefaultEditorCameraZoomSpeed;
 
 		if (CInput::is_key_held_enum(KeyboardKey::KEY_LEFT_SHIFT))
 		{
-			speed = editor::s_DefaultEditorCameraSpeedDecreased;
-			zoom_speed = editor::s_DefaultEditorCameraZoomSpeedDecreased;
+			speed = GlobalData::Get().s_DefaultEditorCameraSpeedDecreased;
+			zoom_speed = GlobalData::Get().s_DefaultEditorCameraZoomSpeedDecreased;
 		}
 		if(CInput::is_key_held_enum(KeyboardKey::KEY_A))
 		{

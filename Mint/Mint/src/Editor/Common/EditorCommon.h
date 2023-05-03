@@ -7,23 +7,28 @@
 
 namespace mint::editor
 {
+	struct GlobalData
+	{
+		STATIC_GET(GlobalData, s_GlobalData);
 
-	static const mint::String s_EditorIconsPath = "EditorRessources/Icons";
-	static mint::String s_EditorDefaultSceneRessourcesPath = "assets";
-	static const mint::u32 s_DefaultIconSize = 20;
-	static const mint::f32 s_DefaultComboWidth = 20.0f;
-	static const mint::f32 s_DefaultGridcellSize = 64.0f;
-	static mint::f32 s_DefaultEditorCameraSpeed = 200.0f;
-	static mint::f32 s_DefaultEditorCameraSpeedDecreased = 20.0f;
-	static mint::f32 s_DefaultEditorCameraZoomSpeed = 0.5f;
-	static mint::f32 s_DefaultEditorCameraZoomSpeedDecreased = 0.05f;
-	static const mint::f32 s_DefaultEditorDialogWidth = 500.0f;
-	static const mint::f32 s_DefaultEditorDialogHeight = 200.0f;
-	static const mint::f32 s_DefaultEditorTextEditorWidth = 600.0f;
-	static const mint::f32 s_DefaultEditorTextEditorHeight = 400.0f;
-	static const mint::f32 s_DefaultEditorCharacterSize = 13.0f;
-	static const mint::u64 s_DefaultEditorTextEditorBufferSize = 1024 * 13.0f;
-	static entt::entity s_EditorInspectedEntity = entt::null;
+		static GlobalData* s_GlobalData;
+		static const mint::String s_EditorIconsPath;
+		static mint::String s_EditorDefaultSceneRessourcesPath;
+		static const mint::u32 s_DefaultIconSize;
+		static const mint::f32 s_DefaultComboWidth;
+		static const mint::f32 s_DefaultGridcellSize;
+		static mint::f32 s_DefaultEditorCameraSpeed;
+		static mint::f32 s_DefaultEditorCameraSpeedDecreased;
+		static mint::f32 s_DefaultEditorCameraZoomSpeed;
+		static mint::f32 s_DefaultEditorCameraZoomSpeedDecreased;
+		static const mint::f32 s_DefaultEditorDialogWidth;
+		static const mint::f32 s_DefaultEditorDialogHeight;
+		static const mint::f32 s_DefaultEditorTextEditorWidth;
+		static const mint::f32 s_DefaultEditorTextEditorHeight;
+		static const mint::f32 s_DefaultEditorCharacterSize;
+		static const mint::u64 s_DefaultEditorTextEditorBufferSize;
+		static entt::entity s_EditorInspectedEntity;
+	};
 
 
 	enum FolderOptions

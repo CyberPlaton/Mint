@@ -19,7 +19,7 @@ namespace mint::editor
 	public:
 		STATIC_GET(CEditorIconManager, s_CEditorIconManager);
 
-		bool initialize(const String& icon_ressources_path = mint::editor::s_EditorIconsPath);
+		bool initialize(const String& icon_ressources_path = GlobalData::Get().s_EditorIconsPath);
 
 		void terminate();
 

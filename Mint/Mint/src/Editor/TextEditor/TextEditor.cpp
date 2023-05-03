@@ -41,7 +41,10 @@ namespace mint::editor
 
 	void CTextEditor::on_ui_frame()
 	{
-		ImGui::SetNextWindowSize({s_DefaultEditorTextEditorWidth, s_DefaultEditorTextEditorHeight}, ImGuiCond_Once);
+		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
+		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
+
+		ImGui::SetNextWindowSize({w, h}, ImGuiCond_Once);
 		ImGui::Begin(m_fileName.c_str(), &m_active, m_windowFlags);
 
 		ImGui::SameLine();
@@ -53,7 +56,7 @@ namespace mint::editor
 			if (!is_saved()) save_file();
 		}
 
-		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { s_DefaultEditorTextEditorWidth - 50.0f, s_DefaultEditorTextEditorHeight - 50.0f}, m_inputFlags);
+		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f}, m_inputFlags);
 
 		ImGui::End();
 
@@ -77,35 +80,6 @@ namespace mint::editor
 		return m_lastSavedFileSize == m_currentFileSize;
 	}
 
-
-	mint::f32 CTextEditor::get_current_max_text_width()
-	{
-		u32 index = 0;
-		u32 max = 0;
-		u32 current = 0;
-		char character = m_buffer[index];
-		while(character != '\0')
-		{
-			if(character == '\n')
-			{
-				max = std::max(max, current);
-
-				current = 0;
-
-				index++;
-				character = m_buffer[index];
-
-				continue;
-			}
-			
-
-			current++;
-			index++;
-			character = m_buffer[index];
-		}
-
-		return SCAST(mint::f32, max) + s_DefaultEditorTextEditorWidth + 50.0f;
-	}
 
 
 	void CTextEditor::set_file_icon(const mint::String& file_extension)

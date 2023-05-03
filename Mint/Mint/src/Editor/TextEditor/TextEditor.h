@@ -8,6 +8,9 @@
 
 namespace mint::editor
 {
+#ifndef MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE
+	#define MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE 1024 * 13
+#endif
 
 	class CTextEditor
 	{
@@ -27,8 +30,6 @@ namespace mint::editor
 
 		bool save_file();
 
-		mint::f32 get_current_max_text_width();
-
 		void set_file_icon(const mint::String& file_extension);
 
 	private:
@@ -47,7 +48,7 @@ namespace mint::editor
 		mint::String m_fileName;
 		mint::String m_fileIcon;
 
-		char m_buffer[s_DefaultEditorTextEditorBufferSize];
+		char m_buffer[MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE];
 	};
 }
 
