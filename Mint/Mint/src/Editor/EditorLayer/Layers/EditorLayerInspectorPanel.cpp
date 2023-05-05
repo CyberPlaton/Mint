@@ -55,7 +55,15 @@ namespace mint::editor
 		{
 			auto entity_name = CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
 
-			ImGui::Text(entity_name.c_str());
+			auto& metaclasses = mint::reflection::CEntityMetaclassDatabase::Get().get_entity_metaclasses(SCAST(u64, GlobalData::Get().s_EditorInspectedEntity));
+
+			for(auto& mc: metaclasses)
+			{
+				if(ImGui::CollapsingHeader(mc->get_metaclass_name().c_str()))
+				{
+
+				}
+			}
 		}
 	}
 

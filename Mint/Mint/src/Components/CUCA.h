@@ -13,6 +13,7 @@ namespace mint
 }
 
 
+
 namespace mint::component
 {
 	class CUCA
@@ -130,6 +131,7 @@ namespace mint::component
 
 
 }
+
 
 template< typename T >
 bool mint::component::CUCA::entity_has_component(entt::entity entity)

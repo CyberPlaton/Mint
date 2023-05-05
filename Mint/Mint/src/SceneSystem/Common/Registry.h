@@ -6,6 +6,13 @@
 #include "Components/Components.h"
 
 
+#if MINT_DISTR
+#else
+#include "Utility/Reflection/EntityMetaclassDatabase.h"
+#include "Utility/Reflection/Reflection.h"
+#endif
+
+
 namespace mint
 {
 	class CScene;
@@ -70,6 +77,8 @@ namespace mint
 		}
 
 
+		const entt::registry& get_entt_registry();
+
 	private:
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
@@ -86,6 +95,11 @@ namespace mint
 			m_registry.erase< T >(entity);
 
 		);
+
+#if MINT_DISTR
+#else
+		mint::reflection::CEntityMetaclassDatabase::Get().remove_entity_metaclass< T >(SCAST(u64, entity));
+#endif
 	}
 
 
@@ -94,11 +108,17 @@ namespace mint
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			auto& component = m_registry.emplace< T >(entity);
+			auto& comp = m_registry.emplace< T >(entity);
 
 		);
 
-		return component;
+
+#if MINT_DISTR
+#else
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), mint::reflection::SBase::get_metaclass(&comp));
+#endif
+
+		return comp;
 	}
 
 

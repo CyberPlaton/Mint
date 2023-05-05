@@ -39,6 +39,7 @@
 			"Utility/STL",
 			"Utility/Input/LuaBinding",
 			"Utility/Input",
+			"Utility/Reflection",
 			"Utility",
 			"Components/LuaBinding",
 			"Components",

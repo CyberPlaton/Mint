@@ -85,6 +85,18 @@ namespace mint
 			m_registry.destroy(entity);
 
 		);
+
+
+#if MINT_DISTR
+#else
+		mint::reflection::CEntityMetaclassDatabase::Get().remove_entity_from_database(SCAST(u64, entity));
+#endif
+	}
+
+
+	const entt::registry& CRegistry::get_entt_registry()
+	{
+		return m_registry;
 	}
 
 

@@ -29,6 +29,9 @@ namespace mint::algorithm
 	void vector_erase(Vector< T >& from, T element);
 
 	template < typename T >
+	void vector_erase_at(Vector< T >& from, u64 index);
+
+	template < typename T >
 	void vector_erase_first(Vector< T >& from);
 
 	template < typename T >
@@ -40,6 +43,13 @@ namespace mint::algorithm
 	template < typename R, typename T >
 	R vector_get_first_element_as(Vector< T >& from);
 
+}
+
+
+template < typename T >
+void mint::algorithm::vector_erase_at(Vector< T >& from, u64 index)
+{
+	from.erase(from.begin() + index);
 }
 
 

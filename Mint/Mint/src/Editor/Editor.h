@@ -16,6 +16,8 @@
 #include "EditorLayer/Layers/EditorLayerLeftmostPanel.h"
 #include "EditorLayer/Layers/EditorLayerRightmostPanel.h"
 #include "TextEditor/TextEditor.h"
+#include "Utility/Reflection/EntityMetaclassDatabase.h"
+#include "Utility/Reflection/Reflection.h"
 
 namespace mint::editor
 {

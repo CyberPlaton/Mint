@@ -43,7 +43,7 @@ bool CMainScene::on_load()
 	const auto& window = MINT_ENGINE()->get_main_window_const();
 
 	auto camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 },
-		window.get_x(), window.get_y(), window.get_w(), window.get_h());
+	window.get_x(), window.get_y(), window.get_w(), window.get_h());
 	camera->set_translation({ 0.0f, 0.0f });
 	camera->set_rotation(0.0f);
 	camera->set_zoom(1.0f);
@@ -59,6 +59,7 @@ bool CMainScene::on_load()
 	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
 	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
+	
 
 	identifier.m_enttId = SCAST(u64, m_knight);
 	identifier.m_uuid = identifier.m_enttId;
@@ -111,6 +112,17 @@ bool CMainScene::on_load()
 
 	add_entity(m_knight);
 
+
+	/*
+		TESTING REFLECTION
+	*/
+#if MINT_DISTR
+#else
+	auto& reflected = m_registry.add_component< mint::component::SUserCreatedComponent >(m_knight);
+	reflected.m_entity = SCAST(u64, m_knight);
+	reflected.m_name = identifier.m_debugName;
+	reflected.m_isReflected = true;
+#endif
 
 	m_ready = true;
 	return true;

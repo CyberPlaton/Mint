@@ -7,12 +7,27 @@
 #include "Graphics/Common/Color.h"
 #include "Utility/Serialization/Serializer.h"
 
+#include "Utility/Reflection/Reflection.h"
+
 
 namespace mint::component
 {
-
-	struct SIdentifier
+	struct SUserCreatedComponent INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SUserCreatedComponent);
+
+
+		REFLECTED_MEMBER(u64, VariantType_Uint64, m_entity);
+		REFLECTED_MEMBER(String, VariantType_String, m_name);
+		REFLECTED_MEMBER(bool, VariantType_Boolean, m_isReflected);
+	};
+
+
+
+	struct SIdentifier INHERITS(mint::reflection::SBase)
+	{
+		REFLECTED_CLASS(SIdentifier);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -25,8 +40,10 @@ namespace mint::component
 	};
 
 
-	struct SSceneHierarchy
+	struct SSceneHierarchy INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SSceneHierarchy);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -37,14 +54,18 @@ namespace mint::component
 	};
 
 
-	struct SDynamicGameobject
+	struct SDynamicGameobject INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SDynamicGameobject);
+
 		u8 m_placeholder = 0;
 	};
 
 
-	struct SRigidBody 
+	struct SRigidBody INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SRigidBody);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -57,8 +78,10 @@ namespace mint::component
 	};
 
 
-	struct STransform
+	struct STransform INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(STransform);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -73,8 +96,10 @@ namespace mint::component
 	};
 
 
-	struct SSprite
+	struct SSprite INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SSprite);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -97,8 +122,10 @@ namespace mint::component
 	};
 
 
-	struct SAnimatedSprite
+	struct SAnimatedSprite INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SAnimatedSprite);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
@@ -109,8 +136,10 @@ namespace mint::component
 	};
 
 
-	struct SScript
+	struct SScript INHERITS(mint::reflection::SBase)
 	{
+		REFLECTED_CLASS(SScript);
+
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
