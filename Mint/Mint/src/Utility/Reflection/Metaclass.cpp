@@ -25,7 +25,25 @@ namespace mint::reflection
 
 	void CMetaClass::set_metaclass_name(const String& name)
 	{
-		m_name = name;
+		String __name = name;
+		u64 index;
+
+		if(index = name.find("class"); index != std::string::npos)
+		{
+			__name = name.substr(index + 6);
+		}
+		else if(index = name.find("struct"); index != std::string::npos)
+		{
+			__name = name.substr(index + 7);
+		}
+		if(index = name.find_last_of("::"); index != std::string::npos)
+		{
+			__name = name.substr(index + 1);
+		}
+
+		MINT_ASSERT(!__name.empty() == true, "Invalid operation. Empty Metaclass name provided.");
+
+		m_name = __name;
 	}
 
 

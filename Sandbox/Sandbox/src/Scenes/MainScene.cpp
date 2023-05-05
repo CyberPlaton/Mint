@@ -118,7 +118,7 @@ bool CMainScene::on_load()
 	*/
 #if MINT_DISTR
 #else
-	auto& reflected = m_registry.add_component< mint::component::SUserCreatedComponent >(m_knight);
+	auto& reflected = m_registry.add_component< MyComponent >(m_knight);
 	reflected.m_entity = SCAST(u64, m_knight);
 	reflected.m_name = identifier.m_debugName;
 	reflected.m_isReflected = true;

@@ -12,17 +12,6 @@
 
 namespace mint::component
 {
-	struct SUserCreatedComponent INHERITS(mint::reflection::SBase)
-	{
-		REFLECTED_CLASS(SUserCreatedComponent);
-
-
-		REFLECTED_MEMBER(u64, VariantType_Uint64, m_entity);
-		REFLECTED_MEMBER(String, VariantType_String, m_name);
-		REFLECTED_MEMBER(bool, VariantType_Boolean, m_isReflected);
-	};
-
-
 
 	struct SIdentifier INHERITS(mint::reflection::SBase)
 	{

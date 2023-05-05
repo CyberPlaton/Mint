@@ -1,6 +1,18 @@
 #include "Mint.h"
 
 
+struct MyComponent INHERITS(mint::reflection::SBase)
+{
+	REFLECTED_CLASS(MyComponent);
+
+
+	REFLECTED_MEMBER(mint::u64, VariantType_Uint64, m_entity);
+	REFLECTED_MEMBER(mint::String, VariantType_String, m_name);
+	REFLECTED_MEMBER(bool, VariantType_Boolean, m_isReflected);
+};
+
+
+
 class CMainScene : public mint::CScene
 {
 public:
