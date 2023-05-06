@@ -15,7 +15,7 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::on_update(f32 dt)
 	{
-
+		m_componentEditorStack.on_update(dt);
 	}
 
 
@@ -30,6 +30,10 @@ namespace mint::editor
 		{
 			if (ImGui::BeginMenu("Inspector"))
 			{
+				if (ImGui::MenuItem("Dump registered component editors"))
+				{
+					m_componentEditorStack.print_registered_component_editors();
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("X"))
@@ -42,7 +46,6 @@ namespace mint::editor
 		show_main_frame();
 
 		ImGui::EndChild();
-
 
 		m_componentEditorStack.on_ui_frame();
 	}

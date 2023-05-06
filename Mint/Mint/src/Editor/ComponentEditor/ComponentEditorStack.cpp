@@ -9,12 +9,47 @@ namespace mint::editor
 
 	bool CComponentEditorStack::try_push_component_editor(reflection::CMetaClass* metaclass)
 	{
-		if(find_component_editor(metaclass->get_metaclass_name()) >= 0)
+		String metaclass_name = metaclass->get_metaclass_name();
+
+		if(find_component_editor(metaclass_name) >= 0)
 		{
 			return true;
 		}
 
-		auto editor = new CComponentEditor(metaclass);
+		IComponentEditor* editor = nullptr;
+
+		if(metaclass_name == "SIdentifier")
+		{
+			editor = new CIdentifierComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SSceneHierarchy")
+		{
+			editor = new CSceneHierarchyComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SRigidBody")
+		{
+			editor = new CRigidBodyComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "STransform")
+		{
+			editor = new CTransformComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SSprite")
+		{
+			editor = new CSpriteComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SAnimatedSprite")
+		{
+			editor = new CAnimatedSpriteComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SScript")
+		{
+			editor = new CScriptComponentEditor(metaclass);
+		}
+		else
+		{
+			editor = new CGeneralComponentEditor(metaclass);
+		}
 
 		if(!editor->is_ready())
 		{
@@ -30,7 +65,9 @@ namespace mint::editor
 
 	void CComponentEditorStack::pop_component_editor()
 	{
-		auto editor = mint::algorithm::vector_get_last_element_as< CComponentEditor* >(m_componentEditors);
+		auto editor = mint::algorithm::vector_get_last_element_as< IComponentEditor* >(m_componentEditors);
+
+		editor->on_terminate();
 
 		mint::algorithm::vector_erase_last(m_componentEditors);
 
@@ -61,9 +98,9 @@ namespace mint::editor
 	void CComponentEditorStack::on_ui_frame()
 	{
 		u64 index = 0;
-		for(auto& editor: m_componentEditors)
+		for (auto& editor : m_componentEditors)
 		{
-			if(editor->is_active())
+			if (editor->is_active())
 			{
 				editor->on_ui_frame();
 			}
@@ -106,6 +143,25 @@ namespace mint::editor
 		}
 
 		return -1;
+	}
+
+
+	void CComponentEditorStack::on_update(f32 dt)
+	{
+		u64 index = 0;
+		for (auto& editor : m_componentEditors)
+		{
+			if (editor->is_active())
+			{
+				editor->on_update(dt);
+			}
+			else
+			{
+				mint::algorithm::vector_erase_at(m_componentEditors, index);
+				break;
+			}
+			index++;
+		}
 	}
 
 

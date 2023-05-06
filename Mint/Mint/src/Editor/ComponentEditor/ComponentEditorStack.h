@@ -4,7 +4,14 @@
 #define _MINTEDITOR_COMPONENT_EDITOR_STACK_H_
 
 
-#include "ComponentEditor.h"
+#include "ComponentEditors/AnimatedSpriteComponentEditor.h"
+#include "ComponentEditors/GeneralComponentEditor.h"
+#include "ComponentEditors/IdentifierComponentEditor.h"
+#include "ComponentEditors/RigidBodyComponentEditor.h"
+#include "ComponentEditors/SceneHierarchyComponentEditor.h"
+#include "ComponentEditors/ScriptComponentEditor.h"
+#include "ComponentEditors/SpriteComponentEditor.h"
+#include "ComponentEditors/TransformComponentEditor.h"
 
 
 namespace mint::editor
@@ -15,6 +22,12 @@ namespace mint::editor
 	public:
 		CComponentEditorStack() = default;
 		~CComponentEditorStack();
+
+
+		void on_ui_frame();
+
+		void on_update(f32 dt);
+
 
 		bool try_push_component_editor(reflection::CMetaClass* metaclass);
 
@@ -28,11 +41,9 @@ namespace mint::editor
 
 		s64 find_component_editor(const String& component_name);
 
-		void on_ui_frame();
-
 
 	private:
-		Vector< CComponentEditor* > m_componentEditors;
+		Vector< IComponentEditor* > m_componentEditors;
 
 	};
 

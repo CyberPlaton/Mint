@@ -76,6 +76,8 @@
 			"Editor/RessourceManagement",
 			"Editor/Common",
 			"Editor/TextEditor",
+			"Editor/ComponentEditor/Common",
+			"Editor/ComponentEditor/ComponentEditors",
 			"Editor/ComponentEditor",
 			"Editor",
 		}

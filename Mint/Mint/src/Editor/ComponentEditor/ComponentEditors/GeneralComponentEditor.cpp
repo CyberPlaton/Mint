@@ -1,35 +1,28 @@
 #if MINT_DISTR
 #else
-#include "ComponentEditor.h"
+#include "GeneralComponentEditor.h"
 
 
 namespace mint::editor
 {
 
 
-	CComponentEditor::CComponentEditor(reflection::CMetaClass* metaclass) :
-		m_metaclass(metaclass)
+	CGeneralComponentEditor::CGeneralComponentEditor(reflection::CMetaClass* metaclass) : CComponentEditor(metaclass)
 	{
-		MINT_ASSERT(metaclass != nullptr, "Invalid oepration. Invalid Metaclass provided!");
-
-		m_windowWidth = MINT_ENGINE()->get_main_window_const().get_w();
-		m_windowHeight = MINT_ENGINE()->get_main_window_const().get_h();
-
-		m_windowFlags = ImGuiWindowFlags_NoSavedSettings;
-		m_active = true;
-		m_ready = true;
+		set_ready(true);
+		set_active(true);
 	}
 
 
-	void CComponentEditor::on_ui_frame()
+	void CGeneralComponentEditor::on_ui_frame()
 	{
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
-		ImGui::SetNextWindowPos({ m_windowWidth / 2.0f - w / 2.0f,  m_windowHeight / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f,  get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
 
-		ImGui::Begin(get_component_name().c_str(), &m_active, m_windowFlags);
+		ImGui::Begin(get_component_name().c_str(), &m_active, get_flags());
 
 		show_members();
 
@@ -37,25 +30,7 @@ namespace mint::editor
 	}
 
 
-	bool CComponentEditor::is_ready()
-	{
-		return m_ready;
-	}
-
-
-	bool CComponentEditor::is_active()
-	{
-		return m_active;
-	}
-
-
-	mint::String CComponentEditor::get_component_name()
-	{
-		return m_metaclass->get_metaclass_name();
-	}
-
-
-	void CComponentEditor::show_members()
+	void CGeneralComponentEditor::show_members()
 	{
 		auto slid = GlobalData::Get().s_EditorEditFieldSliderIdStart;
 		auto scid = GlobalData::Get().s_EditorEditFieldScalarIdStart;
@@ -123,6 +98,18 @@ namespace mint::editor
 			}
 			}
 		}
+	}
+
+
+	void CGeneralComponentEditor::on_terminate()
+	{
+
+	}
+
+
+	void CGeneralComponentEditor::on_update(f32 dt)
+	{
+
 	}
 
 
