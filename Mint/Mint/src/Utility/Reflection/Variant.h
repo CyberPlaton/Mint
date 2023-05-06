@@ -28,9 +28,12 @@ namespace mint::reflection
 	{
 	public:
 		CVariant();
-		CVariant(VariantType type, void* data_pointer);
+		CVariant(VariantType type, String name, void* data_pointer);
 		~CVariant();
 
+		VariantType get_type();
+
+		String get_name();
 
 		void set(VariantType type, void* data_pointer);
 
@@ -43,6 +46,7 @@ namespace mint::reflection
 
 	private:
 		VariantType m_type;
+		String m_name;
 		void* m_dataPointer;
 	};
 

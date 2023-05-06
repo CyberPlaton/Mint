@@ -6,8 +6,8 @@
 namespace mint::reflection
 {
 
-	CVariant::CVariant(VariantType type, void* data_pointer) :
-		m_dataPointer(data_pointer), m_type(type)
+	CVariant::CVariant(VariantType type, String name, void* data_pointer) :
+		m_dataPointer(data_pointer), m_type(type), m_name(name)
 	{
 	}
 
@@ -37,6 +37,18 @@ namespace mint::reflection
 	bool CVariant::is(VariantType type)
 	{
 		return type == m_type && m_type != VariantType_None;
+	}
+
+
+	mint::reflection::VariantType CVariant::get_type()
+	{
+		return m_type;
+	}
+
+
+	mint::String CVariant::get_name()
+	{
+		return m_name;
 	}
 
 

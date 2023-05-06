@@ -5,6 +5,7 @@
 
 
 #include "../Common/Layer.h"
+#include "../../ComponentEditor/ComponentEditorStack.h"
 
 
 namespace mint::editor
@@ -22,6 +23,10 @@ namespace mint::editor
 		String get_layer_name() override final;
 
 		ImGuiWindowFlags get_flags() override final;
+
+	private:
+		CComponentEditorStack m_componentEditorStack;
+
 
 	private:
 		void show_main_frame();

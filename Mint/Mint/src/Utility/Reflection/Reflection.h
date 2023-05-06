@@ -48,7 +48,7 @@ class_name()\
 #define REFLECTED_MEMBER(type, variant_type, member_variable) \
 type member_variable; \
 private: \
-mint::reflection::SAutoAdder member_variable##_adder{this, #member_variable, {mint::reflection::VariantType::variant_type, &this->member_variable} }; \
+mint::reflection::SAutoAdder member_variable##_adder{this, #member_variable, {mint::reflection::VariantType::variant_type, #member_variable, &this->member_variable} }; \
 public: \
 
 

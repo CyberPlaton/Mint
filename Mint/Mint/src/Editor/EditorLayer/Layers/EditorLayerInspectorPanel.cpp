@@ -42,6 +42,9 @@ namespace mint::editor
 		show_main_frame();
 
 		ImGui::EndChild();
+
+
+		m_componentEditorStack.on_ui_frame();
 	}
 
 
@@ -61,9 +64,9 @@ namespace mint::editor
 
 			for (auto& mc : metaclasses)
 			{
-				if (ImGui::CollapsingHeader(mc->get_metaclass_name().c_str()))
+				if (ImGui::Button(mc->get_metaclass_name().c_str()))
 				{
-
+					m_componentEditorStack.try_push_component_editor(mc);
 				}
 			}
 		}

@@ -32,6 +32,10 @@ namespace mint::editor
 		static const mint::f32 s_DefaultEditorCharacterSize;
 		static const mint::u64 s_DefaultEditorTextEditorBufferSize;
 		static entt::entity s_EditorInspectedEntity;
+
+
+		static ImGuiID s_EditorEditFieldSliderIdStart;
+		static ImGuiID s_EditorEditFieldScalarIdStart;
 	};
 
 

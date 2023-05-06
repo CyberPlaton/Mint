@@ -9,6 +9,7 @@ struct MyComponent INHERITS(mint::reflection::SBase)
 	REFLECTED_MEMBER(mint::u64, VariantType_Uint64, m_entity);
 	REFLECTED_MEMBER(mint::String, VariantType_String, m_name);
 	REFLECTED_MEMBER(bool, VariantType_Boolean, m_isReflected);
+	REFLECTED_MEMBER(mint::u32, VariantType_Uint32, m_memberValue);
 };
 
 

@@ -115,7 +115,7 @@ namespace mint
 
 			ImGui::PushID(slider_id);
 			ImGui::PushItemWidth(s_editDragFieldWidth);
-			ImGui::DragInt("u32", &prev, 1, min, max, "%d", flags);
+			ImGui::DragInt("##u32", &prev, 1, min, max, "%d", flags);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -124,7 +124,7 @@ namespace mint
 
 			ImGui::PushID(scalar_id);
 			ImGui::PushItemWidth(s_editScalarFieldWidth);
-			ImGui::InputInt("scalar", &prev, 0, 0);
+			ImGui::InputInt("##scalar", &prev, 0, 0);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
@@ -134,7 +134,7 @@ namespace mint
 			return true;
 		}
 
-		return false;
+ 		return false;
 	}
 
 

@@ -8,12 +8,13 @@
 #include "Utility/FileSystem/Filesystem.h"
 
 
-namespace mint::editor
-{
 #ifndef MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE
 #define MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE 1024 * 13
 #endif
 
+
+namespace mint::editor
+{
 	class CTextEditor
 	{
 	public:
