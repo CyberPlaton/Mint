@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "LayerStack.h"
 
 
@@ -7,7 +9,7 @@ namespace mint::editor
 
 	bool CLayerStack::try_push_layer(CLayer* layer)
 	{
-		if(layer->on_initialize())
+		if (layer->on_initialize())
 		{
 			m_layers.push_back(layer);
 
@@ -33,7 +35,7 @@ namespace mint::editor
 
 	void CLayerStack::clear_all_layers()
 	{
-		while(!m_layers.empty())
+		while (!m_layers.empty())
 		{
 			pop_layer();
 		}
@@ -42,7 +44,7 @@ namespace mint::editor
 
 	void CLayerStack::on_ui_frame()
 	{
-		for(auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
+		for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
 		{
 			auto layer = *it;
 
@@ -103,7 +105,7 @@ namespace mint::editor
 		{
 			auto layer = *it;
 
-			print_layer_recursive(layer);			
+			print_layer_recursive(layer);
 		}
 	}
 
@@ -126,9 +128,9 @@ namespace mint::editor
 
 		MINT_LOG_INFO("{}.", text);
 
-		if(layer->has_children_layers())
+		if (layer->has_children_layers())
 		{
-			for(const auto& kid: layer->get_children_layers())
+			for (const auto& kid : layer->get_children_layers())
 			{
 				print_layer_recursive(kid, depth + 1);
 			}
@@ -137,3 +139,4 @@ namespace mint::editor
 
 
 }
+#endif

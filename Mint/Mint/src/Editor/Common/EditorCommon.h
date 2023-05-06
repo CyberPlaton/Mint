@@ -1,8 +1,12 @@
+#if MINT_DISTR
+#else
 #ifndef _MINTEDITOR_EDITOR_COMMON_H_
 #define _MINTEDITOR_EDITOR_COMMON_H_
 
-
 #include "UI/UI.h"
+
+
+
 
 
 namespace mint::editor
@@ -95,4 +99,5 @@ namespace mint::editor
 }
 
 
+#endif
 #endif

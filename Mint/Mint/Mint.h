@@ -31,8 +31,10 @@
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
 
-
+#if MINT_DISTR
+#else
 #include "Editor/Editor.h"
+#endif
 
 
 namespace mint

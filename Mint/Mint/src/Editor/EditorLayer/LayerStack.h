@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #ifndef _MINTEDITOR_LAYER_STACK_H_
 #define _MINTEDITOR_LAYER_STACK_H_
 
@@ -43,4 +45,5 @@ namespace mint::editor
 }
 
 
+#endif
 #endif

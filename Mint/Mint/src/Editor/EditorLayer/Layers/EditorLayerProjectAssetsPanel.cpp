@@ -1,4 +1,6 @@
-﻿#include "EditorLayerProjectAssetsPanel.h"
+﻿#if MINT_DISTR
+#else
+#include "EditorLayerProjectAssetsPanel.h"
 
 
 namespace mint::editor
@@ -31,7 +33,7 @@ namespace mint::editor
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
-		
+
 		ImGui::BeginChild("Project Assets", { width - 17.5f, percent(height, 48) }, true, get_flags());
 
 		menu_bar();
@@ -51,7 +53,7 @@ namespace mint::editor
 
 			texteditor.on_ui_frame();
 
-			if(!texteditor.is_active())
+			if (!texteditor.is_active())
 			{
 				m_textEditorStack.erase(m_textEditorStack.begin() + i);
 				break;
@@ -99,7 +101,7 @@ namespace mint::editor
 		CFileystem fs(m_currentScenePathFull);
 
 		// Create "assets" folder if not already there.
-		if(!fs.forward_pretend(GlobalData::Get().s_EditorDefaultSceneRessourcesPath))
+		if (!fs.forward_pretend(GlobalData::Get().s_EditorDefaultSceneRessourcesPath))
 		{
 			CFileystem::create_directory(CFileystem::construct_from(fs.get_current_directory().as_string(), GlobalData::Get().s_EditorDefaultSceneRessourcesPath));
 		}
@@ -108,7 +110,7 @@ namespace mint::editor
 
 		CUI::help_marker_no_question_mark(m_currentScenePathFull.c_str());
 
-		if(open)
+		if (open)
 		{
 			auto dirs = fs.get_all_directories_in_current_dir();
 			auto files = fs.get_all_files_in_current_dir();
@@ -129,7 +131,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_contents(CPath& path)
 	{
-		if(ImGui::TreeNode(path.get_stem().c_str()))
+		if (ImGui::TreeNode(path.get_stem().c_str()))
 		{
 			show_folder_options(path);
 
@@ -160,7 +162,7 @@ namespace mint::editor
 		{
 			CPath relative = CFileystem::get_relative_path_to_working_directory(path);
 
-			m_textEditorStack.emplace_back( relative );
+			m_textEditorStack.emplace_back(relative);
 
 			auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
 
@@ -170,10 +172,10 @@ namespace mint::editor
 			}
 		}
 
-// 		mint::String file = path.get_stem() + path.get_extension();
-// 		ImGui::Text(file.c_str());
-// 
-// 		show_file_options(path);
+		// 		mint::String file = path.get_stem() + path.get_extension();
+		// 		ImGui::Text(file.c_str());
+		// 
+		// 		show_file_options(path);
 	}
 
 
@@ -183,9 +185,9 @@ namespace mint::editor
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
-		if(ImGui::Combo(ICON_FA_FOLDER_TREE, &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
+		if (ImGui::Combo(ICON_FA_FOLDER_TREE, &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
 		{
-			switch(item_current)
+			switch (item_current)
 			{
 			case FolderOptions_NewFolder:
 			{
@@ -232,16 +234,16 @@ namespace mint::editor
 		ImGui::InputText("|", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
 
 
-		if(ImGui::SmallButton("OK"))
+		if (ImGui::SmallButton("OK"))
 		{
 			mint::String name = mint::String(m_createDialogBuffer);
 
-			if(!name.empty())
+			if (!name.empty())
 			{
 				// create folder
 				auto path = CFileystem::construct_from(m_createDirectory, name);
-				
-				if(CFileystem::create_directory(path))
+
+				if (CFileystem::create_directory(path))
 				{
 				}
 			}
@@ -283,7 +285,7 @@ namespace mint::editor
 
 		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
 		ImGui::Combo(s_EditorAssetPanelFileTypes[item_current], &item_current, s_EditorAssetPanelFileTypes, IM_ARRAYSIZE(s_EditorAssetPanelFileTypes));
-		
+
 		ImGui::SameLine();
 		CUI::help_marker("Select the Type of the File to be created!");
 
@@ -296,7 +298,7 @@ namespace mint::editor
 				extension = String(s_EditorAssetPanelFileTypeExtensions[item_current]);
 
 				// create file
-				if(CFileystem::create_file(m_createDirectory, name, extension))
+				if (CFileystem::create_file(m_createDirectory, name, extension))
 				{
 				}
 			}
@@ -334,7 +336,7 @@ namespace mint::editor
 
 		if (ImGui::SmallButton("OK"))
 		{
-			if(CFileystem::delete_directory_or_file(m_removeDirectory))
+			if (CFileystem::delete_directory_or_file(m_removeDirectory))
 			{
 			}
 
@@ -352,3 +354,4 @@ namespace mint::editor
 	}
 
 }
+#endif

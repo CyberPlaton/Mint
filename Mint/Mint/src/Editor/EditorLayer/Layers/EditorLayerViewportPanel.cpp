@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerViewportPanel.h"
 
 
@@ -20,7 +22,7 @@ namespace mint::editor
 	{
 	}
 
-	
+
 	mint::String CViewportPanelLayer::get_layer_name()
 	{
 		return "Viewport Panel";
@@ -28,3 +30,4 @@ namespace mint::editor
 
 
 }
+#endif

@@ -1,9 +1,8 @@
+#if MINT_DISTR
+#else
 #ifndef _MINTEDITOR_EDITOR_H_
 #define _MINTEDITOR_EDITOR_H_
 
-
-#if MINT_DISTR
-#else
 #include "Common/EditorInternationalization.h"
 #include "EditorLayer/LayerStack.h"
 #include "RessourceManagement/EditorIconManager.h"
@@ -24,6 +23,4 @@ namespace mint::editor
 }
 
 #endif
-
-
 #endif

@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerHierarchyPanel.h"
 
 
@@ -24,9 +26,9 @@ namespace mint::editor
 
 		ImGui::BeginChild("Hierarchy", { width - 17.5f, percent(height, 50) }, true, get_flags());
 
-		if(ImGui::BeginMenuBar())
+		if (ImGui::BeginMenuBar())
 		{
-			if(ImGui::BeginMenu(lang::get_word(lang::Word_Hierarchy)))
+			if (ImGui::BeginMenu(lang::get_word(lang::Word_Hierarchy)))
 			{
 				ImGui::EndMenu();
 			}
@@ -56,10 +58,10 @@ namespace mint::editor
 		const auto& entities = MINT_ACTIVE_SCENE()->get_entities();
 
 		ImGui::SetNextItemOpen(true, ImGuiCond_Appearing);
-		
+
 		const auto open = ImGui::TreeNode(m_currentSceneName.c_str());
 
-		if(open)
+		if (open)
 		{
 			for (const auto& entity : entities)
 			{
@@ -78,29 +80,29 @@ namespace mint::editor
 	{
 		// Show entity name
 		bool inspected = false;
-		if(GlobalData::Get().s_EditorInspectedEntity == entity)
+		if (GlobalData::Get().s_EditorInspectedEntity == entity)
 		{
 			inspected = true;
 		}
 
-		if(inspected)
+		if (inspected)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, { 0.25f, 0.5f, 1.0f, 1.0f });
 		}
 
 		bool open = ImGui::TreeNode(CUCA::identifier_get_debug_name(entity).c_str());
 
-		if(ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
 			GlobalData::Get().s_EditorInspectedEntity = entity;
 		}
 
 		if (inspected) ImGui::PopStyleColor();
 
-		if(open)
+		if (open)
 		{
 			// Show entities´ children if he has any
-			if(CUCA::hierarchy_has_children(entity))
+			if (CUCA::hierarchy_has_children(entity))
 			{
 				const auto& children = CUCA::hierarchy_get_children(entity);
 				for (const auto& kid : children)
@@ -117,3 +119,4 @@ namespace mint::editor
 
 
 }
+#endif

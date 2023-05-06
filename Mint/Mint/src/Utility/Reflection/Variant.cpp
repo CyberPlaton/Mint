@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "Variant.h"
 
 
@@ -39,3 +41,4 @@ namespace mint::reflection
 
 
 }
+#endif

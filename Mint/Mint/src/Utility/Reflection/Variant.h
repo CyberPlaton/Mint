@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #ifndef _MINT_VARIANT_H_
 #define _MINT_VARIANT_H_
 
@@ -28,7 +30,7 @@ namespace mint::reflection
 		CVariant();
 		CVariant(VariantType type, void* data_pointer);
 		~CVariant();
-		
+
 
 		void set(VariantType type, void* data_pointer);
 
@@ -48,15 +50,16 @@ namespace mint::reflection
 	template < typename T >
 	T* mint::reflection::CVariant::cast_safe(VariantType type)
 	{
-		if(is(type))
+		if (is(type))
 		{
 			return reinterpret_cast<T*>(m_dataPointer);
 		}
-		
+
 		return nullptr;
 	}
 
 
 }
 
+#endif
 #endif

@@ -1,6 +1,7 @@
-﻿#ifndef _MINTEDITOR_INTERNATIONALIZATION_H_
+﻿#if MINT_DISTR
+#else
+#ifndef _MINTEDITOR_INTERNATIONALIZATION_H_
 #define _MINTEDITOR_INTERNATIONALIZATION_H_
-
 
 
 namespace mint::editor::lang
@@ -32,4 +33,5 @@ namespace mint::editor::lang
 }
 
 
+#endif
 #endif

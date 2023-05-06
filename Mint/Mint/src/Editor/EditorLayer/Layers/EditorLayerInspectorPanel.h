@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #ifndef _MINTEDITOR_EDITOR_INSPECTOR_PANEL_LAYER_H_
 #define _MINTEDITOR_EDITOR_INSPECTOR_PANEL_LAYER_H_
 
@@ -29,4 +31,5 @@ namespace mint::editor
 }
 
 
+#endif
 #endif

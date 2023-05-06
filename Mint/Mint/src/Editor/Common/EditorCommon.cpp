@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorCommon.h"
 
 
@@ -21,3 +23,4 @@ namespace mint::editor
 	const mint::u64 GlobalData::s_DefaultEditorTextEditorBufferSize = 1024 * 13.0f;
 	entt::entity GlobalData::s_EditorInspectedEntity = entt::null;
 }
+#endif

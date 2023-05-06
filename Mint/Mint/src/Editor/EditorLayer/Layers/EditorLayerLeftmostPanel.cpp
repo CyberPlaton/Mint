@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerLeftmostPanel.h"
 
 
@@ -9,7 +11,7 @@ namespace mint::editor
 	{
 		bool result = true;
 
-		for(const auto& kid : get_children_layers())
+		for (const auto& kid : get_children_layers())
 		{
 			result &= kid->on_initialize();
 		}
@@ -49,3 +51,4 @@ namespace mint::editor
 
 
 }
+#endif

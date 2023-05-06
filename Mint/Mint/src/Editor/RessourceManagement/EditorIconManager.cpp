@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorIconManager.h"
 
 
@@ -56,8 +58,8 @@ namespace mint::editor
 
 		mint::CFileystem fs(mint::CFileystem::get_working_directory());
 
-		if(fs.forward(icon_ressources_path) &&
-		   fs.forward_pretend("Icons.maml"))
+		if (fs.forward(icon_ressources_path) &&
+			fs.forward_pretend("Icons.maml"))
 		{
 			mint::CFileystem document_fs(fs.get_current_directory()); document_fs.append_path("Icons.maml");
 
@@ -65,13 +67,13 @@ namespace mint::editor
 			maml::SNode* root = nullptr;
 			maml::SNode* icons = nullptr;
 
-			if(root = CSerializer::load_maml_document(document_fs.get_current_directory().as_string(), document); root != nullptr)
+			if (root = CSerializer::load_maml_document(document_fs.get_current_directory().as_string(), document); root != nullptr)
 			{
 				icons = maml::CDocument::find_first_match_in_node(root, "icons");
 
 				MINT_ASSERT(icons != nullptr, "Invalid operation! MAML icons file does not have \"icons\" node!");
 
-				for(auto& property : maml::CDocument::get_all_node_properties(icons))
+				for (auto& property : maml::CDocument::get_all_node_properties(icons))
 				{
 					MINT_ASSERT(property.is< mint::String >() == true, "Invalid data type for icon name provided! Names must be \"strings\" only.");
 
@@ -82,7 +84,7 @@ namespace mint::editor
 					{
 						mint::CFileystem icon_file_path(fs.get_current_directory());
 
-						if(icon_file_path.forward(icon_name))
+						if (icon_file_path.forward(icon_name))
 						{
 							mint::Texture texture(icon_file_path.get_current_directory().as_string());
 
@@ -136,3 +138,4 @@ namespace mint::editor
 
 
 }
+#endif

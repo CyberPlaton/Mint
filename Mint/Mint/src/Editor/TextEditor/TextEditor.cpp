@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "TextEditor.h"
 
 
@@ -23,7 +25,7 @@ namespace mint::editor
 			free(buffer);
 
 			set_file_icon(path.get_extension());
-			
+
 			m_fileName = String(m_fileIcon) + " " + path.get_stem() + path.get_extension();
 
 
@@ -44,7 +46,7 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 
-		ImGui::SetNextWindowSize({w, h}, ImGuiCond_Once);
+		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
 		ImGui::Begin(m_fileName.c_str(), &m_active, m_windowFlags);
 
 		ImGui::SameLine();
@@ -56,7 +58,7 @@ namespace mint::editor
 			if (!is_saved()) save_file();
 		}
 
-		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f}, m_inputFlags);
+		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f }, m_inputFlags);
 
 		ImGui::End();
 
@@ -86,9 +88,9 @@ namespace mint::editor
 	{
 		String substr = file_extension.substr(1);
 
-		for(auto i = 0; i < IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions); i++)
+		for (auto i = 0; i < IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions); i++)
 		{
-			if(strcmp(s_EditorAssetPanelFileTypeExtensions[i], substr.c_str()) == 0)
+			if (strcmp(s_EditorAssetPanelFileTypeExtensions[i], substr.c_str()) == 0)
 			{
 				m_fileIcon = s_EditorDefaultFileSourceFileIcon[i];
 				return;
@@ -107,7 +109,7 @@ namespace mint::editor
 
 		free(out_data);
 
-		if(result)
+		if (result)
 		{
 			m_lastSavedFileSize = m_currentFileSize;
 		}
@@ -145,3 +147,4 @@ namespace mint::editor
 
 
 }
+#endif

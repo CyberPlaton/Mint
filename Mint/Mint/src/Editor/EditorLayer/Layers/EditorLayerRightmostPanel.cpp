@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerRightmostPanel.h"
 
 
@@ -45,3 +47,4 @@ namespace mint::editor
 		return ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 	}
 }
+#endif

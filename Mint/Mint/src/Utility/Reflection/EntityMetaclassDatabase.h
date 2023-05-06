@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else 
 #ifndef _MINT_ENTITY_META_CLASS_DATABASE_H_
 #define _MINT_ENTITY_META_CLASS_DATABASE_H_
 
@@ -48,9 +50,9 @@ namespace mint::reflection
 			auto& vector = m_database.get_ref(entity);
 
 			u32 index = 0;
-			for(auto& mc: vector)
+			for (auto& mc : vector)
 			{
-				if(mc->get_metaclass_type() == metaclass_identifier)
+				if (mc->get_metaclass_type() == metaclass_identifier)
 				{
 					mint::algorithm::vector_erase_at(vector, index);
 					break;
@@ -66,4 +68,5 @@ namespace mint::reflection
 }
 
 
+#endif
 #endif

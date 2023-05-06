@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "Metaclass.h"
 
 
@@ -5,7 +7,7 @@ namespace mint::reflection
 {
 
 
-	CMetaClass::CMetaClass() : 
+	CMetaClass::CMetaClass() :
 		m_type(0)
 	{
 	}
@@ -28,15 +30,15 @@ namespace mint::reflection
 		String __name = name;
 		u64 index;
 
-		if(index = name.find("class"); index != std::string::npos)
+		if (index = name.find("class"); index != std::string::npos)
 		{
 			__name = name.substr(index + 6);
 		}
-		else if(index = name.find("struct"); index != std::string::npos)
+		else if (index = name.find("struct"); index != std::string::npos)
 		{
 			__name = name.substr(index + 7);
 		}
-		if(index = name.find_last_of("::"); index != std::string::npos)
+		if (index = name.find_last_of("::"); index != std::string::npos)
 		{
 			__name = name.substr(index + 1);
 		}
@@ -76,3 +78,4 @@ namespace mint::reflection
 
 
 }
+#endif

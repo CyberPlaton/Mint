@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #ifndef _MINTEDITOR_TEXT_EDITOR_H_
 #define _MINTEDITOR_TEXT_EDITOR_H_
 
@@ -9,7 +11,7 @@
 namespace mint::editor
 {
 #ifndef MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE
-	#define MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE 1024 * 13
+#define MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE 1024 * 13
 #endif
 
 	class CTextEditor
@@ -53,4 +55,5 @@ namespace mint::editor
 }
 
 
+#endif
 #endif

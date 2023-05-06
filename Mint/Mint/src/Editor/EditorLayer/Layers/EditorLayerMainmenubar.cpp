@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerMainmenubar.h"
 
 
@@ -70,3 +72,4 @@ namespace mint::editor
 
 
 }
+#endif

@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerInspectorPanel.h"
 
 
@@ -30,7 +32,7 @@ namespace mint::editor
 			{
 				ImGui::EndMenu();
 			}
-			if(ImGui::MenuItem("X"))
+			if (ImGui::MenuItem("X"))
 			{
 				GlobalData().Get().s_EditorInspectedEntity = entt::null;
 			}
@@ -51,15 +53,15 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::show_main_frame()
 	{
-		if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
+		if (GlobalData::Get().s_EditorInspectedEntity != entt::null)
 		{
 			auto entity_name = CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
 
 			auto& metaclasses = mint::reflection::CEntityMetaclassDatabase::Get().get_entity_metaclasses(SCAST(u64, GlobalData::Get().s_EditorInspectedEntity));
 
-			for(auto& mc: metaclasses)
+			for (auto& mc : metaclasses)
 			{
-				if(ImGui::CollapsingHeader(mc->get_metaclass_name().c_str()))
+				if (ImGui::CollapsingHeader(mc->get_metaclass_name().c_str()))
 				{
 
 				}
@@ -73,3 +75,4 @@ namespace mint::editor
 	}
 
 }
+#endif

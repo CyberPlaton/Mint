@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EditorLayerCameraController.h"
 
 
@@ -25,7 +27,7 @@ namespace mint::editor
 			speed = GlobalData::Get().s_DefaultEditorCameraSpeedDecreased;
 			zoom_speed = GlobalData::Get().s_DefaultEditorCameraZoomSpeedDecreased;
 		}
-		if(CInput::is_key_held_enum(KeyboardKey::KEY_A))
+		if (CInput::is_key_held_enum(KeyboardKey::KEY_A))
 		{
 			m_camera->translate({ -dt * speed, 0.0f });
 		}
@@ -43,7 +45,7 @@ namespace mint::editor
 		}
 
 
-		if(CInput::is_mouse_button_held(MOUSE_BUTTON_MIDDLE))
+		if (CInput::is_mouse_button_held(MOUSE_BUTTON_MIDDLE))
 		{
 			auto delta = GetMouseDelta();
 			auto zoom = 1.0f / m_camera->get_zoom();
@@ -51,7 +53,7 @@ namespace mint::editor
 		}
 
 
-		if(f32 wheel_delta = CInput::get_mouse_wheel(); wheel_delta != 0.0f)
+		if (f32 wheel_delta = CInput::get_mouse_wheel(); wheel_delta != 0.0f)
 		{
 			wheel_delta *= zoom_speed;
 
@@ -82,3 +84,4 @@ namespace mint::editor
 
 
 }
+#endif

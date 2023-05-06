@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "EntityMetaclassDatabase.h"
 
 
@@ -10,7 +12,7 @@ namespace mint::reflection
 	{
 		MINT_ASSERT(entity != SCAST(u64, entt::null), "Invalid operation. Invalid entity provided!");
 
-		if(!m_database.lookup(entity))
+		if (!m_database.lookup(entity))
 		{
 			m_database.add(entity, Vector< CMetaClass* >{});
 		}
@@ -31,7 +33,7 @@ namespace mint::reflection
 			m_database.remove(entity);
 		}
 
-		return* this;
+		return*this;
 	}
 
 
@@ -62,3 +64,4 @@ namespace mint::reflection
 
 
 }
+#endif

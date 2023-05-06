@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #include "Layer.h"
 
 namespace mint::editor
@@ -45,7 +47,7 @@ namespace mint::editor
 
 	void CLayer::on_ui_frame()
 	{
-		for(const auto& layer : get_children_layers())
+		for (const auto& layer : get_children_layers())
 		{
 			layer->on_ui_frame();
 		}
@@ -92,7 +94,7 @@ namespace mint::editor
 	{
 		auto& children = get_children_layers();
 
-		while(!children.empty())
+		while (!children.empty())
 		{
 			auto kid = children[0];
 
@@ -110,7 +112,4 @@ namespace mint::editor
 
 
 }
-
-
-
-
+#endif

@@ -1,3 +1,5 @@
+#if MINT_DISTR
+#else
 #ifndef _MINT_META_CLASS_H_
 #define _MINT_META_CLASS_H_
 
@@ -9,6 +11,7 @@
 #include "Variant.h"
 
 #include <type_traits>
+
 
 namespace mint::reflection
 {
@@ -28,7 +31,7 @@ namespace mint::reflection
 		void add_member(const String& name, CVariant& variant);
 		void add_member(const String& name, CVariant&& variant);
 
-		
+
 		template< typename T >
 		bool is(const String& name);
 
@@ -63,13 +66,13 @@ namespace mint::reflection
 
 		auto& variant = m_members.get_ref(h);
 
-		if(std::is_pointer_v< T >)
+		if (std::is_pointer_v< T >)
 		{
 			if (!std::is_base_of_v< SBase, T >) MINT_ASSERT(false, "Invalid operation. Pointer type must be derived from SBase component class!");
 
 			return variant.cast_safe< T >(VariantType_Pointer);
 		}
-		else if(std::is_same_v< u32, T >)
+		else if (std::is_same_v< u32, T >)
 		{
 			return variant.cast_safe< T >(VariantType_Uint32);
 		}
@@ -108,4 +111,5 @@ namespace mint::reflection
 }
 
 
+#endif
 #endif

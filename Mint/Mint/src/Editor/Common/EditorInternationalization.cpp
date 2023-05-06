@@ -1,4 +1,6 @@
-﻿#include "EditorInternationalization.h"
+﻿#if MINT_DISTR
+#else
+#include "EditorInternationalization.h"
 
 
 namespace mint::editor::lang
@@ -12,7 +14,7 @@ namespace mint::editor::lang
 
 	const char* get_word(Word word)
 	{
-		switch(s_Language)
+		switch (s_Language)
 		{
 		case Language_German: return get_word_german(word);
 		case Language_Russian: return get_word_russian(word);
@@ -49,3 +51,4 @@ namespace mint::editor::lang
 
 
 }
+#endif
