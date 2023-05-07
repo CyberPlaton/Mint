@@ -27,10 +27,12 @@ namespace mint::editor
 	private:
 		CComponentEditorStack m_componentEditorStack;
 
+		bool m_addingComponent = false;
 
 	private:
 		void show_main_frame();
 
+		void show_add_component_dialog();
 	};
 
 }

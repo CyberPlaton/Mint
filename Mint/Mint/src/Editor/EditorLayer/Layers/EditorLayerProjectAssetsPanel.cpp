@@ -242,14 +242,15 @@ namespace mint::editor
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
 
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f });
 		ImGui::SetNextWindowSize({ w, h });
 
 		String text = "New folder at " + m_createDirectory.get_stem();
+		String itext = "##" + text;
 
 		ImGui::Begin(text.c_str(), &m_createFolderDialog);
 
-		ImGui::InputText("|", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
+		ImGui::InputText(itext.c_str(), m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
 
 
 		if (ImGui::SmallButton("OK"))

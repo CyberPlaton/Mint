@@ -41,7 +41,20 @@ namespace mint::editor
 
 		show_main_frame();
 
+		if(GlobalData().Get().s_EditorInspectedEntity != entt::null)
+		{
+			ImGui::Separator();
+
+			if (ImGui::Button(ICON_FA_SQUARE_PLUS " Add Component"))
+			{
+				m_addingComponent = true;
+			}
+		}
+
 		ImGui::EndChild();
+
+
+		if (m_addingComponent) show_add_component_dialog();
 
 		m_componentEditorStack.on_ui_frame();
 	}
@@ -75,6 +88,23 @@ namespace mint::editor
 	{
 		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 	}
+
+
+	void CInspectorPanelLayer::show_add_component_dialog()
+	{
+		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
+		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
+
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
+
+		String text = "Adding Component to " + CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
+
+		ImGui::Begin(text.c_str(), &m_addingComponent, ImGuiWindowFlags_None);
+
+		ImGui::End();
+	}
+
 
 }
 #endif
