@@ -33,6 +33,7 @@ namespace mint::editor
 	f32 GlobalData::s_EditorTransformMinRotation = -720.0f;
 	f32 GlobalData::s_EditorTransformMaxRotation = 720.0f;
 
+	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
 
 }
 #endif

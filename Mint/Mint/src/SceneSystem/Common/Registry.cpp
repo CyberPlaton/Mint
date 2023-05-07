@@ -100,4 +100,10 @@ namespace mint
 	}
 
 
+	entt::registry& CRegistry::get_entt_registry_ref()
+	{
+		return m_registry;
+	}
+
+
 }

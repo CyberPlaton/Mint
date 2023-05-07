@@ -9,7 +9,6 @@
 #if MINT_DISTR
 #else
 #include "Utility/Reflection/EntityMetaclassDatabase.h"
-#include "Utility/Reflection/Reflection.h"
 #endif
 
 
@@ -78,6 +77,8 @@ namespace mint
 
 
 		const entt::registry& get_entt_registry();
+
+		entt::registry& get_entt_registry_ref();
 
 	private:
 		MINT_CRITICAL_SECTION(m_criticalSection);

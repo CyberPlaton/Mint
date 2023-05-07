@@ -94,6 +94,7 @@ namespace mint::editor
 	{
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
+		auto& db = GlobalData::Get().s_ComponentDatabase;
 
 		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
@@ -101,6 +102,8 @@ namespace mint::editor
 		String text = "Adding Component to " + CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
 
 		ImGui::Begin(text.c_str(), &m_addingComponent, ImGuiWindowFlags_None);
+
+
 
 		ImGui::End();
 	}

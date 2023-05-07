@@ -27,7 +27,7 @@ namespace mint::reflection
 		void set_metaclass_type(u64 hash);
 		u64 get_metaclass_type();
 
-		void set_metaclass_name(const String& name);
+		String set_metaclass_name(const String& name);
 		String get_metaclass_name();
 
 

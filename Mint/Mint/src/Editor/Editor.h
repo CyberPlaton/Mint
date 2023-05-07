@@ -5,6 +5,7 @@
 
 #include "Common/EditorInternationalization.h"
 #include "EditorLayer/LayerStack.h"
+#include "ComponentEditor/ApplicationComponentsDatabase.h"
 #include "RessourceManagement/EditorIconManager.h"
 #include "ComponentEditor/ComponentEditorStack.h"
 #include "EditorLayer/Layers/EditorLayerCameraController.h"

@@ -25,7 +25,7 @@ namespace mint::reflection
 	}
 
 
-	void CMetaClass::set_metaclass_name(const String& name)
+	String CMetaClass::set_metaclass_name(const String& name)
 	{
 		String __name = name;
 		u64 index;
@@ -46,6 +46,8 @@ namespace mint::reflection
 		MINT_ASSERT(!__name.empty() == true, "Invalid operation. Empty Metaclass name provided.");
 
 		m_name = __name;
+
+		return m_name;
 	}
 
 

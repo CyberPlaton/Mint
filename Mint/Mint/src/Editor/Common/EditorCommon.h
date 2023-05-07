@@ -3,10 +3,10 @@
 #ifndef _MINTEDITOR_EDITOR_COMMON_H_
 #define _MINTEDITOR_EDITOR_COMMON_H_
 
+
+
 #include "UI/UI.h"
-
-
-
+#include "../../Editor/ComponentEditor/ApplicationComponentsDatabase.h"
 
 
 namespace mint::editor
@@ -16,6 +16,7 @@ namespace mint::editor
 		STATIC_GET(GlobalData, s_GlobalData);
 
 		static GlobalData* s_GlobalData;
+		
 		static const mint::String s_EditorIconsPath;
 		static mint::String s_EditorDefaultSceneRessourcesPath;
 		static const mint::u32 s_DefaultIconSize;
@@ -44,6 +45,8 @@ namespace mint::editor
 		static f32 s_EditorTransformMaxScale;
 		static f32 s_EditorTransformMinRotation;
 		static f32 s_EditorTransformMaxRotation;
+
+		static CApplicationComponentsDatabase s_ComponentDatabase;
 	};
 
 

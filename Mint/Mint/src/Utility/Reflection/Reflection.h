@@ -12,6 +12,9 @@
 
 
 #include "Metaclass.h"
+#include "Editor/ComponentEditor/Common/ApplicationComponentsDatabaseInterface.h"
+
+
 
 namespace mint::reflection
 {
@@ -42,8 +45,16 @@ namespace mint::reflection
 class_name()\
 {\
 	this->m_metaclass.set_metaclass_type(entt::type_id< class_name >().hash()); \
-	this->m_metaclass.set_metaclass_name(typeid(class_name).name()); \
+	mint::String component_name = this->m_metaclass.set_metaclass_name(typeid(class_name).name()); \
+	auto db = mint::editor::IApplicationComponentsDatabase::get_component_database(); \
+	db->register_component(component_name, &class_name::add_this_component_to_entity); \
+}; \
+static void add_this_component_to_entity(entt::registry& registry, entt::entity entity) \
+{ \
+	if(!registry.all_of< class_name >(entity)) registry.emplace< class_name >(entity); \
 }
+
+
 
 #define REFLECTED_MEMBER(type, variant_type, member_variable) \
 type member_variable; \
