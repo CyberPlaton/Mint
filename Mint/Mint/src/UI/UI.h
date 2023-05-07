@@ -58,7 +58,21 @@ namespace mint
 
 		static f32 s_editDragFieldWidth;
 		static f32 s_editScalarFieldWidth;
+
+
+	private:
+		static bool InputTextEx(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data);
 	};
+
+
+	struct InputTextCallback_UserData
+	{
+		std::string* Str;
+		ImGuiInputTextCallback  ChainCallback;
+		void* ChainCallbackUserData;
+	};
+
+	static s32 InputTextCallback(ImGuiInputTextCallbackData* data);
 
 }
 

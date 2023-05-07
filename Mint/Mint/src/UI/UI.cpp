@@ -8,6 +8,20 @@ namespace mint
 	f32 CUI::s_editDragFieldWidth = 150.0f;
 	f32 CUI::s_editScalarFieldWidth = 100.0f;
 	
+
+	bool CUI::InputTextEx(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+	{
+		IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
+		flags |= ImGuiInputTextFlags_CallbackResize;
+
+		InputTextCallback_UserData cb_user_data;
+		cb_user_data.Str = str;
+		cb_user_data.ChainCallback = callback;
+		cb_user_data.ChainCallbackUserData = user_data;
+		return ImGui::InputText(label, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
+	}
+
+
 	bool CUI::initialize()
 	{
 		rlImGuiSetup(false);
@@ -368,6 +382,27 @@ namespace mint
 
 	bool CUI::edit_field_string(String& value, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
 	{
+		String text = "##" + field_text;
+
+		if (ImGui::CollapsingHeader(field_text.c_str()))
+		{
+			u32 item_width = ImGui::CalcTextSize(value.c_str()).x;
+			if (item_width < 75.0f) item_width = 75.0f;
+
+
+			ImGui::PushID(slider_id);
+			ImGui::PushItemWidth(item_width);
+
+			InputTextEx(text.c_str(), &value, ImGuiInputTextFlags_None, InputTextCallback, nullptr);
+
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+
+			help_marker_no_question_mark(field_desc);
+
+			return true;
+		}
+
 		return false;
 	}
 
@@ -520,6 +555,28 @@ namespace mint
 	bool CUI::ui_has_focus()
 	{
 		return ImGui::IsAnyItemHovered() || ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) || ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+	}
+
+
+	s32 InputTextCallback(ImGuiInputTextCallbackData* data)
+	{
+		InputTextCallback_UserData* user_data = (InputTextCallback_UserData*)data->UserData;
+		if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
+		{
+			// Resize string callback
+			// If for some reason we refuse the new length (BufTextLen) and/or capacity (BufSize) we need to set them back to what we want.
+			std::string* str = user_data->Str;
+			IM_ASSERT(data->Buf == str->c_str());
+			str->resize(data->BufTextLen);
+			data->Buf = (char*)str->c_str();
+		}
+		else if (user_data->ChainCallback)
+		{
+			// Forward to user callback, if any
+			data->UserData = user_data->ChainCallbackUserData;
+			return user_data->ChainCallback(data);
+		}
+		return 0;
 	}
 
 
