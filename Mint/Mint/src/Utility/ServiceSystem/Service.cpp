@@ -69,9 +69,11 @@ namespace mint
 	{
 		const auto& services = g_Services.get_all();
 
+		MINT_LOG_INFO("[{:.4f}][IService::print_registered_services] Dumping registered services:", MINT_APP_TIME);
+
 		for(const auto service : services)
 		{
-			MINT_LOG_INFO("[{:.4f}][IService::print_registered_services] Service Type: \"{}\"", MINT_APP_TIME, service->get_service_type());
+			MINT_LOG_INFO("\tService Type: \"{}\"", service->get_service_type());
 		}
 	}
 

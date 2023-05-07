@@ -4,6 +4,7 @@
 
 #include "Common.h"
 #include "Algorithm.h"
+#include "Utility/Logging/Logging.h"
 
 
 namespace mint
@@ -83,11 +84,13 @@ namespace mint
 
 		f32 get_h() const;
 
+		void print_window_configurations() const;
 
 	private:
 		Window m_window;
 		Texture m_windowIcon;
-		
+		SDescription m_description;
+
 
 	private:
 		void _setWindowState(ConfigFlags flag, bool value);

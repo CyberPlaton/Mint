@@ -9,8 +9,6 @@ namespace mint
 	{
 		if(initialize(manifest_filepath))
 		{
-			IService::print_registered_services();
-
 			return true;
 		}
 
@@ -69,6 +67,9 @@ namespace mint
 		if (initialize(manifest_filepath))
 		{
 			IService::print_registered_services();
+
+			get_main_window_const().print_window_configurations();
+
 
 			set_engine_fps(60.0f);
 			set_engine_window_title("Mint Engine Editor");
