@@ -33,7 +33,7 @@ namespace mint
 
 		static bool delete_directory_or_file(CPath complete_entry_path);
 
-		static bool create_file(CPath directory_path, String& file_name, String& file_extension);
+		static bool create_file(CPath directory_path, String& file_name, String& file_extension, bool add_dot_before_extension = true);
 
 		static bool find_directory(CPath query_directory, const String& searched_directory_name);
 

@@ -131,7 +131,9 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_contents(CPath& path)
 	{
-		if (ImGui::TreeNode(path.get_stem().c_str()))
+		String text = ICON_FA_FOLDER_TREE + path.get_stem();
+
+		if (ImGui::TreeNode(text.c_str()))
 		{
 			show_folder_options(path);
 
@@ -156,36 +158,52 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file(CPath& path)
 	{
-		mint::String text = mint::String(ICON_FA_PEN_TO_SQUARE) + " " + path.get_stem() + path.get_extension();
-
-		if (ImGui::SmallButton(text.c_str()))
+		// Show this icon if it is editable, otherwise just as plain text.
+		mint::String text;
+		bool editable = true;
+		if(is_file_editable(path.get_extension()))
 		{
-			CPath relative = CFileystem::get_relative_path_to_working_directory(path);
-
-			m_textEditorStack.emplace_back(relative);
-
-			auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
-
-			if (!texteditor.is_ready())
-			{
-				mint::algorithm::vector_erase_last(m_textEditorStack);
-			}
+			text = mint::String(ICON_FA_PEN_TO_SQUARE) + " " + path.get_stem() + path.get_extension();
+		}
+		else
+		{
+			editable = false;
+			text = path.get_stem() + path.get_extension();
 		}
 
-		// 		mint::String file = path.get_stem() + path.get_extension();
-		// 		ImGui::Text(file.c_str());
-		// 
-		// 		show_file_options(path);
+		
+		if(editable)
+		{
+			if (ImGui::SmallButton(text.c_str()))
+			{
+				CPath relative = CFileystem::get_relative_path_to_working_directory(path);
+
+				m_textEditorStack.emplace_back(relative);
+
+				auto& texteditor = mint::algorithm::vector_get_last_element_as<CTextEditor&>(m_textEditorStack);
+
+				if (!texteditor.is_ready())
+				{
+					mint::algorithm::vector_erase_last(m_textEditorStack);
+				}
+			}
+		}
+		else
+		{
+			ImGui::Text(text.c_str());
+		}
 	}
 
 
 	void CProjectAssetsPanelLayer::show_folder_options(CPath& path)
 	{
+		String text = "##" + path.as_string();
+
 		static int item_current = 0;
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
-		if (ImGui::Combo(ICON_FA_FOLDER_TREE, &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
+		if (ImGui::Combo(text.c_str(), &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
 		{
 			switch (item_current)
 			{
@@ -298,7 +316,7 @@ namespace mint::editor
 				extension = String(s_EditorAssetPanelFileTypeExtensions[item_current]);
 
 				// create file
-				if (CFileystem::create_file(m_createDirectory, name, extension))
+				if (CFileystem::create_file(m_createDirectory, name, extension, false))
 				{
 				}
 			}
@@ -352,6 +370,18 @@ namespace mint::editor
 
 		ImGui::End();
 	}
+
+
+	bool CProjectAssetsPanelLayer::is_file_editable(const String& file_extension)
+	{
+		for(const auto& ext: s_EditorAssetPanelFileTypeExtensions)
+		{
+			if (strcmp(file_extension.c_str(), ext) == 0) return true;
+		}
+
+		return false;
+	}
+
 
 }
 #endif

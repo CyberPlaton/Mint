@@ -62,6 +62,8 @@ namespace mint::editor
 		void show_create_folder_dialog();
 
 		void show_delete_folder_dialog();
+
+		bool is_file_editable(const String& file_extension);
 	};
 
 }

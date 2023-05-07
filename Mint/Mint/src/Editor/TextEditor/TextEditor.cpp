@@ -46,6 +46,8 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 
+		String input_text = "##" + m_fileName;
+
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
 		ImGui::Begin(m_fileName.c_str(), &m_active, m_windowFlags);
 
@@ -58,7 +60,7 @@ namespace mint::editor
 			if (!is_saved()) save_file();
 		}
 
-		ImGui::InputTextMultiline(ICON_FA_MARKER, m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f }, m_inputFlags);
+		ImGui::InputTextMultiline(input_text.c_str(), m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f }, m_inputFlags);
 
 		ImGui::End();
 

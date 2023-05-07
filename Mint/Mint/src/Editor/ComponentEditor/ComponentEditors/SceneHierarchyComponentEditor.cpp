@@ -34,7 +34,38 @@ namespace mint::editor
 
 	void CSceneHierarchyComponentEditor::show_members()
 	{
+		auto entity = get_metaclass()->get_metaclass_entity();
+		ImGuiID slid = 10000;
+		ImGuiID scid = 20000;
 
+
+		auto parent = CUCA::hierarchy_get_parent(entity);
+		auto& children = CUCA::hierarchy_get_children(entity);
+
+
+		if(parent == entt::null)
+		{
+			ImGui::Text("No Parent");
+		}
+		else
+		{
+			ImGui::Text(TextFormat("Parent: %zu", SCAST(u64, parent)));
+		}
+
+		ImGui::Separator();
+
+		if(children.empty())
+		{
+			ImGui::Text("No Children");
+		}
+		else
+		{
+			ImGui::Text("Children:");
+			for(auto& kid: children)
+			{
+				ImGui::Text(TextFormat("Child: %zu", SCAST(u64, kid)));
+			}
+		}
 	}
 
 

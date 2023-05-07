@@ -84,16 +84,16 @@ namespace mint::editor
 		"Lua"
 	};
 	static const char* s_EditorAssetPanelFileTypeExtensions[] = {
-		"texture",
-		"vsh",
-		"fsh",
-		"behavior",
-		"script",
-		"scene",
-		"maml",
+		".texture",
+		".vsh",
+		".fsh",
+		".behavior",
+		".script",
+		".scene",
+		".maml",
 
 
-		"lua"
+		".lua"
 	};
 	static const char* s_EditorDefaultFileSourceFileIcon[] = {
 		ICON_FA_PANORAMA,

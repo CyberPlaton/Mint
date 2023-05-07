@@ -118,13 +118,13 @@ namespace mint
 	}
 
 
-	bool CFileystem::create_file(CPath directory_path, String& file_name, String& file_extension)
+	bool CFileystem::create_file(CPath directory_path, String& file_name, String& file_extension, bool add_dot_before_extension)
 	{
 		if(directory_path.does_exist())
 		{
 			String name;
 			name.append(file_name.c_str());
-			name.append(".");
+			if(add_dot_before_extension) name.append(".");
 			name.append(file_extension.c_str());
 
 			directory_path /= name;
