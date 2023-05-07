@@ -40,6 +40,8 @@ namespace mint::editor
 		virtual ImGuiWindowFlags get_flags() = 0;
 
 		virtual void set_flags(ImGuiWindowFlags) = 0;
+
+		virtual reflection::CMetaClass* get_metaclass() = 0;
 	};
 
 
@@ -72,6 +74,7 @@ namespace mint::editor
 		ImGuiWindowFlags get_flags()  override final;
 		void set_flags(ImGuiWindowFlags value)  override final;
 
+		reflection::CMetaClass* get_metaclass() override final;
 
 	protected:
 		reflection::CMetaClass* m_metaclass;

@@ -19,8 +19,8 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
-		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f,  get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
+		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f,  get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Once);
 
 		ImGui::Begin(get_component_name().c_str(), &m_active, get_flags());
 
@@ -89,6 +89,26 @@ namespace mint::editor
 				break;
 			}
 			case reflection::VariantType_Pointer:
+			{
+				break;
+			}
+			case reflection::VariantType_Vec2:
+			{
+				break;
+			}
+			case reflection::VariantType_Vec3:
+			{
+				break;
+			}
+			case reflection::VariantType_Vec4:
+			{
+				break;
+			}
+			case reflection::VariantType_Rect:
+			{
+				break;
+			}
+			case reflection::VariantType_Color:
 			{
 				break;
 			}

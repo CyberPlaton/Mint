@@ -46,4 +46,11 @@ namespace mint::algorithm
 		return glm::radians(degrees);
 	}
 
+
+	bool are_values_sufficiently_different(f32 lh, f32 rh)
+	{
+		return glm::distance< f32 >(lh, rh) > glm::epsilon< f32 >();
+	}
+
+
 }

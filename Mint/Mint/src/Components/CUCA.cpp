@@ -318,7 +318,7 @@ namespace mint::component
 
 		Vec3 rotation; glm::extractEulerAngleXYZ(transform, rotation.x, rotation.y, rotation.z);
 
-		return rotation.z;
+		return mint::algorithm::radians_to_degree(rotation.z);
 	}
 
 

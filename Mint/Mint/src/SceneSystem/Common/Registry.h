@@ -115,7 +115,10 @@ namespace mint
 
 #if MINT_DISTR
 #else
-		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), mint::reflection::SBase::get_metaclass(&comp));
+		auto metaclass = mint::reflection::SBase::get_metaclass(&comp);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
 #endif
 
 		return comp;

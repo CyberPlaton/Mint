@@ -21,6 +21,9 @@ namespace mint::reflection
 		CMetaClass();
 		~CMetaClass() = default;
 
+		void set_metaclass_entity(entt::entity entity);
+		entt::entity get_metaclass_entity();
+
 		void set_metaclass_type(u64 hash);
 		u64 get_metaclass_type();
 
@@ -47,6 +50,8 @@ namespace mint::reflection
 		u64 m_type;
 
 		String m_name;
+
+		entt::entity m_entity;
 	};
 
 

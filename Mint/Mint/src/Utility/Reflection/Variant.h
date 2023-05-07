@@ -20,6 +20,11 @@ namespace mint::reflection
 		VariantType_Double,
 		VariantType_String,
 		VariantType_Boolean,
+		VariantType_Vec2,
+		VariantType_Vec3,
+		VariantType_Vec4,
+		VariantType_Rect,
+		VariantType_Color,
 		VariantType_Pointer
 	};
 

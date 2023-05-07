@@ -30,10 +30,6 @@ namespace mint::editor
 		{
 			if (ImGui::BeginMenu("Inspector"))
 			{
-				if (ImGui::MenuItem("Dump registered component editors"))
-				{
-					m_componentEditorStack.print_registered_component_editors();
-				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("X"))

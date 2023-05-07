@@ -91,6 +91,14 @@ namespace mint::editor
 	}
 
 
+	mint::reflection::CMetaClass* CComponentEditor::get_metaclass()
+	{
+		MINT_ASSERT(m_metaclass != nullptr, "Invalid operation. Metaclass was not set or became invalid!");
+
+		return m_metaclass;
+	}
+
+
 }
 
 #endif

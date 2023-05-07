@@ -8,7 +8,7 @@ namespace mint::reflection
 
 
 	CMetaClass::CMetaClass() :
-		m_type(0)
+		m_type(0), m_entity(entt::null)
 	{
 	}
 
@@ -74,6 +74,20 @@ namespace mint::reflection
 	mint::Vector< CVariant >& CMetaClass::get_all_members()
 	{
 		return m_members.get_all();
+	}
+
+
+	void CMetaClass::set_metaclass_entity(entt::entity entity)
+	{
+		MINT_ASSERT(entity != entt::null, "Invalid operation. Entity must be valid!");
+
+		m_entity = entity;
+	}
+
+
+	entt::entity CMetaClass::get_metaclass_entity()
+	{
+		return m_entity;
 	}
 
 

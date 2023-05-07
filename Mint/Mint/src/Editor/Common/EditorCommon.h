@@ -36,6 +36,14 @@ namespace mint::editor
 
 		static ImGuiID s_EditorEditFieldSliderIdStart;
 		static ImGuiID s_EditorEditFieldScalarIdStart;
+
+
+		static u64 s_EditorTransformMinPosition;
+		static u64 s_EditorTransformMaxPosition;
+		static f32 s_EditorTransformMinScale;
+		static f32 s_EditorTransformMaxScale;
+		static f32 s_EditorTransformMinRotation;
+		static f32 s_EditorTransformMaxRotation;
 	};
 
 
