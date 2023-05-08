@@ -17,6 +17,5 @@ namespace mint::reflection
 		return &component->m_metaclass;
 	}
 
-
 }
 #endif

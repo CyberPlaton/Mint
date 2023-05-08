@@ -7,6 +7,7 @@
 #include "SceneSystem/Common/IScene.h"
 #include "Utility/STL/Map.h"
 #include "Common/ApplicationComponentsDatabaseInterface.h"
+#include "Physics/PhysicsSystem.h"
 
 
 namespace mint::editor
@@ -19,12 +20,23 @@ namespace mint::editor
 		~CApplicationComponentsDatabase();
 
 
-		void register_component(const String& component_name, ComponentFunctionType add_component_to_entity_function) override final;
+		void register_component(const String& component_name, ComponentFunctionType add_component_to_entity_function,
+															  ComponentFunctionType remove_component_from_entity_function) override final;
 
 		bool add_component_to_entity(const String& component_name, entt::entity entity)  override final;
 
+		bool remove_component_from_entity(const String& component_name, entt::entity entity) override final;
+
+		Vector< String >& get_all_component_names() override final;
+
+		void print_registered_components();
+
 	private:
-		CMap< ComponentFunctionType > m_components;
+		Vector< String > m_componentNames;
+
+		CMap< ComponentFunctionType > m_componentAddFunctions;
+
+		CMap< ComponentFunctionType > m_componentRemoveFunctions;
 	
 	};
 

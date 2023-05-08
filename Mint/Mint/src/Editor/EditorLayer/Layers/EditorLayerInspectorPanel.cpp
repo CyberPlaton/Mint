@@ -68,6 +68,10 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::show_main_frame()
 	{
+		auto& db = GlobalData::Get().s_ComponentDatabase;
+
+		String button_text = ICON_FA_TRASH_CAN "##";
+
 		if (GlobalData::Get().s_EditorInspectedEntity != entt::null)
 		{
 			auto entity_name = CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
@@ -79,6 +83,14 @@ namespace mint::editor
 				if (ImGui::Button(mc->get_metaclass_name().c_str()))
 				{
 					m_componentEditorStack.try_push_component_editor(mc);
+				}
+
+				ImGui::SameLine();
+
+				String text = button_text + mc->get_metaclass_name();
+				if (ImGui::Button(text.c_str()))
+				{
+					db.remove_component_from_entity(mc->get_metaclass_name(), GlobalData::Get().s_EditorInspectedEntity);
 				}
 			}
 		}
@@ -95,6 +107,8 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 		auto& db = GlobalData::Get().s_ComponentDatabase;
+		auto& components = db.get_all_component_names();
+
 
 		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
@@ -103,7 +117,13 @@ namespace mint::editor
 
 		ImGui::Begin(text.c_str(), &m_addingComponent, ImGuiWindowFlags_None);
 
-
+		for(const auto& comp: components)
+		{
+			if(ImGui::Button(comp.c_str()))
+			{
+				db.add_component_to_entity(comp, GlobalData::Get().s_EditorInspectedEntity);
+			}
+		}
 
 		ImGui::End();
 	}

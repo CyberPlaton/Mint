@@ -11,9 +11,8 @@
 #define _MINT_REFLECTION_H_
 
 
-#include "Metaclass.h"
 #include "Editor/ComponentEditor/Common/ApplicationComponentsDatabaseInterface.h"
-
+#include "EntityMetaclassDatabase.h"
 
 
 namespace mint::reflection
@@ -31,7 +30,6 @@ namespace mint::reflection
 
 		static CMetaClass* get_metaclass(SBase* component);
 
-
 	protected:
 		CMetaClass m_metaclass;
 	};
@@ -47,12 +45,25 @@ class_name()\
 	this->m_metaclass.set_metaclass_type(entt::type_id< class_name >().hash()); \
 	mint::String component_name = this->m_metaclass.set_metaclass_name(typeid(class_name).name()); \
 	auto db = mint::editor::IApplicationComponentsDatabase::get_component_database(); \
-	db->register_component(component_name, &class_name::add_this_component_to_entity); \
+	db->register_component(component_name, &class_name::add_this_component_to_entity, &class_name::remove_this_component_from_entity); \
 }; \
 static void add_this_component_to_entity(entt::registry& registry, entt::entity entity) \
 { \
-	if(!registry.all_of< class_name >(entity)) registry.emplace< class_name >(entity); \
+	if(!registry.all_of< class_name >(entity)) \
+	{ \
+		auto& component = registry.emplace< class_name >(entity); \
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(mint::u64, entity), &component.m_metaclass); \
+	}; \
+} \
+static void remove_this_component_from_entity(entt::registry& registry, entt::entity entity) \
+{ \
+	if(registry.all_of< class_name >(entity)) \
+	{ \
+		registry.erase< class_name >(entity); \
+		mint::reflection::CEntityMetaclassDatabase::Get().remove_entity_metaclass< class_name >(SCAST(mint::u64, entity)); \
+	}; \
 }
+
 
 
 

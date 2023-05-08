@@ -68,6 +68,7 @@ namespace mint
 		{
 			IService::print_registered_services();
 
+
 			get_main_window_const().print_window_configurations();
 
 
@@ -85,6 +86,12 @@ namespace mint
 
 
 			if(result) m_layerStack.print_registered_layers();
+
+
+			register_engine_components_to_reflection_system();
+
+			editor::GlobalData::Get().s_ComponentDatabase.print_registered_components();
+
 
 			return result;
 		}
@@ -300,6 +307,18 @@ namespace mint
 		}
 
 		return !failed;
+	}
+
+
+	void CEditor::register_engine_components_to_reflection_system()
+	{
+		mint::component::SIdentifier id;
+		mint::component::SSceneHierarchy h;
+		mint::component::SRigidBody rb;
+		mint::component::STransform t;
+		mint::component::SSprite s;
+		mint::component::SAnimatedSprite as;
+		mint::component::SScript sc;
 	}
 
 

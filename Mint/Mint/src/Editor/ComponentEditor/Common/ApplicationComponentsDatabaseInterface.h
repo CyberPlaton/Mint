@@ -20,10 +20,13 @@ namespace mint::editor
 		static void set_component_database(IApplicationComponentsDatabase* db);
 
 
-		virtual void register_component(const String&, ComponentFunctionType) = 0;
+		virtual void register_component(const String&, ComponentFunctionType, ComponentFunctionType) = 0;
 
 		virtual bool add_component_to_entity(const String&, entt::entity) = 0;
 	
+		virtual bool remove_component_from_entity(const String&, entt::entity) = 0;
+
+		virtual Vector< String >& get_all_component_names() = 0;
 
 	protected:
 		static IApplicationComponentsDatabase* s_IApplicationComponentsDatabase;

@@ -67,6 +67,8 @@ namespace mint
 	protected:
 		bool create_layer_stack();
 
+		void register_engine_components_to_reflection_system();
+
 		void toggle(bool& value);
 	
 		template < class T >
