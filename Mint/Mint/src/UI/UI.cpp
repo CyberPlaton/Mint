@@ -26,9 +26,12 @@ namespace mint
 	{
 		rlImGuiSetup(false);
 
+#if MINT_DISTR
+		return true;
+#else
 		CFileystem fs(CFileystem::get_working_directory());
 
-		if(fs.forward("EditorRessources") && fs.forward("Fonts"))
+		if (fs.forward("EditorRessources") && fs.forward("Fonts"))
 		{
 			ImGuiIO& io = ImGui::GetIO();
 
@@ -38,21 +41,20 @@ namespace mint
 			0,
 			};
 			ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
-			
+
 			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "DroidSans.ttf").as_string();
 
 			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 18.0f, &icons_config, ranges);
 
 			rlImGuiReloadFonts();
 
-			//ImGui::GetIO().FontDefault = font;
-
 			return true;
 		}
-		
+
 		MINT_LOG_CRITICAL("[{:.4f}][CUI::initialize] Failed loading fonts at \"{}\"!", MINT_APP_TIME, fs.get_current_directory().as_string());
-		
+
 		return false;
+#endif
 	}
 
 

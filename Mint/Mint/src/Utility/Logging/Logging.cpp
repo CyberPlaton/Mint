@@ -42,7 +42,9 @@ namespace mint
 #endif
 		m_timer.start_timer();
 
-		MINT_LOG_INFO("Application start...");
+		String date = CTimer::get_local_date_time();
+
+		MINT_LOG_INFO("[{}] Application start...", date);
 
 		return true;
 	}
@@ -50,7 +52,9 @@ namespace mint
 
 	void CLogging::terminate()
 	{
-		MINT_LOG_INFO("Application end...");
+		String date = CTimer::get_local_date_time();
+
+		MINT_LOG_INFO("[{}] Application end...", date);
 
 		s_fileLog.reset();
 		s_consoleLog.reset();
