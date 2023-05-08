@@ -3,8 +3,6 @@
 namespace mint
 {
 	std::shared_ptr< spdlog::logger > CLogging::s_consoleLog;
-
-
 	std::shared_ptr< spdlog::logger > CLogging::s_fileLog;
 
 
@@ -15,12 +13,15 @@ namespace mint
 #if MINT_DEBUG
 		m_verbosity = Verbosity_Debug;
 		m_mode = Mode_Console;
+		SetTraceLogLevel(LOG_INFO | LOG_WARNING | LOG_ERROR | LOG_FATAL);
 #elif MINT_RELEASE
 		m_verbosity = Verbosity_Release;
 		m_mode = Mode_File;
+		SetTraceLogLevel(LOG_WARNING | LOG_ERROR | LOG_FATAL);
 #else
 		m_verbosity = Verbosity_Distr;
 		m_mode = Mode_File;
+		SetTraceLogLevel(LOG_NONE);
 #endif
 		
 

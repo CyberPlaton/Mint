@@ -144,10 +144,14 @@ namespace mint
 		auto refresh_rate = GetMonitorRefreshRate(monitor);
 		auto width = m_window.GetWidth();
 		auto height = m_window.GetHeight();
+		auto monitor_width = GetMonitorWidth(monitor);
+		auto monitor_height = GetMonitorHeight(monitor);
 		auto render_width = m_window.GetRenderWidth();
 		auto render_height = m_window.GetRenderHeight();
 
 		MINT_LOG_INFO("\t Monitor ID: {}", monitor);
+		MINT_LOG_INFO("\t Monitor Width: {}", monitor_width);
+		MINT_LOG_INFO("\t Monitor Height: {}", monitor_height);
 		MINT_LOG_INFO("\t Refresh Rate: {}", refresh_rate);
 		MINT_LOG_INFO("\t Target FPS: {}", m_description.m_targetFPS);
 		MINT_LOG_INFO("\t Title: {}", m_description.m_title);
@@ -165,7 +169,6 @@ namespace mint
 		MINT_LOG_INFO("\t Focus: {}",			m_description.m_focus == true ? "True" : "False");
 		MINT_LOG_INFO("\t Minimized: {}",		m_description.m_minimized == true ? "True" : "False");
 		MINT_LOG_INFO("\t Run Minimized: {}",	m_description.m_runMinimized == true ? "True" : "False");
-
 	}
 
 

@@ -22,8 +22,6 @@ namespace mint::editor
 			m_componentRemoveFunctions.add(h, remove_component_from_entity_function);
 
 			m_componentNames.push_back(component_name);
-
-			MINT_LOG_INFO("[{:.4f}][CApplicationComponentsDatabase::register_component] Registered Component: \"{}\"", MINT_APP_TIME, component_name);
 		}
 	}
 
