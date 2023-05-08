@@ -97,6 +97,8 @@ namespace mint::editor
 			GlobalData::Get().s_EditorInspectedEntity = entity;
 		}
 
+		check_entity_for_components_sanity(entity);
+
 		if (inspected) ImGui::PopStyleColor();
 
 		if (open)
@@ -113,6 +115,77 @@ namespace mint::editor
 
 
 			ImGui::TreePop();
+		}
+
+	}
+
+
+	void CHierarchyPanelLayer::check_entity_for_components_sanity(entt::entity entity)
+	{
+		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+
+		bool info = false;
+		String info_message;
+		u32 info_count = 1;
+
+		if(registry.has_component< mint::component::STransform >(entity))
+		{
+			if(!registry.has_component< mint::component::SDynamicGameobject >(entity))
+			{
+				info_message = std::to_string(info_count) + ".) The entity does not have a SDynamicGameobject "
+															"Component, and its position will not be updated when it changes its Position!";
+
+				info = true;
+				info_count++;
+			}
+		}
+
+		if (registry.has_component< mint::component::SRigidBody >(entity))
+		{
+			if (!registry.has_component< mint::component::STransform >(entity))
+			{
+				info_message = std::to_string(info_count) + ".) The entity does not have a STransform "
+														    "Component, and will not be functioning without it. Either remove "
+															"SRigidBody Component or add STransform Component!";
+
+				info = true;
+				info_count++;
+			}
+		}
+
+		if (registry.has_component< mint::component::SSprite >(entity))
+		{
+			if (!registry.has_component< mint::component::STransform >(entity))
+			{
+				info_message = std::to_string(info_count) + ".) The entity does not have a STransform "
+														    "Component, and will not be rendered! Either remove "
+															"SSprite Component or add STransform Component!";
+
+				info = true;
+				info_count++;
+			}
+		}
+
+		if (registry.has_component< mint::component::SAnimatedSprite >(entity))
+		{
+			if (!registry.has_component< mint::component::SSprite >(entity))
+			{
+				info_message = std::to_string(info_count) + ".) The entity does not have a SSprite "
+															"Component, and will not be rendered nor animated! Either remove "
+															"SAnimatedSprite Component or add SSprite Component!";
+
+				info = true;
+				info_count++;
+			}
+		}
+
+		ImGui::SameLine();
+
+		ImGui::Text(ICON_FA_CIRCLE_EXCLAMATION);
+
+		if(ImGui::IsItemHovered())
+		{
+			CUI::help_marker_no_question_mark(info_message);
 		}
 
 	}

@@ -184,6 +184,12 @@ namespace mint
 	{
 		if (CInput::is_key_pressed_enum(KEY_ESCAPE))
 		{
+			if(editor::GlobalData::Get().s_EditorInspectedEntity != entt::null)
+			{
+				editor::GlobalData::Get().s_EditorInspectedEntity = entt::null;
+				return;
+			}
+			
 			toggle(m_editingMode);
 
 			if (m_editingMode)

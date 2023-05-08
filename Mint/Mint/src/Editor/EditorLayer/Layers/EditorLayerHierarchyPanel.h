@@ -5,6 +5,7 @@
 
 
 #include "../Common/Layer.h"
+#include "SceneSystem/Common/IScene.h"
 
 
 namespace mint::editor
@@ -32,6 +33,8 @@ namespace mint::editor
 		void show_main_frame();
 
 		void show_entity_recursive(entt::entity entity);
+
+		void check_entity_for_components_sanity(entt::entity entity);
 	};
 
 }
