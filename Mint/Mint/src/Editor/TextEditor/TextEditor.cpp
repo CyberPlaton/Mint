@@ -167,7 +167,9 @@ namespace mint::editor
 		else if (file_type == ".maml" || file_type == ".scene" || file_type == ".texture" ||
 				 file_type == ".behavior" || file_type == ".script")
 		{
-			MINT_LOG_WARN("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for MAML is not yet supported!", MINT_APP_TIME);
+			m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::MAML());
+
+			MINT_LOG_WARN("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for MAML is not yet fully supported!", MINT_APP_TIME);
 		}
 		else
 		{
