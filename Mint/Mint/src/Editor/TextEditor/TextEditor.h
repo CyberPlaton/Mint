@@ -6,11 +6,8 @@
 
 #include "../Common/EditorCommon.h"
 #include "Utility/FileSystem/Filesystem.h"
+#include "ImGuiTextEditor.h"
 
-
-#ifndef MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE
-#define MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE 1024 * 13
-#endif
 
 
 namespace mint::editor
@@ -44,14 +41,16 @@ namespace mint::editor
 		bool m_ready;
 
 		bool m_changed;
-		mint::u32 m_lastSavedFileSize;
-		mint::u32 m_currentFileSize;
+		bool m_saved;
 
 		mint::CPath m_filepath;
 		mint::String m_fileName;
 		mint::String m_fileIcon;
 
-		char m_buffer[MINTEDITOR_TEXT_EDITOR_BUFFER_SIZE];
+		TextEditor m_editor;
+
+	private:
+		void _prepare_editor(const String& file_type);
 	};
 }
 

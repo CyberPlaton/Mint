@@ -8,19 +8,17 @@ namespace mint::editor
 
 
 	CTextEditor::CTextEditor(mint::CPath path) :
-		m_filepath(path), m_lastSavedFileSize(0), m_currentFileSize(0),
-		m_ready(false), m_changed(false), m_windowFlags(0), m_inputFlags(0)
+		m_filepath(path), m_ready(false), m_changed(false), m_saved(false), m_windowFlags(0), m_inputFlags(0)
 	{
 		if (!is_valid_file(path)) return;
 
 
-		auto buffer = CFileystem::read_file_at_path(path, &m_lastSavedFileSize);
+		u32 file_size = 0;
+		auto buffer = CFileystem::read_file_at_path(path, &file_size);
 
 		if (buffer)
 		{
-			// Copy loaded contents into own buffer.
-			std::memset(&m_buffer, NULL, sizeof(m_buffer));
-			std::memcpy(&m_buffer, buffer, m_lastSavedFileSize);
+			m_editor.SetText(buffer);
 
 			free(buffer);
 
@@ -28,15 +26,14 @@ namespace mint::editor
 
 			m_fileName = String(m_fileIcon) + " " + path.get_stem() + path.get_extension();
 
-
-			m_lastSavedFileSize = mint::String(m_buffer).size();
-			m_currentFileSize = m_lastSavedFileSize;
-
 			m_windowFlags = ImGuiWindowFlags_None;
 			m_inputFlags = ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_CtrlEnterForNewLine;
 
 			m_ready = true;
 			m_active = true;
+			m_saved = true;
+
+			_prepare_editor(path.get_extension());
 		}
 	}
 
@@ -51,6 +48,12 @@ namespace mint::editor
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
 		ImGui::Begin(m_fileName.c_str(), &m_active, m_windowFlags);
 
+		auto current_w = ImGui::GetWindowWidth();
+		auto current_h = ImGui::GetWindowHeight();
+
+		w = glm::max(w, current_w);
+		h = glm::max(h, current_h);
+
 		ImGui::SameLine();
 		ImGui::Text(is_saved() == true ? ICON_FA_CHECK : ICON_FA_STAR_OF_LIFE);
 
@@ -60,11 +63,17 @@ namespace mint::editor
 			if (!is_saved()) save_file();
 		}
 
-		ImGui::InputTextMultiline(input_text.c_str(), m_buffer, IM_ARRAYSIZE(m_buffer), { w - 50.0f, h - 50.0f }, m_inputFlags);
+		m_editor.Render(input_text.c_str(), { w, h }, true);
 
-		ImGui::End();
+ 		ImGui::End();
 
-		m_currentFileSize = mint::String(m_buffer).size();
+		m_changed = m_editor.IsTextChanged();
+
+
+		if(m_changed)
+		{
+			m_saved = false;
+		}
 	}
 
 
@@ -81,7 +90,7 @@ namespace mint::editor
 
 	bool CTextEditor::is_saved()
 	{
-		return m_lastSavedFileSize == m_currentFileSize;
+		return m_saved;
 	}
 
 
@@ -103,30 +112,23 @@ namespace mint::editor
 
 	bool CTextEditor::save_file()
 	{
-		void* out_data = malloc(m_currentFileSize);
+		const auto& text = m_editor.GetText();
 
-		std::memcpy(out_data, &m_buffer, m_currentFileSize);
-
-		auto result = CFileReaderWriter::write_to_file_at_path(m_filepath.as_string(), out_data, m_currentFileSize);
-
-		free(out_data);
-
-		if (result)
+		if(!CFileReaderWriter::write_to_file_at_path(m_filepath.as_string(), (void*)text.c_str(), text.size()))
 		{
-			m_lastSavedFileSize = m_currentFileSize;
-		}
-		else
-		{
-			MINT_LOG_WARN("[{:.4f}][CTextEditor::save_file] Unable to save file \"{}\"!", MINT_APP_TIME, m_filepath.as_string());
+			MINT_LOG_ERROR("[{:.4f}][CTextEditor::save_file] Failed saving file to \"{}\"!", MINT_APP_TIME, m_filepath.as_string());
+
+			return false;
 		}
 
-		return result;
+		m_saved = true;
+		return true;
 	}
 
 
 	bool CTextEditor::is_valid_file(mint::CPath path)
 	{
-		String substr = path.get_extension().substr(1);
+		String substr = path.get_extension();
 
 		for (auto i = 0; i < IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions); i++)
 		{
@@ -145,6 +147,33 @@ namespace mint::editor
 	bool CTextEditor::is_active()
 	{
 		return m_active;
+	}
+
+
+	void CTextEditor::_prepare_editor(const String& file_type)
+	{
+		m_editor.SetPalette(TextEditor::GetLightPalette());
+
+		if(file_type == ".lua")
+		{
+			m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::Lua());
+
+			MINT_LOG_WARN("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for Scripting is not yet fully supported!", MINT_APP_TIME);
+		}
+		else if(file_type == ".fsh" || file_type == ".vsh")
+		{
+			m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::GLSL());
+		}
+		else if (file_type == ".maml" || file_type == ".scene" || file_type == ".texture" ||
+				 file_type == ".behavior" || file_type == ".script")
+		{
+			MINT_LOG_WARN("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for MAML is not yet supported!", MINT_APP_TIME);
+		}
+		else
+		{
+			MINT_LOG_ERROR("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for Type \"{}\" is not supported!", MINT_APP_TIME, file_type);
+		}
+
 	}
 
 
