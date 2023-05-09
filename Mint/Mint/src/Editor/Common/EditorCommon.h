@@ -65,8 +65,7 @@ namespace mint::editor
 	enum FileType
 	{
 		FileType_Texture,
-		FileType_VertexShader,
-		FileType_FragmentShader,
+		FileType_Shader,
 		FileType_Behavior,
 		FileType_Script,
 
@@ -76,8 +75,7 @@ namespace mint::editor
 	};
 	static const char* s_EditorAssetPanelFileTypes[] = {
 		"Texture",
-		"Vertex Shader",
-		"Fragment Shader",
+		"Shader",
 		"Behavior",
 		"Script",
 		"Scene",
@@ -88,6 +86,7 @@ namespace mint::editor
 	};
 	static const char* s_EditorAssetPanelFileTypeExtensions[] = {
 		".texture",
+		".shader",
 		".vsh",
 		".fsh",
 		".behavior",
@@ -100,8 +99,9 @@ namespace mint::editor
 	};
 	static const char* s_EditorDefaultFileSourceFileIcon[] = {
 		ICON_FA_PANORAMA,
-		ICON_FA_IMAGE,
-		ICON_FA_IMAGE,
+		ICON_FA_FILE_LINES,
+		ICON_FA_FILE_CODE,
+		ICON_FA_FILE_CODE,
 		ICON_FA_PEOPLE_ROBBERY,
 		ICON_FA_FILE_CODE,
 		ICON_FA_FILE_LINES,

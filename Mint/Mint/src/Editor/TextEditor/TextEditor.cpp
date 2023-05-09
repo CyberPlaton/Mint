@@ -63,7 +63,7 @@ namespace mint::editor
 			if (!is_saved()) save_file();
 		}
 
-		m_editor.Render(input_text.c_str(), { w, h }, true);
+		m_editor.Render(input_text.c_str(), { w - 10.0f, h - 10.0f }, true);
 
  		ImGui::End();
 
@@ -97,7 +97,7 @@ namespace mint::editor
 
 	void CTextEditor::set_file_icon(const mint::String& file_extension)
 	{
-		String substr = file_extension.substr(1);
+		String substr = file_extension;
 
 		for (auto i = 0; i < IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions); i++)
 		{
@@ -165,7 +165,7 @@ namespace mint::editor
 			m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::GLSL());
 		}
 		else if (file_type == ".maml" || file_type == ".scene" || file_type == ".texture" ||
-				 file_type == ".behavior" || file_type == ".script")
+				 file_type == ".behavior" || file_type == ".script" || file_type == ".shader")
 		{
 			m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::MAML());
 
