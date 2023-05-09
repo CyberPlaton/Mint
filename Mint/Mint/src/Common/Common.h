@@ -115,9 +115,17 @@ namespace mint
 static CLASS& Get() \
 { static CLASS STATIC_MEMBER; return STATIC_MEMBER;} \
 
-#define STRING(s) #s
+#define STRINGIFY(s) #s
 
-#define CONCAT(f, s) STRING(f ## s)
+#define STRING(s) STRINGIFY(s)
+
+#define CONCAT2(a, b)						STRING(a ## b)
+#define CONCAT3(a, b, c)					STRING(CONCAT2(a, b) ## c)
+#define CONCAT4(a, b, c, d)					STRING(CONCAT3(a, b, c) ## d)
+#define CONCAT5(a, b, c, d, e)				STRING(CONCAT4(a, b, c, d) ## e)
+#define CONCAT6(a, b, c, d, e, f)			STRING(CONCAT5(a, b, c, d, e) ## f)
+#define CONCAT7(a, b, c, d, e, f, g)		STRING(CONCAT6(a, b, c, d, e, f) ## g)
+#define CONCAT8(a, b, c, d, e, f, g, h)		STRING(CONCAT7(a, b, c, d, e, f, g) ## h)
 
 #define TYPESTRING(s) typeid(s).name()
 

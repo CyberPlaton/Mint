@@ -66,6 +66,8 @@ namespace mint
 	{
 		if (initialize(manifest_filepath))
 		{
+			print_engine_version();
+
 			IService::print_registered_services();
 
 
@@ -73,7 +75,7 @@ namespace mint
 
 
 			set_engine_fps(60.0f);
-			set_engine_window_title("Mint Engine Editor");
+			set_engine_window_title("Mint Engine " MINT_ENGINE_VERSION_STRING);
 
 
 			m_editorCamera = new mint::fx::CCamera2D({ 255, 150, 50, 255 }, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
@@ -258,6 +260,13 @@ namespace mint
 	void CEditor::on_editor_frame_end()
 	{
 		end_frame();
+	}
+
+
+	void CEditor::print_engine_version()
+	{
+		MINT_LOG_INFO("[{:.4f}][CEditor::print_engine_version] Dumping engine version:", MINT_APP_TIME);
+		MINT_LOG_INFO("\t{}", MINT_ENGINE_VERSION_STRING);
 	}
 
 

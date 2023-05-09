@@ -57,6 +57,7 @@ namespace mint
 
 		void on_editor_frame_end();
 
+		void print_engine_version();
 
 	protected:
 		editor::CLayerStack m_layerStack;
