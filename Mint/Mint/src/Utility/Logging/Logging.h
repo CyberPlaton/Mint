@@ -204,5 +204,6 @@ namespace mint
 
 #define MINT_LOG_CRITICAL(...) mint::CLogging::Get().log_critical(mint::CLogging::Get().get_logger(), __VA_ARGS__)
 
+#define MINT_LOG_SEPARATOR() mint::CLogging::Get().log_info(mint::CLogging::Get().get_logger(), "----------------------------------------------------------------------------------------------------------------")
 
 #endif

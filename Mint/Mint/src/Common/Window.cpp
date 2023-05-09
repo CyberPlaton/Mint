@@ -138,7 +138,7 @@ namespace mint
 
 	void CWindow::print_window_configurations() const
 	{
-		MINT_LOG_INFO("[{:.4f}][CWindow::print_window_configurations] Dumping window configurations:", MINT_APP_TIME);
+		MINT_LOG_INFO("Dumping window configuration:", MINT_APP_TIME);
 
 		auto monitor = GetCurrentMonitor();
 		auto refresh_rate = GetMonitorRefreshRate(monitor);
@@ -169,6 +169,7 @@ namespace mint
 		MINT_LOG_INFO("\t Focus: {}",			m_description.m_focus == true ? "True" : "False");
 		MINT_LOG_INFO("\t Minimized: {}",		m_description.m_minimized == true ? "True" : "False");
 		MINT_LOG_INFO("\t Run Minimized: {}",	m_description.m_runMinimized == true ? "True" : "False");
+		MINT_LOG_SEPARATOR();
 	}
 
 

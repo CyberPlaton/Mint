@@ -265,8 +265,8 @@ namespace mint
 
 	void CEditor::print_engine_version()
 	{
-		MINT_LOG_INFO("[{:.4f}][CEditor::print_engine_version] Dumping engine version:", MINT_APP_TIME);
-		MINT_LOG_INFO("\t{}", MINT_ENGINE_VERSION_STRING);
+		MINT_LOG_INFO("Runtime version: \"{}\", Editor version: \"{}\"", MINT_ENGINE_VERSION_STRING, MINT_EDITOR_VERSION_STRING);
+		MINT_LOG_SEPARATOR();
 	}
 
 

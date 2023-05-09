@@ -99,7 +99,7 @@ namespace mint::editor
 
 	void CLayerStack::print_registered_layers()
 	{
-		MINT_LOG_INFO("[{:.4f}][CLayerStack::print_registered_layers] Dumping registered layers from top to bottom:", MINT_APP_TIME);
+		MINT_LOG_INFO("Dumping registered layers from top to bottom:");
 
 		for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
 		{
@@ -107,6 +107,7 @@ namespace mint::editor
 
 			print_layer_recursive(layer);
 		}
+		MINT_LOG_SEPARATOR();
 	}
 
 
@@ -126,7 +127,7 @@ namespace mint::editor
 
 		text += "\"" + name + "\"";
 
-		MINT_LOG_INFO("{}.", text);
+		MINT_LOG_INFO("{}", text);
 
 		if (layer->has_children_layers())
 		{

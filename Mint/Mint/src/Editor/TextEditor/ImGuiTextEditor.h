@@ -1,4 +1,9 @@
-#pragma once
+#if MINT_DISTR
+#else
+#ifndef _MINTEDITOR_IMGUI_TEXTEDITOR_H_
+#define _MINTEDITOR_IMGUI_TEXTEDITOR_H_
+
+#include "UI/Common/UICommon.h"
 
 #include <string>
 #include <vector>
@@ -8,7 +13,7 @@
 #include <unordered_map>
 #include <map>
 #include <regex>
-#include "UI/Common/UICommon.h"
+
 
 class TextEditor
 {
@@ -152,7 +157,7 @@ public:
 	{
 		typedef std::pair<std::string, PaletteIndex> TokenRegexString;
 		typedef std::vector<TokenRegexString> TokenRegexStrings;
-		typedef bool(*TokenizeCallback)(const char * in_begin, const char * in_end, const char *& out_begin, const char *& out_end, PaletteIndex & paletteIndex);
+		typedef bool(*TokenizeCallback)(const char* in_begin, const char* in_end, const char*& out_begin, const char*& out_end, PaletteIndex& paletteIndex);
 
 		std::string mName;
 		Keywords mKeywords;
@@ -218,13 +223,13 @@ public:
 	Coordinates GetCursorPosition() const { return GetActualCursorCoordinates(); }
 	void SetCursorPosition(const Coordinates& aPosition);
 
-	inline void SetHandleMouseInputs    (bool aValue){ mHandleMouseInputs    = aValue;}
+	inline void SetHandleMouseInputs(bool aValue) { mHandleMouseInputs = aValue; }
 	inline bool IsHandleMouseInputsEnabled() const { return mHandleKeyboardInputs; }
 
-	inline void SetHandleKeyboardInputs (bool aValue){ mHandleKeyboardInputs = aValue;}
+	inline void SetHandleKeyboardInputs(bool aValue) { mHandleKeyboardInputs = aValue; }
 	inline bool IsHandleKeyboardInputsEnabled() const { return mHandleKeyboardInputs; }
 
-	inline void SetImGuiChildIgnored    (bool aValue){ mIgnoreImGuiChild     = aValue;}
+	inline void SetImGuiChildIgnored(bool aValue) { mIgnoreImGuiChild = aValue; }
 	inline bool IsImGuiChildIgnored() const { return mIgnoreImGuiChild; }
 
 	inline void SetShowWhitespaces(bool aValue) { mShowWhitespaces = aValue; }
@@ -387,3 +392,6 @@ private:
 
 	float mLastClick;
 };
+
+#endif
+#endif

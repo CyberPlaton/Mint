@@ -65,14 +65,15 @@ namespace mint::editor
 
 	void CApplicationComponentsDatabase::print_registered_components()
 	{
-		MINT_LOG_INFO("[{:.4f}][CApplicationComponentsDatabase::print_registered_components] Dumping registered components:", MINT_APP_TIME);
+		MINT_LOG_INFO("Dumping registered components:");
 
 		for(const auto& c : m_componentNames)
 		{
-			MINT_LOG_INFO("\tComponent: \"{}\"", c.c_str());
+			MINT_LOG_INFO("\t\"{}\"", c.c_str());
 		}
 
-		MINT_LOG_WARN("Note the current limitation of the system: We register only components that were created as an object at least once.");
+		MINT_LOG_WARN("\tNote: Components are registered only as they are created as an object at least once during the lifetime of the program.");
+		MINT_LOG_SEPARATOR();
 	}
 
 
