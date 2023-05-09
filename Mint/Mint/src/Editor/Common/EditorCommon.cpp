@@ -20,7 +20,6 @@ namespace mint::editor
 	const mint::f32 GlobalData::s_DefaultEditorTextEditorWidth = 600.0f;
 	const mint::f32 GlobalData::s_DefaultEditorTextEditorHeight = 400.0f;
 	const mint::f32 GlobalData::s_DefaultEditorCharacterSize = 13.0f;
-	const mint::u64 GlobalData::s_DefaultEditorTextEditorBufferSize = 1024 * 13;
 	entt::entity GlobalData::s_EditorInspectedEntity = entt::null;
 	ImGuiID GlobalData::s_EditorEditFieldSliderIdStart = 10000;
 	ImGuiID GlobalData::s_EditorEditFieldScalarIdStart = 50000;

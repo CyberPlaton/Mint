@@ -1,7 +1,6 @@
 #ifndef _MINT_UI_H_
 #define _MINT_UI_H_
 
-
 #include "Common/UICommon.h"
 #include "Utility/FileSystem/Filesystem.h"
 #include "Utility/Logging/Logging.h"

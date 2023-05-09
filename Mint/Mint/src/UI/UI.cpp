@@ -44,7 +44,7 @@ namespace mint
 
 			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "DroidSans.ttf").as_string();
 
-			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 18.0f, &icons_config, ranges);
+			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 13.0f, &icons_config, ranges);
 
 			rlImGuiReloadFonts();
 
