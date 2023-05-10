@@ -64,11 +64,14 @@ namespace maml
 	{
 		_primary_scanning_pass();
 
-		m_source = "";
-		m_cursor = 0;
-		m_currentLine = 0;
+		if(!m_panik)
+		{
+			m_source = "";
+			m_cursor = 0;
+			m_currentLine = 0;
 
-		_secondary_scanning_pass();
+			_secondary_scanning_pass();
+		}
 
 		return m_tokens;
 	}

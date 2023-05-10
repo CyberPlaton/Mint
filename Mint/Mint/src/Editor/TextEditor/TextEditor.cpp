@@ -25,6 +25,7 @@ namespace mint::editor
 			set_file_icon(path.get_extension());
 
 			m_fileName = String(m_fileIcon) + " " + path.get_stem() + path.get_extension();
+			m_fileType = path.get_extension();
 
 			m_windowFlags = ImGuiWindowFlags_None;
 			m_inputFlags = ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_CtrlEnterForNewLine;
@@ -72,6 +73,7 @@ namespace mint::editor
 
 		if(m_changed)
 		{
+			check_for_errors();
 			m_saved = false;
 		}
 	}
@@ -210,12 +212,28 @@ namespace mint::editor
 		{
 			MINT_LOG_ERROR("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for Type \"{}\" is not supported!", MINT_APP_TIME, file_type);
 		}
+	}
 
 
-		TextEditor::ErrorMarkers errors;
-		errors.emplace(2, "Some weird error");
+	void CTextEditor::set_error(u64 line, const mint::String& error_message)
+	{
+		m_errors.emplace(line, error_message);
 
-		m_editor.SetErrorMarkers(errors);
+		m_editor.SetErrorMarkers(m_errors);
+	}
+
+
+	void CTextEditor::check_for_errors()
+	{
+		if (m_fileType == ".maml" || m_fileType == ".scene" || m_fileType == ".texture" ||
+			m_fileType == ".behavior" || m_fileType == ".script" || m_fileType == ".shader")
+		{
+			// Check for MAML errors.
+		}
+		else if(m_fileType == ".lua")
+		{
+			// Check for LUA errors.
+		}
 	}
 
 
