@@ -126,6 +126,12 @@ public:
 
 	struct Identifier
 	{
+		Identifier(std::string declaration, Coordinates location = {0, 0}) :
+			mLocation(location), mDeclaration(declaration)
+		{
+		}
+		Identifier() = default;
+
 		Coordinates mLocation;
 		std::string mDeclaration;
 	};

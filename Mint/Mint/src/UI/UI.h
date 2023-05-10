@@ -21,6 +21,12 @@ namespace mint
 
 		void end();
 
+		static ImU32 get_imgui_color(f32 r, f32 g, f32 b, f32 a);
+
+		static bool is_style_dark();
+
+		static bool is_style_light();
+
 		static bool image_button(const Texture* texture, const Vec2& size, const fx::CColor& bg = MINT_BLACK(), const fx::CColor& tint = MINT_WHITE(), s32 padding = -1);
 
 		static bool edit_field_sint32(s32& value, s32 min, s32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None);

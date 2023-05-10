@@ -24,7 +24,7 @@ namespace mint
 
 	bool CUI::initialize()
 	{
-		rlImGuiSetup(false);
+		rlImGuiSetup(true);
 
 #if MINT_DISTR
 		return true;
@@ -42,11 +42,13 @@ namespace mint
 			};
 			ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
 
-			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "DroidSans.ttf").as_string();
+			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "Cousine-Regular.ttf").as_string();
 
-			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 13.0f, &icons_config, ranges);
+			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 16.0f, &icons_config, ranges);
 
 			rlImGuiReloadFonts();
+
+			ImGui::GetIO().FontDefault = font;
 
 			return true;
 		}
@@ -73,6 +75,34 @@ namespace mint
 	void CUI::end()
 	{
 		rlImGuiEnd();
+	}
+
+
+	ImU32 CUI::get_imgui_color(f32 r, f32 g, f32 b, f32 a)
+	{
+		return ImGui::ColorConvertFloat4ToU32({ r, g, b, a });
+	}
+
+
+	bool CUI::is_style_light()
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+		ImVec4* colors = style->Colors;
+
+		auto color = colors[ImGuiCol_Text];
+
+		return (color.x == 0.00f && color.y == 0.00f && color.z == 0.00f && color.w == 1.00f);
+	}
+
+
+	bool CUI::is_style_dark()
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+		ImVec4* colors = style->Colors;
+
+		auto color = colors[ImGuiCol_Text];
+
+		return (color.x == 1.00f && color.y == 1.00f && color.z == 1.00f && color.w == 1.00f);
 	}
 
 

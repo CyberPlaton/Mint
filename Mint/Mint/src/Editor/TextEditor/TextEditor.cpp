@@ -152,7 +152,42 @@ namespace mint::editor
 
 	void CTextEditor::_prepare_editor(const String& file_type)
 	{
-		m_editor.SetPalette(TextEditor::GetLightPalette());
+		TextEditor::Palette palette;
+
+		const auto& light = TextEditor::GetLightPalette();
+
+		for (int i = 0; i < (int)TextEditor::PaletteIndex::Max; i++)
+		{
+			palette[i] = CUI::get_imgui_color(1.0f, 0.0f, 0.0f, 1.0f);
+		}
+
+		// Change identifier, background and function colors.
+		palette[(u32)TextEditor::PaletteIndex::Default] = CUI::get_imgui_color(0.9f, 0.9f, 0.9f, 1.0f);							// Light Grey - Good.
+		palette[(u32)TextEditor::PaletteIndex::LineNumber] = CUI::get_imgui_color(0.27f, 0.52f, 0.63f, 1.0f);					// Blue - Good.
+		palette[(u32)TextEditor::PaletteIndex::Keyword] = CUI::get_imgui_color(0.25f, 0.62f, 0.93f, 1.0f);						// Blue - Good.
+		palette[(u32)TextEditor::PaletteIndex::Number] = CUI::get_imgui_color(0.59f, 0.96f, 0.69f, 1.0f);						// Green - Good.
+		palette[(u32)TextEditor::PaletteIndex::String] = CUI::get_imgui_color(1.0f, 0.7f, 0.4f, 1.0f);							// Skin Color - Good.
+		palette[(u32)TextEditor::PaletteIndex::CharLiteral] = palette[(u32)TextEditor::PaletteIndex::Default];
+		palette[(u32)TextEditor::PaletteIndex::Punctuation] = palette[(u32)TextEditor::PaletteIndex::Default];
+		palette[(u32)TextEditor::PaletteIndex::Preprocessor] = CUI::get_imgui_color(0.7f, 0.7f, 0.7f, 1.0f);					// Light Grey - Good.
+		// Just words and variable names and custom functions := Identifier
+		palette[(u32)TextEditor::PaletteIndex::Identifier] = CUI::get_imgui_color(1.0f, 0.84f, 0.62f, 1.0f);					// Light Skin Color - Good.
+		// Built-in functions := KnownIdentifier
+		palette[(u32)TextEditor::PaletteIndex::KnownIdentifier] = CUI::get_imgui_color(0.86f, 0.46f, 1.0f, 1.0f);				// Violette - Good.
+		palette[(u32)TextEditor::PaletteIndex::PreprocIdentifier] = palette[(u32)TextEditor::PaletteIndex::KnownIdentifier];	
+		palette[(u32)TextEditor::PaletteIndex::Comment] = CUI::get_imgui_color(0.17f, 0.50f, 0.25f, 1.0f);						// Green - Good.
+		palette[(u32)TextEditor::PaletteIndex::MultiLineComment] = palette[(u32)TextEditor::PaletteIndex::Comment];				
+		palette[(u32)TextEditor::PaletteIndex::Background] = CUI::get_imgui_color(0.15f, 0.14f, 0.13f, 1.0f);					// Dark Grey - Good.
+		palette[(u32)TextEditor::PaletteIndex::Cursor] = CUI::get_imgui_color(1.0f, 1.0f, 1.0f, 1.0f);							// White - Good.
+		palette[(u32)TextEditor::PaletteIndex::Selection] = CUI::get_imgui_color(0.67f, 0.79f, 1.0f, 0.4f);						// Light Blue - Good.
+		palette[(u32)TextEditor::PaletteIndex::ErrorMarker] = CUI::get_imgui_color(0.65f, 0.02f, 0.0f, 1.0f);					// Dark Red - Good.
+		palette[(u32)TextEditor::PaletteIndex::Breakpoint] = palette[(u32)TextEditor::PaletteIndex::ErrorMarker];				
+		palette[(u32)TextEditor::PaletteIndex::CurrentLineFill] = CUI::get_imgui_color(0.0f, 0.0f, 0.0f, 0.0f);					// Invisible - Good.
+		palette[(u32)TextEditor::PaletteIndex::CurrentLineFillInactive] = palette[(u32)TextEditor::PaletteIndex::CurrentLineFill]; // Invisible - Good.
+		palette[(u32)TextEditor::PaletteIndex::CurrentLineEdge] = CUI::get_imgui_color(0.7f, 0.7f, 0.7f, 1.0f);					// Light Grey - Good.
+
+		m_editor.SetPalette(palette);
+
 
 		if(file_type == ".lua")
 		{
@@ -176,6 +211,11 @@ namespace mint::editor
 			MINT_LOG_ERROR("[{:.4f}][CTextEditor::_prepare_editor] Syntax highlighting for Type \"{}\" is not supported!", MINT_APP_TIME, file_type);
 		}
 
+
+		TextEditor::ErrorMarkers errors;
+		errors.emplace(2, "Some weird error");
+
+		m_editor.SetErrorMarkers(errors);
 	}
 
 

@@ -3114,29 +3114,64 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::Lua()
 	if (!inited)
 	{
 		static const char* const keywords[] = {
-			"and", "break", "do", "", "else", "elseif", "end", "false", "for", "function", "if", "in", "", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"
+			"and", "break", "do", "", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"
 		};
 
 		for (auto& k : keywords)
 			langDef.mKeywords.insert(k);
 
-		static const char* const identifiers[] = {
-			"assert", "collectgarbage", "dofile", "error", "getmetatable", "ipairs", "loadfile", "load", "loadstring",  "next",  "pairs",  "pcall",  "print",  "rawequal",  "rawlen",  "rawget",  "rawset",
-			"select",  "setmetatable",  "tonumber",  "tostring",  "type",  "xpcall",  "_G",  "_VERSION","arshift", "band", "bnot", "bor", "bxor", "btest", "extract", "lrotate", "lshift", "replace",
-			"rrotate", "rshift", "create", "resume", "running", "status", "wrap", "yield", "isyieldable", "debug","getuservalue", "gethook", "getinfo", "getlocal", "getregistry", "getmetatable",
-			"getupvalue", "upvaluejoin", "upvalueid", "setuservalue", "sethook", "setlocal", "setmetatable", "setupvalue", "traceback", "close", "flush", "input", "lines", "open", "output", "popen",
-			"read", "tmpfile", "type", "write", "close", "flush", "lines", "read", "seek", "setvbuf", "write", "__gc", "__tostring", "abs", "acos", "asin", "atan", "ceil", "cos", "deg", "exp", "tointeger",
-			"floor", "fmod", "ult", "log", "max", "min", "modf", "rad", "random", "randomseed", "sin", "sqrt", "string", "tan", "type", "atan2", "cosh", "sinh", "tanh",
-			"pow", "frexp", "ldexp", "log10", "pi", "huge", "maxinteger", "mininteger", "loadlib", "searchpath", "seeall", "preload", "cpath", "path", "searchers", "loaded", "module", "require", "clock",
-			"date", "difftime", "execute", "exit", "getenv", "remove", "rename", "setlocale", "time", "tmpname", "byte", "char", "dump", "find", "format", "gmatch", "gsub", "len", "lower", "match", "rep",
-			"reverse", "sub", "upper", "pack", "packsize", "unpack", "concat", "maxn", "insert", "pack", "unpack", "remove", "move", "sort", "offset", "codepoint", "char", "len", "codes", "charpattern",
-			"coroutine", "table", "io", "os", "string", "utf8", "bit32", "math", "debug", "package"
+
+		static std::pair< const char*, const char* > const identifiers[] = {
+			{"dofile", "This function receives a file name, opens it and executes its contents as a Lua chunk, or as pre-compiled chunks.\nWhen called without arguments, it executes the contents of the standard input. It returns 1 if there are no errors, nil otherwise. It issues an error when called with a non string argument."},
+			{"dostring", "This function executes a given string as a Lua chunk.\nIt returns 1 if there are no errors, nil otherwise."},
+			{"next", "This function allows a program to traverse all fields of a table.\nIts first argument is a table and its second argument is an index in this table.\nIt returns the next index of the table and the value associated with the index.\nWhen called with nil as its second argument, the function returns the first index of the table (and its associated value).\nWhen called with the last index, or with nil in an empty table, it returns nil.\nIn Lua there is no declaration of fields; semantically, there is no difference between a field not present in a table or a field with value nil.\nTherefore, the function only considers fields with non nil values.The order the indices are enumerated is not specified, even for numeric indices."},
+			{"nextvar", "This function is similar to the function next , but it iterates over the global variables.\nIts single argument is the name of a global variable, or nil to get a first name. Similarly to next , it returns the name of another variable and its value, or nil if there are no more variables. See Section 8.2 for an example of the use of this function."},
+			{"tostring", "This function receives an argument of any type and converts it to a string in a reasonable format."},
+			{"print", "This function receives any number of arguments, and prints their values in a reasonable format. Each value is printed in a new line.\nThis function is not intended for formatted output, but as a quick way to show a value, for instance for error messages or debugging."},
+			{"tonumber ", "This function receives one argument, and tries to convert it to a number.\nIf the argument is already a number or a string convertible to a number (see Section 4.2), it returns that number; otherwise, it returns nil."},
+			{"type ", "This function allows Lua to test the type of a value. It receives one argument, and returns its type, coded as a string.\nThe possible results of this function are \"nil\" (a string, not the value nil ), \"number\" , \"string\" , \"table\" , \"function\" (returned both for C functions and Lua functions), and \"userdata\"."},
+			{"assert ", "This function issues an ''assertion failed!'' error when its argument is nil."},
+			{"error ", "This function issues an error message and terminates the last called function from the library (lua_dofile , lua_dostring , ...). It never returns."},
+			
+			{"strfind", "Receives two string arguments, and returns a number. This number indicates the first position where the second argument appears in the first argument.\nIf the second argument is not a substring of the first one, then strfind returns nil.\nA third optional numerical argument specifies where to start the search. Another optional numerical argument specifies where to stop it."},
+			{"strlen", "Receives a string and returns its length."},
+			{"strsub", "Returns another string, which is a substring of s , starting at i and runing until j . If j is absent, it is assumed to be equal to the length of s.\nParticularly, the call strsub(s,1,j) returns a prefix of s with length j , while the call strsub(s,i) returns a suffix of s , starting at i."},
+			{"strlower", "Receives a string and returns a copy of that string with all upper case letters changed to lower case. All other characters are left unchanged."},
+			{"strupper", "Receives a string and returns a copy of that string with all lower case letters changed to upper case. All other characters are left unchanged."},
+			{"format", "This function returns a formated version of its variable number of arguments following the description given in its first argument (which must be a string).\nThe format string follows the same rules as the printf family of standard C functions.\nThe only differencies are that the options/modifiers * , l , L , n , p , and h are not supported, and there is an extra option, q.\nThis option formats a string in a form suitable to be safely read back by the Lua interpreter.\nThe string is written between double quotes, and all double quotes, returns and backslashes in the string are correctly escaped when written.\nThe options c , d , E , e , f , g i , o , u , X , and x all expect a number argument, while q and s expects a string."},
+			
+			{"abs", "Built-in function"},
+			{"acos", "Built-in function"},
+			{"asin", "Built-in function"},
+			{"atan", "Built-in function"},
+			{"atan2", "Built-in function"},
+			{"ceil", "Built-in function"},
+			{"cos", "Built-in function"},
+			{"floor", "Built-in function"},
+			{"log", "Built-in function"},
+			{"log10", "Built-in function"},
+			{"max", "Built-in function"},
+			{"min", "Built-in function"},
+			{"mod", "Built-in function"},
+			{"sin", "Built-in function"},
+			{"sqrt", "Built-in function"},
+			{"tan", "Built-in function"},
+			{"random", "Built-in function"},
+			{"randomseed", "Built-in function"},
+			
+			{"readfrom", "This function opens a file named filename and sets it as the current input file.\nWhen called without parameters, this function closes the current input file, and restores stdin as the current input file."},
+			{"writeto", "This function opens a file named filename and sets it as the current output file.\nNotice that, if the file already exists, it will be completely erased with this operation. When called without parameters, this function closes the current output file, and restores stdout as the current output file."},
+			{"appendto", "This function opens a file named filename and sets it as the current output file.\nUnlike the writeto operation, this function does not erase any previous content of the file."},
+			{"remove", "This function deletes the file with the given name."},
+			{"rename", "This function renames file name1 to name2."},
+			{"tmpname", "This function returns a string with a file name that can safely be used for a temporary file."},
+			{"read", "This function returns a value read from the current input. An optional string argument specifies the way the input is interpreted.\nWithout a format argument, read first skips blanks, tabs and newlines. Then it checks whether the current character is 'or'. If so, it reads a string up to the ending quotation mark, and returns this string, without the quotation marks. Otherwise it reads up to a blank, tab or newline."},
+			{"readuntil", "Reads the current input until the first occurrence of the given character.\nWhen called with no parameters, reads until the end of the current input file.\nReturns the string read. The character itself is not read."},
+			{"write", "This function writes the value of its first argument to the current output.\nAn optional second argument specifies the format to be used. This format is given as a string, composed of four parts.\nThe first part is the only one not optional, and must be one of the following characters:\n's' to write string, 'f' to write floats, 'i' to write integers and 'q' to write quoted strings."},
 		};
-		for (auto& k : identifiers)
+		for(auto& pair: identifiers)
 		{
-			Identifier id;
-			id.mDeclaration = "Built-in function";
-			langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
+			langDef.mIdentifiers.insert(std::make_pair(pair.first, pair.second));
 		}
 
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
@@ -3152,7 +3187,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::Lua()
 		langDef.mSingleLineComment = "--";
 
 		langDef.mCaseSensitive = true;
-		langDef.mAutoIndentation = false;
+		langDef.mAutoIndentation = true;
 
 		langDef.mName = "Lua";
 
@@ -3297,16 +3332,6 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::MAML()
 		for (auto& k : cppKeywords)
 			langDef.mKeywords.insert(k);
 
-// 		static const char* const identifiers[] = {
-// 		};
-// 		for (auto& k : identifiers)
-// 		{
-// 			Identifier id;
-// 			id.mDeclaration = "Built-in function";
-// 			langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
-// 		}
-
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 
 		langDef.mTokenize = [](const char* in_begin, const char* in_end, const char*& out_begin, const char*& out_end, PaletteIndex& paletteIndex) -> bool
 		{
@@ -3335,6 +3360,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::MAML()
 			return paletteIndex != PaletteIndex::Max;
 		};
 
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 
 		langDef.mCommentStart = "#";
 		langDef.mCommentEnd = "\n";
