@@ -23,6 +23,8 @@ namespace mint::fx
 		
 		const Vector< CMaterial >& get_materials_for_entity(entt::entity entity) const;
 
+		const CMaterial& get_main_material_for_entity(entt::entity entity) const;
+
 	private:
 		static CMaterialManager* s_CMaterialManager;
 

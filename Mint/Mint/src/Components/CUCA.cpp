@@ -912,4 +912,17 @@ namespace mint::component
 		);
 	}
 
+
+	const mint::fx::CMaterial& CUCA::sprite_get_main_material(entt::entity entity)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			const auto & m = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
+
+		);
+
+		return m;
+	}
+
+
 }

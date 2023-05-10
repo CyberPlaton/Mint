@@ -46,4 +46,10 @@ namespace mint::fx
 	}
 
 
+	const mint::fx::CMaterial& CMaterialManager::get_main_material_for_entity(entt::entity entity) const
+	{
+		return get_materials_for_entity(entity)[0];
+	}
+
+
 }

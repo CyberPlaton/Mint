@@ -24,6 +24,10 @@ namespace mint::editor
 
 	private:
 		void show_members();
+
+		void show_materials(const Vector< mint::fx::CMaterial >& materials);
+
+		void show_material(const mint::fx::CMaterial& material);
 	};
 
 }

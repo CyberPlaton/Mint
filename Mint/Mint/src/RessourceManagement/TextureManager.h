@@ -38,7 +38,6 @@ namespace mint
 	private:
 		static CTextureManager* s_CTextureManager;
 
-
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 		CMap< Texture > m_textures;
