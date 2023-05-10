@@ -5,6 +5,7 @@
 
 
 #include "../Common/ComponentEditor.h"
+#include "Scripting/BehaviorEngine.h"
 
 
 namespace mint::editor

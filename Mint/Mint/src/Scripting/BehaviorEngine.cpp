@@ -14,6 +14,7 @@ namespace mint::scripting
 		m_internalLoop = false;
 		m_running = false;
 		m_update = false;
+		m_behaviorsActive = true;
 
 		return true;
 	}
@@ -110,7 +111,7 @@ namespace mint::scripting
 
 			for(auto& script : m_activeBehaviors.get_all())
 			{
-				if (script.is_ready()) script.on_update(dt);
+				if (m_behaviorsActive && script.is_ready() && script.is_active()) script.on_update(dt);
 			}
 
 		);
@@ -170,6 +171,7 @@ namespace mint::scripting
 
 		if(m_behaviorPrefabs.lookup(h))
 		{
+			if(does_entity_have_behavior_set(entity)) remove_behavior_from_entity(entity);
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -205,21 +207,19 @@ namespace mint::scripting
 	}
 
 
-	void CBehaviorEngine::remove_behavior_from_entity(const String& script_name, entt::entity entity)
+	void CBehaviorEngine::remove_behavior_from_entity(entt::entity entity)
 	{
-		auto h = mint::algorithm::djb_hash(script_name);
+		auto h = SCAST(u64, entity);
 
-		if (m_activeBehaviors.lookup(h))
-		{
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				auto& behavior = m_activeBehaviors.get_ref(h);
+			auto & behavior = m_activeBehaviors.get_ref(h);
 
-				behavior.on_destroy();
+			behavior.on_destroy();
 
-				m_activeBehaviors.remove(h);
-			);
-		}
+			m_activeBehaviors.remove(h);
+
+		);
 	}
 
 
@@ -230,6 +230,72 @@ namespace mint::scripting
 		_set_is_running(false);
 
 		_wait_for_termination();
+	}
+
+
+	bool CBehaviorEngine::does_entity_have_behavior_set(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			auto result = m_activeBehaviors.lookup(h);
+			
+		);
+
+		return result;
+	}
+
+
+	mint::scripting::CBehavior& CBehaviorEngine::get_entity_behavior(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			mint::scripting::CBehavior & behavior = m_activeBehaviors.get_ref(h);
+
+		);
+
+		return behavior;
+	}
+
+
+	bool CBehaviorEngine::is_entity_behavior_active(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const mint::scripting::CBehavior & behavior = m_activeBehaviors.get_const(h);
+
+			auto active = behavior.is_active();
+		
+		);
+
+		return active;
+	}
+
+
+	const mint::Vector< mint::scripting::CBehavior >& CBehaviorEngine::get_all_behavior_prefabs()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto & prefabs = m_behaviorPrefabs.get_all_const();
+
+		);
+
+		return prefabs;
+	}
+
+
+	void CBehaviorEngine::set_all_behaviors_active(bool value)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_behaviorsActive = value;
+
+		);
 	}
 
 

@@ -15,6 +15,10 @@ namespace mint::scripting
 
 		virtual void terminate() = 0;
 
+		virtual bool is_active() const = 0;
+
+		virtual void set_active(bool) = 0;
+
 		virtual bool is_ready() const = 0;
 
 		virtual bool has_error() const = 0;
@@ -57,11 +61,15 @@ namespace mint::scripting
 
 		void terminate();
 
-		bool is_ready() const { return m_ready; };
+		bool is_active() const override final { return m_active; }
 
-		bool has_error() const { return m_error; }
+		void set_active(bool value) override final { m_active = value; }
 
-		bool has_entity_set() const { return m_entity != entt::null; };
+		bool is_ready() const override final { return m_ready; };
+
+		bool has_error() const override final { return m_error; }
+
+		bool has_entity_set() const override final { return m_entity != entt::null; };
 
 
 		void on_update(f32 dt) {};
@@ -85,6 +93,7 @@ namespace mint::scripting
 		lua_State* m_state;
 
 		bool m_ready;
+		bool m_active;
 		bool m_error;
 
 		entt::entity m_entity;

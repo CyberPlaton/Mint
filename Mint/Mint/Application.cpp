@@ -150,6 +150,12 @@ namespace mint
 	}
 
 
+	bool CEditor::is_in_editor_mode()
+	{
+		return m_editingMode;
+	}
+
+
 	void CEditor::on_editor_ui_frame_begin()
 	{
 		ui_frame_begin();
@@ -205,6 +211,8 @@ namespace mint
 				set_engine_window_title("Mint Engine Editor: Editing Mode");
 
 				MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
+
+				mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
 			}
 			else
 			{
@@ -217,6 +225,8 @@ namespace mint
 				set_engine_window_title("Mint Engine Editor");
 
 				MINT_ACTIVE_SCENE()->pop_camera();
+
+				mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
 			}
 		}
 

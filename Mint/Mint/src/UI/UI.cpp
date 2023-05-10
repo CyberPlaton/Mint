@@ -45,10 +45,20 @@ namespace mint
 			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "Cousine-Regular.ttf").as_string();
 
 			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 16.0f, &icons_config, ranges);
+			
+			ImGui::GetIO().FontDefault = font;
+
+
+			ImFontConfig config;
+			config.MergeMode = true;
+			config.GlyphMinAdvanceX = 14.5f; // Use if you want to make the icon monospaced
+			static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+			
+			String icon_file = CFileystem::construct_from(fs.get_current_directory().as_string(), "fa-solid-900.ttf").as_string();
+
+			io.Fonts->AddFontFromFileTTF(icon_file.c_str(), 14.5f, &config, icon_ranges);
 
 			rlImGuiReloadFonts();
-
-			ImGui::GetIO().FontDefault = font;
 
 			return true;
 		}

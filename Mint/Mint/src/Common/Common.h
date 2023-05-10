@@ -93,6 +93,8 @@ namespace mint
 	using Texture = raylib::Texture;
 	using Shader = raylib::Shader;
 
+	static inline bool is_handle_valid(u64 handle) { return handle != static_cast< u64 >(-1); }
+
 	template< typename T >
 	using Vector = std::vector< T >;
 
@@ -104,11 +106,14 @@ namespace mint
 }
 
 
-
 // Common macros
+
+// Static cast is preferred over c-style cast as it is more safer and can throw compiler errors.
+#define SCAST(type, value) static_cast< type >(value)
+
 #define MINT_SAS_RENDERING_LAYERS_MAX 100
 #define MINT_SAS_OUT_QUEUE_COUNT_MAX 3
-#define MINT_INVALID_HANDLE static_cast< mint::u64 >(-1)
+#define MINT_INVALID_HANDLE SCAST(u64, -1)
 
 
 #define STATIC_GET(CLASS, STATIC_MEMBER) \
@@ -143,9 +148,6 @@ assert((message, expression))
 #define MINT_VERIFY(expression, message) \
 assert((message, expression))
 
-
-	// Static cast is preferred over c-style cast as it is more safer and can throw compiler errors.
-#define SCAST(type, value) static_cast< type >(value)
 
 #if MINT_PLATFORM_LINUX
 #include <pthread.h>

@@ -5,7 +5,7 @@ namespace mint::scripting
 {
 
 	CLuaScript::CLuaScript() :
-		m_state(nullptr), m_ready(false), m_error(false), m_entity(entt::null)
+		m_state(nullptr), m_ready(false), m_error(false), m_active(false), m_entity(entt::null)
 	{
 		m_state = luaL_newstate();
 
@@ -22,6 +22,7 @@ namespace mint::scripting
 
 		m_ready = other.m_ready;
 		m_error = other.m_error;
+		m_active = other.m_active;
 		m_entity = other.m_entity;
 		m_scriptName = other.m_scriptName;
 		m_scriptPath = other.m_scriptPath;
@@ -36,6 +37,7 @@ namespace mint::scripting
 
 		m_ready = other.m_ready;
 		m_error = other.m_error;
+		m_active = other.m_active;
 		m_entity = other.m_entity;
 		m_scriptName = other.m_scriptName;
 		m_scriptPath = other.m_scriptPath;
@@ -75,6 +77,7 @@ namespace mint::scripting
 			{
 				luaL_dofile(m_state, m_scriptPath.c_str());
 
+				set_active(true);
 				m_ready = true;
 
 				return true;
@@ -100,11 +103,14 @@ namespace mint::scripting
 
 	void CLuaScript::terminate()
 	{
+		set_active(false);
+		m_ready = false;
+
 		lua_close(m_state);
 		m_state = nullptr;
-		m_ready = false;
 		m_entity = entt::null;
 		m_error = false;
+
 	}
 
 

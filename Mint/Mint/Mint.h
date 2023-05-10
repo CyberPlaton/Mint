@@ -57,6 +57,7 @@ namespace mint
 
 		void exit() override final;
 
+		virtual bool is_in_editor_mode() { return false; }
 
 		void begin_rendering() override final;
 

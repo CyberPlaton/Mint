@@ -24,6 +24,7 @@ namespace mint::scripting
 
 		void stop_behavior_engine_thread();
 
+		void set_all_behaviors_active(bool value);
 
 		bool is_running();
 
@@ -34,8 +35,15 @@ namespace mint::scripting
 
 		void set_behavior_for_entity(const String& script_name, entt::entity entity);
 
-		void remove_behavior_from_entity(const String& script_name, entt::entity entity);
+		void remove_behavior_from_entity(entt::entity entity);
 
+		bool does_entity_have_behavior_set(entt::entity entity);
+
+		CBehavior& get_entity_behavior(entt::entity entity);
+
+		bool is_entity_behavior_active(entt::entity entity);
+
+		const Vector< CBehavior >& get_all_behavior_prefabs();
 
 	private:
 		static CBehaviorEngine* s_CBehaviorEngine;
@@ -45,6 +53,8 @@ namespace mint::scripting
 		bool m_running;
 
 		bool m_update;
+
+		bool m_behaviorsActive;
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 

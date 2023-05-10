@@ -42,6 +42,7 @@ namespace mint
 
 		void run();
 
+		bool is_in_editor_mode() override final;
 	
 		void on_editor_ui_frame_begin();
 

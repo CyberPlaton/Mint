@@ -40,6 +40,8 @@ namespace mint
 
 		virtual void exit() = 0;
 
+		virtual bool is_in_editor_mode() = 0;
+
 
 		virtual void begin_rendering() = 0;
 
