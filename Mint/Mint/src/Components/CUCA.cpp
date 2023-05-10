@@ -29,6 +29,7 @@ namespace mint::component
 	{
 		const auto& materials = CUCA::sprite_get_all_materials(entity);
 
+		// TODO: This does not take the sprite scale into account.
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -922,6 +923,19 @@ namespace mint::component
 		);
 
 		return m;
+	}
+
+
+	mint::CRect CUCA::sprite_get_destination_rect(entt::entity entity)
+	{
+		auto position = CUCA::transform_get_position(entity);
+		auto scale = CUCA::transform_get_scale(entity);
+		auto size = CUCA::sprite_get_size(entity);
+
+		return {
+			position.x, position.y,
+			position.x + size.x * scale.x, position.y + size.y * scale.y
+		};
 	}
 
 

@@ -95,7 +95,9 @@ namespace mint
 
 	void CMintEngine::frame()
 	{
-		fx::CSceneRenderer::Get().on_render(MINT_ACTIVE_SCENE());
+		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
+
+		fx::CSceneRenderer::Get().on_render(frame_entities);
 	}
 
 
@@ -130,6 +132,11 @@ namespace mint
 	void CMintEngine::on_before_update()
 	{
 		CEventSystem::Get().update();
+
+
+		CSAS::Get().submit_scene_dynamic_entities(MINT_ACTIVE_SCENE()->get_dynamic_entities());
+		CSAS::Get().set_should_update(true);
+
 
 		CPluginSystem::Get().on_before_update();
 	}
@@ -378,7 +385,8 @@ namespace mint
 	{
 		// Prepare plugin shutdown and terminate high level engine sub systems.
 		CPluginSystem::Get().on_pre_termination();
-		
+
+
 		// Spatial acceleration structure.
 		CSAS::Get().stop_sas_thread();
 

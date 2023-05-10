@@ -40,6 +40,7 @@ namespace mint::component
 		static u64 animated_sprite_get_animation_speed(entt::entity entity);
 		static void animated_sprite_set_animation_speed(entt::entity entity, u64 value);
 
+		static mint::CRect sprite_get_destination_rect(entt::entity entity);
 		static bool sprite_is_internal_visible(entt::entity entity);
 		static void sprite_set_is_internal_visible(entt::entity entity, bool value);
 		static void sprite_add_material(entt::entity entity, const fx::CMaterial& material);

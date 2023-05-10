@@ -70,6 +70,8 @@ namespace mint
 		editor::CLayerStack m_layerStack;
 		mint::fx::CCamera2D* m_editorCamera = nullptr;
 
+		CTimer m_timer;
+
 		bool m_editingMode = false;
 
 	protected:

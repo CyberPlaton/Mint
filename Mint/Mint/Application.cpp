@@ -94,6 +94,7 @@ namespace mint
 
 			editor::GlobalData::Get().s_ComponentDatabase.print_registered_components();
 
+			m_timer.start_timer();
 
 			return result;
 		}
@@ -241,6 +242,23 @@ namespace mint
 		on_after_update(dt);
 
 		m_layerStack.on_after_update(dt);
+
+
+		if(m_timer.seconds_elapsed() > 5)
+		{
+			auto fps = CTimestep::get_real_fps();
+
+			if (fps < 60.0f)
+			{
+				MINT_LOG_WARN("[{:.4f}][CEditor::on_editor_after_update] Low FPS: \"{}\"!", MINT_APP_TIME, fps);
+			}
+			else if (fps < 30.0f)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CEditor::on_editor_after_update] Very Low FPS: \"{}\"!", MINT_APP_TIME, fps);
+			}
+
+			m_timer.start_timer();
+		}
 	}
 
 

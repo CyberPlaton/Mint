@@ -59,6 +59,7 @@ bool CMainScene::on_load()
 	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
 	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
+	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_knight);
 	
 
 	identifier.m_enttId = SCAST(u64, m_knight);
