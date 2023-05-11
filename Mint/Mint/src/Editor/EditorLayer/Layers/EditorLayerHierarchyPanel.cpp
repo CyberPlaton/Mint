@@ -79,6 +79,7 @@ namespace mint::editor
 	void CHierarchyPanelLayer::show_entity_recursive(entt::entity entity)
 	{
 		// Show entity name
+		auto name = CUCA::identifier_get_debug_name(entity);
 		bool inspected = false;
 		if (GlobalData::Get().s_EditorInspectedEntity == entity)
 		{
@@ -87,19 +88,35 @@ namespace mint::editor
 
 		if (inspected)
 		{
-			ImGui::PushStyleColor(ImGuiCol_Text, { 0.25f, 0.5f, 1.0f, 1.0f });
+			// Selection outline.
+			auto drawList = ImGui::GetWindowDrawList();
+			auto cursor = ImGui::GetCursorScreenPos();
+			auto parent_size = ImGui::GetItemRectSize();
+			auto content_region = ImGui::GetContentRegionAvail();
+
+			ImVec2 vstart = { cursor.x, cursor.y };
+			ImVec2 vend = { vstart.x + content_region.x, vstart.y + parent_size.y };
+
+			drawList->AddRectFilled(vstart, vend, ImGui::ColorConvertFloat4ToU32({ 0.47f, 0.77f, 1.0f, 0.4f }));
+
+			// Entity name coloring.
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0.9f, 0.9f, 0.9f, 1.0f });
 		}
 
-		bool open = ImGui::TreeNode(CUCA::identifier_get_debug_name(entity).c_str());
+		bool open = ImGui::TreeNode(name.c_str());
+
+		if (inspected) ImGui::PopStyleColor();
+
+
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
 			GlobalData::Get().s_EditorInspectedEntity = entity;
 		}
 
+
 		check_entity_for_components_sanity(entity);
 
-		if (inspected) ImGui::PopStyleColor();
 
 		if (open)
 		{
@@ -124,7 +141,7 @@ namespace mint::editor
 	{
 		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
 
-		bool info = false;
+		bool warning = false;
 		String info_message;
 		u32 info_count = 1;
 
@@ -132,10 +149,12 @@ namespace mint::editor
 		{
 			if(!registry.has_component< mint::component::SDynamicGameobject >(entity))
 			{
-				info_message = std::to_string(info_count) + ".) The entity does not have a SDynamicGameobject "
+				info_message += std::to_string(info_count) + ".) The entity does not have a SDynamicGameobject "
 															"Component, and its position will not be updated when it changes its Position!";
 
-				info = true;
+				info_message += "\n";
+
+				warning = true;
 				info_count++;
 			}
 		}
@@ -144,11 +163,13 @@ namespace mint::editor
 		{
 			if (!registry.has_component< mint::component::STransform >(entity))
 			{
-				info_message = std::to_string(info_count) + ".) The entity does not have a STransform "
+				info_message += std::to_string(info_count) + ".) The entity does not have a STransform "
 														    "Component, and will not be functioning without it. Either remove "
 															"SRigidBody Component or add STransform Component!";
 
-				info = true;
+				info_message += "\n";
+
+				warning = true;
 				info_count++;
 			}
 		}
@@ -157,11 +178,13 @@ namespace mint::editor
 		{
 			if (!registry.has_component< mint::component::STransform >(entity))
 			{
-				info_message = std::to_string(info_count) + ".) The entity does not have a STransform "
+				info_message += std::to_string(info_count) + ".) The entity does not have a STransform "
 														    "Component, and will not be rendered! Either remove "
 															"SSprite Component or add STransform Component!";
 
-				info = true;
+				info_message += "\n";
+
+				warning = true;
 				info_count++;
 			}
 		}
@@ -170,24 +193,37 @@ namespace mint::editor
 		{
 			if (!registry.has_component< mint::component::SSprite >(entity))
 			{
-				info_message = std::to_string(info_count) + ".) The entity does not have a SSprite "
+				info_message += std::to_string(info_count) + ".) The entity does not have a SSprite "
 															"Component, and will not be rendered nor animated! Either remove "
 															"SAnimatedSprite Component or add SSprite Component!";
 
-				info = true;
+				info_message += "\n";
+
+				warning = true;
 				info_count++;
 			}
 		}
 
-		ImGui::SameLine();
 
-		ImGui::Text(ICON_FA_CIRCLE_EXCLAMATION);
-
-		if(ImGui::IsItemHovered())
+		if(warning)
 		{
-			CUI::help_marker_no_question_mark(info_message);
-		}
+			ImGui::SameLine();
 
+			ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorConvertFloat4ToU32({ 1.0f, 0.57f, 0.0f, 1.0f }));
+
+			ImGui::Text(ICON_FA_CIRCLE_EXCLAMATION " Warning");
+
+			ImGui::PopStyleColor();
+
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorConvertFloat4ToU32({ 1.0f, 0.57f, 0.0f, 1.0f }));
+
+				CUI::help_marker_no_question_mark(info_message);
+
+				ImGui::PopStyleColor();
+			}
+		}
 	}
 
 

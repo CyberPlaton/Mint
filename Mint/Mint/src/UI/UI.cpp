@@ -573,7 +573,7 @@ namespace mint
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * desc.size());
 			ImGui::TextUnformatted(desc.c_str());
 			ImGui::PopTextWrapPos();
 			ImGui::EndTooltip();
