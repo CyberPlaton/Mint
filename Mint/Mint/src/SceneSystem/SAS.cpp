@@ -136,6 +136,8 @@ namespace mint
 						MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity),
 						"Submitting dynamic entities is allowed only for dynamic entities with a Sprite component!");
 
+			if (!CUCA::sprite_is_visible(entity) || !CUCA::sprite_is_internal_visible(entity)) continue;
+
 			detail::SQuadTreeNode node;
 			node.m_entity = entity;
 
@@ -217,6 +219,9 @@ namespace mint
 			MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
 					   !MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity),
 					   "Submitting static entities is allowed only for static entities with a Sprite component!");
+
+			if (!CUCA::sprite_is_visible(entity) || !CUCA::sprite_is_internal_visible(entity)) continue;
+
 
 			detail::SQuadTreeNode node;
 			node.m_entity = entity;
@@ -333,26 +338,28 @@ namespace mint
 		}
 
 
-		if(result.empty()) return;
-
-
-		// Presort the entities in a painters algorithm manner. In that way we can
-		// avoid sorting in the renderer and iterate through the vector of entities directly.
 		u32 current_highest_layer = 0;
-		for (auto& node : result)
-		{
-			auto layer = CUCA::sprite_get_depth(node.m_entity);
-
-			m_layeredEntities[layer].push_back(node.m_entity);
-
-			if (layer > current_highest_layer) current_highest_layer = layer;
-		}
-
 		Vector< entt::entity > frame_entities;
-		for (u32 lyr = 0; lyr <= current_highest_layer; lyr++)
+
+		if(!result.empty())
 		{
-			mint::algorithm::vector_push_back(frame_entities, m_layeredEntities[lyr]);
+			// Presort the entities in a painters algorithm manner. In that way we can
+			// avoid sorting in the renderer and iterate through the vector of entities directly.
+			for (auto& node : result)
+			{
+				auto layer = CUCA::sprite_get_depth(node.m_entity);
+
+				m_layeredEntities[layer].push_back(node.m_entity);
+
+				if (layer > current_highest_layer) current_highest_layer = layer;
+			}
+
+			for (u32 lyr = 0; lyr <= current_highest_layer; lyr++)
+			{
+				mint::algorithm::vector_push_back(frame_entities, m_layeredEntities[lyr]);
+			}
 		}
+
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -362,6 +369,7 @@ namespace mint
 
 		);
 
+
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 			// Clean up rendering layers, inclusive the highest rendered layer.
@@ -370,7 +378,7 @@ namespace mint
 				m_layeredEntities[lyr].clear();
 			}
 
- 		);
+		);
 	}
 
 
