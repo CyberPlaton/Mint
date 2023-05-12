@@ -326,6 +326,9 @@ namespace mint
 		// Texture manager.
 		result &= CTextureManager::Get().initialize();
 
+		// Material manager.
+		result &= fx::CMaterialManager::Get().initialize();
+
 		// Plugin Manager (pre-initialize plugins).
 		CPluginSystem::Get().on_pre_initialization();
 
@@ -413,6 +416,8 @@ namespace mint
 		scripting::CBehaviorEngine::Get().terminate();
 		scripting::CScriptEngine::Get().terminate();
 
+		// Material manager.
+		fx::CMaterialManager::Get().terminate();
 
 		// Texture Manager.
 		CTextureManager::Get().terminate();
@@ -421,6 +426,7 @@ namespace mint
 		CShaderManager::Get().terminate();
 
 		// UI.
+		CUI::Get().terminate();
 
 		// Embedded shaders.
 		fx::CEmbeddedShaders::Get().terminate();

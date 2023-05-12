@@ -24,12 +24,18 @@ namespace mint::editor
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
-		ImGui::BeginChild("Hierarchy", { width - 17.5f, percent(height, 50) }, true, get_flags());
+		ImGui::BeginChild(lang::get_word(lang::Word_Hierarchy), { width - 17.5f, percent(height, 50) }, true, get_flags());
 
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu(lang::get_word(lang::Word_Hierarchy)))
+			if (ImGui::BeginMenu("Scene"))
 			{
+				if(ImGui::MenuItem("Reload"))
+				{
+					auto scene = MINT_ACTIVE_SCENE();
+					auto name = scene->get_scene_name();
+					scene->transit_to_scene(name);
+				}
 				ImGui::EndMenu();
 			}
 		}
@@ -43,7 +49,7 @@ namespace mint::editor
 
 	mint::String CHierarchyPanelLayer::get_layer_name()
 	{
-		return "Scene Hierarchy Panel";
+		return "CHierarchyPanelLayer";
 	}
 
 

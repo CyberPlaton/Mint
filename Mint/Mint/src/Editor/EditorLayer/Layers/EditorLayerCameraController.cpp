@@ -71,7 +71,7 @@ namespace mint::editor
 
 	mint::String CCameraControllerLayer::get_layer_name()
 	{
-		return "Editor Camera Controller";
+		return "CCameraControllerLayer";
 	}
 
 
@@ -80,6 +80,12 @@ namespace mint::editor
 		const char* text = TextFormat("Zoom: %.3f", m_camera->get_zoom());
 
 		DrawText(text, 1, 20, 24, RAYWHITE);
+	}
+
+
+	void CCameraControllerLayer::reload_camera(mint::fx::CCamera2D* editor_camera)
+	{
+		m_camera = editor_camera;
 	}
 
 

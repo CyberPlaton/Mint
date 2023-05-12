@@ -7,11 +7,13 @@ namespace mint::editor
 {
 
 
-	bool CLayerStack::try_push_layer(CLayer* layer)
+	bool CLayerStack::try_push_layer(CLayer* layer, bool as_root_layer /*= false*/)
 	{
 		if (layer->on_initialize())
 		{
-			m_layers.push_back(layer);
+			mint::algorithm::vector_push_back(m_layers, layer);
+
+			if (as_root_layer) m_rootLayer = layer;
 
 			return true;
 		}
@@ -23,6 +25,8 @@ namespace mint::editor
 
 	void CLayerStack::pop_layer()
 	{
+		MINT_ASSERT(m_layers.empty() == false, "Invalid operation. Popping an empty stack is not allowed!");
+
 		auto top = m_layers[m_layers.size() - 1];
 
 		m_layers.erase(m_layers.begin() + m_layers.size() - 1);
@@ -35,10 +39,9 @@ namespace mint::editor
 
 	void CLayerStack::clear_all_layers()
 	{
-		while (!m_layers.empty())
-		{
-			pop_layer();
-		}
+		m_rootLayer->on_terminate();
+
+		delete m_rootLayer; m_rootLayer = nullptr;
 	}
 
 
@@ -101,12 +104,8 @@ namespace mint::editor
 	{
 		MINT_LOG_INFO("Dumping registered layers from top to bottom:");
 
-		for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
-		{
-			auto layer = *it;
+		print_layer_recursive(m_rootLayer);
 
-			print_layer_recursive(layer);
-		}
 		MINT_LOG_SEPARATOR();
 	}
 

@@ -4,7 +4,7 @@
 
 #include "Common/IScene.h"
 #include "Components/Components.h"
-
+#include "Utility/EventSystem/EventSystem.h"
 
 namespace mint
 {
@@ -74,7 +74,9 @@ namespace mint
 	protected:
 		Vector< entt::entity > m_entities;
 
-		Vector< fx::ICamera* > m_cameraStack;
+		fx::ICamera* m_camera;
+
+		fx::ICamera* m_cameraOverride;
 
 		CRegistry m_registry;
 

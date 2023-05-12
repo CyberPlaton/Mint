@@ -8,6 +8,7 @@
 #include "ComponentEditor/ApplicationComponentsDatabase.h"
 #include "RessourceManagement/EditorIconManager.h"
 #include "ComponentEditor/ComponentEditorStack.h"
+#include "EditorLayer/Layers/EditorLayerRoot.h"
 #include "EditorLayer/Layers/EditorLayerCameraController.h"
 #include "EditorLayer/Layers/EditorLayerHierarchyPanel.h"
 #include "EditorLayer/Layers/EditorLayerInspectorPanel.h"

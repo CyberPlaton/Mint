@@ -63,5 +63,33 @@ namespace mint::reflection
 	}
 
 
+	bool CEntityMetaclassDatabase::initialize()
+	{
+		return true;
+	}
+
+
+	void CEntityMetaclassDatabase::terminate()
+	{
+		MINT_LOG_WARN("[{:.4f}][CEntityMetaclassDatabase::terminate]", MINT_APP_TIME);
+		reset();
+	}
+
+
+	void CEntityMetaclassDatabase::reset()
+	{
+		m_database.reset();
+	}
+
+
+	void CEntityMetaclassDatabase::reset(Vector< entt::entity >& entities)
+	{
+		for(auto& entity : entities)
+		{
+			remove_entity_from_database(SCAST(u64, entity));
+		}
+	}
+
+
 }
 #endif

@@ -23,7 +23,6 @@ namespace mint::fx
 
 		virtual void end_camera() { MINT_ASSERT(false, "Invalid operation using the camera interface!"); }
 
-
 		
 		virtual void set_translation(Vec2 value) { m_translation = value; };
 

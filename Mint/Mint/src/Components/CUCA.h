@@ -107,6 +107,9 @@ namespace mint::component
 		static void transform_set_rotation_local(entt::entity entity, f32 value);
 		static void transform_rotate_local(entt::entity entity, f32 value);
 
+
+
+
 	private:
 		static MINT_CRITICAL_SECTION(m_entityCriticalSection);
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);

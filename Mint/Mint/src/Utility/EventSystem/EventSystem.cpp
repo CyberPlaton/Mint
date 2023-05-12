@@ -23,131 +23,104 @@ namespace mint
 
 	void CEventSystem::reset()
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+		// Completely clear the event queue.
+		while (!m_eventQueue.empty())
+		{
+			auto event = m_eventQueue.front();
 
-			while (!m_eventQueue.empty())
+			m_eventQueue.pop();
+
+			delete event;
+			event = nullptr;
+		}
+
+		// Selectively clear listeners that are not persistent.
+		for (auto& map : m_listeners.get_all())
+		{
+			Vector< u64 > to_be_removed;
+
+			for (auto& delegate : map.get_all())
 			{
-				auto event = m_eventQueue.front();
-
-				m_eventQueue.pop();
-
-				delete event;
-				event = nullptr;
+				if (!delegate->get_is_persistent()) mint::algorithm::vector_push_back(to_be_removed, delegate->get_unique_identifier());
 			}
 
 
-			for(auto& pair: m_listeners)
+			for (auto id : to_be_removed)
 			{
-				while(!pair.second.empty())
-				{
-					auto delegate = pair.second.end();
-
-					pair.second.pop_back();
-
-					delete *delegate;
-					*delegate = nullptr;
-				}
+				map.remove(id);
 			}
-
-			m_listeners.clear();
-
-		);
+		}
 	}
 
 
 	void CEventSystem::update()
 	{
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+		while (!m_eventQueue.empty())
+		{
+			auto event = m_eventQueue.front();
+			auto type = event->get_event_type();
 
-			while (!m_eventQueue.empty())
+			if(m_listeners.lookup(type))
 			{
-				auto event = m_eventQueue.front();
+				auto& listeners = m_listeners.get_ref(type);
 
-				auto event_type = event->get_event_type();
-
-				for (auto& pair : m_listeners)
+				for (auto& delegate : listeners.get_all())
 				{
-					if (event_type == pair.first)
-					{
-						for (auto& delegate : pair.second)
-						{
-							delegate->execute(event);
-						}
-					}
+					delegate->execute(event);
 				}
-
-				m_eventQueue.pop();
-
-				delete event; event = nullptr;
 			}
-		);
+
+
+			m_eventQueue.pop();
+			delete event; event = nullptr;
+		}
 	}
 
 
 	void CEventSystem::add_listener(const String& listened_event_type, SDelegate* delegate)
 	{
 		auto h = mint::algorithm::djb_hash(listened_event_type);
+		auto id = delegate->get_unique_identifier();
 
-		bool listener_added = false;
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			for(auto& pair: m_listeners)
-			{
-				if(h == pair.first)
-				{
-					pair.second.push_back(delegate);
-
-					listener_added = true;
-
-					break;
-				}
-			}
-		);
-
-
-		if(!listener_added)
+		if (!m_listeners.lookup(h))
 		{
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				auto index = m_listeners.size();
-
-				m_listeners.emplace_back(std::make_pair(h, Vector< SDelegate* >{}));
-
-				m_listeners[index].second.push_back(delegate);
-
-			);
+			m_listeners.add(h, CMap< SDelegate* >{});
 		}
+
+
+		auto& map = m_listeners.get_ref(h);
+
+		map.add(id, delegate);
 	}
 
 
-	void CEventSystem::remove_listener(const String& listened_event_type, u64 delegate_identifier)
+	void CEventSystem::add_listener(SDelegate* delegate)
+	{
+		auto h = delegate->get_listening_event_type();
+		auto id = delegate->get_unique_identifier();
+
+		if(!m_listeners.lookup(h))
+		{
+			m_listeners.add(h, CMap< SDelegate* >{});
+		}
+
+
+		auto& map = m_listeners.get_ref(h);
+
+		map.add(id, delegate);
+	}
+
+
+	void CEventSystem::remove_listener(const String& listened_event_type, DelegateHandle delegate_identifier)
 	{
 		auto h = mint::algorithm::djb_hash(listened_event_type);
+		
+		if (!m_listeners.lookup(h)) return;
 
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			for (auto& pair : m_listeners)
-			{
-				if (h == pair.first)
-				{
-					for(auto i = 0; i < pair.second.size(); i++)
-					{
-						auto& delegate = pair.second[i];
+		auto& map = m_listeners.get_ref(h);
 
-						if(delegate->get_unique_identifier() == delegate_identifier)
-						{
-							pair.second.erase(pair.second.begin() + i);
-
-							delete delegate;
-							delegate = nullptr;
-
-							break;
-						}
-					}
-				}
-			}
-		);
+		map.remove(delegate_identifier);
 	}
 
 

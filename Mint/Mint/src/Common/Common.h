@@ -88,6 +88,7 @@ namespace mint
 	using TextureHandle = u64;
 	using MaterialHandle = u64;
 	using ScriptHandle = u64;
+	using DelegateHandle = u64;
 	using String = std::string;
 	using Window = raylib::Window;
 	using Texture = raylib::Texture;

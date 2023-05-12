@@ -9,12 +9,25 @@
 #include "Utility/Logging/Logging.h"
 #include "Utility/EventSystem/EventSystem.h"
 #include "SAS.h"
+#include "Scripting/ScriptEngine.h"
+#include "Scripting/BehaviorEngine.h"
+#include "Physics/PhysicsSystem.h"
+#include "RessourceManagement/ShaderManager.h"
+#include "RessourceManagement/TextureManager.h"
 
 
 namespace mint
 {
 	class CSceneManager
 	{
+	private:
+		MINT_DEFINE_PERSISTENT_EVENT_LISTENER(CSceneManager::SSceneChangeEventDelegate, Event_SceneTransit,
+			{
+				auto scene_name = event->get_event_data(0).cast< mint::String >();
+
+				mint::CSceneManager::Get().set_current_scene(scene_name);
+			});
+
 	public:
 		STATIC_GET(CSceneManager, g_CSceneManager);
 
@@ -32,7 +45,7 @@ namespace mint
 
 		void set_initial_scene(CScene* scene);
 
-
+		bool is_transitioning();
 
 		void unload_scene(CScene* scene);
 

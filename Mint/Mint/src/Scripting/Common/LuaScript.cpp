@@ -48,6 +48,8 @@ namespace mint::scripting
 
 	CLuaScript::~CLuaScript()
 	{
+		MINT_LOG_WARN("[{:.4f}][CLuaScript::~CLuaScript]", MINT_APP_TIME);
+
 		terminate();
 	}
 

@@ -94,6 +94,8 @@ namespace mint
 
 			editor::GlobalData::Get().s_ComponentDatabase.print_registered_components();
 
+			MINT_REGISTER_EVENT_LISTENER(SSceneChangeEventDelegate);
+
 			m_timer.start_timer();
 
 			return result;
@@ -203,33 +205,22 @@ namespace mint
 
 			if (m_editingMode)
 			{
-				auto viewport = get_layer_as< editor::CViewportPanelLayer >("Viewport Panel");
-
-				viewport->set_is_enabled(true);
-
-				set_engine_fps(0.0f);
-
-				set_engine_window_title("Mint Engine Editor: Editing Mode");
-
-				MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
-
-				mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
+				set_editing_mode();
 			}
 			else
 			{
-				auto viewport = get_layer_as< editor::CViewportPanelLayer >("Viewport Panel");
-
-				viewport->set_is_enabled(false);
-
-				set_engine_fps(30.0f);
-
-				set_engine_window_title("Mint Engine Editor");
-
-				MINT_ACTIVE_SCENE()->pop_camera();
-
-				mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
+				unset_editing_mode();
 			}
 		}
+		if(m_sceneReloaded && !CSceneManager::Get().is_transitioning())
+		{
+			// Reloading can be done in editing mode only, thus no need to toggle anything, just recreate the camera.
+			MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
+
+			m_sceneReloaded = false;
+		}
+
+
 
 		on_update(dt);
 
@@ -304,14 +295,25 @@ namespace mint
 		mint::u32 failed_count = 0;
 		bool failed = false;
 
-		if(!m_layerStack.try_push_layer(new editor::CCameraControllerLayer(m_editorCamera)))
+		// Create the root layer.
+		auto root = new editor::CRootLayer();
+		m_layerStack.try_push_layer(root, true);
+
+
+
+		// Create the hierarchy of layers.
+		auto camera_controller = new editor::CCameraControllerLayer(m_editorCamera);
+		root->add_child_layer(camera_controller);
+		if(!m_layerStack.try_push_layer(camera_controller))
 		{
 			if(failed_on.empty()) failed_on = "CCameraControllerLayer";
 			failed_count++;
 			failed = true;
 		}
 
+
 		auto rightmost_panel = new editor::CRightmostPanelLayer();
+		root->add_child_layer(rightmost_panel);
 		rightmost_panel->add_child_layer(new editor::CInspectorPanelLayer());
 		if (!m_layerStack.try_push_layer(rightmost_panel))
 		{
@@ -320,7 +322,9 @@ namespace mint
 			failed = true;
 		}
 
+
 		auto leftmost_panel = new editor::CLeftmostPanelLayer();
+		root->add_child_layer(leftmost_panel);
 		leftmost_panel->add_child_layer(new editor::CHierarchyPanelLayer());
 		leftmost_panel->add_child_layer(new editor::CProjectAssetsPanelLayer());
 		if (!m_layerStack.try_push_layer(leftmost_panel))
@@ -330,13 +334,20 @@ namespace mint
 			failed = true;
 		}
 		
-		if (!m_layerStack.try_push_layer(new editor::CViewportPanelLayer()))
+
+		auto viewport = new editor::CViewportPanelLayer();
+		root->add_child_layer(viewport);
+		if (!m_layerStack.try_push_layer(viewport))
 		{
 			if (failed_on.empty()) failed_on = "CViewportPanelLayer";
 			failed_count++;
 			failed = true;
 		}
-		if (!m_layerStack.try_push_layer(new editor::CMainmenubarLayer()))
+
+
+		auto mainmenu = new editor::CMainmenubarLayer();
+		root->add_child_layer(mainmenu);
+		if (!m_layerStack.try_push_layer(mainmenu))
 		{
 			if (failed_on.empty()) failed_on = "CMainmenubarLayer";
 			failed_count++;
@@ -369,6 +380,42 @@ namespace mint
 	{
 		value = !value;
 	}
+
+
+	void CEditor::set_editing_mode()
+	{
+		auto viewport = get_layer_as< editor::CViewportPanelLayer >("CViewportPanelLayer");
+		
+		viewport->set_is_enabled(true);
+		
+		set_engine_fps(0.0f);
+
+		set_engine_window_title("Mint Engine Editor: Editing Mode");
+
+		MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
+
+		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
+	}
+
+
+	void CEditor::unset_editing_mode()
+	{
+		auto viewport = get_layer_as< editor::CViewportPanelLayer >("CViewportPanelLayer");
+
+		viewport->set_is_enabled(false);
+
+		set_engine_fps(30.0f);
+
+		set_engine_window_title("Mint Engine Editor");
+
+		MINT_ACTIVE_SCENE()->pop_camera();
+
+		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
+	}
+
+
+
+
 
 
 #endif

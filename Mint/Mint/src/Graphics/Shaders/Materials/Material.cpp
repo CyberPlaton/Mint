@@ -177,4 +177,11 @@ namespace mint::fx
 	}
 
 
+	CMaterial::~CMaterial()
+	{
+		m_staticUniforms.reset();
+		m_dynamicUniforms.reset();
+	}
+
+
 }

@@ -4,15 +4,18 @@ namespace mint
 {
 
 
-	CScene::CScene()
+	CScene::CScene() : m_camera(nullptr), m_cameraOverride(nullptr)
 	{
-
 	}
 
 
 	CScene::~CScene()
 	{
+		MINT_LOG_WARN("[{:.4f}][CScene::~CScene]", MINT_APP_TIME);
 
+		m_entities.clear();
+
+		delete m_camera; m_camera = nullptr;
 	}
 
 
@@ -128,25 +131,27 @@ namespace mint
 
 	void CScene::transit_to_scene(const String& scene_name)
 	{
+		auto event = new SEvent("Event_SceneTransit", scene_name);
 
+		CEventSystem::Get().queue_event(event);
 	}
 
 
 	fx::ICamera* CScene::get_active_camera()
 	{
-		return mint::algorithm::vector_get_last_element_as< fx::ICamera* >(m_cameraStack);
+		return m_cameraOverride == nullptr ? m_camera : m_cameraOverride;
 	}
 
 
 	void CScene::push_camera(fx::ICamera* camera)
 	{
-		mint::algorithm::vector_push_back(m_cameraStack, camera);
+		m_cameraOverride = camera;
 	}
 
 
 	void CScene::pop_camera()
 	{
-		mint::algorithm::vector_erase_last(m_cameraStack);
+		m_cameraOverride = nullptr;
 	}
 
 

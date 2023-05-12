@@ -56,7 +56,7 @@ namespace mint::fx
 	{
 	public:
 		CMaterial();
-		~CMaterial() = default;
+		~CMaterial();
 
 
 		void bind_shader() const;
@@ -95,6 +95,11 @@ namespace mint::fx
 		
 		Vec2 m_textureSize;
 		
+		/// @brief TODO: Refactor this.
+		///
+		/// If we are responsible for the Shader we want to delete it.
+		/// If not then someone else has to delete it.
+		/// Currently nobody does it...
 		mint::Shader* m_shader;
 
 		BlendMode m_blendMode = BLEND_ALPHA;

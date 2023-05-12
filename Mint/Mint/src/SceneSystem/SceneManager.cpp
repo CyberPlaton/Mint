@@ -128,7 +128,7 @@ namespace mint
 
 	bool CSceneManager::initialize()
 	{
-
+		MINT_REGISTER_EVENT_LISTENER(SSceneChangeEventDelegate);
 		return true;
 	}
 
@@ -200,17 +200,30 @@ namespace mint
 
 
 		// Unloading the scene basically means reset the system to default state.
+		CEventSystem::Get().reset();
+
+		scripting::CScriptEngine::Get().reset();
+
+		scripting::CBehaviorEngine::Get().reset();
+
+		fx::CMaterialManager::Get().reset();
+
+		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().reset();
 
 		CSAS::Get().reset();
 
 		MINT_SCENE_REGISTRY().reset(scene->get_entities());
 
-		CEventSystem::Get().reset();
+		CShaderManager::Get().reset();
+
+		CTextureManager::Get().reset();
 	}
 
 
 	void CSceneManager::load_scene(CScene* scene)
 	{
+		IScene::set_active_scene(scene);
+
 		Vector< CAsset > assets;
 
 		_load_scene_definition(scene, assets);
@@ -232,11 +245,15 @@ namespace mint
 
 
 		// Initialize the spatial acceleration structure. 
-		CSAS::Get().reset();
-
 		CSAS::Get().submit_scene_dynamic_entities(scene->get_dynamic_entities());
 
 		CSAS::Get().submit_scene_static_entities(scene->get_static_entities());
+	}
+
+
+	bool CSceneManager::is_transitioning()
+	{
+		return m_transition;
 	}
 
 

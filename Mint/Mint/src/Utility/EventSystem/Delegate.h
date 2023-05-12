@@ -15,21 +15,24 @@ namespace mint
 
 	struct SDelegate : public IDelegate
 	{
-		SDelegate(const String& listen_to_event_type, const String& delegate_name);
+		SDelegate(const String& listen_to_event_type, const String& delegate_name, bool persistent = false);
 
 		virtual ~SDelegate() {}
 
 		virtual void execute(SEvent*) override {};
 
 
-		u64 get_unique_identifier() { return m_identifier; }
+		DelegateHandle get_unique_identifier() { return m_identifier; }
 
 		u64 get_listening_event_type() { return m_eventType; }
 
+		bool get_is_persistent() { return m_persistent; }
 
 		u64 m_identifier;
 
 		u64 m_eventType;
+
+		bool m_persistent;
 	};
 
 

@@ -13,13 +13,25 @@ namespace mint
 
 	CRegistry::~CRegistry()
 	{
+		MINT_LOG_WARN("[{:.4f}][CRegistry::~CRegistry]", MINT_APP_TIME);
+
 		terminate();
+
+#if MINT_DISTR
+#else
+		reflection::CEntityMetaclassDatabase::Get().terminate();
+#endif
 	}
 
 
 	bool CRegistry::initialize()
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
+
+#if MINT_DISTR
+#else
+		reflection::CEntityMetaclassDatabase::Get().initialize();
+#endif
 
 		return true;
 	}
@@ -42,6 +54,12 @@ namespace mint
 			m_registry.clear();
 
 			);
+
+
+#if MINT_DISTR
+#else
+		reflection::CEntityMetaclassDatabase::Get().reset();
+#endif
 	}
 
 
@@ -54,6 +72,11 @@ namespace mint
 			m_registry.clear();
 
 			);
+
+#if MINT_DISTR
+#else
+		reflection::CEntityMetaclassDatabase::Get().reset(entities);
+#endif
 	}
 
 

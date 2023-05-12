@@ -40,7 +40,12 @@ namespace mint
 				queue.clear();
 			}
 
+			for (u32 lyr = 0; lyr < MINT_SAS_RENDERING_LAYERS_MAX; lyr++)
+			{
+				m_layeredEntities[lyr].clear();
+			}
 		);
+
 	}
 
 	void CSAS::run_sas_thread()

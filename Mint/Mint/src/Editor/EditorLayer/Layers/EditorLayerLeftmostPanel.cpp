@@ -40,7 +40,7 @@ namespace mint::editor
 
 	mint::String CLeftmostPanelLayer::get_layer_name()
 	{
-		return "Leftmost Panel";
+		return "CLeftmostPanelLayer";
 	}
 
 

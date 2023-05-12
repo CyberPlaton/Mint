@@ -65,7 +65,7 @@ namespace mint::editor
 
 	mint::String CProjectAssetsPanelLayer::get_layer_name()
 	{
-		return "Project Assets Panel";
+		return "CProjectAssetsPanelLayer";
 	}
 
 

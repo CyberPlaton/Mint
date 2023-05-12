@@ -8,6 +8,7 @@
 #include "Common/Algorithm.h"
 #include "Utility/STL/Map.h"
 #include "Metaclass.h"
+#include "Utility/Logging/Logging.h"
 
 
 namespace mint::reflection
@@ -17,6 +18,15 @@ namespace mint::reflection
 	{
 	public:
 		STATIC_GET(CEntityMetaclassDatabase, s_CEntityMetaclassDatabase);
+
+		bool initialize();
+
+		void terminate();
+
+		void reset();
+
+		void reset(Vector< entt::entity >& entities);
+
 
 		CEntityMetaclassDatabase& add_entity_metaclass(u64 entity, CMetaClass* metaclass);
 

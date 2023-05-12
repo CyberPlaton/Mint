@@ -18,6 +18,8 @@ namespace mint::editor
 	public:
 		CCameraControllerLayer(mint::fx::CCamera2D* editor_camera);
 
+		void reload_camera(mint::fx::CCamera2D* editor_camera);
+
 		bool on_initialize() override final;
 
 		void on_update(f32 dt) override final;

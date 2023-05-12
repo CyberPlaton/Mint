@@ -25,7 +25,7 @@ namespace mint::editor
 
 	mint::String CViewportPanelLayer::get_layer_name()
 	{
-		return "Viewport Panel";
+		return "CViewportPanelLayer";
 	}
 
 

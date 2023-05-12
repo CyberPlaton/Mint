@@ -24,6 +24,11 @@ namespace mint::fx
 
 	void CMaterialManager::reset()
 	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_materials.reset();
+
+			);
 
 	}
 

@@ -22,7 +22,7 @@ namespace mint
 		template < typename... ARGS >
 		T& emplace_back(u64 identifier, const ARGS&... args)
 		{
-			MINT_VERIFY(lookup(identifier) == false, "Invalid operation. Overriding indices does not work for add_in_place!");
+			MINT_ASSERT(lookup(identifier) == false, "Invalid operation. Overriding indices does not work for emplace_back!");
 
 			u64 index = m_data.size();
 

@@ -67,7 +67,7 @@ namespace mint::editor
 
 	mint::String CMainmenubarLayer::get_layer_name()
 	{
-		return "Main Menu Bar";
+		return "CMainmenubarLayer";
 	}
 
 

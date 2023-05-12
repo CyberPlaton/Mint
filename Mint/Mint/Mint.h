@@ -15,6 +15,7 @@
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
 #include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
+#include "Graphics/Shaders/MaterialManager.h"
 #include "UI/UI.h"
 #include "Common/Random.h"
 #include "Graphics/Common/Camera2D.h"

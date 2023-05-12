@@ -92,8 +92,6 @@ namespace mint::editor
 
 		mint::Vector< ILayer* >& get_children_layers() { return m_childrenLayers; }
 
-		virtual String get_layer_name() { return "None"; }
-
 	protected:
 		bool m_enabled = true;
 

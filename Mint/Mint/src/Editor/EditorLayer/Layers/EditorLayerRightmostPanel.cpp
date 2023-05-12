@@ -38,7 +38,7 @@ namespace mint::editor
 
 	mint::String CRightmostPanelLayer::get_layer_name()
 	{
-		return "Rightmost Panel";
+		return "CRightmostPanelLayer";
 	}
 
 

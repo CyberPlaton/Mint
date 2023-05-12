@@ -38,12 +38,13 @@ namespace mint::scripting
 			{
 				behaviors[0].on_destroy();
 
-				behaviors.erase(behaviors.begin());
+				mint::algorithm::vector_erase_first(behaviors);
 			}
 
-		);
+			m_activeBehaviors.reset();
+			m_behaviorPrefabs.reset();
 
-		m_behaviorPrefabs.reset();
+		);
 	}
 
 
@@ -173,7 +174,7 @@ namespace mint::scripting
 		{
 			if(does_entity_have_behavior_set(entity)) remove_behavior_from_entity(entity);
 
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+				MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 				CBehavior& behavior = m_activeBehaviors.emplace_back(SCAST(u64, entity),
 																	 m_behaviorPrefabs.get(h));
@@ -218,8 +219,7 @@ namespace mint::scripting
 			behavior.on_destroy();
 
 			m_activeBehaviors.remove(h);
-
-		);
+ 		);
 	}
 
 

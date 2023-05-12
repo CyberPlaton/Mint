@@ -62,7 +62,7 @@ namespace mint::editor
 
 	mint::String CInspectorPanelLayer::get_layer_name()
 	{
-		return "Entity Inspector Panel";
+		return "CInspectorPanelLayer";
 	}
 
 

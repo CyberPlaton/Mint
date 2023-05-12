@@ -35,6 +35,13 @@ namespace mint
 
 	class CEditor : public mint::CMintEngine
 	{
+	private:
+			MINT_DEFINE_PERSISTENT_EVENT_LISTENER(CEditor::SSceneChangeEventDelegate, Event_SceneTransit,
+			{
+				auto editor = reinterpret_cast<CEditor*>(MINT_ENGINE());
+				editor->m_sceneReloaded = true;
+			});
+
 	public:
 		bool initialize_editor(const String& manifest_filepath);
 
@@ -74,6 +81,9 @@ namespace mint
 
 		bool m_editingMode = false;
 
+		bool m_sceneReloaded = false;
+
+
 	protected:
 		bool create_layer_stack();
 
@@ -84,25 +94,17 @@ namespace mint
 		template < class T >
 		T* get_layer_as(const String& name);
 
+
+		void set_editing_mode();
+
+		void unset_editing_mode();
 	};
 
 
 	template < class T >
 	T* mint::CEditor::get_layer_as(const String& name)
 	{
-		auto h = mint::algorithm::djb_hash(name);
-
-		for(auto layer : m_layerStack.get_all_layers())
-		{
-			auto lh = mint::algorithm::djb_hash(layer->get_layer_name());
-
-			if(h == lh)
-			{
-				return reinterpret_cast<T*>(layer);
-			}
-		}
-
-		return nullptr;
+		return m_layerStack.get_layer_as< T >(name);
 	}
 
 #endif
