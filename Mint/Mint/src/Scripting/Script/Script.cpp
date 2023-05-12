@@ -68,4 +68,10 @@ namespace mint::scripting
 	}
 
 
+	CScript::~CScript()
+	{
+		MINT_LOG_WARN("[{:.4f}][CScript::~CScript] Script: \"{}\"", MINT_APP_TIME, get_script_name());
+	}
+
+
 }

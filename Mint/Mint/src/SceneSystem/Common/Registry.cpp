@@ -13,8 +13,6 @@ namespace mint
 
 	CRegistry::~CRegistry()
 	{
-		MINT_LOG_WARN("[{:.4f}][CRegistry::~CRegistry]", MINT_APP_TIME);
-
 		terminate();
 
 #if MINT_DISTR

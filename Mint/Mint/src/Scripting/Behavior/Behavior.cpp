@@ -66,4 +66,11 @@ namespace mint::scripting
 		}
 	}
 
+
+	CBehavior::~CBehavior()
+	{
+		MINT_LOG_WARN("[{:.4f}][CBehavior::~CBehavior] Script: \"{}\"", MINT_APP_TIME, get_script_name());
+	}
+
+
 }

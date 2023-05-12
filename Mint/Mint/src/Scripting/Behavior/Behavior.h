@@ -14,6 +14,8 @@ namespace mint::scripting
 	class CBehavior : public CLuaScript
 	{
 	public:
+		~CBehavior();
+
 		void on_update(f32 dt = 0.0f) override final;
 
 		void on_create() override final;

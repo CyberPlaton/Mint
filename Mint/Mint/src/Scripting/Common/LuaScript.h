@@ -54,7 +54,7 @@ namespace mint::scripting
 		CLuaScript();
 		CLuaScript(const CLuaScript& other);
 		CLuaScript& operator=(const CLuaScript& other);
-		~CLuaScript();
+		virtual ~CLuaScript();
 
 
 		bool initialize();

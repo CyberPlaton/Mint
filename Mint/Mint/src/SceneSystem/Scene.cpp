@@ -11,8 +11,6 @@ namespace mint
 
 	CScene::~CScene()
 	{
-		MINT_LOG_WARN("[{:.4f}][CScene::~CScene]", MINT_APP_TIME);
-
 		m_entities.clear();
 
 		delete m_camera; m_camera = nullptr;
