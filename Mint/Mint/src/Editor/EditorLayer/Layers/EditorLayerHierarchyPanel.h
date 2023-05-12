@@ -35,6 +35,16 @@ namespace mint::editor
 		void show_entity_recursive(entt::entity entity);
 
 		void check_entity_for_components_sanity(entt::entity entity);
+
+		void react_to_selected_entity_option(s32* option);
+
+		void create_dynamic_child_entity(entt::entity parent);
+
+		void create_dynamic_parent_entity(entt::entity child);
+
+		void create_static_child_entity(entt::entity parent);
+
+		void create_static_parent_entity(entt::entity child);
 	};
 
 }

@@ -21,6 +21,7 @@ namespace mint::editor
 	const mint::f32 GlobalData::s_DefaultEditorTextEditorHeight = 400.0f;
 	const mint::f32 GlobalData::s_DefaultEditorCharacterSize = 13.0f;
 	entt::entity GlobalData::s_EditorInspectedEntity = entt::null;
+	entt::entity GlobalData::s_EditorOptionSelectedEntity = entt::null;
 	ImGuiID GlobalData::s_EditorEditFieldSliderIdStart = 10000;
 	ImGuiID GlobalData::s_EditorEditFieldScalarIdStart = 50000;
 
@@ -33,6 +34,7 @@ namespace mint::editor
 	f32 GlobalData::s_EditorTransformMaxRotation = 720.0f;
 
 	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
+
 
 }
 #endif

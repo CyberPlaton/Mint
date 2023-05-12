@@ -113,16 +113,40 @@ namespace mint::editor
 
 		if (inspected) ImGui::PopStyleColor();
 
-
-
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
 			GlobalData::Get().s_EditorInspectedEntity = entity;
 		}
 
 
+
+		ImGui::SameLine();
+
+		static s32 selected_entity_option = -1;
+
+		ImGui::PushStyleColor(ImGuiCol_Text, { 0.9f, 0.9f, 0.9f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
+		if(ImGui::SmallButton(ICON_FA_GEAR))
+		{
+			ImGui::OpenPopup("Entity Options Popup", ImGuiPopupFlags_MouseButtonRight);
+			GlobalData::Get().s_EditorOptionSelectedEntity = entity;
+		}
+		ImGui::PopStyleColor(2);
+
+		if (ImGui::BeginPopup("Entity Options Popup"))
+		{
+			ImGui::SeparatorText("Entity Options");
+
+			for (int i = 0; i < IM_ARRAYSIZE(s_EditorEntityOptions); i++)
+				if (ImGui::Selectable(s_EditorEntityOptions[i]))
+					selected_entity_option = i;
+
+			ImGui::EndPopup();
+		}
+
 		check_entity_for_components_sanity(entity);
 
+		react_to_selected_entity_option(&selected_entity_option);
 
 		if (open)
 		{
@@ -230,6 +254,140 @@ namespace mint::editor
 				ImGui::PopStyleColor();
 			}
 		}
+	}
+
+
+	void CHierarchyPanelLayer::react_to_selected_entity_option(s32* option)
+	{
+		if (*option == -1) return;
+
+		auto op = *option;
+		
+		switch(op)
+		{
+		case 0: create_dynamic_child_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
+		case 1: create_dynamic_parent_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
+		case 2: create_static_child_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
+		case 3: create_static_parent_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
+		}
+
+		*option = -1;
+		GlobalData::Get().s_EditorOptionSelectedEntity = entt::null;
+	}
+
+
+	void CHierarchyPanelLayer::create_dynamic_child_entity(entt::entity parent)
+	{
+		auto scene = MINT_ACTIVE_SCENE();
+		auto& registry = scene->get_registry();
+
+
+		auto entity = registry.create_entity();
+
+		auto& identifier = registry.add_component< mint::component::SIdentifier >(entity);
+		auto& hierarchy = registry.add_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = registry.add_component< mint::component::STransform >(entity);
+		auto& dynamic = registry.add_component< mint::component::SDynamicGameobject >(entity);
+
+		identifier.m_enttId = SCAST(u64, entity);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "EmptyDynamicEntity_" + std::to_string(identifier.m_enttId);
+		
+		CUCA::hierarchy_set_parent(entity, parent);
+
+		CUCA::hierarchy_add_child(parent, entity);
+
+		CUCA::transform_set_scale(entity, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(entity, 0.0f);
+		CUCA::transform_set_position(entity, { 1.0f, 1.0f });
+
+		scene->add_entity(entity);
+	}
+
+
+	void CHierarchyPanelLayer::create_dynamic_parent_entity(entt::entity child)
+	{
+		auto scene = MINT_ACTIVE_SCENE();
+		auto& registry = scene->get_registry();
+
+
+		auto entity = registry.create_entity();
+
+		auto& identifier = registry.add_component< mint::component::SIdentifier >(entity);
+		auto& hierarchy = registry.add_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = registry.add_component< mint::component::STransform >(entity);
+		auto& dynamic = registry.add_component< mint::component::SDynamicGameobject >(entity);
+
+		identifier.m_enttId = SCAST(u64, entity);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "EmptyDynamicEntity_" + std::to_string(identifier.m_enttId);
+		hierarchy.m_parent = entt::null;
+
+		CUCA::hierarchy_set_parent(child, entity);
+
+		CUCA::hierarchy_add_child(entity, child);
+
+		CUCA::transform_set_scale(entity, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(entity, 0.0f);
+		CUCA::transform_set_position(entity, { 1.0f, 1.0f });
+
+		scene->add_entity(entity);
+	}
+
+
+	void CHierarchyPanelLayer::create_static_child_entity(entt::entity parent)
+	{
+		auto scene = MINT_ACTIVE_SCENE();
+		auto& registry = scene->get_registry();
+
+
+		auto entity = registry.create_entity();
+
+		auto& identifier = registry.add_component< mint::component::SIdentifier >(entity);
+		auto& hierarchy = registry.add_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = registry.add_component< mint::component::STransform >(entity);
+
+		identifier.m_enttId = SCAST(u64, entity);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "EmptyStaticEntity_" + std::to_string(identifier.m_enttId);
+		hierarchy.m_parent = parent;
+
+		CUCA::transform_set_scale(entity, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(entity, 0.0f);
+		CUCA::transform_set_position(entity, { 1.0f, 1.0f });
+
+		scene->add_entity(entity);
+
+		CSAS::Get().submit_scene_static_entities(scene->get_entities());
+	}
+
+
+	void CHierarchyPanelLayer::create_static_parent_entity(entt::entity child)
+	{
+		auto scene = MINT_ACTIVE_SCENE();
+		auto& registry = scene->get_registry();
+
+
+		auto entity = registry.create_entity();
+
+		auto& identifier = registry.add_component< mint::component::SIdentifier >(entity);
+		auto& hierarchy = registry.add_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = registry.add_component< mint::component::STransform >(entity);
+
+		identifier.m_enttId = SCAST(u64, entity);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "EmptyStaticEntity_" + std::to_string(identifier.m_enttId);
+		hierarchy.m_parent = entt::null;
+
+		CUCA::hierarchy_set_parent(child, entity);
+
+		CUCA::transform_set_scale(entity, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(entity, 0.0f);
+		CUCA::transform_set_position(entity, { 1.0f, 1.0f });
+
+		scene->add_entity(entity);
+
+		CSAS::Get().submit_scene_static_entities(scene->get_entities());
 	}
 
 

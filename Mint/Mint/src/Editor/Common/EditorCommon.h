@@ -32,6 +32,8 @@ namespace mint::editor
 		static const mint::f32 s_DefaultEditorTextEditorHeight;
 		static const mint::f32 s_DefaultEditorCharacterSize;
 		static entt::entity s_EditorInspectedEntity;
+		static entt::entity s_EditorOptionSelectedEntity;
+
 
 
 		static ImGuiID s_EditorEditFieldSliderIdStart;
@@ -108,6 +110,13 @@ namespace mint::editor
 
 
 		ICON_FA_FILE_CODE,
+	};
+
+	static const char* s_EditorEntityOptions[] = {
+		"Create Dynamic Child",
+		"Create Dynamic Parent",
+		"Create Static Child",
+		"Create Static Parent",
 	};
 
 }

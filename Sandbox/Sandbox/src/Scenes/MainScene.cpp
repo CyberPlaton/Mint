@@ -67,7 +67,7 @@ bool CMainScene::on_load()
 	hierarchy.m_parent = entt::null;
 	transform.m_scale = { 1.0f, 1.0f };
 	transform.m_rotation = 45.0f;
-	transform.m_scale = { 1.0f, 1.0f };
+	transform.m_position = { 0.0f, 0.0f };
 	sprite.m_visible = true;
 	sprite.m_internalVisible = true;
 	sprite.m_depth = 0;
