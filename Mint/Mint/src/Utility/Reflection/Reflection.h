@@ -52,6 +52,7 @@ static void add_this_component_to_entity(entt::registry& registry, entt::entity 
 	if(!registry.all_of< class_name >(entity)) \
 	{ \
 		auto& component = registry.emplace< class_name >(entity); \
+		component.m_metaclass.set_metaclass_entity(entity); \
 		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(mint::u64, entity), &component.m_metaclass); \
 	}; \
 } \

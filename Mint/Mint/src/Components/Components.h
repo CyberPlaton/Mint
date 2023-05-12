@@ -81,7 +81,7 @@ namespace mint::component
 
 		Vec2 m_scale = { 0.0f, 0.0f };
 
-		Mat4 m_worldTransform = Mat4(1.0f);
+		Mat4 m_worldTransform = glm::identity< Mat4 >();
 	};
 
 
@@ -93,21 +93,21 @@ namespace mint::component
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
-		bool m_visible = false;
+		bool m_visible = true;
 
-		bool m_internalVisible = false;
+		bool m_internalVisible = true;
 
 		u64 m_depth = 0;
 
-		CRect m_rect;
+		CRect m_rect = {0.0f, 0.0f, 1.0f, 1.0f};
 
 		bool m_flipX = false;
 
 		bool m_flipY = false;
 
-		mint::fx::CColor m_color;
+		mint::fx::CColor m_color = {255, 255, 255, 255};
 
-		Vec2 m_origin;
+		Vec2 m_origin = { 0.0f, 0.0f };
 	};
 
 
@@ -119,9 +119,9 @@ namespace mint::component
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
-		f32 m_frameCounter;
+		f32 m_frameCounter = 0;
 
-		u64 m_animationSpeed;
+		u64 m_animationSpeed = 0;
 	};
 
 
@@ -133,7 +133,7 @@ namespace mint::component
 		static bool import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 
 
-		ScriptHandle m_scriptHandle;
+		ScriptHandle m_scriptHandle = MINT_INVALID_HANDLE;
 	};
 
 }

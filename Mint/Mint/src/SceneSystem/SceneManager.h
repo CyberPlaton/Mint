@@ -68,6 +68,10 @@ namespace mint
 		void _load_scene_definition(CScene* scene, Vector< CAsset >& scene_assets);
 
 		void _load_scene_asset_ressources(CScene* scene, CAsset& asset);
+
+		void _load_common_asset_ressources();
+
+		void _load_common_asset_ressource(CAsset& asset);
 	};
 
 }

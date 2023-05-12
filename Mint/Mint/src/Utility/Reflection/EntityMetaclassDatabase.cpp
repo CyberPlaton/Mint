@@ -12,6 +12,11 @@ namespace mint::reflection
 	{
 		MINT_ASSERT(entity != SCAST(u64, entt::null), "Invalid operation. Invalid entity provided!");
 
+
+		MINT_LOG_WARN("[{:.4f}][CEntityMetaclassDatabase::add_entity_metaclass] Adding Metaclass for Entity: \"{}\"\n\t\tMetaclass Name: \"{}\", Type: \"{}\", Entity: \"{}\"", 
+					   MINT_APP_TIME, entity, metaclass->get_metaclass_name(), metaclass->get_metaclass_type(), (u64)metaclass->get_metaclass_entity());
+
+
 		if (!m_database.lookup(entity))
 		{
 			m_database.add(entity, Vector< CMetaClass* >{});

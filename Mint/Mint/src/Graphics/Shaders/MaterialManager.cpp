@@ -39,21 +39,46 @@ namespace mint::fx
 
 		if(!m_materials.lookup(h)) m_materials.add(h, Vector< CMaterial >{});
 
-		m_materials.get_ref(h).push_back(material);
+		mint::algorithm::vector_push_back(m_materials.get_ref(h), material);
 	}
 
 
-	const mint::Vector< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity) const
+	const mint::Vector< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
 	{
 		auto h = SCAST(u64, entity);
+
+		if(!m_materials.lookup(h))
+		{
+			auto& materials = m_materials.emplace_back(h);
+
+			set_default_main_material_for_entity(entity);
+		}
 
 		return m_materials.get_const(h);
 	}
 
 
-	const mint::fx::CMaterial& CMaterialManager::get_main_material_for_entity(entt::entity entity) const
+	const mint::fx::CMaterial& CMaterialManager::get_main_material_for_entity(entt::entity entity)
 	{
-		return get_materials_for_entity(entity)[0];
+		const auto& materials = get_materials_for_entity(entity);
+
+		return materials[0];
+	}
+
+
+	void CMaterialManager::set_default_main_material_for_entity(entt::entity entity, const String& default_texture /*= "DefaultSprite"*/, const String& default_shader /*= "Sprite"*/, BlendMode blending_mode/*= BLEND_ALPHA*/, BlendingEquation blending_equation /*= BlendingEquation_BlendColor*/, BlendingFactor blending_src_factor /*= BlendingFactor_SrcAlpha*/, BlendingFactor blending_dst_factor /*= BlendingFactor_OneMinusSrcAlpha*/)
+	{
+		auto h = SCAST(u64, entity);
+
+		auto& materials = m_materials.get_ref(h);
+		auto& material = materials.emplace_back();
+
+		material.set_shader_program(default_shader);
+		material.set_texture(default_texture);
+		material.set_blend_mode(blending_mode);
+		material.set_blend_mode_equation(blending_equation);
+		material.set_blend_mode_src_factor(blending_src_factor);
+		material.set_blend_mode_dst_factor(blending_dst_factor);
 	}
 
 

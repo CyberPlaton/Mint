@@ -89,6 +89,8 @@ namespace mint::reflection
 
 	entt::entity CMetaClass::get_metaclass_entity()
 	{
+		MINT_ASSERT(m_entity != entt::null, "Invalid operation. Entity became invalid or was not set!");
+
 		return m_entity;
 	}
 

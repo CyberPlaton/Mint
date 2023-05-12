@@ -226,6 +226,8 @@ namespace mint
 
 		Vector< CAsset > assets;
 
+		_load_common_asset_ressources();
+
 		_load_scene_definition(scene, assets);
 
 		scene->on_before_load();
@@ -254,6 +256,121 @@ namespace mint
 	bool CSceneManager::is_transitioning()
 	{
 		return m_transition;
+	}
+
+
+	void CSceneManager::_load_common_asset_ressources()
+	{
+		Vector< CAsset > scene_assets;
+
+		CFileystem fs(CFileystem::get_working_directory());
+
+		fs.forward("Scenes");
+		
+		maml::CDocument document;
+
+		auto root = CSerializer::load_maml_document(CFileystem::construct_from(fs.get_current_directory().as_string(), "common.maml").as_string(), document);
+
+		MINT_ASSERT(root != nullptr, "Failed loading common scene ressources!");
+
+
+		auto asset_node = document.find_first_match_in_document("asset");
+
+		String entities, path;
+
+		CSerializer::import_string(path, "assets", asset_node);
+
+		auto ressource_declaration_node = document.get_node_children(asset_node);
+
+		for (auto& node : ressource_declaration_node)
+		{
+			CAsset ressource;
+
+			String folder, extension, type;
+			bool recurse;
+
+			CSerializer::import_string(folder, "folder", node);
+			CSerializer::import_string(extension, "extension", node);
+			CSerializer::import_string(type, "type", node);
+			CSerializer::import_bool(&recurse, "recursive", node);
+
+
+			CFileystem fpath = fs;
+			fpath.append_path(path);
+			fpath.append_path(folder);
+
+			ressource.set_asset_source_path(fpath.get_current_directory().as_string());
+			ressource.set_ressource_type(type);
+			ressource.set_asset_extension(extension);
+
+			ressource.write_bool("recursive", recurse);
+
+
+			scene_assets.push_back(ressource);
+		}
+
+
+		for(auto& asset: scene_assets)
+		{
+			_load_common_asset_ressource(asset);
+		}
+	}
+
+
+	void CSceneManager::_load_common_asset_ressource(CAsset& asset)
+	{
+		CFileystem fs(asset.get_asset_source_path());
+
+		String extension, type;
+		extension = asset.get_asset_extension();
+		type = asset.get_ressource_type();
+
+
+		auto files = fs.get_all_files_in_current_dir();
+		for (auto& file : files)
+		{
+			if (file.has_extension(extension))
+			{
+				maml::CDocument document;
+
+				auto root = CSerializer::load_maml_document(file.as_string(), document);
+
+				if (root)
+				{
+					auto asset_node = document.find_first_match_in_node(root, "asset");
+
+					auto ressource_loader = CRessourceLoaderFactory::create_ressource_loader(type);
+
+					if (ressource_loader)
+					{
+						CAsset def = ressource_loader->load_asset(fs.get_current_directory().as_string(), type, asset_node);
+
+
+						if (!ressource_loader->load_ressource(type, def))
+						{
+							MINT_LOG_ERROR("[{:.4f}][CSceneManager::_load_scene_asset_ressources] Failed loading asset \"{}\" at \"{}\" of type \"{}\" for scene \"{}\"!",
+								MINT_APP_TIME, def.get_asset_name(), def.get_asset_source_path(), type, MINT_ACTIVE_SCENE()->get_scene_name());
+						}
+					}
+				}
+			}
+		}
+
+
+		if (asset.read_bool("recursive"))
+		{
+			auto dirs = fs.get_all_directories_in_current_dir();
+			for (auto& dir : dirs)
+			{
+				CPath path = fs.get_current_directory() /= dir;
+
+				CAsset recursive_asset_decl = asset;
+
+				recursive_asset_decl.set_asset_source_path(path.as_string());
+
+				_load_common_asset_ressource(recursive_asset_decl);
+			}
+		}
 	}
 
 

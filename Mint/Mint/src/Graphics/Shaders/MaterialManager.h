@@ -21,9 +21,13 @@ namespace mint::fx
 
 		void add_material_for_entity(entt::entity entity, const CMaterial& material);
 		
-		const Vector< CMaterial >& get_materials_for_entity(entt::entity entity) const;
+		const Vector< CMaterial >& get_materials_for_entity(entt::entity entity);
 
-		const CMaterial& get_main_material_for_entity(entt::entity entity) const;
+		const CMaterial& get_main_material_for_entity(entt::entity entity);
+
+		void set_default_main_material_for_entity(entt::entity entity, const String& default_texture = "DefaultSprite", const String& default_shader = "Sprite",
+												  BlendMode blending_mode = BLEND_ALPHA, BlendingEquation blending_equation = BlendingEquation_BlendColor, 
+												  BlendingFactor blending_src_factor = BlendingFactor_SrcAlpha, BlendingFactor blending_dst_factor = BlendingFactor_OneMinusSrcAlpha);
 
 	private:
 		static CMaterialManager* s_CMaterialManager;
