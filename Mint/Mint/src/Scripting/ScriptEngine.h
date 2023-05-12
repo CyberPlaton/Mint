@@ -34,6 +34,8 @@ namespace mint::scripting
 
 		void remove_script_from_scene(const String& script_name);
 
+		void set_all_scripts_active(bool value);
+
 	private:
 		static CScriptEngine* s_CScriptEngine;
 
@@ -43,6 +45,8 @@ namespace mint::scripting
 		std::atomic_bool m_running;
 
 		bool m_update;
+
+		bool m_scriptsActive;
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 

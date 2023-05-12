@@ -177,7 +177,7 @@ namespace mint::scripting
 				MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 				CBehavior& behavior = m_activeBehaviors.emplace_back(SCAST(u64, entity),
-																	 m_behaviorPrefabs.get(h));
+																	 m_behaviorPrefabs.get_ref(h));
 
 				behavior.initialize();
 
@@ -195,15 +195,15 @@ namespace mint::scripting
 	{
 		auto h = mint::algorithm::djb_hash(script_name);
 
-		CBehavior behavior;
+		CBehavior& behavior = m_behaviorPrefabs.emplace_back(h);
 
 		behavior.set_script_entity(entt::null);
 		behavior.set_script_name(script_name);
 		behavior.set_script_path(script_file_path);
 
-		if (behavior.initialize())
+		if (!behavior.initialize())
 		{
-			m_behaviorPrefabs.add(h, behavior);
+			m_behaviorPrefabs.remove(h);
 		}
 	}
 

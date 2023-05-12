@@ -14,6 +14,7 @@ namespace mint::scripting
 		m_internalLoop = false;
 		m_running = false;
 		m_update = false;
+		m_scriptsActive = true;
 
 		return true;
 	}
@@ -110,7 +111,7 @@ namespace mint::scripting
 
 			for (auto& script : m_scripts.get_all())
 			{
-				if (script.is_ready()) script.on_update(dt);
+				if (m_scriptsActive && script.is_ready() && script.is_active()) script.on_update(dt);
 			}
 
 		);
@@ -215,6 +216,16 @@ namespace mint::scripting
 		_set_is_running(false);
 		
 		_wait_for_termination();
+	}
+
+
+	void CScriptEngine::set_all_scripts_active(bool value)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_scriptsActive = value;
+
+		);
 	}
 
 

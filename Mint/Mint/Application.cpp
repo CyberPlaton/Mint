@@ -395,6 +395,7 @@ namespace mint
 		MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
 
 		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
+		mint::scripting::CScriptEngine::Get().set_all_scripts_active(false);
 	}
 
 
@@ -411,6 +412,7 @@ namespace mint
 		MINT_ACTIVE_SCENE()->pop_camera();
 
 		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
+		mint::scripting::CScriptEngine::Get().set_all_scripts_active(true);
 	}
 
 

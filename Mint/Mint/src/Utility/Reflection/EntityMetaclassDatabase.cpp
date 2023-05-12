@@ -71,7 +71,6 @@ namespace mint::reflection
 
 	void CEntityMetaclassDatabase::terminate()
 	{
-		MINT_LOG_WARN("[{:.4f}][CEntityMetaclassDatabase::terminate]", MINT_APP_TIME);
 		reset();
 	}
 
