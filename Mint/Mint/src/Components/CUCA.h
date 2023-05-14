@@ -22,6 +22,9 @@ namespace mint::component
 		friend class IMintEngine;
 	public:
 
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Utility functions
+		////////////////////////////////////////////////////////////////////////////////////////
 		template< typename T >
 		static bool entity_has_component(entt::entity entity);
 
@@ -34,8 +37,14 @@ namespace mint::component
 		template< typename T >
 		static void entity_remove_component(entt::entity entity);
 
+		static Vec2 extract_position_from_world_transform(const Mat4& transform);
+		static f32 extract_rotation_from_world_transform(const Mat4& transform);
+		static Vec2 extract_scale_from_world_transform(const Mat4& transform);
 
 
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Component functions
+		////////////////////////////////////////////////////////////////////////////////////////
 
 		static u64 animated_sprite_get_animation_speed(entt::entity entity);
 		static void animated_sprite_set_animation_speed(entt::entity entity, u64 value);
@@ -77,13 +86,6 @@ namespace mint::component
 		static void hierarchy_add_child(entt::entity entity, entt::entity child);
 		static void hierarchy_remove_child(entt::entity entity, entt::entity child);
 
-		static Mat4 transform_get_world_transform_matrix(entt::entity entity);
-		static Mat4 transform_get_local_transform_matrix(entt::entity entity);
-		static Vec2 transform_get_position(entt::entity entity);
-		static f32 transform_get_rotation(entt::entity entity);
-		static Vec2 transform_get_scale(entt::entity entity);
-
-
 		/// @brief Transform operations applied to an entity that are hierarchical,
 		/// meaning, if the entity has children we apply the same transformation operation to them too.
 		/// @param entity 
@@ -95,18 +97,9 @@ namespace mint::component
 		static void transform_rotate(entt::entity entity, f32 value);
 		static void transform_set_rotation(entt::entity entity, f32 value);
 
-
-		/// @brief Transform operations applied to an entity ignoring the entity hierarchy,
-		/// meaning, if the entity has children, the transformation operation is not applied to them.
-		/// @param entity 
-		/// @param value 
-		static void transform_scale_local(entt::entity entity, Vec2 value);
-		static void transform_set_scale_local(entt::entity entity, Vec2 value);
-		static void transform_set_position_local(entt::entity entity, Vec2 value);
-		static void transform_translate_local(entt::entity entity, Vec2 value);
-		static void transform_set_rotation_local(entt::entity entity, f32 value);
-		static void transform_rotate_local(entt::entity entity, f32 value);
-
+		static Vec2 transform_get_position(entt::entity entity);
+		static f32 transform_get_rotation(entt::entity entity);
+		static Vec2 transform_get_scale(entt::entity entity);
 
 
 
@@ -127,11 +120,13 @@ namespace mint::component
 #else
 	private:
 #endif
+		static Mat4 _get_world_transform(entt::entity entity);
+		static Mat4 _get_local_transform(entt::entity entity);
+		static void _update_world_transform_recursive(entt::entity entity);
+
 		static void _rigid_body_update_translation(entt::entity entity, Vec2 value);
 		static void _rigid_body_update_rotation(entt::entity entity, f32 value);
 		static void _rigid_body_update_scale(entt::entity entity, Vec2 value);
-
-		static void _transform_recompute_world_transform(entt::entity entity);
 	};
 
 

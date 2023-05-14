@@ -39,55 +39,32 @@ namespace mint::editor
 		ImGuiID slid = 10000;
 		ImGuiID scid = 20000;
 
-		Vec2 position = CUCA::transform_get_position(entity);
-		Vec2 scale = CUCA::transform_get_scale(entity);
-		f32 rotation = CUCA::transform_get_rotation(entity);
-		f32 rotation_before = rotation;
+
+		auto position = CUCA::transform_get_position(entity);
+		auto scale = CUCA::transform_get_scale(entity);
+		auto rotation = CUCA::transform_get_rotation(entity);
 
 		
-		if( CUI::edit_field_vec2(position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
-							"Position", "Entities current position in the world, this affects all children positions recursively", slid++, scid++))
-		{
-			CUCA::transform_set_position(entity, position);
-		}
-		if( CUI::edit_field_vec2(position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
-						    "Local Position", "Entities current position in the world, this does not affect children positions", slid++, scid++) )
-		{
-			CUCA::transform_set_position_local(entity, position);
-		}
+		CUI::edit_field_vec2(position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
+							 "Position", "Entities current position in the world, this affects all children positions recursively", slid++, scid++);
+		
+		ImGui::Separator();
 
 
+		CUI::edit_field_vec2(scale, gd.s_EditorTransformMinScale, gd.s_EditorTransformMaxScale,
+							 "Scale", "Entities current scale, this affects all children scale values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 		ImGui::Separator();
 
-		if( CUI::edit_field_vec2(scale, gd.s_EditorTransformMinScale, gd.s_EditorTransformMaxScale,
-							"Scale", "Entities current scale, this affects all children scale values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic) )
-		{
-			CUCA::transform_set_scale(entity, scale);
-		}
-		if (CUI::edit_field_vec2(scale, gd.s_EditorTransformMinScale, gd.s_EditorTransformMaxScale,
-								"Local Scale", "Entities current scale, this does not affect children scale values", slid++, scid++, ImGuiSliderFlags_Logarithmic))
-		{
-			CUCA::transform_set_scale_local(entity, scale);
-		}
+
+		CUI::edit_field_f32(rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
+							"Rotation", "Entities current rotation, this affects all children rotation values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 
 
-
-		ImGui::Separator();
-
-		if( CUI::edit_field_f32(rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
-							"Rotation", "Entities current rotation, this affects all children rotation values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic) )
-		{
-			CUCA::transform_set_rotation(entity, rotation);
-		}
-		if (CUI::edit_field_f32(rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
-			"Local Rotation", "Entities current rotation, this does not affect children rotation values", slid++, scid++, ImGuiSliderFlags_Logarithmic))
-		{
-			CUCA::transform_set_rotation_local(entity, rotation);
-		}
-
-
+		CUCA::transform_set_position(entity, position);
+		CUCA::transform_set_scale(entity, scale);
+ 		CUCA::transform_set_rotation(entity, rotation);
 	}
 
 

@@ -12,6 +12,7 @@
 		-- use latest available system version (e.g. latest Windows SDK)
 		systemversion "latest"
 		staticruntime "Off"
+		floatingpoint "Fast"
 
 		filter "action:vs*"
 			buildoptions{

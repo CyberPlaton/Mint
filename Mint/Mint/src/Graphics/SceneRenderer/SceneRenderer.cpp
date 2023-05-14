@@ -49,6 +49,7 @@ namespace mint::fx
 			const auto& materials = material_manager.get_materials_for_entity(entity);
 		
 
+			
 			const auto& position = CUCA::transform_get_position(entity);
 			const auto& scale = CUCA::transform_get_scale(entity);
 			const auto& rotation = CUCA::transform_get_rotation(entity);
@@ -75,7 +76,7 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, transform.m_rotation, sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, rotation, sprite.m_color.as_cliteral());
 
 
 				material.end_blend_mode();
@@ -105,7 +106,6 @@ namespace mint::fx
 
 			const auto& materials = material_manager.get_materials_for_entity(entity);
 
-
 			const auto& position = CUCA::transform_get_position(entity);
 			const auto& scale = CUCA::transform_get_scale(entity);
 			const auto& rotation = CUCA::transform_get_rotation(entity);
@@ -132,7 +132,7 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, { sprite.m_origin.x, sprite.m_origin.y }, transform.m_rotation, sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, { sprite.m_origin.x, sprite.m_origin.y }, rotation, sprite.m_color.as_cliteral());
 
 
 				material.end_blend_mode();

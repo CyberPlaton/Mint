@@ -17,23 +17,19 @@ namespace mint::component
 
 	mint::Vec2 CUCA::transform_get_position(entt::entity entity)
 	{
-		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);
+		const auto& transform = CUCA::_get_world_transform(entity);
 
-		const auto& position = Vec3(transform[3]);
-
-		return { position.x, position.y };
+		return CUCA::extract_position_from_world_transform(transform);
 	}
 
 
 	mint::Vec2 CUCA::sprite_get_size(entt::entity entity)
 	{
-		const auto& materials = CUCA::sprite_get_all_materials(entity);
-
-		// TODO: This does not take the sprite scale into account.
-
+		const auto& mat = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
+		
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			auto v = materials[0].get_texture_dimension();
+			auto v = mat.get_texture_dimension();
 		);
 
 		return v;
@@ -52,83 +48,21 @@ namespace mint::component
 	}
 
 
-	void CUCA::transform_set_position_local(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to translate an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		Vec2 position = value;
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_position = value;
-		);
-
-		_rigid_body_update_translation(entity, position);
-
-		_transform_recompute_world_transform(entity);
-	}
-
-
 	void CUCA::transform_set_position(entt::entity entity, Vec2 value)
 	{
 		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to translate an entity without a Transform component!");
 
+		// Update data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		
+		transform.m_position = value;
 
-		Vec2 position = value;
-		Vec2 prev_position;
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			prev_position = transform.m_position;
-
-			transform.m_position = value;
-		);
-
-		_rigid_body_update_translation(entity, position);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-
-		);
-
-		for (auto& kid : children)
-		{
-			Vec2 relative = prev_position - transform_get_position(kid);
-				
-			transform_translate(kid, { position.x + relative.x,  position.y + relative.y });
-		}
-	}
-
-
-	void CUCA::transform_translate_local(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to translate an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		Vec2 position;
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_position += value;
-
-			position = transform.m_position;
-		);
-
-		_rigid_body_update_translation(entity, position);
-
-		_transform_recompute_world_transform(entity);
+		// Update physics data.
+		_rigid_body_update_translation(entity, transform.m_position);
 	}
 
 
@@ -137,54 +71,16 @@ namespace mint::component
 		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
 					"Invalid operation. Trying to translate an entity without a Transform component!");
 
+		// Set new data value.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		
+		transform.m_position += value;
 
-		Vec2 position;
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_position += value;
-			
-			position = transform.m_position;
-		);
-
-		_rigid_body_update_translation(entity, position);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-			
-		);
-
-		for(auto& kid: children)
-		{
-			transform_translate(kid, value);
-		}
-	}
-
-
-	void CUCA::transform_set_rotation_local(entt::entity entity, f32 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to rotate an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		f32 rotation = value;
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_rotation = value;
-
-		);
-
-		_rigid_body_update_rotation(entity, rotation);
-
-		_transform_recompute_world_transform(entity);
+		// Update physics data.
+		_rigid_body_update_translation(entity, transform.m_position);
 	}
 
 
@@ -193,58 +89,16 @@ namespace mint::component
 		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
+		// Update the data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		
+		transform.m_rotation = mint::algorithm::degree_to_radians(value);
 
-		f32 rotation = value;
-		f32 prev_rotation;
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			prev_rotation = transform.m_rotation;
-
-			transform.m_rotation = value;
-
-		);
-
-		_rigid_body_update_rotation(entity, rotation);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-
-		);
-
-		for (auto& kid : children)
-		{
-			f32 relative = prev_rotation - transform_get_rotation(entity);
-			transform_rotate(kid, value+ relative);
-		}
-	}
-
-
-	void CUCA::transform_rotate_local(entt::entity entity, f32 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to rotate an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		f32 rotation;
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_rotation += value;
-
-		rotation = transform.m_rotation;
-		);
-
-		_rigid_body_update_rotation(entity, rotation);
-
-		_transform_recompute_world_transform(entity);
+		// Update physics data.
+		_rigid_body_update_rotation(entity, transform.m_rotation);
 	}
 
 
@@ -253,33 +107,16 @@ namespace mint::component
 		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
+		// Update data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		
+		transform.m_rotation += mint::algorithm::degree_to_radians(value);
 
-		f32 rotation;
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_rotation += value;
-
-			rotation = transform.m_rotation;
-		);
-
-		_rigid_body_update_rotation(entity, rotation);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-
-		);
-
-		for (auto& kid : children)
-		{
-			transform_rotate(kid, value);
-		}
+		// Update physics if required.
+		_rigid_body_update_rotation(entity, transform.m_rotation);
 	}
 
 
@@ -306,7 +143,7 @@ namespace mint::component
 
 			MINT_BEGIN_CRITICAL_SECTION(m_rigidBodyCriticalSection,
 
-				rb.m_body->SetTransform(rb.m_body->GetTransform().p, glm::radians(value));
+				rb.m_body->SetTransform(rb.m_body->GetTransform().p, value);
 
 			);
 		}
@@ -315,25 +152,17 @@ namespace mint::component
 
 	f32 CUCA::transform_get_rotation(entt::entity entity)
 	{
-		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);
+		const auto& transform = CUCA::_get_world_transform(entity);
 
-		Vec3 rotation; glm::extractEulerAngleXYZ(transform, rotation.x, rotation.y, rotation.z);
-
-		return mint::algorithm::radians_to_degree(rotation.z);
+		return mint::algorithm::radians_to_degree(CUCA::extract_rotation_from_world_transform(transform));
 	}
 
 
 	mint::Vec2 CUCA::transform_get_scale(entt::entity entity)
 	{
-		const auto& transform = CUCA::transform_get_world_transform_matrix(entity);	
+		const auto& transform = CUCA::_get_world_transform(entity);
 
-		const auto& scale = Vec3(
-			glm::length(Vec3(transform[0])),
-			glm::length(Vec3(transform[1])),
-			glm::length(Vec3(transform[2]))
-		);
-
-		return { scale.x, scale.y };
+		return CUCA::extract_scale_from_world_transform(transform);
 	}
 
 
@@ -344,43 +173,14 @@ namespace mint::component
 
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+		// Set new value.
+		transform.m_scale += value;
 
-			transform.m_scale += value;
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-
-		);
-
-		for (auto& kid : children)
-		{
-			transform_scale(kid, value);
-		}
-	}
-
-
-	void CUCA::transform_scale_local(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to scale an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_scale += value;
-
-		);
-
-		_transform_recompute_world_transform(entity);
+		// Update physics if required.
+		_rigid_body_update_scale(entity, transform.m_scale);
 	}
 
 
@@ -391,120 +191,14 @@ namespace mint::component
 
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 
-		Vec2 prev_scale;
+		// Set new value.
+		transform.m_scale = value;
 
+		// Update transform matrix and children if any.
+		_update_world_transform_recursive(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			prev_scale = transform.m_scale;
-
-			transform.m_scale = value;
-
-		);
-
-		_transform_recompute_world_transform(entity);
-
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			auto & children = hierarchy.m_children;
-
-		);
-
-		for (auto& kid : children)
-		{
-			Vec2 relative = prev_scale - transform_get_scale(kid);
-
-			transform_scale(kid, {value.x + relative.x, value.y + relative.y });
-		}
-	}
-
-
-	void CUCA::transform_set_scale_local(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to scale an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			transform.m_scale = value;
-
-		);
-
-		_transform_recompute_world_transform(entity);
-	}
-
-
-	mint::Mat4 CUCA::transform_get_world_transform_matrix(entt::entity entity)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true &&
-					MINT_SCENE_REGISTRY().has_component< mint::component::SSceneHierarchy >(entity) == true,
-			"Invalid operation. Trying to get the world Transform Matrix for an entity without a Transform or Scene Hierarchy component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			auto& value = transform.m_worldTransform;
-
-		);
-
-		return value;
-	}
-
-
-	mint::Mat4 CUCA::transform_get_local_transform_matrix(entt::entity entity)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to get the local Transform Matrix for an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
-
-			auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
-
-								glm::rotate(Mat4(1.0f), mint::algorithm::degree_to_radians(transform.m_rotation), Vec3(0.0f, 0.0f, 1.0f)) *
-
-								glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 1.0f));
-		);
-
-		return value;
-	}
-
-
-	void CUCA::_transform_recompute_world_transform(entt::entity entity)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true &&
-					MINT_SCENE_REGISTRY().has_component< mint::component::SSceneHierarchy >(entity) == true,
-			"Invalid operation. Trying to recompute the world Transform Matrix for an entity without a Transform or Scene Hierarchy component!");
-
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
-
-			bool has_parent = hierarchy.m_parent != entt::null;
-			entt::entity parent = hierarchy.m_parent;
-
-		);
-
-
-		if (has_parent)
-		{
-			transform.m_worldTransform = transform_get_world_transform_matrix(parent) * transform_get_local_transform_matrix(entity);
-		}
-		else
-		{
-			transform.m_worldTransform = transform_get_local_transform_matrix(entity);
-		}
+		// Update physics if required.
+		_rigid_body_update_scale(entity, transform.m_scale);
 	}
 
 
@@ -928,14 +622,110 @@ namespace mint::component
 
 	mint::CRect CUCA::sprite_get_destination_rect(entt::entity entity)
 	{
-		auto position = CUCA::transform_get_position(entity);
-		auto scale = CUCA::transform_get_scale(entity);
+		auto& mat = CUCA::_get_world_transform(entity);
+
+		auto position = CUCA::extract_position_from_world_transform(mat);
+		auto scale = CUCA::extract_scale_from_world_transform(mat);
 		auto size = CUCA::sprite_get_size(entity);
+
+
+		MINT_ASSERT((std::isnan(position.x) || std::isnan(position.y)) == false,
+					"Invalid operation. Position of an Entity became invalid or was not set correctly!");
+
+		MINT_ASSERT((std::isnan(scale.x) || std::isnan(scale.y)) == false,
+			"Invalid operation. Scale of an Entity became invalid or was not set correctly!");
+
+		MINT_ASSERT((std::isnan(size.x) || std::isnan(size.y)) == false,
+			"Invalid operation. Sprite size of an Entity became invalid or was not set correctly!");
 
 		return {
 			position.x, position.y,
 			position.x + size.x * scale.x, position.y + size.y * scale.y
 		};
+	}
+
+
+	mint::Vec2 CUCA::extract_position_from_world_transform(const Mat4& transform)
+	{
+		const auto& position = Vec3(transform[3]);
+
+		return { position.x, position.y };
+	}
+
+
+	f32 CUCA::extract_rotation_from_world_transform(const Mat4& transform)
+	{
+		Vec3 rotation; glm::extractEulerAngleXYZ(transform, rotation.x, rotation.y, rotation.z);
+
+		return rotation.z;
+	}
+
+
+	mint::Vec2 CUCA::extract_scale_from_world_transform(const Mat4& transform)
+	{
+		const auto& scale = Vec3(
+			glm::length(Vec3(transform[0])),
+			glm::length(Vec3(transform[1])),
+			glm::length(Vec3(transform[2]))
+		);
+
+		return { scale.x, scale.y };
+	}
+
+
+	mint::Mat4 CUCA::_get_local_transform(entt::entity entity)
+	{
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+
+		auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 1.0f)) *
+
+					 glm::rotate(Mat4(1.0f), transform.m_rotation, Vec3(0.0f, 0.0f, 1.0f)) *
+
+					 glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 1.0f));
+
+		return value;
+	}
+
+
+	mint::Mat4 CUCA::_get_world_transform(entt::entity entity)
+	{
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+
+		if( CUCA::hierarchy_has_parent(entity))
+		{
+			auto& parent_transform = CUCA::_get_world_transform(CUCA::hierarchy_get_parent(entity));
+
+			return parent_transform * transform.m_worldTransform;
+		}
+
+		return transform.m_worldTransform;
+	}
+
+
+	void CUCA::_update_world_transform_recursive(entt::entity entity)
+	{
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
+
+		// Update own transform matrix.
+		transform.m_worldTransform = _get_local_transform(entity);
+
+
+		// Extract data from newly computed transform.
+		transform.m_position = CUCA::extract_position_from_world_transform(transform.m_worldTransform);
+		transform.m_scale = CUCA::extract_scale_from_world_transform(transform.m_worldTransform);
+ 		transform.m_rotation = CUCA::extract_rotation_from_world_transform(transform.m_worldTransform);
+
+
+		if( CUCA::hierarchy_has_children(entity))
+		{
+			auto& children = hierarchy.m_children;
+
+			for(auto& kid : children)
+			{
+				_update_world_transform_recursive(kid);
+			}
+		}
 	}
 
 

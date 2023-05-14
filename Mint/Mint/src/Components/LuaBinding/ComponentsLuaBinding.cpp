@@ -57,17 +57,9 @@ namespace mint::luaglue
 				.addFunction("get_rotation", &CUCA::transform_get_rotation)
 				.addFunction("get_scale", &CUCA::transform_get_scale)
 
-				.addFunction("set_position_local", &CUCA::transform_set_position_local)
-				.addFunction("set_rotation_local", &CUCA::transform_set_rotation_local)
-				.addFunction("set_scale_local", &CUCA::transform_set_scale_local)
-
 				.addFunction("set_position", &CUCA::transform_set_position)
 				.addFunction("set_rotation", &CUCA::transform_set_rotation)
 				.addFunction("set_scale", &CUCA::transform_set_scale)
-
-				.addFunction("translate_local", &CUCA::transform_translate_local)
-				.addFunction("rotate_local", &CUCA::transform_rotate_local)
-				.addFunction("scale_local", &CUCA::transform_scale_local)
 
 				.addFunction("translate", &CUCA::transform_translate)
 				.addFunction("rotate", &CUCA::transform_rotate)

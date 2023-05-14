@@ -26,12 +26,12 @@ namespace mint::editor
 	ImGuiID GlobalData::s_EditorEditFieldScalarIdStart = 50000;
 
 
-	u64 GlobalData::s_EditorTransformMinPosition = 0;
+	u64 GlobalData::s_EditorTransformMinPosition = -100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
 	u64 GlobalData::s_EditorTransformMaxPosition = 100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
 	f32 GlobalData::s_EditorTransformMinScale = 0.01f;
 	f32 GlobalData::s_EditorTransformMaxScale = 1000.0f;
-	f32 GlobalData::s_EditorTransformMinRotation = -720.0f;
-	f32 GlobalData::s_EditorTransformMaxRotation = 720.0f;
+	f32 GlobalData::s_EditorTransformMinRotation = -100000.0f * SCAST(f32, GlobalData::s_DefaultGridcellSize);
+	f32 GlobalData::s_EditorTransformMaxRotation = 100000.0f * SCAST(f32, GlobalData::s_DefaultGridcellSize);
 
 	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
 

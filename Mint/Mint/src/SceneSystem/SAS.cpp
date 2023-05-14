@@ -105,9 +105,6 @@ namespace mint
 
 	void CSAS::submit_scene_dynamic_entities(Vector< entt::entity >& entities)
 	{
-		f32 worldmin[2] = { 0 };
-		f32 worldmax[2] = { 0 };
-
 		Vector< detail::SQuadTreeNode > bboxes;
 
 		// Find minimal and maximal position for all entities, this will be the minimum / maximum of the Quad Tree.
@@ -153,8 +150,8 @@ namespace mint
 			entity_min[1] = dest.get_y();
 
 			f32 entity_max[2] = { 0 };
-			entity_max[0] = dest.get_x() + dest.get_width();
-			entity_max[1] = dest.get_y() + dest.get_height();
+			entity_max[0] = dest.get_x() + glm::distance(dest.get_x(), dest.get_width());
+			entity_max[1] = dest.get_y() + glm::distance(dest.get_y(), dest.get_height());
 
 			spatial::BoundingBox< f32, 2 > bbox(entity_min, entity_max);
 			node.m_boundingBox = bbox;
@@ -189,9 +186,6 @@ namespace mint
 
 	void CSAS::submit_scene_static_entities(Vector< entt::entity >& entities)
 	{
-		f32 worldmin[2] = { 0 };
-		f32 worldmax[2] = { 0 };
-
 		Vector< detail::SQuadTreeNode > bboxes;
 
 		// Find minimal and maximal position for all entities, this will be the minimum / maximum of the Quad Tree.
@@ -238,8 +232,8 @@ namespace mint
 			entity_min[1] = dest.get_y();
 
 			f32 entity_max[2] = { 0 };
-			entity_max[0] = dest.get_x() + dest.get_width();
-			entity_max[1] = dest.get_y() + dest.get_height();
+			entity_max[0] = dest.get_x() + glm::distance(dest.get_x(), dest.get_width());
+			entity_max[1] = dest.get_y() + glm::distance(dest.get_y(), dest.get_height());
 
 			spatial::BoundingBox< f32, 2 > bbox(entity_min, entity_max);
 			node.m_boundingBox = bbox;

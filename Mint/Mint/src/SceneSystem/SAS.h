@@ -8,6 +8,7 @@
 #include "Components/CUCA.h"
 #include "Common/IScene.h"
 
+#include <limits>
 
 namespace mint
 {

@@ -77,11 +77,14 @@ namespace mint::component
 
 		Vec2 m_position = {0.0f, 0.0f};
 
+		/// @brief Rotation in Radians. 
 		f32 m_rotation = 0.0f;
 
 		Vec2 m_scale = { 0.0f, 0.0f };
 
-		Mat4 m_worldTransform = glm::identity< Mat4 >();
+		bool m_dirty = false;
+
+		Mat4 m_worldTransform = Mat4(1.0f);
 	};
 
 
