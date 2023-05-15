@@ -97,6 +97,11 @@ namespace mint::component
 		static void transform_rotate(entt::entity entity, f32 value);
 		static void transform_set_rotation(entt::entity entity, f32 value);
 
+		static void __transform_set_scale_internal__(entt::entity entity, Vec2 value);
+		static void __transform_set_position_internal__(entt::entity entity, Vec2 value);
+		static void __transform_set_rotation_internal__(entt::entity entity, f32 value);
+
+		
 		static Vec2 transform_get_position(entt::entity entity);
 		static f32 transform_get_rotation(entt::entity entity);
 		static Vec2 transform_get_scale(entt::entity entity);
