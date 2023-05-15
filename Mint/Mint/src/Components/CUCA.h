@@ -83,6 +83,7 @@ namespace mint::component
 		static entt::entity hierarchy_get_parent(entt::entity entity);
 		static Vector< entt::entity > hierarchy_get_children(entt::entity entity);
 		static void hierarchy_set_parent(entt::entity entity, entt::entity parent);
+		static void hierarchy_remove_parent(entt::entity entity);
 		static void hierarchy_add_child(entt::entity entity, entt::entity child);
 		static void hierarchy_remove_child(entt::entity entity, entt::entity child);
 

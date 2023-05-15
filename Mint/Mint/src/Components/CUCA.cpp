@@ -776,4 +776,12 @@ namespace mint::component
 	}
 
 
+	void CUCA::hierarchy_remove_parent(entt::entity entity)
+	{
+		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+
+		CUCA::hierarchy_remove_child(hierarchy.m_parent, entity);
+	}
+
+
 }

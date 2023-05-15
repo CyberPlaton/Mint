@@ -110,7 +110,7 @@ namespace mint::editor
 		ImGui::PushID(SCAST(s32, child));
 		if (ImGui::SmallButton(ICON_FA_CIRCLE_XMARK))
 		{
-			CUCA::hierarchy_set_parent(child, entt::null);
+			CUCA::hierarchy_remove_parent(child);
 		}
 		ImGui::PopID();
 
