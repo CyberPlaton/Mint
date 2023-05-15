@@ -29,6 +29,8 @@ namespace mint::editor
 
 		bool m_addingComponent = false;
 
+		entt::entity m_lastInspectedEntity = entt::null;
+
 	private:
 		void show_main_frame();
 

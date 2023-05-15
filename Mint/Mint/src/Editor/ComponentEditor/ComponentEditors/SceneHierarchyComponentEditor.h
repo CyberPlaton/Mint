@@ -23,6 +23,10 @@ namespace mint::editor
 
 	private:
 		void show_members();
+
+		void show_child_options(entt::entity parent, entt::entity child);
+
+		void show_parent_options(entt::entity parent, entt::entity child);
 	};
 
 }

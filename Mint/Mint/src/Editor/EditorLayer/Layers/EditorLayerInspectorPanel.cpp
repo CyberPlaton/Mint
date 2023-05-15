@@ -74,9 +74,18 @@ namespace mint::editor
 
 		if (GlobalData::Get().s_EditorInspectedEntity != entt::null)
 		{
-			auto entity_name = CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
+			if(m_lastInspectedEntity != GlobalData::Get().s_EditorInspectedEntity)
+			{
+				m_lastInspectedEntity = GlobalData::Get().s_EditorInspectedEntity;
+				
+				// Reset the component editor stack.
+				m_componentEditorStack.clear_all_component_editors();
+			}
 
-			auto& metaclasses = mint::reflection::CEntityMetaclassDatabase::Get().get_entity_metaclasses(SCAST(u64, GlobalData::Get().s_EditorInspectedEntity));
+
+			auto entity_name = CUCA::identifier_get_debug_name(m_lastInspectedEntity);
+
+			auto& metaclasses = mint::reflection::CEntityMetaclassDatabase::Get().get_entity_metaclasses(SCAST(u64, m_lastInspectedEntity));
 
 			for (auto& mc : metaclasses)
 			{
@@ -90,7 +99,7 @@ namespace mint::editor
 				String text = button_text + mc->get_metaclass_name();
 				if (ImGui::Button(text.c_str()))
 				{
-					db.remove_component_from_entity(mc->get_metaclass_name(), GlobalData::Get().s_EditorInspectedEntity);
+					db.remove_component_from_entity(mc->get_metaclass_name(), m_lastInspectedEntity);
 				}
 			}
 		}
@@ -113,7 +122,7 @@ namespace mint::editor
 		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f }, ImGuiCond_Appearing);
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Appearing);
 
-		String text = "Adding Component to " + CUCA::identifier_get_debug_name(GlobalData::Get().s_EditorInspectedEntity);
+		String text = "Adding Component to " + CUCA::identifier_get_debug_name(m_lastInspectedEntity);
 
 		ImGui::Begin(text.c_str(), &m_addingComponent, ImGuiWindowFlags_None);
 
@@ -121,7 +130,7 @@ namespace mint::editor
 		{
 			if(ImGui::Button(comp.c_str()))
 			{
-				db.add_component_to_entity(comp, GlobalData::Get().s_EditorInspectedEntity);
+				db.add_component_to_entity(comp, m_lastInspectedEntity);
 			}
 		}
 

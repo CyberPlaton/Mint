@@ -49,7 +49,10 @@ namespace mint::editor
 		}
 		else
 		{
-			ImGui::Text(TextFormat("Parent: %zu", SCAST(u64, parent)));
+			
+			ImGui::Text(TextFormat("Parent: %s (%zu)", CUCA::identifier_get_debug_name(parent).c_str(), SCAST(u64, parent)));
+
+			show_parent_options(parent, entity);
 		}
 
 		ImGui::Separator();
@@ -63,7 +66,9 @@ namespace mint::editor
 			ImGui::Text("Children:");
 			for(auto& kid: children)
 			{
-				ImGui::Text(TextFormat("Child: %zu", SCAST(u64, kid)));
+				ImGui::Text(TextFormat("Child: %s (%zu)", CUCA::identifier_get_debug_name(kid).c_str(), SCAST(u64, kid)));
+
+				show_child_options(entity, kid);
 			}
 		}
 	}
@@ -73,6 +78,50 @@ namespace mint::editor
 	{
 		set_ready(true);
 		set_active(true);
+	}
+
+
+	void CSceneHierarchyComponentEditor::show_child_options(entt::entity parent, entt::entity child)
+	{
+		ImGui::SameLine();
+
+		ImGui::PushID(SCAST(s32, child));
+		if (ImGui::SmallButton(ICON_FA_CIRCLE_XMARK))
+		{
+			CUCA::hierarchy_remove_child(parent, child);
+		}
+		ImGui::PopID();
+
+		ImGui::SameLine();
+
+		ImGui::PushID(SCAST(s32, child));
+		if (ImGui::SmallButton(ICON_FA_MAGNIFYING_GLASS))
+		{
+			GlobalData::Get().s_EditorInspectedEntity = child;
+		}
+		ImGui::PopID();
+	}
+
+
+	void CSceneHierarchyComponentEditor::show_parent_options(entt::entity parent, entt::entity child)
+	{
+		ImGui::SameLine();
+
+		ImGui::PushID(SCAST(s32, child));
+		if (ImGui::SmallButton(ICON_FA_CIRCLE_XMARK))
+		{
+			CUCA::hierarchy_set_parent(child, entt::null);
+		}
+		ImGui::PopID();
+
+		ImGui::SameLine();
+
+		ImGui::PushID(SCAST(s32, child));
+		if (ImGui::SmallButton(ICON_FA_MAGNIFYING_GLASS))
+		{
+			GlobalData::Get().s_EditorInspectedEntity = parent;
+		}
+		ImGui::PopID();
 	}
 
 

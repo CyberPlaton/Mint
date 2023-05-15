@@ -384,6 +384,8 @@ namespace mint::component
 
 			mint::algorithm::vector_erase(hierarchy.m_children, child);
 
+			CUCA::hierarchy_set_parent(child, entt::null);
+
 		);
 	}
 
