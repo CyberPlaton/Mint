@@ -53,4 +53,32 @@ namespace mint::algorithm
 	}
 
 
+	void string_push_front(String& string, const String& to_prepend_one)
+	{
+		string.insert(0, to_prepend_one);
+	}
+
+
+	void string_push_back(String& string, const String& to_append_one)
+	{
+		string.append(to_append_one);
+	}
+
+
+	void string_erase_substr(String& string, const String& substring_to_erase)
+	{
+		auto index = string.find(substring_to_erase);
+		if(index != std::string::npos)
+		{
+			string.erase(index, substring_to_erase.size());
+		}
+	}
+
+
+	void string_erase_range(String& string, u64 begin, u64 end)
+	{
+		string.erase(string.begin() + begin, string.begin() + end);
+	}
+
+
 }

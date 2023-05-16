@@ -286,9 +286,6 @@ namespace mint
 			if (auto read_bytes = fread(buffer, sizeof(char), file_size, file);
 				read_bytes > 0)
 			{
-				//char* cbuffer = reinterpret_cast<char*>(buffer);
-				//cbuffer[read_bytes] = '\0';
-
 				return reinterpret_cast<char*>(buffer);
 			}
 

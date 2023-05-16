@@ -15,6 +15,13 @@ namespace mint::algorithm
 
 	void string_split(const String& string, char delimiter, Vector< String >& storage );
 
+	void string_push_front(String& string, const String& to_prepend_one);
+
+	void string_push_back(String& string, const String& to_append_one);
+
+	void string_erase_substr(String& string, const String& substring_to_erase);
+
+	void string_erase_range(String& string, u64 begin, u64 end);
 
 	f32 radians_to_degree(f32 radians);
 	f32 degree_to_radians(f32 degrees);
