@@ -30,8 +30,8 @@ namespace mint::editor
 	u64 GlobalData::s_EditorTransformMaxPosition = 100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
 	f32 GlobalData::s_EditorTransformMinScale = 0.01f;
 	f32 GlobalData::s_EditorTransformMaxScale = 1000.0f;
-	f32 GlobalData::s_EditorTransformMinRotation = -100000.0f * SCAST(f32, GlobalData::s_DefaultGridcellSize);
-	f32 GlobalData::s_EditorTransformMaxRotation = 100000.0f * SCAST(f32, GlobalData::s_DefaultGridcellSize);
+	f32 GlobalData::s_EditorTransformMinRotation = -mint::math::pi;
+	f32 GlobalData::s_EditorTransformMaxRotation = mint::math::pi;
 
 	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
 

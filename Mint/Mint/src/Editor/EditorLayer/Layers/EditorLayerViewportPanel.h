@@ -6,6 +6,8 @@
 
 #include "../Common/Layer.h"
 #include "../../RessourceManagement/EditorIconManager.h"
+#include "Graphics/DebugRenderer/DebugRenderer.h"
+#include "SceneSystem/SAS.h"
 
 
 namespace mint::editor
@@ -19,6 +21,8 @@ namespace mint::editor
 		void on_update(f32 dt) override final;
 
 		void on_ui_frame() override final;
+
+		void on_frame() override final;
 
 		String get_layer_name() override final;
 

@@ -49,6 +49,8 @@
 			"SceneSystem",
 			"Graphics/LuaBinding",
 			"Graphics/Common",
+			"Graphics/PrimitiveRenderer",
+			"Graphics/DebugRenderer",
 			"Graphics/SceneRenderer",
 			"Graphics/Shaders/EmbeddedShaders",
 			"Graphics/Shaders/ShaderGraph",

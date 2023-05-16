@@ -7,6 +7,7 @@
 
 #include "UI/UI.h"
 #include "../../Editor/ComponentEditor/ApplicationComponentsDatabase.h"
+#include "Common/Math.h"
 
 
 namespace mint::editor

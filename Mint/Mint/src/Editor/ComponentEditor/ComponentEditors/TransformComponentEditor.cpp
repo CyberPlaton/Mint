@@ -54,7 +54,7 @@ namespace mint::editor
 
 
 		CUI::edit_field_f32(transform.m_rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
-							"Rotation", "Entities current rotation, this affects all children rotation values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic);
+							"Rotation", "Entities current rotation, this affects all children rotation values recursively", slid++, scid++, ImGuiSliderFlags_None, 0.05f);
 	}
 
 

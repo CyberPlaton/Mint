@@ -664,7 +664,7 @@ namespace mint::component
 
 
 	mint::Vec2 CUCA::extract_scale_from_world_transform(const Mat4& transform)
-	{
+	{	
 		const auto& scale = Vec3(
 			glm::length(Vec3(transform[0])),
 			glm::length(Vec3(transform[1])),
@@ -679,11 +679,11 @@ namespace mint::component
 	{
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 
-		auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 1.0f)) *
+		auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
 
 					 glm::rotate(Mat4(1.0f), transform.m_rotation, Vec3(0.0f, 0.0f, 1.0f)) *
 
-					 glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 1.0f));
+					 glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 0.0f));
 
 		return value;
 	}
