@@ -9,6 +9,7 @@
 #include "../../IMint.h"
 #include "../../Common/EditorInternationalization.h"
 #include "Utility/FileSystem/Filesystem.h"
+#include "Graphics/Common/Camera2D.h"
 
 namespace mint::editor
 {
@@ -50,6 +51,8 @@ namespace mint::editor
 		virtual void set_parent_layer(ILayer*) = 0;
 
 		virtual mint::Vector< ILayer* >& get_children_layers() = 0;
+
+		virtual fx::CCamera2D* get_editor_camera() = 0;
 	};
 
 
@@ -91,6 +94,8 @@ namespace mint::editor
 		void set_parent_layer(ILayer* layer);
 
 		mint::Vector< ILayer* >& get_children_layers() { return m_childrenLayers; }
+
+		fx::CCamera2D* get_editor_camera() override final;
 
 	protected:
 		bool m_enabled = true;
