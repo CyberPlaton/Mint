@@ -629,6 +629,7 @@ namespace mint::component
 		auto position = CUCA::extract_position_from_world_transform(mat);
 		auto scale = CUCA::extract_scale_from_world_transform(mat);
 		auto size = CUCA::sprite_get_size(entity);
+		auto origin = CUCA::sprite_get_origin(entity);
 
 
 		MINT_ASSERT((std::isnan(position.x) || std::isnan(position.y)) == false,
@@ -638,12 +639,19 @@ namespace mint::component
 			"Invalid operation. Scale of an Entity became invalid or was not set correctly!");
 
 		MINT_ASSERT((std::isnan(size.x) || std::isnan(size.y)) == false,
-			"Invalid operation. Sprite size of an Entity became invalid or was not set correctly!");
+			"Invalid operation. Texture size of an Entity became invalid or was not set correctly!");
+
+		MINT_ASSERT((std::isnan(origin.x) || std::isnan(origin.y)) == false,
+			"Invalid operation. Texture origin of an Entity became invalid or was not set correctly!");
+
+		f32 x = position.x - origin.x * scale.x;
+		f32 y = position.y - origin.y * scale.y;
 
 		return {
-			position.x, position.y,
+			x, y,
 			position.x + size.x * scale.x, position.y + size.y * scale.y
-		};
+ 		};
+
 	}
 
 
