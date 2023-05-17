@@ -32,15 +32,6 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 bool CMainScene::on_before_load()
 {
-	mint::fx::sc::CShaderPreprocessor sp;
-
-	mint::String shader = sp.parse_shader_file("testing_shader.fsh");
-	if(!shader.empty())
-	{
-		MINT_LOG_INFO("[Shader Loaded] Dump:");
-		MINT_LOG_INFO("{}", shader);
-	}
-
 	return true;
 }
 

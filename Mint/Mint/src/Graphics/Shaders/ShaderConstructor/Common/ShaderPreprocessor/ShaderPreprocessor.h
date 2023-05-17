@@ -6,7 +6,7 @@
 #include "Utility/FileSystem/Filesystem.h"
 #include "Utility/Logging/Logging.h"
 #include "Utility/STL/Map.h"
-#include "../GlobalShaderSettings.h"
+#include "Graphics/Common/GlobalGraphicsSettings.h"
 #include "Common/Any.h"
 #include "Common/Algorithm.h"
 
@@ -17,8 +17,6 @@ namespace mint::fx::sc
 	class CShaderPreprocessor
 	{
 	public:
-		String parse_shader_file(const String& file_path);
-
 
 	private:
 

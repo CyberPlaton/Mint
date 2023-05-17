@@ -1,0 +1,80 @@
+parser grammar MAMLParser;
+options { tokenVocab=MAMLLexer; }
+
+program
+    : node
+    | EOF
+    ;
+    
+
+node : node_header node_body node_end ;
+    
+node_header : ID COLON ;
+    
+node_body : properties? ;
+
+node_end : END ;
+
+properties : property+ ;
+
+property : ID EQ value
+    | node 
+    | func ;
+
+value : NUMBER
+    | STRING
+    | TRUE
+    | FALSE 
+    | VECTOR2
+    | VECTOR3
+    | VECTOR4 
+    | array ;
+
+
+array : LBRACKET array_body RBRACKET ;
+
+array_body : (value (',' value)*)? ;
+
+func : func_body ;
+
+func_body : LPAREN func_params RPAREN ;
+
+func_params : (value (',' value)* )? ;
+
+
+
+// DELETE THIS CONTENT IF YOU PUT COMBINED GRAMMAR IN Parser TAB
+lexer grammar MAMLLexer;
+
+// Not really lexer rules (fragments). No Tokens will be produces for these.
+WS: [ \t\n\r\f]+ -> skip ;
+QUOTE : '"' ;
+DOT : '.' ;
+NL : '\n' ;
+FLOAT : (SNIT | UINT) DOT (UINT) ;
+MINUS : '-' ;
+UINT : [0-9]+ ;
+SINT : MINUS [0-9]+ ;
+
+LBRACKET : '[' ;
+RBRACKET : ']' ;
+LPAREN : '(' ;
+RPAREN : ')' ;
+COMMA : ',' ; 
+
+
+
+// Possible Tokens to be produced.
+END : 'end' ;
+EQ : '=' ;
+COLON : ':' ;
+FALSE : 'False' ;
+TRUE : 'True' ;
+ID: [a-zA-Z_][a-zA-Z_0-9]* ;
+STRING : QUOTE ID QUOTE ;
+NUMBER : (UINT | FLOAT | SINT) ;
+
+// Intermediate rules for combining other Tokens. Done in Lexers secondary pass.
+VECTOR2 : NUMBER ' ' NUMBER ;
+VECTOR3 : NUMBER ' ' NUMBER ' ' NUMBER;
+VECTOR4 : NUMBER ' ' NUMBER ' ' NUMBER ' ' NUMBER;
