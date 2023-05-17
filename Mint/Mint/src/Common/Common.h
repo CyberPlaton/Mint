@@ -7,7 +7,7 @@
 #define MINT_PLATFORM_LINUX 0
 #define MINTFX_USE_EMBEDDED_SHADERS 0
 #define MINTFX_OPENGL_330 0
-#define MINTFX_OPENGL_ES_2 0
+#define MINTFX_OPENGL_ES20 0
 
 // Platform Detection
 #include "platform.h"
@@ -17,7 +17,7 @@
 #define MINTFX_OPENGL_330 1
 #elif BX_PLATFORM_LINUX
 #define MINT_PLATFORM_LINUX 1
-#define MINTFX_OPENGL_ES_2 1
+#define MINTFX_OPENGL_ES20 1
 #endif
 
 
