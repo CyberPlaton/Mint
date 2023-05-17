@@ -5,6 +5,7 @@
 #include "Common.h"
 
 #include <sstream>
+#include <algorithm>
 
 
 namespace mint::algorithm
@@ -15,6 +16,8 @@ namespace mint::algorithm
 
 	void string_split(const String& string, char delimiter, Vector< String >& storage );
 
+	void string_insert(String& string, const String& to_insert_one, u64 index);
+
 	void string_push_front(String& string, const String& to_prepend_one);
 
 	void string_push_back(String& string, const String& to_append_one);
@@ -22,6 +25,12 @@ namespace mint::algorithm
 	void string_erase_substr(String& string, const String& substring_to_erase);
 
 	void string_erase_range(String& string, u64 begin, u64 end);
+
+	void string_to_lower(String& string);
+
+	u64 string_get_length(const String& string);
+
+	u64 string_find_substr(const String& string, const String& substring);
 
 	f32 radians_to_degree(f32 radians);
 	f32 degree_to_radians(f32 degrees);

@@ -12,6 +12,13 @@ namespace mint::fx::sc
 		m_opengl_es20 = true;
 #endif
 
+#if MINT_DEBUG
+		m_debug = true;
+#elif MINT_RELEASE
+		m_release = true;
+#elif MINT_DISTR
+		m_distr = true;
+#endif
 
 		return true;
 	}

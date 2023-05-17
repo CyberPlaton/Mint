@@ -17,24 +17,24 @@ namespace mint::fx::sc
 	{
 		PreprocessorOpCode_Invalid = -1,
 		PreprocessorOpCode_Include = 0,
-		PreprocessorOpCode_If,
+		PreprocessorOpCode_Ifdef,
 		PreprocessorOpCode_Else,
 		PreprocessorOpCode_Endif,
 	};
-
 
 	enum PreprocessorValueType
 	{
 		PreprocessorValueType_Invalid = -1,
 		PreprocessorValueType_String = 0,
+		PreprocessorValueType_Identifier,
 	};
+
 
 	struct SPreprocessorValue
 	{
 		CAny m_value;
 		PreprocessorValueType m_type;
 	};
-
 
 
 	class CShaderPreprocessor
@@ -44,49 +44,46 @@ namespace mint::fx::sc
 
 
 	private:
-		u64 m_cursor = 0;
-
-		u64 m_directiveBegin = 0;
-		u64 m_directiveEnd = 0;
-
-		String m_source;
+		String m_finalSource;
 
 		String m_shaderName;
 
 		String m_shaderPath;
 
+
+		u64 m_currentLineNumber = 0;
+
+		String m_currentLine;
+
 	private:
-		String _parse_shader_file();
-	
-		bool _process_directive(PreprocessorOpCode opcode, SPreprocessorValue& value, String& error);
+		
+		String _parse_shader_code_part(String& shader_code, u64 line_start = 0, u64 line_end = UINT_MAX);
 
+		bool _get_next_line(std::istringstream& stream, String& output_string);
 
-		void _step();
-
-		char _advance();
-
-		char _peek_current();
-
-		char _peek_next();
-
-
-		bool _is_newline(char c);
-
-		bool _is_eof(char c);
-
-		bool _is_whitespace(char c);
-
-		bool _is_quote(char c);
-
-		bool _is_preprocessor_directive(char c);
-
-		bool _is_identifier(char c);
+		bool _does_line_have_preprocessor_directive(const String& text);
 
 
 		PreprocessorOpCode _get_op_code(const String& text);
 		SPreprocessorValue _get_preprocessor_value(const String& text);
 
 		bool _is_directive_opengl_native(const String& text);
+
+
+		bool _is_ifdef(const String& text);
+
+		bool _is_else(const String& text);
+
+		bool _is_endif(const String& text);
+
+		bool _is_include(const String& text);
+
+
+
+		void _process_ifdef(PreprocessorOpCode opcode, SPreprocessorValue& value);
+
+		void _process_include(PreprocessorOpCode opcode, SPreprocessorValue& value);
+
 	};
 
 

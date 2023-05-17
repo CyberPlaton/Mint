@@ -3,7 +3,7 @@
 
 
 #include "Common/Common.h"
-
+#include "Utility/STL/Map.h"
 
 namespace mint::fx::sc
 {
@@ -20,6 +20,9 @@ namespace mint::fx::sc
 		bool m_opengl_330 = false;
 		bool m_opengl_es20 = false;
 
+		bool m_debug = false;
+		bool m_release = false;
+		bool m_distr = false;
 	};
 
 }

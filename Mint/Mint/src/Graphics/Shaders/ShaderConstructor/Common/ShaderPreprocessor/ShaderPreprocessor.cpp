@@ -35,120 +35,32 @@ namespace mint::fx::sc
 			fs.back();
 			m_shaderPath = fs.get_current_directory().as_string();
 				
-			m_source = String(data);
-			
-			return _parse_shader_file();
+			return _parse_shader_code_part(String(data));
 		}
 
 		return "";
 	}
 
 
-	String CShaderPreprocessor::_parse_shader_file()
-	{
-		if (m_source.empty()) return "";
-
-		char c = m_source[0];
-
-		while(!_is_eof(c))
-		{
-			if(_is_preprocessor_directive(c))
-			{
-				c = _advance();
-
-				// Get the op code.
-				String opcode;
-
-				// Mark the start of the preprocessor directive, including the '#' sign.
-				m_directiveBegin = m_cursor - 1;
-				
-				while(!_is_whitespace(c))
-				{
-					opcode += c;
-
-					c = _advance();
-				}
-
-				// Consume whitespaces.
-				c = _advance();
-				while(_is_whitespace(c))
-				{
-					c = _advance();
-				}
-
-				String value;
-				// Get the value for the op code.
-				while(!_is_newline(c))
-				{
-					value += c;
-
-					c = _advance();
-				}
-
-				// Mark the start of the preprocessor directive, including the '\n' sign.
-				m_directiveEnd = m_cursor + 1;
-
-
-				PreprocessorOpCode oc = _get_op_code(opcode);
-				SPreprocessorValue v = _get_preprocessor_value(value);
-				
-				if(v.m_type != PreprocessorValueType_Invalid)
-				{
-					// Erase the directive from the parsed source to be valid for OpenGL compiler.
-					// Note: We erase before proceeding, as we might have to include another shader file, thus 
-					// making the directive begin and end marks invalid.
-					mint::algorithm::string_erase_range(m_source, m_directiveBegin, m_directiveEnd);
-
-
-
-					String error;
-					if (!_process_directive(oc, v, error))
-					{
-						MINT_LOG_ERROR("[{:.4f}][CShaderPreprocessor::_parse_shader_file] Error parsing preprocessor directive \"{}\" and value \"{}\". Error message: \"{}\"!", MINT_APP_TIME, opcode, value, error);
-						return "";
-					}
-				}
-
-				m_directiveBegin = 0;
-				m_directiveEnd = 0;
-			}
-
-			c = _advance();
-		}
-
-		return m_source;
-	}
-
-
-	char CShaderPreprocessor::_advance()
-	{
-		return m_source[++m_cursor];
-	}
-
-
-	char CShaderPreprocessor::_peek_current()
-	{
-		return m_source[m_cursor];
-	}
-
-
-	char CShaderPreprocessor::_peek_next()
-	{
-		return m_source[m_cursor + 1];
-	}
-
-
-	void CShaderPreprocessor::_step()
-	{
-		m_cursor++;
-	}
-
-
 	mint::fx::sc::SPreprocessorValue CShaderPreprocessor::_get_preprocessor_value(const String& text)
 	{
+		// What we expect is the following format:
+		// [preprocessor directive][opcode][whitespace][value], i.e.
+		//            #              ifdef    ' '       DEBUG
+
 		SPreprocessorValue pvalue;
 		pvalue.m_type = PreprocessorValueType_Invalid;
 
+		// Get the index where the whitespace starts and ignore it.
+		u64 index = text.find_first_of(' ') + 1;
+		
+		// Get the text value from the index to the end.
+		String value = text.substr(index);
+
+		mint::algorithm::string_to_lower(value);
+
+
+		// Process the value and extract its type.
 		u64 first_quote = text.find_first_of('"');
 		u64 last_quote = text.find_last_of('"');
 
@@ -158,11 +70,16 @@ namespace mint::fx::sc
 		{
 			pvalue.m_type = PreprocessorValueType_String;
 
-			// Extract the pure value ignoring the quotes.
+			// Extract the pure text value ignoring the quotes.
 			String s;
-			s = text.substr(1, text.size() - 2);
+			s = value.substr(1, value.size() - 2);
 
 			pvalue.m_value = CAny(s);
+		}
+		else
+		{
+			pvalue.m_type = PreprocessorValueType_Identifier;
+			pvalue.m_value = CAny(value);
 		}
 
 		return pvalue;
@@ -171,19 +88,19 @@ namespace mint::fx::sc
 
 	mint::fx::sc::PreprocessorOpCode CShaderPreprocessor::_get_op_code(const String& text)
 	{
-		if(text == "include")
+		if(text.find("#include") != std::string::npos)
 		{
 			return PreprocessorOpCode_Include;
 		}
-		else if (text == "if")
+		else if (text.find("#ifdef") != std::string::npos)
 		{
-			return PreprocessorOpCode_If;
+			return PreprocessorOpCode_Ifdef;
 		}
-		else if (text == "else")
+		else if (text.find("#else") != std::string::npos)
 		{
 			return PreprocessorOpCode_Else;
 		}
-		else if (text == "endif")
+		else if (text.find("#endif") != std::string::npos)
 		{
 			return PreprocessorOpCode_Endif;
 		}
@@ -192,124 +109,126 @@ namespace mint::fx::sc
 	}
 
 
-	bool CShaderPreprocessor::_process_directive(PreprocessorOpCode opcode, SPreprocessorValue& value, String& error)
+
+	bool CShaderPreprocessor::_get_next_line(std::istringstream& stream, String& output_string)
 	{
-		if(opcode == PreprocessorOpCode_Invalid)
+		return std::getline(stream, output_string).good();
+	}
+
+	mint::String CShaderPreprocessor::_parse_shader_code_part(String& shader_code, u64 line_start /*= 0*/, u64 line_end /*= UINT_MAX*/)
+	{
+		std::istringstream ss(shader_code);
+
+		while(_get_next_line(ss, m_currentLine))
 		{
-			error = "Unrecognized preprocessor directive";
-			return false;
-		}
-		if(value.m_type == PreprocessorValueType_Invalid)
-		{
-			error = "Unexpected preprocessor value";
-			return false;
-		}
+			// Ignore the lines before the starting line.
+			if (m_currentLineNumber < line_start) continue;
+
+			// Ignore the lines after the ending line.
+			if (m_currentLineNumber > line_end) break;
 
 
-		switch(opcode)
-		{
-		case PreprocessorOpCode_Include:
-		{
-			CShaderPreprocessor pp;
-			String include_shader;
+			// Process the current line.
 
-			CFileystem fs(m_shaderPath);
-
-			// Get the shader path to be included into the current source.
-			if(!fs.forward(value.m_value.cast< String >()))
+			// Check whether the line contains a preprocessor directive.
+			if(_does_line_have_preprocessor_directive(m_currentLine))
 			{
-				error = "Unable to find shader file at \"" + fs.get_current_directory().as_string() + "\"";
+				if(_is_include(m_currentLine))
+				{
+					PreprocessorOpCode opcode = _get_op_code(m_currentLine);
+					SPreprocessorValue value = _get_preprocessor_value(m_currentLine);
+
+					_process_include(opcode, value);
+
+					// Do not include the current line, because its the preprocessor directive
+					// not supported by OpenGL compiler!
+					continue;
+				}
+				if (_is_ifdef(m_currentLine))
+				{
+					PreprocessorOpCode opcode = _get_op_code(m_currentLine);
+					SPreprocessorValue value = _get_preprocessor_value(m_currentLine);
+
+					_process_ifdef(opcode, value);
+
+					continue;
+				}
+			}
+
+			// Append the source line by line like it was defined.
+			m_finalSource += m_currentLine + "\n";
+
+			m_currentLineNumber++;
+		}
+
+		return m_finalSource;
+	}
+
+
+	bool CShaderPreprocessor::_does_line_have_preprocessor_directive(const String& text)
+	{
+		if(text[0] == '#')
+		{
+			if(text.find("version") != std::string::npos)
+			{
+				// Ignore the OpenGL native directive.
 				return false;
 			}
 
-			// Check for recursive inclusion.
-			if(fs.get_current_directory().as_string() == m_shaderPath)
-			{
-				error = "Recursive self-inclusion detected in shader \"" + fs.get_current_directory().as_string() + "\"";
-				return false;
-			}
-
-			// Get the shader source to be included into the current source.
-			include_shader = pp.parse_shader_file(fs.get_current_directory().as_string());
-			if(include_shader.empty())
-			{
-				error = "Failed parsing shader file \"" + fs.get_current_directory().as_string() + "\" for \"" + m_shaderPath + "\"";
-				return false;
-			}
-
-			mint::algorithm::string_push_front(m_source, include_shader);
-
-			m_cursor += include_shader.size();
-
-			return true;
-			break;
-		}
-		case PreprocessorOpCode_If:
-		{
-			break;
-		}
-		case PreprocessorOpCode_Else:
-		{
-			break;
-		}
-		case PreprocessorOpCode_Endif:
-		{
-			break;
-		}
-		}
-
-		return false;
-	}
-
-
-	bool CShaderPreprocessor::_is_newline(char c)
-	{
-		return c == '\n';
-	}
-
-
-	bool CShaderPreprocessor::_is_eof(char c)
-	{
-		return c == '\0';
-	}
-
-
-	bool CShaderPreprocessor::_is_whitespace(char c)
-	{
-		return (c == '\n' || c == '\t' ||
-				c == '\f' || c == '\r' ||
-				c == ' ');
-	}
-
-
-	bool CShaderPreprocessor::_is_preprocessor_directive(char c)
-	{
-		return c == '#';
-	}
-
-
-	bool CShaderPreprocessor::_is_identifier(char c)
-	{
-		return ((c >= 'a' && c <= 'z') ||
-				(c >= 'A' && c <= 'Z') ||
-				c == '_');
-	}
-
-
-	bool CShaderPreprocessor::_is_quote(char c)
-	{
-		return c == '"';
-	}
-
-
-	bool CShaderPreprocessor::_is_directive_opengl_native(const String& text)
-	{
-		if(text == "version")
-		{
+			// Do not ignore out own directives.
 			return true;
 		}
 
 		return false;
+	}
+
+
+	bool CShaderPreprocessor::_is_ifdef(const String& text)
+	{
+		return text.find("#ifdef") != std::string::npos;
+	}
+
+
+	bool CShaderPreprocessor::_is_else(const String& text)
+	{
+		return text.find("#else") != std::string::npos;
+	}
+
+
+	bool CShaderPreprocessor::_is_endif(const String& text)
+	{
+		return text.find("#endif") != std::string::npos;
+	}
+
+
+	bool CShaderPreprocessor::_is_include(const String& text)
+	{
+		return text.find("#include") != std::string::npos;
+	}
+
+
+	void CShaderPreprocessor::_process_include(PreprocessorOpCode opcode, SPreprocessorValue& value)
+	{
+		// Construct filepath for shader to be included.
+		CFileystem fs(m_shaderPath);
+
+		if(!fs.forward(value.m_value.cast< String >()))
+		{
+			// File not found.
+		}
+
+
+		CShaderPreprocessor pp;
+		String source_to_include = pp.parse_shader_file(fs.get_current_directory().as_string());
+
+		// Add the included source to current source where it should have been included.
+		m_finalSource += source_to_include;
+	}
+
+
+	void CShaderPreprocessor::_process_ifdef(PreprocessorOpCode opcode, SPreprocessorValue& value)
+	{
+
 	}
 
 

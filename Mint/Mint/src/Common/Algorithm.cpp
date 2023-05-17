@@ -81,4 +81,29 @@ namespace mint::algorithm
 	}
 
 
+	mint::u64 string_find_substr(const String& string, const String& substring)
+	{
+		return string.find(substring);
+	}
+
+
+	mint::u64 string_get_length(const String& string)
+	{
+		return string.size();
+	}
+
+
+	void string_insert(String& string, const String& to_insert_one, u64 index)
+	{
+		string.insert(index, to_insert_one);
+	}
+
+
+	void string_to_lower(String& string)
+	{
+		std::transform(string.begin(), string.end(), 
+					   string.begin(), [](unsigned char c) {return std::tolower(c); });
+	}
+
+
 }
