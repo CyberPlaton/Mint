@@ -29,6 +29,7 @@ namespace mint::fx
 
 	public:
 		CMap< bool > m_settings;
+
 	};
 
 }

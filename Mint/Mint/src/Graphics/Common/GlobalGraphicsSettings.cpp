@@ -77,10 +77,9 @@ namespace mint::fx
 
 
 		MINT_LOG_INFO("\tGPU Vendor: {}", vendor);
+		MINT_LOG_INFO("\tGraphics Card: {}", renderer);
 		MINT_LOG_INFO("\tGPU Memory: Total {} MB, Used: {} MB, Available: {} MB", total_memory_mb, (total_memory_mb - free_memory_mb), free_memory_mb);
-		MINT_LOG_INFO("\tRenderer:", renderer, opengl_version, shader_version);
-		
-		MINT_LOG_INFO("\t\tGraphics Card: {}", renderer);
+		MINT_LOG_INFO("\tRenderer Information:");
 		MINT_LOG_INFO("\t\tOpenGL Version: {}", opengl_version);
 		MINT_LOG_INFO("\t\tOpenGL Shader: {}", shader_version);
 
