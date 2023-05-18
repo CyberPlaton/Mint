@@ -42,6 +42,7 @@ namespace mint
 
 		virtual bool is_in_editor_mode() = 0;
 
+		virtual void print_engine_context() = 0;
 
 		virtual void begin_rendering() = 0;
 

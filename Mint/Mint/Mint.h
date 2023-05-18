@@ -4,7 +4,9 @@
 
 #include "IMint.h"
 
-
+#include "Hardware/GlobalGraphicsSettings.h"
+#include "Hardware/GlobalCPUSettings.h"
+#include "Hardware/GlobalOSSettings.h"
 #include "Utility/ServiceSystem/ServiceLocator.h"
 #include "Utility/Logging/Logging.h"
 #include "Common/Timestep.h"
@@ -14,8 +16,6 @@
 #include "Utility/PluginSystem/PluginSystem.h"
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
-#include "Graphics/Common/GlobalGraphicsSettings.h"
-#include "Common/GlobalCPUSettings.h"
 #include "Graphics/Shaders/ShaderConstructor/Common/ShaderPreprocessor/ShaderPreprocessor.h"
 #include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
 #include "Graphics/Shaders/MaterialManager.h"
@@ -24,16 +24,13 @@
 #include "Graphics/Common/Camera2D.h"
 #include "Utility/Input/Input.h"
 #include "Scripting/Common/ScriptLuaBindingServiceImpl.h"
-
-
 #include "RessourceManagement/Common/RessourceLoaders/TextureLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ScriptLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/BehaviorLoader.h"
-
-
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
+
 
 #if MINT_DISTR
 #else
@@ -62,6 +59,8 @@ namespace mint
 		void exit() override final;
 
 		virtual bool is_in_editor_mode() { return false; }
+
+		virtual void print_engine_context();
 
 		void begin_rendering() override final;
 

@@ -3,7 +3,7 @@
 
 
 #include "Common.h"
-#include "Algorithm.h"
+#include "Common/Algorithm.h"
 #include "Utility/Logging/Logging.h"
 #include "Hardware/hwinfo/cpu.h"
 #include "Hardware/hwinfo/ram.h"
@@ -16,7 +16,6 @@ namespace mint
 		STATIC_GET(CGlobalCPUSettings, s_CGlobalCPUSettings);
 
 		bool initialize();
-
 
 		void print_cpu_context();
 

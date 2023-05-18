@@ -6,7 +6,7 @@
 #include "Utility/FileSystem/Filesystem.h"
 #include "Utility/Logging/Logging.h"
 #include "Utility/STL/Map.h"
-#include "Graphics/Common/GlobalGraphicsSettings.h"
+#include "Hardware/GlobalGraphicsSettings.h"
 #include "Common/Any.h"
 #include "Common/Algorithm.h"
 

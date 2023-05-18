@@ -24,6 +24,7 @@ filter {"platforms:Windows","configurations:Release"}
 		"spdlog",
 		"Lua52",
 
+		"opengl32",
 		"gdi32", 
 		"kernel32",
 		"psapi",
@@ -38,6 +39,7 @@ filter {"platforms:Windows","configurations:Distr"}
 		"spdlog",
 		"Lua52",
 
+		"opengl32",
 		"gdi32", 
 		"kernel32",
 		"psapi",

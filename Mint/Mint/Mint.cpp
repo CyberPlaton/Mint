@@ -18,10 +18,12 @@ namespace mint
 
 		if(!_pre_init(wdesc, pdesc)) return false;
 
+		// GPU context can only be reported after the window and raylib have been initialized.
+		CGlobalGraphicsSettings::Get().print_graphics_context();
+
 		if(!_init()) return false;
 
 		if(!_post_init(initial_scene)) return false;
-
 
 		CSceneManager::Get().set_initial_scene(initial_scene);
 
@@ -59,6 +61,13 @@ namespace mint
 	void CMintEngine::exit()
 	{
 		m_running = false;
+	}
+
+
+	void CMintEngine::print_engine_context()
+	{
+		MINT_LOG_INFO("Runtime version: \"{}\"", MINT_ENGINE_VERSION_STRING);
+		MINT_LOG_SEPARATOR();
 	}
 
 
@@ -188,6 +197,10 @@ namespace mint
 		// Initialize lowest level sub-systems.
 		result &= CLogging::Get().initialize();
 
+		// Fatal error! We cant even report what happened.
+		if (!result) return false;
+
+
 		// Initialize component exporters and importers.
 		IMintEngine::register_component_exporter_functions();
 		IMintEngine::register_component_importer_functions();
@@ -198,6 +211,21 @@ namespace mint
 		CRessourceLoaderFactory::register_ressource_loader("Shader", &CShaderLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Script", &CScriptLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Behavior", &CBehaviorLoader::create);
+		
+
+		// Global OS settings.
+		result &= CGlobalOSSettings::Get().initialize();
+
+		// Global Graphics settings. Can be done here as we do not use any OpenGL functions there.
+		result &= CGlobalGraphicsSettings::Get().initialize();
+
+		// Global CPU settings.
+		result &= CGlobalCPUSettings::Get().initialize();
+
+		// Report engine context.
+		MINT_ENGINE()->print_engine_context();
+		CGlobalOSSettings::Get().print_os_context();
+		CGlobalCPUSettings::Get().print_cpu_context();
 
 		return result;
 	}
@@ -320,12 +348,6 @@ namespace mint
 		// Event System.
 		result &= CEventSystem::Get().initialize();
 
-		// Global Graphics settings.
-		result &= fx::CGlobalGraphicsSettings::Get().initialize();
-
-		// Global CPU settings.
-		result &= CGlobalCPUSettings::Get().initialize();
-
 		// Shader manager.
 		result &= CShaderManager::Get().initialize();
 
@@ -347,8 +369,6 @@ namespace mint
 		if(result)
 		{
 			IService::register_service(new mint::scripting::CScriptLuaBindingService(), "LuaRegistration");
-
-
 		}
 
 		return result;

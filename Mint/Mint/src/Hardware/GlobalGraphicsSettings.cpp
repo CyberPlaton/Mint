@@ -1,10 +1,8 @@
 #include "GlobalGraphicsSettings.h"
 
-
 #include <gl/GL.h>
 
-
-namespace mint::fx
+namespace mint
 {
 
 	bool CGlobalGraphicsSettings::initialize()

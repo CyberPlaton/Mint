@@ -51,6 +51,8 @@ namespace mint
 
 		bool is_in_editor_mode() override final;
 	
+		void print_engine_context() override final;
+
 		void on_editor_ui_frame_begin();
 
 		void on_editor_ui_frame_render();
@@ -71,7 +73,6 @@ namespace mint
 
 		void on_editor_frame_end();
 
-		void print_engine_version();
 
 	protected:
 		editor::CLayerStack m_layerStack;

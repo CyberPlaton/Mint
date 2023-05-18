@@ -8,7 +8,7 @@
 #include "Utility/Logging/Logging.h"
 
 
-namespace mint::fx
+namespace mint
 {
 
 	class CGlobalGraphicsSettings
