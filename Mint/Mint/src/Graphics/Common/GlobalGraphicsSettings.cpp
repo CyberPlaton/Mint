@@ -1,7 +1,10 @@
 #include "GlobalGraphicsSettings.h"
 
 
-namespace mint::fx::sc
+#include <gl/GL.h>
+
+
+namespace mint::fx
 {
 
 	bool CGlobalGraphicsSettings::initialize()
@@ -52,5 +55,37 @@ namespace mint::fx::sc
 		return false;
 	}
 
+
+	void CGlobalGraphicsSettings::print_graphics_context()
+	{
+		MINT_LOG_INFO("Dumping graphics context information:");
+
+		String vendor(reinterpret_cast< const char* > (glGetString(GL_VENDOR)));
+		String renderer(reinterpret_cast<const char*> (glGetString(GL_RENDERER)));
+		String opengl_version(reinterpret_cast<const char*> (glGetString(GL_VERSION)));
+		String shader_version(reinterpret_cast<const char*> (glGetString(0x8B8C)));
+
+
+		GLint totalMemoryKB;
+		GLint freeMemoryKB;
+
+		glGetIntegerv(0x9048, &totalMemoryKB);
+		glGetIntegerv(0x9049, &freeMemoryKB);
+
+		s32 total_memory_mb = totalMemoryKB / 1024;
+		s32 free_memory_mb = freeMemoryKB / 1024;
+
+
+		MINT_LOG_INFO("\tGPU Vendor: {}", vendor);
+		MINT_LOG_INFO("\tGPU Memory: Total {} MB, Used: {} MB, Available: {} MB", total_memory_mb, (total_memory_mb - free_memory_mb), free_memory_mb);
+		MINT_LOG_INFO("\tRenderer:", renderer, opengl_version, shader_version);
+		
+		MINT_LOG_INFO("\t\tGraphics Card: {}", renderer);
+		MINT_LOG_INFO("\t\tOpenGL Version: {}", opengl_version);
+		MINT_LOG_INFO("\t\tOpenGL Shader: {}", shader_version);
+
+
+		MINT_LOG_SEPARATOR();
+	}
 
 }

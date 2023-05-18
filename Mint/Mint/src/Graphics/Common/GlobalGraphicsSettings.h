@@ -5,9 +5,10 @@
 #include "Common/Common.h"
 #include "Utility/STL/Map.h"
 #include "Common/Algorithm.h"
+#include "Utility/Logging/Logging.h"
 
 
-namespace mint::fx::sc
+namespace mint::fx
 {
 
 	class CGlobalGraphicsSettings
@@ -24,7 +25,7 @@ namespace mint::fx::sc
 
 
 
-
+		void print_graphics_context();
 
 	public:
 		CMap< bool > m_settings;

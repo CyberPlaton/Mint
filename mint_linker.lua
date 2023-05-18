@@ -9,6 +9,7 @@ filter {"platforms:Windows","configurations:Debug"}
 		"spdlogd",
 		"Lua52",
 
+		"opengl32",
 		"gdi32", 
 		"kernel32",
 		"psapi",

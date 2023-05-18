@@ -15,6 +15,7 @@
 #include "Graphics/Common/Color.h"
 #include "Graphics/SceneRenderer/SceneRenderer.h"
 #include "Graphics/Common/GlobalGraphicsSettings.h"
+#include "Common/CPU.h"
 #include "Graphics/Shaders/ShaderConstructor/Common/ShaderPreprocessor/ShaderPreprocessor.h"
 #include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
 #include "Graphics/Shaders/MaterialManager.h"

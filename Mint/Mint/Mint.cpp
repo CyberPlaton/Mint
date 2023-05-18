@@ -320,8 +320,11 @@ namespace mint
 		// Event System.
 		result &= CEventSystem::Get().initialize();
 
-		// Global Shader settings.
-		result &= fx::sc::CGlobalGraphicsSettings::Get().initialize();
+		// Global Graphics settings.
+		result &= fx::CGlobalGraphicsSettings::Get().initialize();
+
+		// Global CPU settings.
+		result &= CGlobalCPUSettings::Get().initialize();
 
 		// Shader manager.
 		result &= CShaderManager::Get().initialize();

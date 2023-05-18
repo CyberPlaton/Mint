@@ -68,6 +68,10 @@ namespace mint
 		{
 			print_engine_version();
 
+			fx::CGlobalGraphicsSettings::Get().print_graphics_context();
+
+			CGlobalCPUSettings::Get().print_cpu_context();
+
 			IService::print_registered_services();
 
 
