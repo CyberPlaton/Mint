@@ -57,23 +57,6 @@
 				fldr
 			}
 		end
-		--for index = 1, #scenes_and_plugins do
-		--	fldr = scenes_and_plugins[index]
-		--	print("[" .. fldr.."]" .. " = " .. scenes_and_plugins_path .. "/" .. fldr)
-		--
-		--	print("Create virtual path: = " .. fldr)
-		--	vpaths{
-		--		[fldr] = {scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"}
-		--	}
-		--	
-		--	print("Include files: = " .. scenes_and_plugins_path .. "/" .. fldr .. "/**.h and " .. scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp")
-		--	files{
-		--		scenes_and_plugins_path .. "/" .. fldr .. "/**.h", scenes_and_plugins_path .. "/" .. fldr .. "/**.cpp"
-		--	}
-		--	includedirs{
-		--		fldr
-		--	}
-		--end
 
 
 		files{
