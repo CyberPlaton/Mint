@@ -91,8 +91,19 @@ namespace mint
 	}
 
 
-	void CWindow::set_size(Vec2 v)
+	mint::Vec2 CWindow::get_max_possible_window_size()
 	{
+		auto monitor = GetCurrentMonitor();
+		auto monitor_width = GetMonitorWidth(monitor);
+		auto monitor_height = GetMonitorHeight(monitor);
+
+		return { monitor_width, monitor_height };
+	}
+
+
+	void CWindow::set_size(const Vec2& v)
+	{
+		m_window.SetPosition({ 0.0f, 0.0f });
 		m_window.SetSize({ v.x, v.y });
 	}
 
@@ -102,6 +113,18 @@ namespace mint
 		bool v = !m_window.IsFullscreen();
 
 		m_window.SetFullscreen(v);
+	}
+
+
+	bool CWindow::is_fullscreen() const
+	{
+		return m_window.IsFullscreen();
+	}
+
+
+	void CWindow::set_is_fullscreen(bool value)
+	{
+		m_window.SetFullscreen(value);
 	}
 
 

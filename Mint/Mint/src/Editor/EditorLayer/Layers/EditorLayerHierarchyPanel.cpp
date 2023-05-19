@@ -128,7 +128,7 @@ namespace mint::editor
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
 		if(ImGui::SmallButton(ICON_FA_GEAR))
 		{
-			ImGui::OpenPopup("Entity Options Popup", ImGuiPopupFlags_MouseButtonRight);
+			ImGui::OpenPopup("Entity Options Popup");
 			GlobalData::Get().s_EditorOptionSelectedEntity = entity;
 		}
 		ImGui::PopStyleColor(2);

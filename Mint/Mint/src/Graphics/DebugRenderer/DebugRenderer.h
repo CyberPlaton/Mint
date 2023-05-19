@@ -15,9 +15,9 @@ namespace mint::fx
 	class CDebugRenderer
 	{
 	public:
-		static void on_render(mint::IScene* scene);
+		static void on_render_destination_rectangle(const Vector< entt::entity >& entities);
 
-		static void on_render(Vector< entt::entity >& entities);
+		static void on_render_sprite_origin(const Vector< entt::entity >& entities);
 
 	};
 

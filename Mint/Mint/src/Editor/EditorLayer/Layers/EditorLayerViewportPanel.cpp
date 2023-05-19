@@ -30,30 +30,37 @@ namespace mint::editor
 
 		ImGui::SameLine();
 
-		if(ImGui::SmallButton(ICON_FA_DISPLAY)) { m_showWindowOptions = true; }
+		if(ImGui::SmallButton(ICON_FA_DISPLAY)) { ImGui::OpenPopup("Viewport Window Options Popup"); }
 		CUI::help_marker_no_question_mark("Edit window settings");
 
+		window_options();
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton(ICON_FA_VIDEO)) { m_showCameraOptions = true; }
+		if (ImGui::SmallButton(ICON_FA_VIDEO)) { ImGui::OpenPopup("Viewport Camera Options Popup"); }
 		CUI::help_marker_no_question_mark("Edit camera settings");
 
+		camera_options();
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton(ICON_FA_TABLE_CELLS)) { m_showGridOptions = true; }
+		if (ImGui::SmallButton(ICON_FA_TABLE_CELLS)) { ImGui::OpenPopup("Viewport Grid Options Popup"); }
 		CUI::help_marker_no_question_mark("Edit grid settings");
-		
+
+		grid_options();
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_BUG)) { ImGui::OpenPopup("Viewport Debug Render Options Popup"); }
+		CUI::help_marker_no_question_mark("Edit debug rendering settings");
+
+		debug_render_options();
+
 		ImGui::PopStyleColor(2);
 
 		main_frame();
 
 		ImGui::End();
-
-		if (m_showWindowOptions) window_options();
-		if (m_showCameraOptions) camera_options();
-		if (m_showGridOptions) grid_options();
 	}
 
 
@@ -69,7 +76,9 @@ namespace mint::editor
 		{
 			auto& entities = CSAS::Get().retrieve_visible_entities();
 
-			fx::CDebugRenderer::on_render(entities);
+			fx::CDebugRenderer::on_render_destination_rectangle(entities);
+
+			fx::CDebugRenderer::on_render_sprite_origin(entities);
 		}
 	}
 
@@ -100,19 +109,68 @@ namespace mint::editor
 
 	void CViewportPanelLayer::window_options()
 	{
+		if (ImGui::BeginPopup("Viewport Window Options Popup"))
+		{
+			ImGui::SeparatorText("Window Settings");
+			
+			ImGui::SameLine();
 
+			CUI::help_marker("Please note that changing the window dimension is done in the application \"Manifest\"!");
+
+			auto& window = MINT_ENGINE()->get_main_window_ref();
+
+			auto size = window.get_size();
+			auto max_size = window.get_max_possible_window_size();
+			auto fullscreen = window.is_fullscreen();
+
+			ImGui::Text(TextFormat("Size: {%.1f:%.1f}", size.x, size.y));
+			ImGui::Text(TextFormat("Max Size: {%.1f:%.1f}", max_size.x, max_size.y));
+			if(ImGui::Checkbox("Fullscreen", &fullscreen))
+			{
+				window.set_is_fullscreen(fullscreen);
+			}
+			
+			ImGui::EndPopup();
+		}
 	}
 
 
 	void CViewportPanelLayer::camera_options()
 	{
+		if (ImGui::BeginPopup("Viewport Camera Options Popup"))
+		{
+			ImGui::SeparatorText("Editor Camera Settings");
 
+
+
+			ImGui::EndPopup();
+		}
 	}
 
 
 	void CViewportPanelLayer::grid_options()
 	{
+		if (ImGui::BeginPopup("Viewport Grid Options Popup"))
+		{
+			ImGui::SeparatorText("Grid Settings");
 
+
+
+			ImGui::EndPopup();
+		}
+	}
+
+
+	void CViewportPanelLayer::debug_render_options()
+	{
+		if (ImGui::BeginPopup("Viewport Debug Render Options Popup"))
+		{
+			ImGui::SeparatorText("Debug Render Settings");
+
+
+
+			ImGui::EndPopup();
+		}
 	}
 
 

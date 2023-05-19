@@ -64,17 +64,28 @@ namespace mint
 
 		void terminate();
 
+		void set_title(const String& title);
+
 		void show();
 
 		void hide();
 
-		Vec2 get_size();
-
-		void set_size(Vec2 v);
 
 		void toggle_fullscreen();
 
-		void set_title(const String& title);
+		bool is_fullscreen() const;
+
+		void set_is_fullscreen(bool value);
+
+
+
+
+
+		Vec2 get_size();
+
+		Vec2 get_max_possible_window_size();
+
+		void set_size(const Vec2& v);
 
 		f32 get_x() const;
 
@@ -83,6 +94,8 @@ namespace mint
 		f32 get_w() const;
 
 		f32 get_h() const;
+
+
 
 		void print_window_configurations() const;
 

@@ -72,6 +72,8 @@ namespace mint
 
 		virtual const CWindow& get_main_window_const() const = 0;
 
+		virtual CWindow& get_main_window_ref() = 0;
+
 		virtual f32 get_engine_fps() = 0;
 
 		virtual f32 get_engine_frametime() = 0;

@@ -88,6 +88,8 @@ namespace mint
 
 		const CWindow& get_main_window_const() const override final;
 
+		CWindow& get_main_window_ref() override final;
+
 		f32 get_engine_fps() override final;
 
 		f32 get_engine_frametime() override final;

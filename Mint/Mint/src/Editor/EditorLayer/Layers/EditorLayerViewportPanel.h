@@ -29,9 +29,8 @@ namespace mint::editor
 		ImGuiWindowFlags CViewportPanelLayer::get_flags() override final;
 
 	private:
-		bool m_showWindowOptions = false;
-		bool m_showCameraOptions = false;
-		bool m_showGridOptions = false;
+		
+
 
 	private:
 		void main_frame();
@@ -41,6 +40,8 @@ namespace mint::editor
 		void camera_options();
 
 		void grid_options();
+
+		void debug_render_options();
 	};
 
 }

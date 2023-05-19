@@ -163,6 +163,12 @@ namespace mint
 	}
 
 
+	mint::CWindow& CMintEngine::get_main_window_ref()
+	{
+		return m_mainWindow;
+	}
+
+
 	mint::f32 CMintEngine::get_engine_fps()
 	{
 		return m_mainTimestep.get_fps();
