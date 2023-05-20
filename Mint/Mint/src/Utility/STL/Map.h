@@ -7,13 +7,54 @@
 
 namespace mint
 {
+	template < typename T >
+	class CMapIterator
+	{
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type = T;
+		using value_type = T;
+		using pointer_type = T*;
+		using reference_type = T&;
 
+
+		CMapIterator(pointer_type pointer) { m_pointer = pointer; }
+
+
+		reference_type operator*() const { return *m_pointer; }
+
+		pointer_type operator->() { return m_pointer; }
+
+		CMapIterator& operator++() { m_pointer++; return *this; }
+
+		CMapIterator operator++(int) { CMapIterator iter = *this; ++(*this); return iter; }
+
+
+		friend bool operator==(const CMapIterator& lh, const CMapIterator& rh) { return lh.m_pointer == rh.m_pointer; }
+		friend bool operator!=(const CMapIterator& lh, const CMapIterator& rh) { return lh.m_pointer != rh.m_pointer; };
+
+
+	private:
+		pointer_type m_pointer;
+
+	};
+
+
+
+	
 	template < typename T >
 	class CMap
 	{
+		friend class CMapIterator< T >;
 	public:
 		CMap() = default;
 		~CMap();
+
+
+		CMapIterator< T > begin() { return CMapIterator(&m_data[0]); }
+
+		CMapIterator< T > end() { return CMapIterator(&m_data[m_data.size() - 1]); }
+
 
 		void add(u64 identifier, T& data);
 
@@ -70,6 +111,7 @@ namespace mint
 		void _restore_integrity_on_remove();
 
 	};
+
 
 
 	template < typename T >

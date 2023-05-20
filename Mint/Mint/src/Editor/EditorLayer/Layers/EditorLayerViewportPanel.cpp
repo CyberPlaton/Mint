@@ -74,11 +74,25 @@ namespace mint::editor
 	{
 		if(MINT_ENGINE()->is_in_editor_mode())
 		{
-			auto& entities = CSAS::Get().retrieve_visible_entities();
+			if(m_debugRenderAll)
+			{
+				auto& entities = CSAS::Get().retrieve_visible_entities();
+				
+				if(m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
 
-			fx::CDebugRenderer::on_render_destination_rectangle(entities);
+				if(m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
+			}
+			else
+			{
+				if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
+				{
+					Vector< entt::entity > entities;
 
-			fx::CDebugRenderer::on_render_sprite_origin(entities);
+					if (m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
+
+					if (m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
+				}
+			}
 		}
 	}
 
@@ -167,6 +181,15 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Debug Render Settings");
 
+			ImGui::Checkbox("Render All", &m_debugRenderAll);
+			m_debugRenderSelected = !m_debugRenderAll;
+
+			ImGui::SameLine();
+
+			CUI::help_marker("Change whether to draw debug information for all game objects or for the inspected one only!");
+
+			ImGui::Checkbox("Destination Rectangle", &m_renderDestinationRect);
+			ImGui::Checkbox("Origin Point", &m_renderOriginPoint);
 
 
 			ImGui::EndPopup();

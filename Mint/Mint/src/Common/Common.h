@@ -84,6 +84,7 @@ namespace mint
 // Common defines
 namespace mint
 {
+	using EntityHandle = u64;
 	using ShaderHandle = u64;
 	using TextureHandle = u64;
 	using MaterialHandle = u64;
@@ -95,6 +96,8 @@ namespace mint
 	using Shader = raylib::Shader;
 
 	static inline bool is_handle_valid(u64 handle) { return handle != static_cast< u64 >(-1); }
+	static inline EntityHandle entity_get_handle(entt::entity entity) { return static_cast<u64>(entity); }
+	static inline u64 invalid_handle() { return static_cast<u64>(-1); }
 
 	template< typename T >
 	using Vector = std::vector< T >;

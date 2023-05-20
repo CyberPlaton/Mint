@@ -16,13 +16,12 @@ namespace mint::luaglue
 				.beginClass< entt::entity >("Entity")
 				.endClass();
 
+
 			luabridge::getGlobalNamespace(state)
 				.beginNamespace("entity")
 
-#ifndef MINT_DISTR
 					.addFunction("get_debug_name", &CUCA::identifier_get_debug_name)				
 					.addFunction("set_debug_name", &CUCA::identifier_set_debug_name)
-#endif
 					.addFunction("get_uuid", &CUCA::identifier_get_uuid)
 					.addFunction("get_identifier", &CUCA::identifier_get_identifier)
  				.endNamespace();
