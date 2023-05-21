@@ -92,9 +92,15 @@ namespace mint::editor
 				{
 					Vector< entt::entity > entities{ GlobalData::Get().s_EditorInspectedEntity };
 
-					if (m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
+					if(m_renderDestinationRect && MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::STransform >(GlobalData::Get().s_EditorInspectedEntity))
+					{
+						fx::CDebugRenderer::on_render_destination_rectangle(entities);
+					}
 
-					if (m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
+					if (m_renderOriginPoint && MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::SSprite >(GlobalData::Get().s_EditorInspectedEntity))
+					{
+						fx::CDebugRenderer::on_render_sprite_origin(entities);
+					}
 				}
 			}
 
