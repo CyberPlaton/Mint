@@ -12,6 +12,7 @@
 *		o CMap2 implemented. Variation of the CMap data structure, designed to be high performance with the same main functionality as in CMap.
 *							 Please note that, in order to achieve maximum performance, data locality and pointer stability the CMap2 is initialized to a fixed size
 *							 and can not be resized dynamically.
+*							 CMap2 is performing safety checks for "get" access in non DISTR builds.
 *							 CMap2 is intended to be used where:
 *								- Fast iterations are a must.
 *								- Frequent lookups or accesses.

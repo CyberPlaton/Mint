@@ -65,6 +65,10 @@ namespace mint
 
 		bool is_index_valid(u64 index);
 
+		u64 get_index_for_memory_location(u64 memory_location);
+
+		bool is_object_at_index_initialized(u64 index);
+
 	private:
 		Vector< bool > m_initializedBit;
 
@@ -186,6 +190,7 @@ namespace mint
 	}
 
 
+
 	template< typename Object >
 	bool mint::CMap2<Object>::lookup(u64 identifier) const
 	{
@@ -245,6 +250,25 @@ namespace mint
 	}
 
 
+	template< typename Object >
+	bool mint::CObjectAllocator<Object>::is_object_at_index_initialized(u64 index)
+	{
+		if(is_index_valid(index))
+		{
+			return m_initializedBit[index];
+		}
+
+		return false;
+	}
+
+
+	template< typename Object >
+	u64 mint::CObjectAllocator<Object>::get_index_for_memory_location(u64 memory_location)
+	{
+		u64 object_size = sizeof(Object);
+
+		return (memory_location - reinterpret_cast<u64>(m_memoryBlockStart)) / object_size;
+	}
 
 	template< typename Object >
 	u64 mint::CObjectAllocator<Object>::size()
@@ -315,9 +339,11 @@ namespace mint
 	{
 		if (is_index_valid(index))
 		{
-			// Prevent access to uninitialized objects, as "get" is not intended to be used that way.
-			if (index >= m_objectCount - 1) return nullptr;
-
+			// Verify that the object at index is initialized and the index is accessing a valid object.
+#if MINT_DISTR
+#else
+			if (!is_object_at_index_initialized(index)) return nullptr;
+#endif
 			
 			// Compute the memory location of the Object.
 			u64 object_size = sizeof(Object);
