@@ -123,17 +123,18 @@ namespace mint::editor
 		ImGui::SameLine();
 
 		static s32 selected_entity_option = -1;
+		String pop_up_identifier = name + "Entity Options Popup";
 
 		ImGui::PushStyleColor(ImGuiCol_Text, { 0.9f, 0.9f, 0.9f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
 		if(ImGui::SmallButton(ICON_FA_GEAR))
 		{
-			ImGui::OpenPopup("Entity Options Popup");
+			ImGui::OpenPopup(pop_up_identifier.c_str());
 			GlobalData::Get().s_EditorOptionSelectedEntity = entity;
 		}
 		ImGui::PopStyleColor(2);
 
-		if (ImGui::BeginPopup("Entity Options Popup"))
+		if (ImGui::BeginPopup(pop_up_identifier.c_str()))
 		{
 			ImGui::SeparatorText("Entity Options");
 
