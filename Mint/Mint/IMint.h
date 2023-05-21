@@ -6,10 +6,26 @@
 #include "SceneSystem/SAS.h"
 #include "Common/Window.h"
 
+/*
+* Version History:
+*	2023.05.01: 
+*		o CMap2 implemented. Variation of the CMap data structure, designed to be high performance with the same main functionality as in CMap.
+*							 Please note that, in order to achieve maximum performance, data locality and pointer stability the CMap2 is initialized to a fixed size
+*							 and can not be resized dynamically.
+*							 CMap2 is intended to be used where:
+*								- Fast iterations are a must.
+*								- Frequent lookups or accesses.
+*								- Objects contained are non-copyable (neither copy-constructed nor assignment-constructed).
+* 
+*		o CBehaviorEngine and CScriptEngine are using the CMap2 data structure.
+*		o CSAS´ internal computation is guarded by the critical section, in order to avoid crashed on terminate.
+* 
+*/
+
 
 #define MINT_ENGINE_VERSION_MAJOR 2023
 #define MINT_ENGINE_VERSION_MINOR 05
-#define MINT_ENGINE_VERSION_PATCH 0
+#define MINT_ENGINE_VERSION_PATCH 1
 #define MINT_ENGINE_VERSION_STRING STRING(MINT_ENGINE_VERSION_MAJOR) "." STRING(MINT_ENGINE_VERSION_MINOR) "." STRING(MINT_ENGINE_VERSION_PATCH)
 
 

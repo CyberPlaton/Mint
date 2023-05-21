@@ -11,6 +11,8 @@ namespace mint::scripting
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
+		m_scripts.initialize(10000);
+
 		m_internalLoop = false;
 		m_running = false;
 		m_update = false;
@@ -32,14 +34,18 @@ namespace mint::scripting
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			for (auto script = m_scripts.begin(); script != m_scripts.end(); script++)
+			auto script = m_scripts.begin();
+			while (script)
 			{
-				script->on_destroy();
+
+				if (m_scriptsActive && script->is_ready()) script->on_destroy();
+
+
+				script = m_scripts.advance(script);
 			}
 
+			m_scripts.reset();
 		);
-
-		m_scripts.reset();
 	}
 
 
@@ -105,14 +111,17 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			for (auto& script : m_scripts.get_all())
+			auto script = m_scripts.begin();
+			u32 index = 0;
+			while (script)
 			{
-				if (m_scriptsActive && script.is_ready() && script.is_active()) script.on_update(dt);
+				if (m_scriptsActive && script->is_ready() && script->is_active()) script->on_update(dt);
+
+				index++;
+				script = m_scripts.advance(script);
 			}
 
 		);
-
-
 	}
 
 
@@ -167,15 +176,17 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			CScript & script = m_scripts.emplace_back(h);
+			auto script = m_scripts.emplace(h);
 
-			script.set_script_entity(entt::null);
-			script.set_script_name(script_name);
-			script.set_script_path(script_file_path);
+			script->set_script_entity(entt::null);
 
-			if (script.initialize())
+			script->set_script_name(script_name);
+			
+			script->set_script_path(script_file_path);
+
+			if (script->initialize())
 			{
-				script.on_create();
+				script->on_create();
 			}
 			else
 			{
@@ -193,9 +204,9 @@ namespace mint::scripting
 		{
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				auto& script = m_scripts.get_ref(h);
+				auto script = m_scripts.get(h);
 
-				script.on_destroy();
+				script->on_destroy();
 
 				m_scripts.remove(h);
 

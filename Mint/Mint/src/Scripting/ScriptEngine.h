@@ -4,6 +4,7 @@
 
 #include "Script/Script.h"
 #include "../../IMint.h"
+#include "Utility/STL/Map2.h"
 
 
 namespace mint::scripting
@@ -51,7 +52,7 @@ namespace mint::scripting
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 
-		CMap< CScript > m_scripts;
+		CMap2< CScript > m_scripts;
 
 
 	private:

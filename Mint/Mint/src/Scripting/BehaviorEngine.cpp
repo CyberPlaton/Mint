@@ -184,22 +184,21 @@ namespace mint::scripting
 
 			if(does_entity_have_behavior_set(entity)) remove_behavior_from_entity(entity);
 
-			auto behavior = m_activeBehaviors.emplace(SCAST(u64, entity));
-
-			behavior->set_script_name(script_name);
-
-			behavior->set_script_path(script_pair.second);
-
-			behavior->set_script_entity_verified(entity_get_handle(entity));
-
-
-			behavior->initialize();
-
-			behavior->on_create();
-
-
-
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				auto behavior = m_activeBehaviors.emplace(SCAST(u64, entity));
+
+				behavior->set_script_name(script_name);
+
+				behavior->set_script_path(script_pair.second);
+
+				behavior->set_script_entity_verified(entity_get_handle(entity));
+
+
+				behavior->initialize();
+
+				behavior->on_create();
+
  			);
 		}
 	}
