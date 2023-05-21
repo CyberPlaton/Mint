@@ -4,6 +4,8 @@
 
 #include "Behavior/Behavior.h"
 #include "../../IMint.h"
+#include "Utility/STL/Map2.h"
+
 
 
 namespace mint::scripting
@@ -43,7 +45,7 @@ namespace mint::scripting
 
 		bool is_entity_behavior_active(entt::entity entity);
 
-		const Vector< CBehavior >& get_all_behavior_prefabs();
+		const Vector< std::pair< String, String > >& get_all_behavior_prefabs();
 
 	private:
 		static CBehaviorEngine* s_CBehaviorEngine;
@@ -59,9 +61,9 @@ namespace mint::scripting
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 
-		CMap< CBehavior > m_activeBehaviors;
+		CMap2< CBehavior > m_activeBehaviors;
 
-		CMap< CBehavior > m_behaviorPrefabs;
+		CMap< std::pair< String, String > > m_behaviorPrefabs;
 
 
 	private:

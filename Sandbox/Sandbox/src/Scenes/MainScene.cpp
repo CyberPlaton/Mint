@@ -49,7 +49,6 @@ bool CMainScene::on_load()
 	m_camera->set_zoom(1.0f);
 
 
-
 	// Create an entity.
 	m_knight = m_registry.create_entity();
 
@@ -123,6 +122,79 @@ bool CMainScene::on_load()
 	reflected.m_name = identifier.m_debugName;
 	reflected.m_isReflected = true;
 #endif
+
+
+
+
+
+	mint::CRandom random;
+	for (int i = 0; i < 100; i++)
+	{
+		// Create an entity.
+		entt::entity entity = m_registry.create_entity();
+
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(entity);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = m_registry.add_component< mint::component::STransform >(entity);
+		auto& sprite = m_registry.add_component< mint::component::SSprite >(entity);
+		auto& script = m_registry.add_component< mint::component::SScript >(entity);
+		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(entity);
+
+
+		identifier.m_enttId = SCAST(u64, entity);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, entity));
+		hierarchy.m_parent = entt::null;
+		transform.m_scale = { random.normalized_float() * 5.0f, random.normalized_float() * 5.0f };
+		transform.m_rotation = random.integer() * 360;
+		transform.m_position = { random.integer() * 512, random.integer() * 512 };
+		sprite.m_visible = true;
+		sprite.m_internalVisible = true;
+		sprite.m_depth = random.integer() % 10;
+		sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
+		sprite.m_color = { 255, 255, 255, 255 };
+		sprite.m_origin = { 0.0f, 0.0f };
+
+
+		mint::fx::CMaterial material;
+
+		// Set material data and bind static uniforms once.
+		material.set_shader_program("Sprite");
+		material.set_texture("Samurai");
+		material.restore_default_blend_mode();
+		material.bind_static_uniforms();
+
+
+		// Add material for entity.
+		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, material);
+
+
+		mint::fx::CMaterial smaterial;
+
+		// Set material data and bind static uniforms once.
+		smaterial.set_shader_program("Sprite");
+		smaterial.set_texture("Samurai");
+
+		smaterial.set_blend_mode(BlendMode::BLEND_ADD_COLORS);
+		smaterial.set_blend_mode_src_factor(fx::BlendingFactor_SrcAlpha);
+		smaterial.set_blend_mode_dst_factor(fx::BlendingFactor_DstColor);
+		smaterial.set_blend_mode_equation(fx::BlendingEquation_BlendColor);
+
+		smaterial.bind_static_uniforms();
+
+		// Add material for entity.
+		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, smaterial);
+
+		// Set script for entity.
+		mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", entity);
+
+		add_entity(entity);
+	}
+
+
+
+
+
 
 	m_ready = true;
 	return true;

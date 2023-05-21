@@ -153,6 +153,15 @@ assert((message, expression))
 assert((message, expression))
 
 
+#if MINT_DEBUG
+#define MINT_DEBUG_BREAK(condition) \
+if((condition) == true) DebugBreak()
+#else
+#define MINT_DEBUG_BREAK(condition)
+#endif
+
+
+
 #if MINT_PLATFORM_LINUX
 #include <pthread.h>
 #define MINT_CRITICAL_SECTION(pSection) pthread_mutex_t pSection

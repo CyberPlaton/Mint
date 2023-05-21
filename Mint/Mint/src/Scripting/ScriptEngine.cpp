@@ -32,13 +32,9 @@ namespace mint::scripting
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			auto & scripts = m_scripts.get_all();
-
-			while(!scripts.empty())
+			for (auto script = m_scripts.begin(); script != m_scripts.end(); script++)
 			{
-				scripts[0].on_destroy();
-
-				scripts.erase(scripts.begin());
+				script->on_destroy();
 			}
 
 		);

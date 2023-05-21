@@ -11,6 +11,8 @@ namespace mint::scripting
 	class ILuaScript
 	{
 	public:
+		virtual bool parse_check() = 0;
+
 		virtual bool initialize() = 0;
 
 		virtual void terminate() = 0;
@@ -42,7 +44,9 @@ namespace mint::scripting
 
 		virtual void set_script_path(const String&) = 0;
 
-		virtual void set_script_entity(entt::entity) = 0;
+		virtual void set_script_entity(EntityHandle) = 0;
+
+		virtual void set_script_entity_verified(EntityHandle) = 0;
 
 	};
 
@@ -56,10 +60,11 @@ namespace mint::scripting
 		CLuaScript& operator=(const CLuaScript& other);
 		virtual ~CLuaScript();
 
+		bool parse_check() override final;
 
-		bool initialize();
+		bool initialize() override final;
 
-		void terminate();
+		void terminate() override final;
 
 		bool is_active() const override final { return m_active; }
 
@@ -69,14 +74,14 @@ namespace mint::scripting
 
 		bool has_error() const override final { return m_error; }
 
-		bool has_entity_set() const override final { return m_entity != entt::null; };
+		bool has_entity_set() const override final { return is_handle_valid(m_entity); };
 
 
-		void on_update(f32 dt) {};
+		virtual void on_update(f32 dt) {};
 
-		void on_create() {};
+		virtual void on_create() {};
 
-		void on_destroy() {};
+		virtual void on_destroy() {};
 
 		String get_script_name() const;
 
@@ -86,8 +91,9 @@ namespace mint::scripting
 
 		void set_script_path(const String& path)  override final;
 
-		void set_script_entity(entt::entity entity) override final;
+		void set_script_entity(EntityHandle entity) override final;
 
+		void set_script_entity_verified(EntityHandle entity) override final;
 
 	protected:
 		lua_State* m_state;
@@ -96,7 +102,7 @@ namespace mint::scripting
 		bool m_active;
 		bool m_error;
 
-		entt::entity m_entity;
+		EntityHandle m_entity;
 
 		String m_scriptName;
 		String m_scriptPath;

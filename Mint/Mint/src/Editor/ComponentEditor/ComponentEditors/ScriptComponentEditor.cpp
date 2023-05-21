@@ -71,19 +71,19 @@ namespace mint::editor
 		}
 		else
 		{
-			const auto& behaviors = be.get_all_behavior_prefabs();
+			const auto& behavior_script_paths = be.get_all_behavior_prefabs();
 
-			for(const auto& script: behaviors)
+			for(const auto& script: behavior_script_paths)
 			{
-				bool open = ImGui::Button(script.get_script_name().c_str());
+				bool open = ImGui::Button(script.first.c_str());
 
 				ImGui::SameLine();
 
-				CUI::help_marker_no_question_mark(script.get_script_path());
+				CUI::help_marker_no_question_mark(TextFormat("Path: \"%s\"", script.second.c_str()));
 
 				if(open)
 				{
-					be.set_behavior_for_entity(script.get_script_name(), entity);
+					be.set_behavior_for_entity(script.first, entity);
 				}
 			}
 		}

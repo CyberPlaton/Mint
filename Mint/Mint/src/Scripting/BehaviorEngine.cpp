@@ -11,6 +11,8 @@ namespace mint::scripting
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
+		m_activeBehaviors.initialize(10000);
+
 		m_internalLoop = false;
 		m_running = false;
 		m_update = false;
@@ -30,21 +32,24 @@ namespace mint::scripting
 
 	void CBehaviorEngine::reset()
 	{
+
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-			auto & behaviors = m_activeBehaviors.get_all();
-
-			while (!behaviors.empty())
+			
+			auto behavior = m_activeBehaviors.begin();
+			while (behavior)
 			{
-				behaviors[0].on_destroy();
 
-				mint::algorithm::vector_erase_first(behaviors);
+				if (m_behaviorsActive && behavior->is_ready()) behavior->on_destroy();
+
+
+				behavior = m_activeBehaviors.advance(behavior);
 			}
 
 			m_activeBehaviors.reset();
 			m_behaviorPrefabs.reset();
 
 		);
+
 	}
 
 
@@ -110,14 +115,17 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			for(auto& script : m_activeBehaviors.get_all())
+			auto behavior = m_activeBehaviors.begin();
+			u32 index = 0;
+			while (behavior)
 			{
-				if (m_behaviorsActive && script.is_ready() && script.is_active()) script.on_update(dt);
+				if (m_behaviorsActive && behavior->is_ready() && behavior->is_active()) behavior->on_update(dt);
+
+				index++;
+				behavior = m_activeBehaviors.advance(behavior);
 			}
 
 		);
-		
-
 	}
 
 
@@ -172,21 +180,27 @@ namespace mint::scripting
 
 		if(m_behaviorPrefabs.lookup(h))
 		{
+			auto script_pair = m_behaviorPrefabs.get(h);
+
 			if(does_entity_have_behavior_set(entity)) remove_behavior_from_entity(entity);
 
-				MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+			auto behavior = m_activeBehaviors.emplace(SCAST(u64, entity));
 
-				CBehavior& behavior = m_activeBehaviors.emplace_back(SCAST(u64, entity),
-																	 m_behaviorPrefabs.get_ref(h));
+			behavior->set_script_name(script_name);
 
-				behavior.initialize();
+			behavior->set_script_path(script_pair.second);
 
-				behavior.set_script_entity(entity);
+			behavior->set_script_entity_verified(entity_get_handle(entity));
 
-				behavior.on_create();
 
+			behavior->initialize();
+
+			behavior->on_create();
+
+
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
  			);
-
 		}
 	}
 
@@ -195,16 +209,7 @@ namespace mint::scripting
 	{
 		auto h = mint::algorithm::djb_hash(script_name);
 
-		CBehavior& behavior = m_behaviorPrefabs.emplace_back(h);
-
-		behavior.set_script_entity(entt::null);
-		behavior.set_script_name(script_name);
-		behavior.set_script_path(script_file_path);
-
-		if (!behavior.initialize())
-		{
-			m_behaviorPrefabs.remove(h);
-		}
+		m_behaviorPrefabs.add(h, std::make_pair(script_name.c_str(), script_file_path.c_str()));
 	}
 
 
@@ -214,9 +219,9 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			auto & behavior = m_activeBehaviors.get_ref(h);
+			auto behavior = m_activeBehaviors.get(h);
 
-			behavior.on_destroy();
+			behavior->on_destroy();
 
 			m_activeBehaviors.remove(h);
  		);
@@ -253,11 +258,11 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			mint::scripting::CBehavior & behavior = m_activeBehaviors.get_ref(h);
+			auto behavior = m_activeBehaviors.get(h);
 
 		);
 
-		return behavior;
+		return *behavior;
 	}
 
 
@@ -267,9 +272,9 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			const mint::scripting::CBehavior & behavior = m_activeBehaviors.get_const(h);
+			auto behavior = m_activeBehaviors.get(h);
 
-			auto active = behavior.is_active();
+			auto active = behavior->is_active();
 		
 		);
 
@@ -277,7 +282,7 @@ namespace mint::scripting
 	}
 
 
-	const mint::Vector< mint::scripting::CBehavior >& CBehaviorEngine::get_all_behavior_prefabs()
+	const mint::Vector< std::pair< String, String > >& CBehaviorEngine::get_all_behavior_prefabs()
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 

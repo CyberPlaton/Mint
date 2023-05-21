@@ -326,57 +326,43 @@ namespace mint
 
 		spatial::BoundingBox< f32, 2 > bbox(viewmin, viewmax);
 		Vector< detail::SQuadTreeNode > result;
-		{
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				m_sqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
-
-				m_dqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
-
-			);
-		}
-
-
-		u32 current_highest_layer = 0;
-		Vector< entt::entity > frame_entities;
-
-		if(!result.empty())
-		{
-			// Presort the entities in a painters algorithm manner. In that way we can
-			// avoid sorting in the renderer and iterate through the vector of entities directly.
-			for (auto& node : result)
-			{
-				auto layer = CUCA::sprite_get_depth(node.m_entity);
-
-				m_layeredEntities[layer].push_back(node.m_entity);
-
-				if (layer > current_highest_layer) current_highest_layer = layer;
-			}
-
-			for (u32 lyr = 0; lyr <= current_highest_layer; lyr++)
-			{
-				mint::algorithm::vector_push_back(frame_entities, m_layeredEntities[lyr]);
-			}
-		}
-
-
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_sqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
+
+			m_dqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
+
+			u32 current_highest_layer = 0;
+			Vector< entt::entity > frame_entities;
+
+			if (!result.empty())
+			{
+				// Presort the entities in a painters algorithm manner. In that way we can
+				// avoid sorting in the renderer and iterate through the vector of entities directly.
+				for (auto& node : result)
+				{
+					auto layer = CUCA::sprite_get_depth(node.m_entity);
+
+					m_layeredEntities[layer].push_back(node.m_entity);
+
+					if (layer > current_highest_layer) current_highest_layer = layer;
+				}
+
+				for (u32 lyr = 0; lyr <= current_highest_layer; lyr++)
+				{
+					mint::algorithm::vector_push_back(frame_entities, m_layeredEntities[lyr]);
+				}
+			}
 
 			m_currentOut = (m_currentOut + 1) % MINT_SAS_OUT_QUEUE_COUNT_MAX;
 
 			m_outQueue[m_currentOut] = frame_entities;
-
-		);
-
-
-		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 			// Clean up rendering layers, inclusive the highest rendered layer.
 			for (u32 lyr = 0; lyr <= current_highest_layer; lyr++)
 			{
 				m_layeredEntities[lyr].clear();
 			}
-
 		);
 	}
 

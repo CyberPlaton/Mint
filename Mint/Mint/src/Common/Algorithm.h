@@ -10,6 +10,8 @@
 
 namespace mint::algorithm
 {
+	u64 get_next_power_of_2(u64 value);
+
 	u64 djb_hash(const String& str);
 
 	bool are_values_sufficiently_different(f32 lh, f32 rh);

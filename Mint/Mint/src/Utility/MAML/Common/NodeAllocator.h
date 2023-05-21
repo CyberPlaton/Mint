@@ -3,6 +3,7 @@
 
 
 #include "Common/Common.h"
+#include "Common/Algorithm.h"
 
 
 namespace maml
@@ -41,27 +42,8 @@ namespace maml
 
 		mint::u64 m_usedAlignment;
 
-
-	private:
-		mint::u64 _get_next_power_2(mint::u64 value);
-
-
 	};
 
-
-	template< class Object >
-	mint::u64 maml::CNodeAllocator<Object>::_get_next_power_2(mint::u64 value)
-	{
-		value--;
-		value |= value >> 1;
-		value |= value >> 2;
-		value |= value >> 4;
-		value |= value >> 8;
-		value |= value >> 16;
-		value++;
-
-		return value;
-	}
 
 
 	template< class Object >
@@ -171,7 +153,7 @@ namespace maml
 		{
 			algnmnt = alignof(Object);
 
-			algnmnt = _get_next_power_2(algnmnt);
+			algnmnt = mint::algorithm::get_next_power_of_2(algnmnt);
 		}
 
 		m_memoryBlockStart = _aligned_malloc(sizeof(Object) * expected_object_count, algnmnt);

@@ -69,10 +69,10 @@ namespace mint
 
 			m_indices.emplace_back(std::make_pair(identifier, index));
 
-			m_data.emplace_back(args...);
-
-			return m_data[index];
+			return m_data.emplace_back(args...);
 		}
+
+		T* get_ptr(u64 identifier);
 
 		T get(u64 identifier);
 
@@ -112,6 +112,15 @@ namespace mint
 
 	};
 
+
+	template < typename T >
+	T* mint::CMap<T>::get_ptr(u64 identifier)
+	{
+		for (auto i = 0; i < m_indices.size(); i++)
+		{
+			if (identifier == m_indices[i].first) return &m_data[m_indices[i].second];
+		}
+	}
 
 
 	template < typename T >
