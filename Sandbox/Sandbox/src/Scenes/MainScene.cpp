@@ -64,9 +64,15 @@ bool CMainScene::on_load()
 	identifier.m_uuid = identifier.m_enttId;
 	identifier.m_debugName = "Knight";
 	hierarchy.m_parent = entt::null;
-	transform.m_scale = { 1.0f, 1.0f };
-	transform.m_rotation = 45.0f;
-	transform.m_position = { 0.0f, 0.0f };
+// 	transform.m_scale = { 1.0f, 1.0f };
+// 	transform.m_rotation = 45.0f;
+// 	transform.m_position = { 0.0f, 0.0f };
+
+	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f }); // Scaling bugged?
+	CUCA::transform_set_rotation(m_knight, 0);
+	CUCA::transform_set_position(m_knight, { -100, 100 });
+
+
 	sprite.m_visible = true;
 	sprite.m_internalVisible = true;
 	sprite.m_depth = 0;
@@ -128,7 +134,7 @@ bool CMainScene::on_load()
 
 
 	mint::CRandom random;
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		// Create an entity.
 		entt::entity entity = m_registry.create_entity();
@@ -137,7 +143,6 @@ bool CMainScene::on_load()
 		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(entity);
 		auto& transform = m_registry.add_component< mint::component::STransform >(entity);
 		auto& sprite = m_registry.add_component< mint::component::SSprite >(entity);
-		auto& script = m_registry.add_component< mint::component::SScript >(entity);
 		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(entity);
 
 
@@ -145,15 +150,17 @@ bool CMainScene::on_load()
 		identifier.m_uuid = identifier.m_enttId;
 		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, entity));
 		hierarchy.m_parent = entt::null;
-		transform.m_scale = { random.normalized_float() * 5.0f, random.normalized_float() * 5.0f };
-		transform.m_rotation = random.integer() * 360;
-		transform.m_position = { random.integer() * 512, random.integer() * 512 };
+
+		CUCA::transform_set_scale(entity, { 1.0f, 1.0f }); // Scaling bugged?
+		CUCA::transform_set_rotation(entity, random.normalized_float() * 360);
+		CUCA::transform_set_position(entity, { random.normalized_float() * 512, random.normalized_float() * 512 });
+
 		sprite.m_visible = true;
 		sprite.m_internalVisible = true;
-		sprite.m_depth = random.integer() % 10;
+		sprite.m_depth = 0;
 		sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
 		sprite.m_color = { 255, 255, 255, 255 };
-		sprite.m_origin = { 0.0f, 0.0f };
+		sprite.m_origin = { 90.0f, 90.0f };
 
 
 		mint::fx::CMaterial material;
@@ -184,9 +191,6 @@ bool CMainScene::on_load()
 
 		// Add material for entity.
 		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, smaterial);
-
-		// Set script for entity.
-		mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", entity);
 
 		add_entity(entity);
 	}

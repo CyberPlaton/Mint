@@ -649,7 +649,7 @@ namespace mint::component
 
 		return {
 			x, y,
-			position.x + size.x * scale.x, position.y + size.y * scale.y
+			size.x * scale.x, size.y * scale.y
  		};
 
 	}

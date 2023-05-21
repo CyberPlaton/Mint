@@ -7,10 +7,7 @@ namespace mint::fx
 
 	void CPrimitiveRenderer::RenderRectangle(const Vec2& position, const Vec2& dimension, const CColor& tint /*= MINT_WHITE()*/, f32 thikness /*= 1.0f*/)
 	{
-		RenderLine(position, { position.x + dimension.x, position.y}, tint, thikness);													// TL TR
-		RenderLine({ position.x + dimension.x, position.y }, { position.x + dimension.x, position.y + dimension.y }, tint, thikness);	// TR BR
-		RenderLine({ position.x + dimension.x, position.y + dimension.y }, { position.x, position.y + dimension.y }, tint, thikness);	// BR BL
-		RenderLine({ position.x, position.y + dimension.y }, position, tint, thikness);													// BL TL
+		DrawRectangleLinesEx({ position.x, position.y, dimension.x, dimension.y }, thikness, tint.as_cliteral());
 	}
 
 

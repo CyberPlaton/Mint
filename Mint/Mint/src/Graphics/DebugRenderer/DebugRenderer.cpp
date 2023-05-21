@@ -3,6 +3,7 @@
 
 namespace mint::fx
 {
+	mint::fx::ICamera* CDebugRenderer::m_camera = nullptr;
 
 	void CDebugRenderer::on_render_destination_rectangle(const Vector< entt::entity >& entities)
 	{
@@ -23,7 +24,21 @@ namespace mint::fx
 			auto origin = CUCA::sprite_get_origin(entity);
 
 			CPrimitiveRenderer::RenderCircleOutlined({ dest.get_x() + origin.x, dest.get_y() + origin.y }, 10.0f, MINT_GREEN_LIGHT(), MINT_GREEN_DARK());
-		}
+		}	
+	}
+
+
+	void CDebugRenderer::begin(fx::ICamera* camera)
+	{
+		m_camera = camera;
+
+		m_camera->use_camera();
+	}
+
+
+	void CDebugRenderer::end()
+	{
+		m_camera->end_camera();
 	}
 
 
