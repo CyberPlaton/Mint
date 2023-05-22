@@ -130,7 +130,7 @@ namespace mint::editor
 		ImGui::SameLine();
 
 		static s32 selected_entity_option = -1;
-		String pop_up_identifier = name + "Entity Options Popup";
+		String pop_up_identifier = name + " Entity Options Popup";
 
 		ImGui::PushStyleColor(ImGuiCol_Text, { 0.9f, 0.9f, 0.9f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
@@ -398,6 +398,5 @@ namespace mint::editor
 		CSAS::Get().submit_scene_static_entities(scene->get_entities());
 	}
 
-
 }
-#endif
+#endif  
