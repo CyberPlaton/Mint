@@ -739,56 +739,19 @@ namespace mint::component
 	}
 
 
-	void CUCA::__transform_set_scale_internal__(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to scale an entity without a Transform component!");
-
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		// Set new value.
-		transform.m_scale = value;
-
-		// Update physics if required.
-		_rigid_body_update_scale(entity, transform.m_scale);
-	}
-
-
-	void CUCA::__transform_set_position_internal__(entt::entity entity, Vec2 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to translate an entity without a Transform component!");
-
-		// Update data.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		transform.m_position = value;
-
-		// Update physics data.
-		_rigid_body_update_translation(entity, transform.m_position);
-	}
-
-
-	void CUCA::__transform_set_rotation_internal__(entt::entity entity, f32 value)
-	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
-			"Invalid operation. Trying to rotate an entity without a Transform component!");
-
-		// Update the data.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-
-		transform.m_rotation = value;
-
-		// Update physics data.
-		_rigid_body_update_rotation(entity, transform.m_rotation);
-	}
-
-
 	void CUCA::hierarchy_remove_parent(entt::entity entity)
 	{
 		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
 
 		CUCA::hierarchy_remove_child(hierarchy.m_parent, entity);
+	}
+
+
+	void CUCA::transform_set_transform_matrix(entt::entity entity, const Mat4& matrix)
+	{
+		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+
+		transform.m_worldTransform = matrix;
 	}
 
 
