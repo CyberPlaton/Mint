@@ -92,7 +92,7 @@ namespace mint::component
 		// Update the data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 		
-		transform.m_rotation = mint::algorithm::degree_to_radians(value);
+		transform.m_rotation = value;
 
 		// Update transform matrix and children if any.
 		_update_world_transform_recursive(entity);
@@ -110,7 +110,7 @@ namespace mint::component
 		// Update data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 		
-		transform.m_rotation += mint::algorithm::degree_to_radians(value);
+		transform.m_rotation += value;
 
 		// Update transform matrix and children if any.
 		_update_world_transform_recursive(entity);
@@ -154,7 +154,7 @@ namespace mint::component
 	{
 		const auto& transform = CUCA::_get_world_transform(entity);
 
-		return mint::algorithm::radians_to_degree(CUCA::extract_rotation_from_world_transform(transform));
+		return CUCA::extract_rotation_from_world_transform(transform);
 	}
 
 
@@ -777,7 +777,7 @@ namespace mint::component
 		// Update the data.
 		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
 
-		transform.m_rotation = mint::algorithm::degree_to_radians(value);
+		transform.m_rotation = value;
 
 		// Update physics data.
 		_rigid_body_update_rotation(entity, transform.m_rotation);

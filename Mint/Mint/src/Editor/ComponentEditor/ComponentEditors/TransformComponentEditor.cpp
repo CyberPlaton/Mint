@@ -41,20 +41,30 @@ namespace mint::editor
 
 		auto& transform = MINT_ACTIVE_SCENE()->get_registry().get_component< mint::component::STransform >(entity);
 		
-		CUI::edit_field_vec2(transform.m_position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
+		auto position = CUCA::transform_get_position(entity);
+		auto rotation = CUCA::transform_get_rotation(entity);
+		auto scale = CUCA::transform_get_scale(entity);
+
+
+		CUI::edit_field_vec2(position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
 							 "Position", "Entities current position in the world, this affects all children positions recursively", slid++, scid++);
 		
 		ImGui::Separator();
 
 
-		CUI::edit_field_vec2(transform.m_scale, gd.s_EditorTransformMinScale, gd.s_EditorTransformMaxScale,
+		CUI::edit_field_vec2(scale, gd.s_EditorTransformMinScale, gd.s_EditorTransformMaxScale,
 							 "Scale", "Entities current scale, this affects all children scale values recursively", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 		ImGui::Separator();
 
 
-		CUI::edit_field_f32(transform.m_rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
+		CUI::edit_field_f32(rotation, gd.s_EditorTransformMinRotation, gd.s_EditorTransformMaxRotation,
 							"Rotation", "Entities current rotation, this affects all children rotation values recursively", slid++, scid++, ImGuiSliderFlags_None, 0.05f);
+	
+
+		CUCA::transform_set_position(entity, position);
+		CUCA::transform_set_scale(entity, scale);
+		CUCA::transform_set_rotation(entity, rotation);
 	}
 
 

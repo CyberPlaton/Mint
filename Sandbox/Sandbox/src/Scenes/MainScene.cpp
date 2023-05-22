@@ -2,7 +2,7 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	CUCA::transform_rotate(m_knight,  45.0f * dt);
+	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 }
 
 

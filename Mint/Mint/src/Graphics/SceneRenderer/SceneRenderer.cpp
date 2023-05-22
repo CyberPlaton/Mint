@@ -76,7 +76,7 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, rotation, sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 
 				material.end_blend_mode();
@@ -132,7 +132,7 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, rotation, sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 
 				material.end_blend_mode();
