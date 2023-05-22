@@ -113,9 +113,16 @@ namespace mint::editor
 
 		if (inspected) ImGui::PopStyleColor();
 
+		// Entity selected for inspection.
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
 			GlobalData::Get().s_EditorInspectedEntity = entity;
+
+			auto position = CUCA::transform_get_position(GlobalData::Get().s_EditorInspectedEntity);
+
+			auto camera = MINT_ACTIVE_SCENE()->get_active_camera();
+
+			camera->set_translation(position);
 		}
 
 
