@@ -61,7 +61,23 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::show_main_frame()
 	{
-		const auto& entities = MINT_ACTIVE_SCENE()->get_entities();
+		auto scene = MINT_ACTIVE_SCENE();
+		auto& registry = scene->get_registry();
+		auto& gd = GlobalData::Get();
+
+		if (gd.s_EditorOptionEntityToBeDeleted != entt::null)
+		{
+			scene->remove_entity(gd.s_EditorOptionEntityToBeDeleted);
+			registry.delete_entity(gd.s_EditorOptionEntityToBeDeleted);
+
+			if (gd.s_EditorInspectedEntity == gd.s_EditorOptionEntityToBeDeleted) { gd.s_EditorInspectedEntity = entt::null; };
+			if (gd.s_EditorOptionSelectedEntity == gd.s_EditorOptionEntityToBeDeleted) { gd.s_EditorOptionSelectedEntity = entt::null; };
+
+			gd.s_EditorOptionEntityToBeDeleted = entt::null;
+		}
+
+
+		const auto& entities = scene->get_entities();
 
 		ImGui::SetNextItemOpen(true, ImGuiCond_Appearing);
 
@@ -167,7 +183,6 @@ namespace mint::editor
 					show_entity_recursive(kid);
 				}
 			}
-
 
 			ImGui::TreePop();
 		}
@@ -277,6 +292,7 @@ namespace mint::editor
 		case 1: create_dynamic_parent_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
 		case 2: create_static_child_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
 		case 3: create_static_parent_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
+		case 4: delete_entity(GlobalData::Get().s_EditorOptionSelectedEntity); break;
 		}
 
 		*option = -1;
@@ -396,6 +412,11 @@ namespace mint::editor
 		scene->add_entity(entity);
 
 		CSAS::Get().submit_scene_static_entities(scene->get_entities());
+	}
+
+	void CHierarchyPanelLayer::delete_entity(entt::entity entity)
+	{
+		GlobalData::Get().s_EditorOptionEntityToBeDeleted = entity;
 	}
 
 }

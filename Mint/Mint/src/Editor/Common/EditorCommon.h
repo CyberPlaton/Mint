@@ -34,6 +34,7 @@ namespace mint::editor
 		static const mint::f32 s_DefaultEditorCharacterSize;
 		static entt::entity s_EditorInspectedEntity;
 		static entt::entity s_EditorOptionSelectedEntity;
+		static entt::entity s_EditorOptionEntityToBeDeleted;
 
 
 
@@ -118,6 +119,7 @@ namespace mint::editor
 		"Create Dynamic Parent",
 		"Create Static Child",
 		"Create Static Parent",
+		"Delete"
 	};
 
 }

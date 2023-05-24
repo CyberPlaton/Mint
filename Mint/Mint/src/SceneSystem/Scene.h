@@ -34,6 +34,8 @@ namespace mint
 
 		void add_entity(entt::entity entity) override final;
 
+		void remove_entity(entt::entity entity) override final;
+
 		Vector< entt::entity > get_entities() override final;
 
 		Vector< entt::entity > get_dynamic_entities() override final;

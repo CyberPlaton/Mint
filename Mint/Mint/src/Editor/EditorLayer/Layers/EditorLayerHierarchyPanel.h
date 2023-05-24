@@ -45,6 +45,8 @@ namespace mint::editor
 		void create_static_child_entity(entt::entity parent);
 
 		void create_static_parent_entity(entt::entity child);
+
+		void delete_entity(entt::entity entity);
 	};
 
 }

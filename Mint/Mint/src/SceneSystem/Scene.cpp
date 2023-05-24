@@ -23,6 +23,11 @@ namespace mint
 	}
 
 
+	void CScene::remove_entity(entt::entity entity)
+	{
+		mint::algorithm::vector_erase(m_entities, entity);
+	}
+
 	mint::Vector< entt::entity > CScene::get_entities()
 	{
 		return m_entities;
