@@ -78,7 +78,6 @@ namespace mint::fx
 		void restore_default_blend_mode();
 
 		void set_shader_program(const String& shader_program_name);
-		void set_shader_program(const mint::Shader& shader);
 
 		void set_texture(const String& texture_name);
 		void set_texture(TextureHandle texture_handle, const Vec2& texture_size);
