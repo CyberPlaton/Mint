@@ -24,32 +24,26 @@ namespace mint::fx
 
 	void CEmbeddedShaders::terminate()
 	{
-		auto& shaders = m_shaders.get_all();
-
-		while(!shaders.empty())
-		{
-			shaders.erase(shaders.begin());
-		}
 	}
 
 
-	const Shader& CEmbeddedShaders::get_default_sprite_shader_program()
+	std::pair< const char*, const char* > CEmbeddedShaders::get_default_sprite_shader_program()
 	{
-		return m_shaders.get_ref(mint::algorithm::djb_hash("Sprite"));
+		return m_shaders.get(mint::algorithm::djb_hash("Sprite"));
 	}
 
 
-	const Shader& CEmbeddedShaders::get_embedded_shader_program(const String& program_name)
+	std::pair< const char*, const char* > CEmbeddedShaders::get_embedded_shader_program(const String& program_name)
 	{
 		auto h = mint::algorithm::djb_hash(program_name);
 
-		return m_shaders.get_ref(h);
+		return m_shaders.get(h);
 	}
 
 
-	const Shader& CEmbeddedShaders::get_embedded_shader_program(ShaderHandle handle)
+	std::pair< const char*, const char* > CEmbeddedShaders::get_embedded_shader_program(ShaderHandle handle)
 	{
-		return m_shaders.get_ref(handle);
+		return m_shaders.get(handle);
 	}
 
 
@@ -87,20 +81,11 @@ namespace mint::fx
 			"}                                  \n";
 
 
-		Shader shader = LoadShaderFromMemory(vs, fs);
+		auto h = mint::algorithm::djb_hash("Sprite");
 
-		if(IsShaderReady(shader))
-		{
-			auto h = mint::algorithm::djb_hash("Sprite");
+		m_shaders.add(h, std::make_pair(vs, fs));
 
-			m_shaders.add(h, shader);
-
-			return true;
-		}
-
-		MINT_LOG_ERROR("[{:.4f}][CEmbeddedShaders::_create_sprite_shader_program] Failed creating embedded shader program \"Sprite\"!", MINT_APP_TIME);
-
-		return false;
+		return true;
 	}
 
 

@@ -93,7 +93,7 @@ namespace mint
 	using String = std::string;
 	using Window = raylib::Window;
 	using Texture = raylib::Texture;
-	using Shader = raylib::Shader;
+	using Shader = Shader;
 
 	static inline bool is_handle_valid(u64 handle) { return handle != static_cast< u64 >(-1); }
 	static inline EntityHandle entity_get_handle(entt::entity entity) { return static_cast<u64>(entity); }

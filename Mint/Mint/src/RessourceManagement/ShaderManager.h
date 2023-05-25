@@ -19,10 +19,10 @@ namespace mint
 		void reset();
 
 
-		void add_shader_program(const String& program_name, Shader& shader);
+		void add_shader_program(const String& program_name, const String& vs_shader_path, const String& fs_shader_path);
 
-		const Shader& get_shader_program(const String& program_name);
-		const Shader& get_shader_program(ShaderHandle handle);
+		bool load_shader_program(const String& program_name, Shader* dest_shader);
+		bool load_shader_program(ShaderHandle handle, Shader* dest_shader);
 		
 		bool lookup_shader_program(const String& program_name);
 		bool lookup_shader_program(ShaderHandle handle);
@@ -33,7 +33,7 @@ namespace mint
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		CMap< Shader > m_shaders;
+		CMap< std::pair< String, String > > m_shaders;
 
 	};
 }

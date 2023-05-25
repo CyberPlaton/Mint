@@ -21,9 +21,9 @@ namespace mint::fx
 		void terminate();
 
 
-		const Shader& get_default_sprite_shader_program();
-		const Shader& get_embedded_shader_program(const String& program_name);
-		const Shader& get_embedded_shader_program(ShaderHandle handle);
+		std::pair< const char*, const char* > get_default_sprite_shader_program();
+		std::pair< const char*, const char* > get_embedded_shader_program(const String& program_name);
+		std::pair< const char*, const char* > get_embedded_shader_program(ShaderHandle handle);
 
 		bool lookup_shader_program(const String& program_name);
 		bool lookup_shader_program(ShaderHandle handle);
@@ -32,7 +32,7 @@ namespace mint::fx
 	private:
 		static CEmbeddedShaders* s_CEmbeddedShaders;
 
-		CMap< Shader > m_shaders;
+		CMap< std::pair< const char*, const char* > > m_shaders;
 
 
 	private:

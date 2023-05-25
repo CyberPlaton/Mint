@@ -19,17 +19,9 @@ namespace mint
 
 		String ps_name = "fs_"; ps_name += asset.get_asset_source_path();
 
-		Shader shader = LoadShader((asset.read_bool("has_vs") == true) ? vs_name.c_str() : nullptr,
-								   fs_name.c_str());
+		CShaderManager::Get().add_shader_program(asset.get_asset_name(), vs_name, fs_name);
 
-		if(IsShaderReady(shader))
-		{
-			CShaderManager::Get().add_shader_program(asset.get_asset_name(), shader);
-
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 
