@@ -22,6 +22,8 @@ namespace mint::fx
 		void reset();
 
 		void add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition);
+
+		void remove_material_from_entity(entt::entity entity, const String& material_name);
 		
 		mint::CMap2< CMaterial >& get_materials_for_entity(entt::entity entity);
 

@@ -113,5 +113,17 @@ namespace mint::fx
 		MINT_ASSERT(false, "Invalid operation. Setting a second default material for an entity is not allowed!");
 	}
 
+	void CMaterialManager::remove_material_from_entity(entt::entity entity, const String& material_name)
+	{
+		auto h = SCAST(u64, entity);
+
+		auto hh = mint::algorithm::djb_hash(material_name);
+
+		if (m_materials.find(h) != m_materials.end())
+		{
+			m_materials[h].remove(hh);
+		}
+	}
+
 
 }
