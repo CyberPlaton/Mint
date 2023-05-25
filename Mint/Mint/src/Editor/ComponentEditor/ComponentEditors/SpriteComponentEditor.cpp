@@ -40,12 +40,12 @@ namespace mint::editor
 
 		auto& materials = CUCA::sprite_get_all_materials(entity);
 
-		const auto& main_material = CUCA::sprite_get_main_material(entity);
+		auto main_material = CUCA::sprite_get_main_material(entity);
 
 		if(ImGui::CollapsingHeader("Main Material"))
 		{
-			ImGui::Text(TextFormat("Texture Handle: %zu", main_material.get_texture_handle()));
-			ImGui::Text(TextFormat("Texture Size: {%.3f:%.3f}", main_material.get_texture_dimension().x, main_material.get_texture_dimension().y));
+			ImGui::Text(TextFormat("Texture Handle: %zu", main_material->get_texture_handle()));
+			ImGui::Text(TextFormat("Texture Size: {%.3f:%.3f}", main_material->get_texture_dimension().x, main_material->get_texture_dimension().y));
 		}
 		
 		ImGui::Separator();

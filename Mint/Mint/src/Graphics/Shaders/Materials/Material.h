@@ -16,6 +16,7 @@ namespace mint::fx
 		CMaterial();
 		~CMaterial();
 
+		void read_definition(const SMaterialDefinition& definition);
 
 		void bind_shader() const;
 		void bind_blend_mode()  const;
@@ -48,6 +49,8 @@ namespace mint::fx
 
 
 	private:
+		MaterialHandle m_handle = SCAST(u64, -1);
+
 		TextureHandle m_texture;
 		
 		Vec2 m_textureSize;

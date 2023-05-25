@@ -49,7 +49,7 @@ namespace mint::fx
 			const auto& sprite = registry.get_component< mint::component::SSprite >(entity);
 
 
-			const auto& materials = material_manager.get_materials_for_entity(entity);
+			auto& materials = material_manager.get_materials_for_entity(entity);
 		
 			
 			const auto& position = CUCA::transform_get_position(entity);
@@ -57,15 +57,17 @@ namespace mint::fx
 			const auto& rotation = CUCA::transform_get_rotation(entity);
 
 
-			for(const auto& material: materials)
+			auto material = materials.begin();
+			while (material)
 			{
-				material.bind_dynamic_uniforms();
 
-				material.bind_shader();
+				material->bind_dynamic_uniforms();
 
-				material.bind_blend_mode();
+				material->bind_shader();
 
-				const Vec2& texture_size = material.get_texture_dimension();
+				material->bind_blend_mode();
+
+				const Vec2& texture_size = material->get_texture_dimension();
 
 				const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
 										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
@@ -78,12 +80,15 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 
-				material.end_blend_mode();
+				material->end_blend_mode();
 
-				material.end_shader();
+				material->end_shader();
+
+
+				material = materials.advance(material);
 			}
 		}
 	}
@@ -106,7 +111,7 @@ namespace mint::fx
 			const auto& sprite = registry.get_component< mint::component::SSprite >(entity);
 
 
-			const auto& materials = material_manager.get_materials_for_entity(entity);
+			auto& materials = material_manager.get_materials_for_entity(entity);
 
 			MINT_LOG_INFO("[{:.4f}][CSceneRenderer::on_render] Entity Materials Vector size: \"{}\" Bytes!", MINT_APP_TIME, sizeof(materials));
 
@@ -115,15 +120,17 @@ namespace mint::fx
 			const auto& rotation = CUCA::transform_get_rotation(entity);
 
 
-			for (const auto& material : materials)
+			auto material = materials.begin();
+			while (material)
 			{
-				material.bind_dynamic_uniforms();
 
-				material.bind_shader();
+				material->bind_dynamic_uniforms();
 
-				material.bind_blend_mode();
+				material->bind_shader();
 
-				const Vec2& texture_size = material.get_texture_dimension();
+				material->bind_blend_mode();
+
+				const Vec2& texture_size = material->get_texture_dimension();
 
 				const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
 										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
@@ -136,12 +143,15 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 
-				material.end_blend_mode();
+				material->end_blend_mode();
 
-				material.end_shader();
+				material->end_shader();
+
+
+				material = materials.advance(material);
 			}
 		}
 	}

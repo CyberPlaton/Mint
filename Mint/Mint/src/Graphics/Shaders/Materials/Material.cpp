@@ -15,6 +15,7 @@ namespace mint::fx
 		set_shader_program(definition.m_shaderProgramName);
 		set_texture(definition.m_textureName);
 
+		m_handle = mint::algorithm::djb_hash(definition.m_materialName);
 		m_blendMode = definition.m_blendMode;
 		m_srcBlendFactor = definition.m_srcBlendFactor;
 		m_dstBlendFactor = definition.m_dstBlendFactor;
@@ -198,6 +199,20 @@ namespace mint::fx
 		}
 		m_staticUniforms.reset();
 		m_dynamicUniforms.reset();
+	}
+
+	void CMaterial::read_definition(const SMaterialDefinition& definition)
+	{
+		set_shader_program(definition.m_shaderProgramName);
+		set_texture(definition.m_textureName);
+
+		m_handle = mint::algorithm::djb_hash(definition.m_materialName);
+		m_blendMode = definition.m_blendMode;
+		m_srcBlendFactor = definition.m_srcBlendFactor;
+		m_dstBlendFactor = definition.m_dstBlendFactor;
+		m_blendingEquation = definition.m_blendingEquation;
+		m_staticUniforms = definition.m_staticUniforms;
+		m_dynamicUniforms = definition.m_dynamicUniforms;
 	}
 
 

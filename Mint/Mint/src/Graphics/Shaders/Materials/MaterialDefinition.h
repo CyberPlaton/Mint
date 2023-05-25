@@ -51,6 +51,8 @@ namespace mint::fx
 
 	struct SMaterialDefinition
 	{
+		String m_materialName;
+
 		String m_textureName;
 		String m_shaderProgramName;
 

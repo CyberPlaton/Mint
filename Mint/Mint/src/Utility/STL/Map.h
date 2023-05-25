@@ -57,7 +57,7 @@ namespace mint
 
 		CMapIterator< T > end() { return CMapIterator(&m_data[m_data.size() - 1]); }
 
-
+		
 		void add(u64 identifier, T& data);
 
 		void add(u64 identifier, T&& data);

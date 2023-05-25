@@ -25,11 +25,11 @@ namespace mint::component
 
 	mint::Vec2 CUCA::sprite_get_size(entt::entity entity)
 	{
-		const auto& mat = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
+		auto mat = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
 		
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			auto v = mat.get_texture_dimension();
+			auto v = mat->get_texture_dimension();
 		);
 
 		return v;
@@ -221,12 +221,12 @@ namespace mint::component
 	}
 
 
-	const mint::Vector< mint::fx::CMaterial >& CUCA::sprite_get_all_materials(entt::entity entity)
+	mint::CMap2< mint::fx::CMaterial >& CUCA::sprite_get_all_materials(entt::entity entity)
 	{
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			const auto & v = fx::CMaterialManager::Get().get_materials_for_entity(entity);
+			auto & v = fx::CMaterialManager::Get().get_materials_for_entity(entity);
 			
 		);
 
@@ -610,11 +610,11 @@ namespace mint::component
 	}
 
 
-	const mint::fx::CMaterial& CUCA::sprite_get_main_material(entt::entity entity)
+	mint::fx::CMaterial* CUCA::sprite_get_main_material(entt::entity entity)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			const auto & m = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
+			auto m = fx::CMaterialManager::Get().get_main_material_for_entity(entity);
 
 		);
 

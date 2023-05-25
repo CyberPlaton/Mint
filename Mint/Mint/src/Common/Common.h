@@ -8,6 +8,7 @@
 #define MINTFX_USE_EMBEDDED_SHADERS 0
 #define MINTFX_OPENGL_330 0
 #define MINTFX_OPENGL_ES20 0
+#define MINTFX_MATERIAL_COUNT_MAX 256
 
 // Platform Detection
 #include "platform.h"

@@ -26,7 +26,7 @@ namespace mint::fx
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			m_materials.reset();
+			m_materials.clear();
 
 			);
 
@@ -36,54 +36,81 @@ namespace mint::fx
 	void CMaterialManager::add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition)
 	{
 		auto h = SCAST(u64, entity);
-
-		if (!m_materials.lookup(h))
-		{
-			m_materials.add(h, Vector< CMaterial >{});
-		}
 		
-		auto& vector = m_materials.get_ref(h);
+		auto hh = mint::algorithm::djb_hash(material_definition.m_materialName);
+		
+		CMaterial* material = nullptr;
 
-		vector.emplace_back(material_definition);
+
+		if (m_materials.find(h) == m_materials.end())
+		{
+			m_materials[h].initialize(MINTFX_MATERIAL_COUNT_MAX);
+		}
+
+		if (!m_materials[h].lookup(hh))
+		{
+			material = m_materials[h].emplace(hh);
+		}
+		else
+		{
+			material = m_materials[h].get(hh);
+		}
+
+		MINT_ASSERT(material != nullptr, "Invalid operation. Material was not found!");
+
+		material->read_definition(material_definition);
 	}
 
 
-	const mint::Vector< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
+	mint::CMap2< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
 	{
 		auto h = SCAST(u64, entity);
 
-		if(!m_materials.lookup(h))
+		if(m_materials.find(h) == m_materials.end())
 		{
-			auto& materials = m_materials.emplace_back(h);
+			auto& materials = m_materials[h];
 
 			set_default_main_material_for_entity(entity);
 		}
 
-		return m_materials.get_const(h);
+		return m_materials[h];
 	}
 
 
-	const mint::fx::CMaterial& CMaterialManager::get_main_material_for_entity(entt::entity entity)
+	mint::fx::CMaterial* CMaterialManager::get_main_material_for_entity(entt::entity entity)
 	{
-		const auto& materials = get_materials_for_entity(entity);
+		auto& materials = get_materials_for_entity(entity);
 
-		return materials[0];
+		return materials.begin();
 	}
 
 
 	void CMaterialManager::set_default_main_material_for_entity(entt::entity entity, const String& default_texture /*= "DefaultSprite"*/, const String& default_shader /*= "Sprite"*/, BlendMode blending_mode/*= BLEND_ALPHA*/, BlendingEquation blending_equation /*= BlendingEquation_BlendColor*/, BlendingFactor blending_src_factor /*= BlendingFactor_SrcAlpha*/, BlendingFactor blending_dst_factor /*= BlendingFactor_OneMinusSrcAlpha*/)
 	{
 		auto h = SCAST(u64, entity);
+		
+		SMaterialDefinition def;
 
-		auto& materials = m_materials.get_ref(h);
-		auto& material = materials.emplace_back();
+		def.m_materialName = "Default Material";
+		def.m_textureName = default_texture;
+		def.m_shaderProgramName = default_shader;
+		def.m_blendMode = blending_mode;
+		def.m_srcBlendFactor = blending_src_factor;
+		def.m_dstBlendFactor = blending_dst_factor;
+		def.m_blendingEquation = blending_equation;
 
-		material.set_shader_program(default_shader);
-		material.set_texture(default_texture);
-		material.set_blend_mode(blending_mode);
-		material.set_blend_mode_equation(blending_equation);
-		material.set_blend_mode_src_factor(blending_src_factor);
-		material.set_blend_mode_dst_factor(blending_dst_factor);
+		auto hh = mint::algorithm::djb_hash(def.m_materialName);
+
+		auto& map = m_materials[h];
+
+		if (!map.lookup(hh))
+		{
+			auto material = map.emplace(hh);
+
+			material->read_definition(def);
+		}
+
+		MINT_ASSERT(false, "Invalid operation. Setting a second default material for an entity is not allowed!");
 	}
 
 

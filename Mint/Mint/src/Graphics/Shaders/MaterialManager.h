@@ -4,6 +4,8 @@
 
 #include "Common/Common.h"
 #include "Materials/Material.h"
+#include "Utility/STL/Map2.h"
+
 
 
 namespace mint::fx
@@ -21,9 +23,9 @@ namespace mint::fx
 
 		void add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition);
 		
-		const Vector< CMaterial >& get_materials_for_entity(entt::entity entity);
+		mint::CMap2< CMaterial >& get_materials_for_entity(entt::entity entity);
 
-		const CMaterial& get_main_material_for_entity(entt::entity entity);
+		CMaterial* get_main_material_for_entity(entt::entity entity);
 
 		void set_default_main_material_for_entity(entt::entity entity, const String& default_texture = "DefaultSprite", const String& default_shader = "Sprite",
 												  BlendMode blending_mode = BLEND_ALPHA, BlendingEquation blending_equation = BlendingEquation_BlendColor, 
@@ -34,7 +36,9 @@ namespace mint::fx
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		CMap< Vector< CMaterial > > m_materials;
+		std::map< EntityHandle, CMap2< CMaterial > > m_materials;
+
+// 		CMap< CMap2< CMaterial > > m_materials;
 
 	};
 

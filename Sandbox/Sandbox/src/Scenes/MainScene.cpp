@@ -85,6 +85,7 @@ bool CMainScene::on_load()
 	mint::fx::SMaterialDefinition def;
 
 	// Set material data and bind static uniforms once.
+	def.m_materialName = "Default Material";
 	def.m_shaderProgramName = "Sprite";
 	def.m_textureName = "Knight";
 	def.m_blendMode = BlendMode::BLEND_ALPHA;
@@ -99,6 +100,7 @@ bool CMainScene::on_load()
 	mint::fx::SMaterialDefinition sdef;
 
 	// Set material data and bind static uniforms once.
+	sdef.m_materialName = "Second Material";
 	sdef.m_shaderProgramName = "Sprite";
 	sdef.m_textureName = "Knight";
 	sdef.m_blendMode = BlendMode::BLEND_ADD_COLORS;
@@ -167,6 +169,7 @@ bool CMainScene::on_load()
 		mint::fx::SMaterialDefinition def;
 
 		// Set material data and bind static uniforms once.
+		def.m_materialName = "Default Material";
 		def.m_shaderProgramName = "Sprite";
 		def.m_textureName = "Samurai";
 		def.m_blendMode = BlendMode::BLEND_ALPHA;
@@ -181,6 +184,7 @@ bool CMainScene::on_load()
 		mint::fx::SMaterialDefinition sdef;
 
 		// Set material data and bind static uniforms once.
+		sdef.m_materialName = "Second Material";
 		sdef.m_shaderProgramName = "Sprite";
 		sdef.m_textureName = "Samurai";
 		sdef.m_blendMode = BlendMode::BLEND_ADD_COLORS;
