@@ -29,6 +29,22 @@ namespace mint::editor
 		show_members();
 
 		ImGui::End();
+
+
+
+		for (auto i = 0; i < m_materialEditorStack.size(); i++)
+		{
+			auto& materialeditor = m_materialEditorStack[i];
+
+			materialeditor.on_ui_frame();
+
+			if (!materialeditor.is_active())
+			{
+				m_materialEditorStack.erase(m_materialEditorStack.begin() + i);
+				break;
+			}
+
+		}
 	}
 
 
@@ -42,10 +58,16 @@ namespace mint::editor
 
 		auto main_material = CUCA::sprite_get_main_material(entity);
 
-		if(ImGui::CollapsingHeader("Main Material"))
+		if(ImGui::Button("Edit Materials"))
 		{
-			ImGui::Text(TextFormat("Texture Handle: %zu", main_material->get_texture_handle()));
-			ImGui::Text(TextFormat("Texture Size: {%.3f:%.3f}", main_material->get_texture_dimension().x, main_material->get_texture_dimension().y));
+			m_materialEditorStack.emplace_back(entity);
+
+			auto& materialeditor = mint::algorithm::vector_get_last_element_as<CMaterialEditor&>(m_materialEditorStack);
+
+			if (!materialeditor.is_ready())
+			{
+				mint::algorithm::vector_erase_last(m_materialEditorStack);
+			}
 		}
 		
 		ImGui::Separator();

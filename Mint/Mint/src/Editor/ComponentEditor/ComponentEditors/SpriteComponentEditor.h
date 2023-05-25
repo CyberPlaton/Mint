@@ -6,6 +6,7 @@
 
 #include "../Common/ComponentEditor.h"
 #include "Scripting/BehaviorEngine.h"
+#include "../../MaterialEditor/MaterialEditor.h"
 
 
 namespace mint::editor
@@ -21,6 +22,11 @@ namespace mint::editor
 		void on_update(f32 dt) override final;
 
 		void on_ui_frame() override final;
+
+
+	private:
+		mint::Vector< editor::CMaterialEditor > m_materialEditorStack;
+
 
 	private:
 		void show_members();
