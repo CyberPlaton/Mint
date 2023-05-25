@@ -38,8 +38,6 @@ namespace mint::fx
 
 		std::map< EntityHandle, CMap2< CMaterial > > m_materials;
 
-// 		CMap< CMap2< CMaterial > > m_materials;
-
 	};
 
 }

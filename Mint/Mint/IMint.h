@@ -21,12 +21,19 @@
 *		o CBehaviorEngine and CScriptEngine are using the CMap2 data structure.
 *		o CSAS´ internal computation is guarded by the critical section, in order to avoid crashed on terminate.
 * 
+* 
+*	2023.05.02:
+*		o Adding SMaterialDefinition structure used to define CMaterial data.
+*		o CMaterialManager stores Materials as { EntityHandle, CMap2< CMaterial > } with maximum of 256 Materials for each entity.
+*		o Scene Renderer iterates over CMap2 with pointers to CMaterial objects. This should be fast in theory, however the actual performance
+*		  was not yet profiled.
+*		o Preparation for the Material Editor is hereby complete; changes will be added as required.
 */
 
 
 #define MINT_ENGINE_VERSION_MAJOR 2023
 #define MINT_ENGINE_VERSION_MINOR 05
-#define MINT_ENGINE_VERSION_PATCH 1
+#define MINT_ENGINE_VERSION_PATCH 2
 #define MINT_ENGINE_VERSION_STRING STRING(MINT_ENGINE_VERSION_MAJOR) "." STRING(MINT_ENGINE_VERSION_MINOR) "." STRING(MINT_ENGINE_VERSION_PATCH)
 
 
