@@ -417,6 +417,23 @@ namespace mint::editor
 	void CHierarchyPanelLayer::delete_entity(entt::entity entity)
 	{
 		GlobalData::Get().s_EditorOptionEntityToBeDeleted = entity;
+
+		// Handle cases where entity is a parent or a child.
+		if (CUCA::hierarchy_has_parent(entity))
+		{
+			auto parent = CUCA::hierarchy_get_parent(entity);
+
+			CUCA::hierarchy_remove_child(parent, entity);
+		}
+		if (CUCA::hierarchy_has_children(entity))
+		{
+			auto& kids = CUCA::hierarchy_get_children(entity);
+
+			for (auto& kid : kids)
+			{
+				CUCA::hierarchy_set_parent(kid, entt::null);
+			}
+		}
 	}
 
 }
