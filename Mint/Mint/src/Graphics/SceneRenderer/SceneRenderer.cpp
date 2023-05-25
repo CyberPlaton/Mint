@@ -42,13 +42,15 @@ namespace mint::fx
 
 		for(auto& entity: registry.get_registry_view< mint::component::SSprite >())
 		{
+			MINT_ASSERT(registry.has_component< mint::component::SSprite >(entity) == true,
+				"Invalid operation. Trying to render an Entity without a Sprite Component!");
+
 			const auto& transform = registry.get_component< mint::component::STransform >(entity);
 			const auto& sprite = registry.get_component< mint::component::SSprite >(entity);
 
 
 			const auto& materials = material_manager.get_materials_for_entity(entity);
 		
-
 			
 			const auto& position = CUCA::transform_get_position(entity);
 			const auto& scale = CUCA::transform_get_scale(entity);
@@ -76,7 +78,7 @@ namespace mint::fx
 
 
 
-				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x, sprite.m_origin.y}, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
+				DrawTexturePro(texture_manager.get_texture(material.get_texture_handle()), src, dst, {sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 
 				material.end_blend_mode();
@@ -105,6 +107,8 @@ namespace mint::fx
 
 
 			const auto& materials = material_manager.get_materials_for_entity(entity);
+
+			MINT_LOG_INFO("[{:.4f}][CSceneRenderer::on_render] Entity Materials Vector size: \"{}\" Bytes!", MINT_APP_TIME, sizeof(materials));
 
 			const auto& position = CUCA::transform_get_position(entity);
 			const auto& scale = CUCA::transform_get_scale(entity);

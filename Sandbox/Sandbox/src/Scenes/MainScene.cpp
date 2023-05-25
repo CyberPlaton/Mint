@@ -81,34 +81,34 @@ bool CMainScene::on_load()
 	sprite.m_origin = { 0.0f, 0.0f };
 
 
-	mint::fx::CMaterial material;
+
+	mint::fx::SMaterialDefinition def;
 
 	// Set material data and bind static uniforms once.
-	material.set_shader_program("Sprite");
-	material.set_texture("Knight");
-	material.restore_default_blend_mode();
-	material.bind_static_uniforms();
+	def.m_shaderProgramName = "Sprite";
+	def.m_textureName = "Knight";
+	def.m_blendMode = BlendMode::BLEND_ALPHA;
+	def.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+	def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusDstAlpha;
+	def.m_blendingEquation = mint::fx::BlendingEquation_Max;
+
+	// Add material for entity.
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, def);
+
+
+	mint::fx::SMaterialDefinition sdef;
+
+	// Set material data and bind static uniforms once.
+	sdef.m_shaderProgramName = "Sprite";
+	sdef.m_textureName = "Knight";
+	sdef.m_blendMode = BlendMode::BLEND_ADD_COLORS;
+	sdef.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+	sdef.m_dstBlendFactor = mint::fx::BlendingFactor_DstColor;
+	sdef.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
 
 
 	// Add material for entity.
-	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, material);
-
-
-	mint::fx::CMaterial smaterial;
-
-	// Set material data and bind static uniforms once.
-	smaterial.set_shader_program("Sprite");
-	smaterial.set_texture("Knight");
-
-	smaterial.set_blend_mode(BlendMode::BLEND_ADD_COLORS);
-	smaterial.set_blend_mode_src_factor(fx::BlendingFactor_SrcAlpha);
-	smaterial.set_blend_mode_dst_factor(fx::BlendingFactor_DstColor);
-	smaterial.set_blend_mode_equation(fx::BlendingEquation_BlendColor);
-
-	smaterial.bind_static_uniforms();
-
-	// Add material for entity.
-	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, smaterial);
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, sdef);
 
 
 	// Set script for entity.
@@ -163,34 +163,35 @@ bool CMainScene::on_load()
 		sprite.m_origin = { 90.0f, 90.0f };
 
 
-		mint::fx::CMaterial material;
+
+		mint::fx::SMaterialDefinition def;
 
 		// Set material data and bind static uniforms once.
-		material.set_shader_program("Sprite");
-		material.set_texture("Samurai");
-		material.restore_default_blend_mode();
-		material.bind_static_uniforms();
+		def.m_shaderProgramName = "Sprite";
+		def.m_textureName = "Samurai";
+		def.m_blendMode = BlendMode::BLEND_ALPHA;
+		def.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+		def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusDstAlpha;
+		def.m_blendingEquation = mint::fx::BlendingEquation_Max;
+
+		// Add material for entity.
+		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, def);
+
+
+		mint::fx::SMaterialDefinition sdef;
+
+		// Set material data and bind static uniforms once.
+		sdef.m_shaderProgramName = "Sprite";
+		sdef.m_textureName = "Samurai";
+		sdef.m_blendMode = BlendMode::BLEND_ADD_COLORS;
+		sdef.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+		sdef.m_dstBlendFactor = mint::fx::BlendingFactor_DstColor;
+		sdef.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
 
 
 		// Add material for entity.
-		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, material);
+		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, sdef);
 
-
-		mint::fx::CMaterial smaterial;
-
-		// Set material data and bind static uniforms once.
-		smaterial.set_shader_program("Sprite");
-		smaterial.set_texture("Samurai");
-
-		smaterial.set_blend_mode(BlendMode::BLEND_ADD_COLORS);
-		smaterial.set_blend_mode_src_factor(fx::BlendingFactor_SrcAlpha);
-		smaterial.set_blend_mode_dst_factor(fx::BlendingFactor_DstColor);
-		smaterial.set_blend_mode_equation(fx::BlendingEquation_BlendColor);
-
-		smaterial.bind_static_uniforms();
-
-		// Add material for entity.
-		mint::fx::CMaterialManager::Get().add_material_for_entity(entity, smaterial);
 
 		add_entity(entity);
 	}

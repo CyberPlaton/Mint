@@ -234,11 +234,11 @@ namespace mint::component
 	}
 
 
-	void CUCA::sprite_add_material(entt::entity entity, const fx::CMaterial& material)
+	void CUCA::sprite_add_material(entt::entity entity, const fx::SMaterialDefinition& material_definition)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			fx::CMaterialManager::Get().add_material_for_entity(entity, material);
+			fx::CMaterialManager::Get().add_material_for_entity(entity, material_definition);
 
 		);
 	}

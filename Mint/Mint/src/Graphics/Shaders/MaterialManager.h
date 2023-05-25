@@ -19,7 +19,7 @@ namespace mint::fx
 
 		void reset();
 
-		void add_material_for_entity(entt::entity entity, const CMaterial& material);
+		void add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition);
 		
 		const Vector< CMaterial >& get_materials_for_entity(entt::entity entity);
 

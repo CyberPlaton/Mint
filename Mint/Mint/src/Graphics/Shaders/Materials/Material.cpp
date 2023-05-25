@@ -10,6 +10,19 @@ namespace mint::fx
 	{
 	}
 
+	CMaterial::CMaterial(const SMaterialDefinition& definition)
+	{
+		set_shader_program(definition.m_shaderProgramName);
+		set_texture(definition.m_textureName);
+
+		m_blendMode = definition.m_blendMode;
+		m_srcBlendFactor = definition.m_srcBlendFactor;
+		m_dstBlendFactor = definition.m_dstBlendFactor;
+		m_blendingEquation = definition.m_blendingEquation;
+		m_staticUniforms = definition.m_staticUniforms;
+		m_dynamicUniforms = definition.m_dynamicUniforms;
+	}
+
 
 	void CMaterial::restore_default_blend_mode()
 	{

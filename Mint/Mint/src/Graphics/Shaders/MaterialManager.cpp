@@ -33,13 +33,18 @@ namespace mint::fx
 	}
 
 
-	void CMaterialManager::add_material_for_entity(entt::entity entity, const CMaterial& material)
+	void CMaterialManager::add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition)
 	{
 		auto h = SCAST(u64, entity);
 
-		if(!m_materials.lookup(h)) m_materials.add(h, Vector< CMaterial >{});
+		if (!m_materials.lookup(h))
+		{
+			m_materials.add(h, Vector< CMaterial >{});
+		}
+		
+		auto& vector = m_materials.get_ref(h);
 
-		mint::algorithm::vector_push_back(m_materials.get_ref(h), material);
+		vector.emplace_back(material_definition);
 	}
 
 

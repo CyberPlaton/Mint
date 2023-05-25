@@ -48,6 +48,8 @@ namespace mint
 		friend class CMapIterator< T >;
 	public:
 		CMap() = default;
+		CMap(const CMap& other) = default;
+		CMap& operator=(const CMap& other) = default;
 		~CMap();
 
 
