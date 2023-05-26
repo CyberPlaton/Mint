@@ -6,30 +6,6 @@
 #include "SceneSystem/SAS.h"
 #include "Common/Window.h"
 
-/*
-* Version History:
-*	2023.05.01: 
-*		o CMap2 implemented. Variation of the CMap data structure, designed to be high performance with the same main functionality as in CMap.
-*							 Please note that, in order to achieve maximum performance, data locality and pointer stability the CMap2 is initialized to a fixed size
-*							 and can not be resized dynamically.
-*							 CMap2 is performing safety checks for "get" access in non DISTR builds.
-*							 CMap2 is intended to be used where:
-*								- Fast iterations are a must.
-*								- Frequent lookups or accesses.
-*								- Objects contained are non-copyable (neither copy-constructed nor assignment-constructed).
-* 
-*		o CBehaviorEngine and CScriptEngine are using the CMap2 data structure.
-*		o CSAS´ internal computation is guarded by the critical section, in order to avoid crashed on terminate.
-* 
-* 
-*	2023.05.02:
-*		o Adding SMaterialDefinition structure used to define CMaterial data.
-*		o CMaterialManager stores Materials as { EntityHandle, CMap2< CMaterial > } with maximum of 256 Materials for each entity.
-*		o Scene Renderer iterates over CMap2 with pointers to CMaterial objects. This should be fast in theory, however the actual performance
-*		  was not yet profiled.
-*		o Preparation for the Material Editor is hereby complete; changes will be added as required.
-*/
-
 
 #define MINT_ENGINE_VERSION_MAJOR 2023
 #define MINT_ENGINE_VERSION_MINOR 05

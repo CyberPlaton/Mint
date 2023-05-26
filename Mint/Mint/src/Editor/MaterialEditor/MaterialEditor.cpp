@@ -93,12 +93,33 @@ namespace mint::editor
 			set_blending_equation(current_blending_equat);
 		}
 
+		ImGui::SeparatorText("Static Shader Uniforms");
+
+		for (auto& uniform : m_materialDefinition.m_staticUniforms)
+		{
+			show_uniform_edit(uniform);
+		}
+
+
+		ImGui::SeparatorText("Dynamic Shader Uniforms");
+
+		for (auto& uniform : m_materialDefinition.m_dynamicUniforms)
+		{
+			show_uniform_edit(uniform);
+		}
+	}
+
+
+	void CMaterialEditor::show_uniform_edit(mint::fx::SShaderUniform& uniform)
+	{
 
 	}
+
 
 	void CMaterialEditor::on_update(f32 dt)
 	{
 	}
+
 
 	void CMaterialEditor::set_blending_src_factor(int option_number)
 	{
