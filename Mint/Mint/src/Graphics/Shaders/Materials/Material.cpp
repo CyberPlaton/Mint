@@ -15,6 +15,9 @@ namespace mint::fx
 		set_shader_program(definition.m_shaderProgramName);
 		set_texture(definition.m_textureName);
 
+		m_textureName = definition.m_textureName;
+		m_materialName = definition.m_materialName;
+		m_shaderProgramName = definition.m_shaderProgramName;
 		m_handle = mint::algorithm::djb_hash(definition.m_materialName);
 		m_blendMode = definition.m_blendMode;
 		m_srcBlendFactor = definition.m_srcBlendFactor;
@@ -206,6 +209,9 @@ namespace mint::fx
 		set_shader_program(definition.m_shaderProgramName);
 		set_texture(definition.m_textureName);
 
+		m_textureName = definition.m_textureName;
+		m_materialName = definition.m_materialName;
+		m_shaderProgramName = definition.m_shaderProgramName;
 		m_handle = mint::algorithm::djb_hash(definition.m_materialName);
 		m_blendMode = definition.m_blendMode;
 		m_srcBlendFactor = definition.m_srcBlendFactor;
@@ -218,6 +224,21 @@ namespace mint::fx
 	mint::MaterialHandle CMaterial::get_material_handle() const
 	{
 		return m_handle;
+	}
+
+	mint::String CMaterial::get_material_name() const
+	{
+		return m_materialName;
+	}
+
+	mint::String CMaterial::get_material_texture_name() const
+	{
+		return m_textureName;
+	}
+
+	mint::String CMaterial::get_material_shader_program_name() const
+	{
+		return m_shaderProgramName;
 	}
 
 

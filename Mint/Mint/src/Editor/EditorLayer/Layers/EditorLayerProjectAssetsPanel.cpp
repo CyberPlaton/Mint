@@ -296,7 +296,7 @@ namespace mint::editor
 
 		ImGui::Begin(text.c_str(), &m_createFileDialog);
 
-		ImGui::InputText("|", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
+		ImGui::InputText("## |", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
 
 		static int item_current = 0;
 		String extension;

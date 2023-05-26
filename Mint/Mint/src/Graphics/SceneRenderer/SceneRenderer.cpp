@@ -113,7 +113,6 @@ namespace mint::fx
 
 			auto& materials = material_manager.get_materials_for_entity(entity);
 
-			MINT_LOG_INFO("[{:.4f}][CSceneRenderer::on_render] Entity Materials Vector size: \"{}\" Bytes!", MINT_APP_TIME, sizeof(materials));
 
 			const auto& position = CUCA::transform_get_position(entity);
 			const auto& scale = CUCA::transform_get_scale(entity);

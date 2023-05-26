@@ -35,6 +35,9 @@ namespace mint::fx
 		Vec2 get_texture_dimension() const;
 		TextureHandle get_texture_handle() const;
 		MaterialHandle get_material_handle() const;
+		String get_material_name() const;
+		String get_material_texture_name() const;
+		String get_material_shader_program_name() const;
 
 
 		void end_shader() const;
@@ -61,12 +64,15 @@ namespace mint::fx
 
 	private:
 		MaterialHandle m_handle = SCAST(u64, -1);
+		String m_materialName;
 
 		TextureHandle m_texture;
-		
+		String m_textureName;
+
 		Vec2 m_textureSize;
 		
 		mint::Shader m_shader;
+		String m_shaderProgramName;
 
 		BlendMode m_blendMode = BLEND_ALPHA;
 		uint32_t m_srcBlendFactor = RL_SRC_ALPHA;

@@ -104,7 +104,7 @@ namespace mint::editor
 		{
 			const Texture* image = &CTextureManager::Get().get_texture(material->get_texture_handle());
 
-			ImGui::SeparatorText(std::to_string(material->get_material_handle()).c_str());
+			ImGui::SeparatorText(material->get_material_name().c_str());
 
 			ImGui::PushID(material->get_material_handle());
 			if (ImGui::ImageButton((ImTextureID)image, { 96, 96 }))

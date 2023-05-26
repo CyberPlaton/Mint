@@ -31,7 +31,7 @@ namespace mint::editor
 	private:
 		ImGuiWindowFlags m_windowFlags;
 
-		mint::fx::CMaterial* m_material;
+		mint::fx::SMaterialDefinition m_materialDefinition;
 
 		entt::entity m_entity;
 
@@ -43,7 +43,6 @@ namespace mint::editor
 	private:
 		void main_frame();
 
-		void show_material(mint::fx::CMaterial* material, u32 material_index);
 	};
 }
 
