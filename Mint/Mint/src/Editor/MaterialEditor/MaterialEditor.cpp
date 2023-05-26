@@ -5,8 +5,8 @@
 namespace mint::editor 
 {
 
-	CMaterialEditor::CMaterialEditor(entt::entity entity) : 
-		m_ready(false), m_active(false), m_entity(entity), m_windowFlags(0)
+	CMaterialEditor::CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material) :
+		m_ready(false), m_active(false), m_entity(entity), m_windowFlags(0), m_material(material)
 	{
 		if (is_handle_valid(entity_get_handle(entity)))
 		{
@@ -26,11 +26,12 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 
-		String text = String(ICON_FA_WAND_MAGIC_SPARKLES) + " Material Editor for \"" + CUCA::identifier_get_debug_name(m_entity) + "\"";
+		String text = String(ICON_FA_WAND_MAGIC_SPARKLES) + " Material Editor for Material \"" + std::to_string(m_material->m_handle) + "\" of \"" + CUCA::identifier_get_debug_name(m_entity) + "\"";
 
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
 		ImGui::Begin(text.c_str(), &m_active, m_windowFlags);
 
+		main_frame();
 		
 		ImGui::End();
 	}
@@ -43,6 +44,16 @@ namespace mint::editor
 	bool CMaterialEditor::is_active()
 	{
 		return m_active;
+	}
+
+	void CMaterialEditor::main_frame()
+	{
+		
+	}
+
+	void CMaterialEditor::on_update(f32 dt)
+	{
+		if (m_material == nullptr) { m_ready = false; m_active = false; }
 	}
 
 }

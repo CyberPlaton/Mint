@@ -6,6 +6,7 @@
 
 #include "../Common/EditorCommon.h"
 #include "Graphics/Shaders/MaterialManager.h"
+#include "RessourceManagement/TextureManager.h"
 
 
 namespace mint::editor
@@ -14,9 +15,11 @@ namespace mint::editor
 	class CMaterialEditor
 	{
 	public:
-		CMaterialEditor(entt::entity entity);
+		CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material);
 		~CMaterialEditor();
 
+
+		void on_update(f32 dt);
 
 		void on_ui_frame();
 
@@ -28,6 +31,8 @@ namespace mint::editor
 	private:
 		ImGuiWindowFlags m_windowFlags;
 
+		mint::fx::CMaterial* m_material;
+
 		entt::entity m_entity;
 
 		bool m_active;
@@ -35,6 +40,10 @@ namespace mint::editor
 		bool m_ready;
 
 
+	private:
+		void main_frame();
+
+		void show_material(mint::fx::CMaterial* material, u32 material_index);
 	};
 }
 

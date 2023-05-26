@@ -113,7 +113,6 @@ namespace mint
 
 // Common macros
 
-// Static cast is preferred over c-style cast as it is more safer and can throw compiler errors.
 #define SCAST(type, value) static_cast< type >(value)
 
 #define MINT_SAS_RENDERING_LAYERS_MAX 100

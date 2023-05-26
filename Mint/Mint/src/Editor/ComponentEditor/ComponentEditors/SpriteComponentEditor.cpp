@@ -12,7 +12,20 @@ namespace mint::editor
 
 	void CSpriteComponentEditor::on_update(f32 dt)
 	{
+		for (auto i = 0; i < m_materialEditorStack.size(); i++)
+		{
+			auto& materialeditor = m_materialEditorStack[i];
 
+			materialeditor.on_update(dt);
+
+			if (!materialeditor.is_active() || 
+				!materialeditor.is_ready())
+			{
+				m_materialEditorStack.erase(m_materialEditorStack.begin() + i);
+				break;
+			}
+
+		}
 	}
 
 
@@ -43,7 +56,6 @@ namespace mint::editor
 				m_materialEditorStack.erase(m_materialEditorStack.begin() + i);
 				break;
 			}
-
 		}
 	}
 
@@ -53,24 +65,6 @@ namespace mint::editor
 		auto entity = get_metaclass()->get_metaclass_entity();
 		ImGuiID slid = 10000;
 		ImGuiID scid = 20000;
-
-		auto& materials = CUCA::sprite_get_all_materials(entity);
-
-		auto main_material = CUCA::sprite_get_main_material(entity);
-
-		if(ImGui::Button("Edit Materials"))
-		{
-			m_materialEditorStack.emplace_back(entity);
-
-			auto& materialeditor = mint::algorithm::vector_get_last_element_as<CMaterialEditor&>(m_materialEditorStack);
-
-			if (!materialeditor.is_ready())
-			{
-				mint::algorithm::vector_erase_last(m_materialEditorStack);
-			}
-		}
-		
-		ImGui::Separator();
 
 		auto visible = CUCA::sprite_is_visible(entity);
 		auto internal_visible = CUCA::sprite_is_internal_visible(entity);
@@ -99,6 +93,36 @@ namespace mint::editor
 		CUCA::sprite_set_origin(entity, origin);
 		CUCA::sprite_set_color(entity, color);
 		CUCA::sprite_set_source_rect(entity, rect);
+
+		ImGui::SeparatorText("Entity Materials");
+
+		auto& materials = CUCA::sprite_get_all_materials(entity);
+
+		// Show materials.
+		auto material = materials.begin();
+		while (material)
+		{
+			const Texture* image = &CTextureManager::Get().get_texture(material->get_texture_handle());
+
+			ImGui::SeparatorText(std::to_string(material->get_material_handle()).c_str());
+
+			ImGui::PushID(material->get_material_handle());
+			if (ImGui::ImageButton((ImTextureID)image, { 96, 96 }))
+			{
+				// Spawn a new Material editor for selected Material.
+				m_materialEditorStack.emplace_back(entity, material);
+
+				auto& materialeditor = mint::algorithm::vector_get_last_element_as<CMaterialEditor&>(m_materialEditorStack);
+
+				if (!materialeditor.is_ready())
+				{
+					mint::algorithm::vector_erase_last(m_materialEditorStack);
+				}
+			}
+			ImGui::PopID();
+
+			material = materials.advance(material);
+		}
 	}
 
 

@@ -215,5 +215,10 @@ namespace mint::fx
 		m_dynamicUniforms = definition.m_dynamicUniforms;
 	}
 
+	mint::MaterialHandle CMaterial::get_material_handle() const
+	{
+		return m_handle;
+	}
+
 
 }

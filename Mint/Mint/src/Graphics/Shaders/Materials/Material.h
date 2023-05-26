@@ -6,11 +6,21 @@
 #include "RessourceManagement/ShaderManager.h"
 #include "RessourceManagement/TextureManager.h"
 
+#if MINT_DISTR
+#else
+namespace mint::editor { class CMaterialEditor; }
+#endif
+
 
 namespace mint::fx
 {
+
 	class CMaterial 
 	{
+#if MINT_DISTR
+#else
+		friend class mint::editor::CMaterialEditor;
+#endif
 	public:
 		CMaterial(const SMaterialDefinition& definition);
 		CMaterial();
@@ -24,6 +34,7 @@ namespace mint::fx
 		void bind_dynamic_uniforms()  const;
 		Vec2 get_texture_dimension() const;
 		TextureHandle get_texture_handle() const;
+		MaterialHandle get_material_handle() const;
 
 
 		void end_shader() const;
