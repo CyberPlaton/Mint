@@ -93,26 +93,66 @@ namespace mint::editor
 			set_blending_equation(current_blending_equat);
 		}
 
+
 		ImGui::SeparatorText("Static Shader Uniforms");
 
-		for (auto& uniform : m_materialDefinition.m_staticUniforms)
+		for (auto& it : m_materialDefinition.m_staticUniforms)
 		{
-			show_uniform_edit(uniform);
+			show_uniform_edit(it, sid++, scid++);
 		}
 
 
 		ImGui::SeparatorText("Dynamic Shader Uniforms");
 
-		for (auto& uniform : m_materialDefinition.m_dynamicUniforms)
+		for (auto& it : m_materialDefinition.m_dynamicUniforms)
 		{
-			show_uniform_edit(uniform);
+			show_uniform_edit(it, sid++, scid++);
 		}
 	}
 
 
-	void CMaterialEditor::show_uniform_edit(mint::fx::SShaderUniform& uniform)
+	void CMaterialEditor::show_uniform_edit(mint::fx::SShaderUniform& uniform, ImGuiID id, ImGuiID scalar_id)
 	{
+		switch (uniform.get_type())
+		{
+		case SHADER_UNIFORM_FLOAT:
+		{
+			auto value = uniform.get< f32 >();
 
+			CUI::edit_field_f32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+		}
+		case SHADER_UNIFORM_VEC2:
+		{
+			auto value = uniform.get< Vec2 >();
+
+			CUI::edit_field_vec2(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+		}
+		case SHADER_UNIFORM_VEC3:
+		{
+			auto value = uniform.get< Vec3 >();
+
+			CUI::edit_field_vec3(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+		}
+		case SHADER_UNIFORM_VEC4:
+		{
+			auto value = uniform.get< Vec4 >();
+
+			CUI::edit_field_vec4(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+		}
+		case SHADER_UNIFORM_INT:
+		{
+			auto value = uniform.get< s32 >();
+
+			CUI::edit_field_sint32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+		}
+		case SHADER_UNIFORM_SAMPLER2D:
+		{
+			auto value = uniform.get< String >();
+
+			CUI::edit_field_string(*value, uniform.get_name(), "", id, scalar_id);
+		}
+		default: { return; }
+		}
 	}
 
 

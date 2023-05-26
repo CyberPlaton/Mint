@@ -17,7 +17,7 @@ namespace mint
 		using pointer_type = T*;
 		using reference_type = T&;
 
-
+		CMapIterator() { m_pointer = nullptr; }
 		CMapIterator(pointer_type pointer) { m_pointer = pointer; }
 
 
@@ -53,9 +53,23 @@ namespace mint
 		~CMap();
 
 
-		CMapIterator< T > begin() { return CMapIterator(&m_data[0]); }
+		CMapIterator< T > begin() 
+		{ 
+			if (m_data.empty())
+			{
+				return CMapIterator< T >{};
+			}
+			return CMapIterator(&m_data[0]);
+		}
 
-		CMapIterator< T > end() { return CMapIterator(&m_data[m_data.size() - 1]); }
+		CMapIterator< T > end() 
+		{
+			if (m_data.empty())
+			{
+				return CMapIterator< T >{};
+			}
+			return CMapIterator(&m_data[m_data.size() + 1]); 
+		}
 
 		
 		void add(u64 identifier, T& data);

@@ -19,7 +19,7 @@ namespace mint::fx
 		}
 
 		template < typename T >
-		T& get() const { return reinterpret_cast< T& >(m_data); }
+		T* get() const { return reinterpret_cast< T* >(m_data); }
 
 		ShaderUniformDataType get_type() const;
 		String get_name() const;

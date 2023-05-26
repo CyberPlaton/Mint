@@ -96,7 +96,7 @@ namespace mint::editor
 
 		int get_blending_equation_option_number(uint32_t blending_equation);
 
-		void show_uniform_edit(mint::fx::SShaderUniform& uniform);
+		void show_uniform_edit(mint::fx::SShaderUniform& uniform, ImGuiID id, ImGuiID scalar_id);
 	};
 }
 
