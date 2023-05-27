@@ -10,19 +10,17 @@ namespace mint::fx
 	
 	struct SShaderUniform
 	{
-		template < typename T >
-		void set(const String& uniform_name, const T& value, ShaderUniformDataType type)
-		{
-			m_name = uniform_name;
-			m_type = type;
-			m_data = &value;
-		}
+		void set(const String& uniform_name, void* value, ShaderUniformDataType type);
 
-		template < typename T >
-		T* get() const { return reinterpret_cast< T* >(m_data); }
+		void* get() const;
+
+		template< typename T > 
+		T get_as();
 
 		ShaderUniformDataType get_type() const;
+		
 		String get_name() const;
+		
 		const char* get_c_name() const;
 
 
@@ -30,6 +28,16 @@ namespace mint::fx
 		ShaderUniformDataType m_type;
 		void* m_data;
 	};
+
+
+	template< typename T >
+	T mint::fx::SShaderUniform::get_as()
+	{
+		if (m_data)
+		{
+			return reinterpret_cast<T>(m_data);
+		}
+	}
 
 
 }

@@ -52,6 +52,14 @@ namespace mint::editor
 		STRING(BlendingEquation_BlendColor)
 	};
 
+	static const char* s_UniformType[] = {
+		STRING(SHADER_UNIFORM_FLOAT),
+		STRING(SHADER_UNIFORM_VEC2),
+		STRING(SHADER_UNIFORM_VEC3),
+		STRING(SHADER_UNIFORM_VEC4),
+		STRING(SHADER_UNIFORM_INT),
+		STRING(SHADER_UNIFORM_SAMPLER2D)
+	};
 
 	class CMaterialEditor
 	{
@@ -80,6 +88,21 @@ namespace mint::editor
 
 		bool m_ready;
 
+		bool m_exportingMaterial = false;
+
+		bool m_addingDynamicUniform = false;
+
+		bool m_addingStaticUniform = false;
+
+		s32 uniform_type = 0;
+		f32 fvalue = 0.0f;
+		s32 ivalue = 0;
+		Vec2 v2value = {0.0f, 0.0f};
+		Vec3 v3value = { 0.0f, 0.0f, 0.0f };
+		Vec4 v4value = { 0.0f, 0.0f, 0.0f, 0.0f };
+		String svalue;
+		String uname;
+
 
 	private:
 		void main_frame();
@@ -97,6 +120,12 @@ namespace mint::editor
 		int get_blending_equation_option_number(uint32_t blending_equation);
 
 		void show_uniform_edit(mint::fx::SShaderUniform& uniform, ImGuiID id, ImGuiID scalar_id);
+
+		void show_dialog_add_dynamic_uniform();
+
+		void show_dialog_add_static_uniform();
+
+		void show_dialog_export_material();
 	};
 }
 

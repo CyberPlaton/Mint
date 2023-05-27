@@ -46,6 +46,10 @@ namespace mint::editor
 		main_frame();
 		
 		ImGui::End();
+
+		if (m_addingDynamicUniform) show_dialog_add_dynamic_uniform();
+		if (m_addingStaticUniform) show_dialog_add_static_uniform();
+		if (m_exportingMaterial) show_dialog_export_material();
 	}
 
 	bool CMaterialEditor::is_ready()
@@ -96,7 +100,14 @@ namespace mint::editor
 
 		ImGui::SeparatorText("Static Shader Uniforms");
 
-		for (auto& it : m_materialDefinition.m_staticUniforms)
+		if (ImGui::Button(ICON_FA_PLUS " ##Add S"))
+		{
+			m_addingStaticUniform = true;
+		}
+
+		auto& suniforms = m_materialDefinition.m_staticUniforms.get_all();
+
+		for (auto& it : suniforms)
 		{
 			show_uniform_edit(it, sid++, scid++);
 		}
@@ -104,10 +115,238 @@ namespace mint::editor
 
 		ImGui::SeparatorText("Dynamic Shader Uniforms");
 
-		for (auto& it : m_materialDefinition.m_dynamicUniforms)
+		if (ImGui::Button(ICON_FA_PLUS " ##Add D"))
+		{
+			m_addingDynamicUniform = true;
+		}
+
+		auto& duniforms = m_materialDefinition.m_dynamicUniforms.get_all();
+
+		for (auto& it : duniforms)
 		{
 			show_uniform_edit(it, sid++, scid++);
 		}
+
+
+		if (ImGui::Button("Apply Material"))
+		{
+			CUCA::sprite_add_material(m_entity, m_materialDefinition);
+		}
+		if (ImGui::Button("Export Material"))
+		{
+			m_exportingMaterial = true;
+		}
+	}
+
+
+	void CMaterialEditor::show_dialog_add_dynamic_uniform()
+	{
+		ImGuiID sid = 30000;
+		ImGuiID scid = 40000;
+
+		ImGui::Begin(ICON_FA_PLUS " Dynamic Uniform", &m_addingDynamicUniform);
+
+		CUI::edit_field_string(uname, "Name", "", sid++, scid++);
+
+		if (ImGui::Combo("Uniform Type", &uniform_type, s_UniformType, IM_ARRAYSIZE(s_UniformType)))
+		{
+		}
+		
+		switch (uniform_type)
+		{
+		case 0:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+ 				uniform.set(uname, (void*)&fvalue, SHADER_UNIFORM_FLOAT);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 1:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v2value, SHADER_UNIFORM_VEC2);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 2:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v3value, SHADER_UNIFORM_VEC3);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 3:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v4value, SHADER_UNIFORM_VEC4);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 4:
+		{ 		
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&ivalue, SHADER_UNIFORM_INT);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 5:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&svalue, SHADER_UNIFORM_SAMPLER2D);
+
+				m_materialDefinition.m_dynamicUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_XMARK))
+		{
+			m_addingDynamicUniform = false;
+		}
+
+		ImGui::End();
+	}
+
+	void CMaterialEditor::show_dialog_add_static_uniform()
+	{
+		ImGuiID sid = 30000;
+		ImGuiID scid = 40000;
+
+		ImGui::Begin(ICON_FA_PLUS " Static Uniform", &m_addingStaticUniform);
+
+		CUI::edit_field_string(uname, "Name", "", sid++, scid++);
+
+		if (ImGui::Combo("Uniform Type", &uniform_type, s_UniformType, IM_ARRAYSIZE(s_UniformType)))
+		{
+		}
+
+		switch (uniform_type)
+		{
+		case 0:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&fvalue, SHADER_UNIFORM_FLOAT);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 1:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v2value, SHADER_UNIFORM_VEC2);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 2:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v3value, SHADER_UNIFORM_VEC3);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 3:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&v4value, SHADER_UNIFORM_VEC4);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 4:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&ivalue, SHADER_UNIFORM_INT);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		case 5:
+		{
+			if (ImGui::SmallButton(ICON_FA_CHECK))
+			{
+				mint::fx::SShaderUniform uniform;
+
+				uniform.set(uname, (void*)&svalue, SHADER_UNIFORM_SAMPLER2D);
+
+				m_materialDefinition.m_staticUniforms.add(mint::algorithm::djb_hash(uname), uniform);
+			}
+
+			break;
+		}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_XMARK))
+		{
+			m_addingStaticUniform = false;
+		}
+
+		ImGui::End();
 	}
 
 
@@ -117,39 +356,51 @@ namespace mint::editor
 		{
 		case SHADER_UNIFORM_FLOAT:
 		{
-			auto value = uniform.get< f32 >();
+			auto value = uniform.get_as< f32* >();
 
 			CUI::edit_field_f32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		case SHADER_UNIFORM_VEC2:
 		{
-			auto value = uniform.get< Vec2 >();
+			auto value = uniform.get_as< Vec2* >();
 
 			CUI::edit_field_vec2(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		case SHADER_UNIFORM_VEC3:
 		{
-			auto value = uniform.get< Vec3 >();
+			auto value = uniform.get_as< Vec3* >();
 
 			CUI::edit_field_vec3(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		case SHADER_UNIFORM_VEC4:
 		{
-			auto value = uniform.get< Vec4 >();
+			auto value = uniform.get_as< Vec4* >();
 
 			CUI::edit_field_vec4(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		case SHADER_UNIFORM_INT:
 		{
-			auto value = uniform.get< s32 >();
+			auto value = uniform.get_as< s32* >();
 
 			CUI::edit_field_sint32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		case SHADER_UNIFORM_SAMPLER2D:
 		{
-			auto value = uniform.get< String >();
+			auto value = uniform.get_as< String* >();
 
 			CUI::edit_field_string(*value, uniform.get_name(), "", id, scalar_id);
+
+			break;
 		}
 		default: { return; }
 		}
@@ -287,6 +538,11 @@ namespace mint::editor
 		case  mint::fx::BlendingEquation_BlendColor:		return 11;
 		default: return 0;
 		}
+	}
+
+	void CMaterialEditor::show_dialog_export_material()
+	{
+
 	}
 
 }
