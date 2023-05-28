@@ -542,7 +542,38 @@ namespace mint::editor
 
 	void CMaterialEditor::show_dialog_export_material()
 	{
+		static String path;
+		static String name;
 
+		ImGui::Begin(ICON_FA_CODE " Material Export", &m_exportingMaterial);
+
+		CUI::edit_field_string(path, "Path", "", 10000, 20000);
+
+		CUI::edit_field_string(name, "Filename", "", 10001, 20001);
+
+		if (ImGui::SmallButton(ICON_FA_CHECK))
+		{
+			auto scene_path = MINT_ACTIVE_SCENE()->get_scene_full_path();
+
+			CFileystem fs(scene_path);
+
+			if (fs.forward("assets") &&  fs.forward(path))
+			{
+				if (CFileystem::create_file(fs.get_current_directory(), name, String("material")))
+				{
+
+				}
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_XMARK))
+		{
+			m_exportingMaterial = false;
+		}
+
+		ImGui::End();
 	}
 
 }

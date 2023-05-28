@@ -217,7 +217,8 @@ namespace mint
 		CRessourceLoaderFactory::register_ressource_loader("Shader", &CShaderLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Script", &CScriptLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Behavior", &CBehaviorLoader::create);
-		
+		CRessourceLoaderFactory::register_ressource_loader("Material", &CMaterialLoader::create);
+
 
 		// Global OS settings.
 		result &= CGlobalOSSettings::Get().initialize();

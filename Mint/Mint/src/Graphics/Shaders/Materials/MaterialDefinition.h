@@ -57,9 +57,9 @@ namespace mint::fx
 		String m_shaderProgramName;
 
 		BlendMode m_blendMode = BLEND_ALPHA;
-		uint32_t m_srcBlendFactor = RL_SRC_ALPHA;
-		uint32_t m_dstBlendFactor = RL_ONE_MINUS_SRC_ALPHA;
-		uint32_t m_blendingEquation = RL_MAX;
+		u32 m_srcBlendFactor = RL_SRC_ALPHA;
+		u32 m_dstBlendFactor = RL_ONE_MINUS_SRC_ALPHA;
+		u32 m_blendingEquation = RL_MAX;
 
 		CMap< SShaderUniform > m_staticUniforms;
 		CMap< SShaderUniform > m_dynamicUniforms;

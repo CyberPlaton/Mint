@@ -28,6 +28,7 @@
 #include "RessourceManagement/Common/RessourceLoaders/ShaderLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ScriptLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/BehaviorLoader.h"
+#include "RessourceManagement/Common/RessourceLoaders/MaterialLoader.h"
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
 
