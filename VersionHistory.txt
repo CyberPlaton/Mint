@@ -9,7 +9,7 @@ Runtime Version History:
 
 
 
-2023.05.01 :
+2023.05.01:
 	o CMap2 implemented. Variation of the CMap data structure, designed to be high performance with the same main functionality as in CMap.
 		Please note that, in order to achieve maximum performance, data locality and pointer stability the CMap2 is initialized to a fixed size
 		and can not be resized dynamically.
@@ -25,3 +25,10 @@ Runtime Version History:
 
 Editor Version History:
 
+2023.05.01:
+	o Material Editor implemented, allowing:
+		- Editing Material Name, used Texture name, used Shader name.
+		- Editing Blending data, such as mode, factors and equation.
+		- Editing Uniforms, both static and dynamic.
+		- Applying Material changes to entity after it was edited.
+		- Exporting Material to file for later loading and usage.
