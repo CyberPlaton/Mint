@@ -31,7 +31,20 @@ namespace maml
 
 	bool CDocument::save_document(const mint::String& file_path)
 	{
-		return true;
+		std::ofstream out;
+		out.open(file_path.c_str(), std::ios_base::trunc);
+		if (out.is_open())
+		{
+			auto node = advance(m_root);
+
+			_export_node(node, out, 0);
+
+			out.close();
+
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -182,5 +195,128 @@ namespace maml
 		return node->m_properties.get_all();
 	}
 
+
+	void CDocument::_export_node(SNode* node, std::ofstream& out, mint::u64 tab_level)
+	{
+		_export_node_header(node, out, tab_level);
+
+		_export_node_body(node, out, tab_level + 1);
+
+		_export_node_end(node, out, tab_level);
+	}
+
+
+	void CDocument::_export_node_header(SNode* node, std::ofstream& out, mint::u64 tab_level)
+	{
+		for (auto i = 0; i < tab_level; i++) out << "\t";
+
+		out << node->m_name << ":" << "\n";
+	}
+
+
+	void CDocument::_export_node_body(SNode* node, std::ofstream& out, mint::u64 tab_level)
+	{
+		_export_node_properties(node, out, tab_level + 1);
+	}
+
+
+	void CDocument::_export_node_end(SNode* node, std::ofstream& out, mint::u64 tab_level)
+	{
+		for (auto i = 0; i < tab_level; i++) out << "\t";
+
+		out << "end" << "\n";
+	}
+
+
+	void CDocument::_export_node_properties(SNode* node, std::ofstream& out, mint::u64 tab_level)
+	{
+		for (auto& p : node->m_properties.get_all())
+		{
+			_export_node_property(p, out, tab_level);
+		}
+
+		for (auto& kid : node->m_children)
+		{
+			_export_node(kid, out, tab_level);
+		}
+	}
+
+
+	void CDocument::_export_node_property(SProperty& property, std::ofstream& out, mint::u64 tab_level)
+	{
+		for (auto i = 0; i < tab_level; i++) out << "\t";
+
+		out << property.m_name << "=";
+
+		_export_value(property.m_data, out);
+	}
+
+
+	void CDocument::_export_value(mint::CAny& value, std::ofstream& out, bool make_new_line /*= true*/)
+	{
+		using namespace mint;
+
+
+		if (value.is< String >())
+		{
+			out << "\"" << value.cast< String >() << "\"";
+		}
+		else if (value.is< f32 >())
+		{
+			out << value.cast< f32 >();
+		}
+		else if (value.is< s64 >())
+		{
+			out << value.cast< s64 >();
+		}
+		else if (value.is< u64 >())
+		{
+			out << value.cast< u64 >();
+		}
+		else if (value.is< Vec2 >())
+		{
+			auto v = value.cast< Vec2 >();
+
+			out << v.x << " " << v.y;
+		}
+		else if (value.is< Vec3 >())
+		{
+			auto v = value.cast< Vec3 >();
+
+			out << v.x << " " << v.y << " " << v.z;
+		}
+		else if (value.is< Vec4 >())
+		{
+			auto v = value.cast< Vec4 >();
+
+			out << v.x << " " << v.y << " " << v.z << " " << v.w;
+		}
+		else if (value.is< bool >())
+		{
+			out << (value.cast< bool >() == true) ? "True" : "False";
+		}
+		else if (value.is< Vector< CAny > >())
+		{
+			_export_array(value.cast< Vector< CAny >& >(), out);
+		}
+
+		if(make_new_line) out << "\n";
+	}
+
+
+	void CDocument::_export_array(mint::Vector< mint::CAny >& array, std::ofstream& out)
+	{
+		out << "[" << " ";
+
+		for (auto i = 0; i < array.size(); i++)
+		{
+			_export_value(array[i], out, false);
+
+			// Comma separation required for values that are not the end of the Array.
+			if(i + 1 < array.size()) out << "," << " ";
+		}
+
+		out << "]";
+	}
 
 }

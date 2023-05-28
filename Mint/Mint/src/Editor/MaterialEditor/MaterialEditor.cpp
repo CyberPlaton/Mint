@@ -358,7 +358,7 @@ namespace mint::editor
 		{
 			auto value = uniform.get_as< f32* >();
 
-			CUI::edit_field_f32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+			CUI::edit_field_f32(*value, -GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
 
 			break;
 		}
@@ -366,7 +366,7 @@ namespace mint::editor
 		{
 			auto value = uniform.get_as< Vec2* >();
 
-			CUI::edit_field_vec2(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+			CUI::edit_field_vec2(*value, -GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
 
 			break;
 		}
@@ -374,7 +374,7 @@ namespace mint::editor
 		{
 			auto value = uniform.get_as< Vec3* >();
 
-			CUI::edit_field_vec3(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+			CUI::edit_field_vec3(*value, -GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
 
 			break;
 		}
@@ -382,15 +382,15 @@ namespace mint::editor
 		{
 			auto value = uniform.get_as< Vec4* >();
 
-			CUI::edit_field_vec4(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+			CUI::edit_field_vec4(*value, -GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
 
 			break;
 		}
 		case SHADER_UNIFORM_INT:
 		{
-			auto value = uniform.get_as< s32* >();
+			auto value = uniform.get_as< s64* >();
 
-			CUI::edit_field_sint32(*value, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
+			CUI::edit_field_sint64(*value, -GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, uniform.get_name(), "", id, scalar_id);
 
 			break;
 		}
@@ -559,9 +559,64 @@ namespace mint::editor
 
 			if (fs.forward("assets") &&  fs.forward(path))
 			{
-				if (CFileystem::create_file(fs.get_current_directory(), name, String("material")))
+				if (CFileystem::create_file(fs.get_current_directory(), name, String("mat")))
 				{
+					// Set Filesystem to be at the created File.
+					CFileystem assetfs(fs);
 
+					fs.forward(name + ".mat");
+
+
+					// Create document for exporting.
+					maml::CDocument document;
+
+					auto material = document.create_node("material");
+
+					CSerializer::export_string(m_materialDefinition.m_materialName, "name", material);
+					CSerializer::export_string(m_materialDefinition.m_textureName, "texture", material);
+					CSerializer::export_string(m_materialDefinition.m_shaderProgramName, "shader", material);
+					CSerializer::export_uint((u64)m_materialDefinition.m_blendMode, "blendingmode", material);
+					CSerializer::export_uint((u64)m_materialDefinition.m_srcBlendFactor, "blendingsrcfactor", material);
+					CSerializer::export_uint((u64)m_materialDefinition.m_dstBlendFactor, "blendingdstfactor", material);
+					CSerializer::export_uint((u64)m_materialDefinition.m_blendingEquation, "blendingequation", material);
+
+					auto staticuniforms = document.create_node("staticuniforms", material);
+					auto dynamicuniforms = document.create_node("dynamicuniforms", material);
+
+					for (auto& su : m_materialDefinition.m_staticUniforms.get_all())
+					{
+						export_uniform(su, staticuniforms);
+					}
+
+					for (auto& du : m_materialDefinition.m_dynamicUniforms.get_all())
+					{
+						export_uniform(du, dynamicuniforms);
+					}
+
+					if (document.save_document(fs.get_current_directory().as_string()))
+					{
+						// Create Material asset file.
+						if (CFileystem::create_file(assetfs.get_current_directory(), name, String("material")) &&
+							assetfs.forward(name + ".material"))
+						{
+							String data;
+							data += "asset:\n";
+							data += "\t" + String("name=\"") + name + "\"\n";
+							data += "\t" + String("type=\"") + ".material" + "\"\n";
+							data += "\t" + String("source=\"") + name + ".mat" + "\"\n";
+							data += "\t" + String("author=\"") + "\"\n";
+							data += "\t" + String("version=") + std::to_string(1) + "\n";
+							data += "\t" + String("description=\"") + "\"\n";
+							data += "end\n";
+							data += "\0";
+
+							CFileReaderWriter::write_to_file_at_path(assetfs.get_current_directory().as_string(), (void*)data.c_str(), data.size());
+						}
+					}
+					else
+					{
+						MINT_LOG_ERROR("[{:.4f}][CMaterialEditor::show_dialog_export_material] Failed exporting Material \"{}\" to \"{}\"!", MINT_APP_TIME, name, fs.get_current_directory().as_string());
+					}
 				}
 			}
 		}
@@ -574,6 +629,56 @@ namespace mint::editor
 		}
 
 		ImGui::End();
+	}
+
+	void CMaterialEditor::export_uniform(mint::fx::SShaderUniform& uniform, maml::SNode* node)
+	{
+		switch (uniform.get_type())
+		{
+		case SHADER_UNIFORM_FLOAT:
+		{
+			auto v = *uniform.get_as< f32* >();
+
+			CSerializer::export_float(v, uniform.get_name(), node);
+			break;
+		}
+		case SHADER_UNIFORM_VEC2:
+		{
+			auto v = *uniform.get_as< Vec2* >();
+
+			CSerializer::export_vec2(v, uniform.get_name(), node);
+			break;
+		}
+		case SHADER_UNIFORM_VEC3:
+		{
+			auto v = *uniform.get_as< Vec3* >();
+
+			CSerializer::export_vec3(v, uniform.get_name(), node);
+			break;
+		}
+		case SHADER_UNIFORM_VEC4:
+		{
+			auto v = *uniform.get_as< Vec4* >();
+
+			CSerializer::export_vec4(v, uniform.get_name(), node);
+			break;
+		}
+		case SHADER_UNIFORM_INT:
+		{
+			auto v = *uniform.get_as< s64* >();
+
+			CSerializer::export_sint(v, uniform.get_name(), node);
+			break;
+		}
+		case SHADER_UNIFORM_SAMPLER2D:
+		{
+			auto v = *uniform.get_as< String* >();
+
+			CSerializer::export_string(v, uniform.get_name(), node);
+			break;
+		}
+		default: { return; }
+		}
 	}
 
 }

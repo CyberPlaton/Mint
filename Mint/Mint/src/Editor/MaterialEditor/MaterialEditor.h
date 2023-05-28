@@ -126,6 +126,8 @@ namespace mint::editor
 		void show_dialog_add_static_uniform();
 
 		void show_dialog_export_material();
+
+		void export_uniform(mint::fx::SShaderUniform& uniform, maml::SNode* node);
 	};
 }
 

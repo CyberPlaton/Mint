@@ -97,6 +97,23 @@ namespace maml
 
 		template < typename T >
 		static T _get_generic_property(SNode* node, const mint::String& property_name, T default_value);
+	
+		static void _export_node(SNode* node, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_node_header(SNode* node, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_node_body(SNode* node, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_node_end(SNode* node, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_node_properties(SNode* node, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_node_property(SProperty& property, std::ofstream& out, mint::u64 tab_level);
+
+		static void _export_value(mint::CAny& value, std::ofstream& out, bool make_new_line = true);
+	
+		static void _export_array(mint::Vector< mint::CAny >& array, std::ofstream& out);
+	
 	};
 
 

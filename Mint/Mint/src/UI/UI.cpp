@@ -163,6 +163,36 @@ namespace mint
 	}
 
 
+	bool CUI::edit_field_sint64(s64& value, s64 min, s64 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
+	{
+		if (ImGui::CollapsingHeader(field_text.c_str()))
+		{
+			int prev = value;
+
+			ImGui::PushID(slider_id);
+			ImGui::PushItemWidth(s_editDragFieldWidth);
+			ImGui::DragInt("s64", &prev, 1, min, max, "%d", flags);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			ImGui::SameLine();
+
+			ImGui::PushID(scalar_id);
+			ImGui::PushItemWidth(s_editScalarFieldWidth);
+			ImGui::InputInt("scalar", &prev, 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+			value = prev;
+
+			return true;
+		}
+
+		return false;
+	}
+
 	bool CUI::edit_field_uint32(u32& value, u32 min, u32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
 	{
 		if (ImGui::CollapsingHeader(field_text.c_str()))
