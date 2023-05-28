@@ -31,9 +31,9 @@ namespace mint::fx
 	void CMaterial::restore_default_blend_mode()
 	{
 		m_blendMode = BLEND_ALPHA;
-		m_srcBlendFactor = RL_SRC_ALPHA;
-		m_dstBlendFactor = RL_ONE_MINUS_SRC_ALPHA;
-		m_blendingEquation = RL_MAX;
+		m_srcBlendFactor = BlendingFactor_SrcAlpha;
+		m_dstBlendFactor = BlendingFactor_OneMinusSrcAlpha;
+		m_blendingEquation = BlendingEquation_BlendColor;
 	}
 
 
