@@ -66,8 +66,6 @@ namespace mint
 
 		void begin_rendering() override final;
 
-		void begin_frame() override final;
-
 		void frame() override final;
 
 		void ui_frame_begin() override final;
@@ -99,6 +97,8 @@ namespace mint
 		void set_engine_fps(f32 fps) override final;
 
 		void set_engine_window_title(const String& title) override final;
+
+		void print_engine_rendering_pass_stack() override final;
 
 	private:
 		bool m_running;

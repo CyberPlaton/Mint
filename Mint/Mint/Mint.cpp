@@ -12,6 +12,7 @@ namespace mint
 		CPhysicsSystem::SDescription pdesc;
 		maml::CDocument document;
 
+
 		if(!CSerializer::load_maml_document(manifest_filepath, document)) return false;
 
 		if(!_load_app_manifiest(document, wdesc, pdesc, initial_scene)) return false;
@@ -21,9 +22,17 @@ namespace mint
 		// GPU context can only be reported after the window and raylib have been initialized.
 		CGlobalGraphicsSettings::Get().print_graphics_context();
 
+
+
 		if(!_init()) return false;
 
+		// Rendering Stack can be reported after context was initialized and the renderers created.
+		print_engine_rendering_pass_stack();
+
+
+
 		if(!_post_init(initial_scene)) return false;
+
 
 		CSceneManager::Get().set_initial_scene(initial_scene);
 
@@ -95,15 +104,6 @@ namespace mint
 	}
 
 
-	void CMintEngine::begin_frame()
-	{
-// 		auto scene = MINT_ACTIVE_SCENE();
-// 		auto camera = scene->get_active_camera();
-// 
-// 		fx::CSceneRenderer::Get().on_pre_render(camera);
-	}
-
-
 	void CMintEngine::frame()
 	{
 		auto scene = MINT_ACTIVE_SCENE();
@@ -111,10 +111,6 @@ namespace mint
 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
 
 		m_renderingPassStack.on_frame(camera, frame_entities);
-
-// 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
-// 
-// 		fx::CSceneRenderer::Get().on_render(frame_entities);
 	}
 
 
@@ -141,16 +137,12 @@ namespace mint
 	void CMintEngine::end_frame()
 	{
 		m_renderingPassStack.on_frame_end();
-
-// 		fx::CSceneRenderer::Get().on_post_render();
 	}
 
 
 	void CMintEngine::end_rendering()
 	{
 		m_renderingPassStack.on_end_drawing();
-
-//		EndDrawing();
 	}
 
 
@@ -208,6 +200,11 @@ namespace mint
 		m_mainWindow.set_title(title);
 	}
 
+
+	void CMintEngine::print_engine_rendering_pass_stack()
+	{
+		m_renderingPassStack.print_rendering_pass_stack();
+	}
 
 	bool CMintEngine::_prepare_for_init()
 	{
@@ -338,6 +335,14 @@ namespace mint
 		// Embedded shaders.
 		result &= fx::CEmbeddedShaders::Get().initialize();
 
+		// Renderers and Renderer Stack.
+		result &= m_renderingPassStack.initialize();
+		if (result)
+		{
+			m_renderingPassStack.try_push_rendering_pass(new fx::CSceneRenderer());
+		}
+
+
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
 
@@ -408,16 +413,6 @@ namespace mint
 		// Lighting.
 
 		// Animation System.
-
-		// Renderers and Renderer Stack.
-		result &= m_renderingPassStack.initialize();
-		if (result)
-		{
-			m_renderingPassStack.try_push_rendering_pass(new fx::CSceneRenderer());
-		}
-
-
-
 
 
 		// CSAS.

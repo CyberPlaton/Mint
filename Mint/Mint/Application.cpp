@@ -35,8 +35,6 @@ namespace mint
 
 
 
-			begin_frame();
-
 			frame();
 
 			end_frame();
@@ -67,10 +65,7 @@ namespace mint
 		if (initialize(manifest_filepath))
 		{
 			IService::print_registered_services();
-
-
 			get_main_window_const().print_window_configurations();
-
 
 			set_engine_fps(60.0f);
 			set_engine_window_title("Mint Engine " MINT_ENGINE_VERSION_STRING);
@@ -253,8 +248,6 @@ namespace mint
 
 	void CEditor::on_editor_frame_begin()
 	{
-		begin_frame();
-
 		if (m_editingMode)
 		{
 			rlPushMatrix();

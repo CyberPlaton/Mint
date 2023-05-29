@@ -109,6 +109,17 @@ namespace mint::fx
 
 	void CRenderingPassStack::terminate()
 	{
+		while (!m_renderingPasses.empty())
+		{
+			auto rp = m_renderingPasses[0];
+
+			m_renderingPasses.erase(m_renderingPasses.begin());
+
+			rp->terminate();
+
+			delete rp; rp = nullptr;
+		}
+
 		UnloadRenderTexture(m_defaultRT);
 	}
 

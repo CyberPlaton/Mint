@@ -49,8 +49,6 @@ namespace mint
 		virtual void end_rendering() = 0;
 
 
-		virtual void begin_frame() = 0;
-
 		virtual void frame() = 0;
 
 		virtual void end_frame() = 0;
@@ -81,6 +79,8 @@ namespace mint
 		virtual void set_engine_fps(f32) = 0;
 
 		virtual void set_engine_window_title(const String&) = 0;
+
+		virtual void print_engine_rendering_pass_stack() = 0;
 
 	protected:
 		static IMintEngine* s_engine;
