@@ -248,13 +248,15 @@ namespace mint
 
 	void CEditor::on_editor_frame_begin()
 	{
+		auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
+
 		if (m_editingMode)
 		{
-			rlPushMatrix();
-				rlTranslatef(0, 0, 0);
-				rlRotatef(-90, 1, 0, 0);
-				DrawGrid(1000, editor::GlobalData::Get().s_DefaultGridcellSize);
-			rlPopMatrix();
+			dr->set_render_grid(true, editor::GlobalData::Get().s_DefaultGridcellSize, 1000);
+		}
+		else
+		{
+			dr->set_render_grid(false);
 		}
 	}
 

@@ -8,6 +8,7 @@
 #include "../../RessourceManagement/EditorIconManager.h"
 #include "Graphics/RenderingPasses/DebugRenderer/DebugRenderer.h"
 #include "SceneSystem/SAS.h"
+#include "Graphics/RenderingPassStack.h"
 
 
 namespace mint::editor

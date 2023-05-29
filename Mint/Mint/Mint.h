@@ -107,8 +107,6 @@ namespace mint
 
 		CTimestep m_mainTimestep;
 
-		fx::CRenderingPassStack m_renderingPassStack;
-
 
 	private:
 		bool _prepare_for_init();

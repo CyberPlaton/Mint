@@ -13,7 +13,7 @@ namespace mint::fx
 	class CRenderingPassStack
 	{
 	public:
-		CRenderingPassStack() = default;
+		STATIC_GET(CRenderingPassStack,s_CRenderingPassStack);
 		~CRenderingPassStack();
 
 		bool initialize();
@@ -57,6 +57,8 @@ namespace mint::fx
 
 		void try_remove_rendering_pass(const String& name);
 
+		template< class T >
+		T* get_rendering_pass_as(const String& name);
 
 
 		void print_rendering_pass_stack();
@@ -66,6 +68,23 @@ namespace mint::fx
 
 		Vector< IRenderingPass* > m_renderingPasses;
 	};
+
+
+	template< class T >
+	T* mint::fx::CRenderingPassStack::get_rendering_pass_as(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		for (auto rp : m_renderingPasses)
+		{
+			if (rp->get_rendering_pass_id() == h) return reinterpret_cast< T* >(rp);
+		}
+
+		MINT_LOG_ERROR("[{:.4f}][CRenderingPassStack::get_rendering_pass_as] Requested Rendering Pass \"{}\" could not be located!", MINT_APP_TIME, name);
+
+		return nullptr;
+	}
+
 
 }
 

@@ -82,9 +82,7 @@ namespace mint
 
 	void CMintEngine::begin_rendering()
 	{
-		// NOTE: As we use RenderTextures and Rendering Passes this is probably obsolete. Monitor this.
-// 		BeginDrawing();
-		m_renderingPassStack.on_begin_drawing();
+		fx::CRenderingPassStack::Get().on_begin_drawing();
 	}
 
 
@@ -110,13 +108,13 @@ namespace mint
 		auto camera = scene->get_active_camera();
 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
 
-		m_renderingPassStack.on_frame(camera, frame_entities);
+		fx::CRenderingPassStack::Get().on_frame(camera, frame_entities);
 	}
 
 
 	void CMintEngine::ui_frame_begin()
 	{
-		m_renderingPassStack.on_ui_frame();
+		fx::CRenderingPassStack::Get().on_ui_frame();
 
 		CUI::Get().begin();
 	}
@@ -130,19 +128,19 @@ namespace mint
 	{
 		CUI::Get().end();
 
-		m_renderingPassStack.on_ui_frame_end();
+		fx::CRenderingPassStack::Get().on_ui_frame_end();
 	}
 
 
 	void CMintEngine::end_frame()
 	{
-		m_renderingPassStack.on_frame_end();
+		fx::CRenderingPassStack::Get().on_frame_end();
 	}
 
 
 	void CMintEngine::end_rendering()
 	{
-		m_renderingPassStack.on_end_drawing();
+		fx::CRenderingPassStack::Get().on_end_drawing();
 	}
 
 
@@ -203,7 +201,7 @@ namespace mint
 
 	void CMintEngine::print_engine_rendering_pass_stack()
 	{
-		m_renderingPassStack.print_rendering_pass_stack();
+		fx::CRenderingPassStack::Get().print_rendering_pass_stack();
 	}
 
 	bool CMintEngine::_prepare_for_init()
@@ -336,10 +334,16 @@ namespace mint
 		result &= fx::CEmbeddedShaders::Get().initialize();
 
 		// Renderers and Renderer Stack.
-		result &= m_renderingPassStack.initialize();
+		result &= fx::CRenderingPassStack::Get().initialize();
 		if (result)
 		{
-			m_renderingPassStack.try_push_rendering_pass(new fx::CSceneRenderer());
+			fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CSceneRenderer());
+
+#if MINT_DISTR
+#else
+			fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CDebugRenderer());
+#endif
+
 		}
 
 
@@ -449,7 +453,7 @@ namespace mint
 
 
 		// Renderers and Renderer Stack.
-		m_renderingPassStack.terminate();
+		fx::CRenderingPassStack::Get().terminate();
 
 		// Animation system.
 	}
