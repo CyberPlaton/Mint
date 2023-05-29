@@ -73,7 +73,9 @@ namespace mint
 
 	void CMintEngine::begin_rendering()
 	{
-		BeginDrawing();
+		// NOTE: As we use RenderTextures and Rendering Passes this is probably obsolete. Monitor this.
+// 		BeginDrawing();
+		m_renderingPassStack.on_begin_drawing();
 	}
 
 
@@ -95,23 +97,31 @@ namespace mint
 
 	void CMintEngine::begin_frame()
 	{
-		auto scene = MINT_ACTIVE_SCENE();
-		auto camera = scene->get_active_camera();
-
-		fx::CSceneRenderer::Get().on_pre_render(camera);
+// 		auto scene = MINT_ACTIVE_SCENE();
+// 		auto camera = scene->get_active_camera();
+// 
+// 		fx::CSceneRenderer::Get().on_pre_render(camera);
 	}
 
 
 	void CMintEngine::frame()
 	{
+		auto scene = MINT_ACTIVE_SCENE();
+		auto camera = scene->get_active_camera();
 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
 
-		fx::CSceneRenderer::Get().on_render(frame_entities);
+		m_renderingPassStack.on_frame(camera, frame_entities);
+
+// 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
+// 
+// 		fx::CSceneRenderer::Get().on_render(frame_entities);
 	}
 
 
 	void CMintEngine::ui_frame_begin()
 	{
+		m_renderingPassStack.on_ui_frame();
+
 		CUI::Get().begin();
 	}
 
@@ -123,18 +133,24 @@ namespace mint
 	void CMintEngine::ui_frame_end()
 	{
 		CUI::Get().end();
+
+		m_renderingPassStack.on_ui_frame_end();
 	}
 
 
 	void CMintEngine::end_frame()
 	{
-		fx::CSceneRenderer::Get().on_post_render();
+		m_renderingPassStack.on_frame_end();
+
+// 		fx::CSceneRenderer::Get().on_post_render();
 	}
 
 
 	void CMintEngine::end_rendering()
 	{
-		EndDrawing();
+		m_renderingPassStack.on_end_drawing();
+
+//		EndDrawing();
 	}
 
 
@@ -393,8 +409,16 @@ namespace mint
 
 		// Animation System.
 
-		// Renderer.
-		result &= fx::CSceneRenderer::Get().initialize();
+		// Renderers and Renderer Stack.
+		result &= m_renderingPassStack.initialize();
+		if (result)
+		{
+			m_renderingPassStack.try_push_rendering_pass(new fx::CSceneRenderer());
+		}
+
+
+
+
 
 		// CSAS.
 		result &= CSAS::Get().initialize();
@@ -429,8 +453,8 @@ namespace mint
 		CSAS::Get().terminate();
 
 
-		// Scene rendering.
-		fx::CSceneRenderer::Get().terminate();
+		// Renderers and Renderer Stack.
+		m_renderingPassStack.terminate();
 
 		// Animation system.
 	}

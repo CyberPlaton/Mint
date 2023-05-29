@@ -6,7 +6,7 @@
 
 #include "../Common/Layer.h"
 #include "../../RessourceManagement/EditorIconManager.h"
-#include "Graphics/DebugRenderer/DebugRenderer.h"
+#include "Graphics/RenderingPasses/DebugRenderer/DebugRenderer.h"
 #include "SceneSystem/SAS.h"
 
 

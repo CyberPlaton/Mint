@@ -74,34 +74,34 @@ namespace mint::editor
 	{
 		if(MINT_ENGINE()->is_in_editor_mode())
 		{
-			auto camera = MINT_ACTIVE_SCENE()->get_active_camera();
-
-			fx::CDebugRenderer::begin(camera);
-
-			if(m_debugRenderAll)
-			{
-				auto& entities = CSAS::Get().retrieve_visible_entities();
-				
-				if(m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
-
-				if(m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
-			}
-			else
-			{
-				if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
-				{
-					Vector< entt::entity > entities{ GlobalData::Get().s_EditorInspectedEntity };
-
-					if(MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::SSprite >(GlobalData::Get().s_EditorInspectedEntity) && MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::STransform >(GlobalData::Get().s_EditorInspectedEntity))
-					{
-						if (m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
-
-						if (m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
-					}
-				}
-			}
-
-			fx::CDebugRenderer::end();
+// 			auto camera = MINT_ACTIVE_SCENE()->get_active_camera();
+// 
+// 			fx::CDebugRenderer::begin(camera);
+// 
+// 			if(m_debugRenderAll)
+// 			{
+// 				auto& entities = CSAS::Get().retrieve_visible_entities();
+// 				
+// 				if(m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
+// 
+// 				if(m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
+// 			}
+// 			else
+// 			{
+// 				if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
+// 				{
+// 					Vector< entt::entity > entities{ GlobalData::Get().s_EditorInspectedEntity };
+// 
+// 					if(MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::SSprite >(GlobalData::Get().s_EditorInspectedEntity) && MINT_ACTIVE_SCENE()->get_registry().has_component< mint::component::STransform >(GlobalData::Get().s_EditorInspectedEntity))
+// 					{
+// 						if (m_renderDestinationRect) fx::CDebugRenderer::on_render_destination_rectangle(entities);
+// 
+// 						if (m_renderOriginPoint) fx::CDebugRenderer::on_render_sprite_origin(entities);
+// 					}
+// 				}
+// 			}
+// 
+// 			fx::CDebugRenderer::end();
 		}
 	}
 
