@@ -14,10 +14,11 @@ namespace mint
 
 		if(asset.read_bool("has_vs"))
 		{
-			String vs_name = "vs_"; vs_name += asset.get_asset_source_path();
+			vs_name = "vs_"; vs_name += asset.get_asset_source_path(); vs_name += ".vsh";
 		}
 
-		String ps_name = "fs_"; ps_name += asset.get_asset_source_path();
+		fs_name = "fs_"; fs_name += asset.get_asset_source_path(); fs_name += ".fsh";
+
 
 		CShaderManager::Get().add_shader_program(asset.get_asset_name(), vs_name, fs_name);
 
