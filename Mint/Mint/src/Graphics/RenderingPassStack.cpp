@@ -199,7 +199,7 @@ namespace mint::fx
 
 	void CRenderingPassStack::begin_default_blending_mode()
 	{
-
+		BeginBlendMode(BLEND_ALPHA);
 	}
 
 	void CRenderingPassStack::on_ui_frame()
