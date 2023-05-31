@@ -1,5 +1,9 @@
 Runtime Version History:
 
+2023.05.03:
+	o Adding Multiple Rendering Passes. Rendering is done to Texture and this Texture is rendered on flush of the frame.
+	o IRenderingPass can be implemented and registered at runtime to provide special effects and post-processing etc.
+
 2023.05.02:
 	o Adding SMaterialDefinition structure used to define CMaterial data.
 	o CMaterialManager stores Materials as { EntityHandle, CMap2< CMaterial > } with maximum of 256 Materials for each entity.
