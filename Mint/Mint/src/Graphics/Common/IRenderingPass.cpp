@@ -23,4 +23,18 @@ namespace mint::fx
 
 	}
 
+	RenderTexture2D* CRenderingPass::__get_default_rendering_texture()
+	{
+		MINT_ASSERT(m_defaultRenderTexture != nullptr, "Invalid operation. Default RenderTexture was nullptr!");
+
+		return m_defaultRenderTexture;
+	}
+
+	void CRenderingPass::__set_default_rendering_texture(RenderTexture2D* texture)
+	{
+		MINT_ASSERT(texture != nullptr, "Invalid operation. RenderTexture was nullptr!");
+
+		m_defaultRenderTexture = texture;
+	}
+
 }

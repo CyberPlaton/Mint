@@ -17,6 +17,7 @@
 #include "Graphics/Common/Color.h"
 #include "Graphics/RenderingPassStack.h"
 #include "Graphics/RenderingPasses/SceneRenderer/SceneRenderer.h"
+#include "Graphics/RenderingPasses/AntiAliasing/FXAA.h"
 #include "Graphics/Shaders/ShaderConstructor/Common/ShaderPreprocessor/ShaderPreprocessor.h"
 #include "Graphics/Shaders/EmbeddedShaders/EmbeddedShaders.h"
 #include "Graphics/Shaders/MaterialManager.h"

@@ -49,6 +49,7 @@
 			"SceneSystem",
 			"Graphics/LuaBinding",
 			"Graphics/Common",
+			"Graphics/RenderingPasses/AntiAliasing",
 			"Graphics/RenderingPasses/PrimitiveRenderer",
 			"Graphics/RenderingPasses/DebugRenderer",
 			"Graphics/RenderingPasses/SceneRenderer",

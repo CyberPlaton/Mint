@@ -26,15 +26,16 @@ namespace mint
 
 		if(!_init()) return false;
 
-		// Rendering Stack can be reported after context was initialized and the renderers created.
-		print_engine_rendering_pass_stack();
-
-
-
 		if(!_post_init(initial_scene)) return false;
 
-
 		CSceneManager::Get().set_initial_scene(initial_scene);
+
+		// Create the anti-aliasing Post-Processing renderer.
+		fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CFXAA());
+
+		// Rendering Stack can be reported after context was initialized and the renderers created.
+		// Please note that it is possible for renderers to be dependent on the Scene being initialized.
+		print_engine_rendering_pass_stack();
 
 
 		m_running = true;
@@ -343,7 +344,6 @@ namespace mint
 #else
 			fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CDebugRenderer());
 #endif
-
 		}
 
 

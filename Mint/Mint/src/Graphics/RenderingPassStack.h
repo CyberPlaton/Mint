@@ -43,6 +43,8 @@ namespace mint::fx
 		void on_end_drawing();
 
 
+		RenderTexture2D* get_default_render_texture();
+
 
 		void on_ui_frame();
 

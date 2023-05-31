@@ -9,16 +9,29 @@ namespace mint
 	{
 		MINT_ASSERT(ressource_type == "Shader", "Invalid asset type provided!");
 
+		CFileystem fs(CFileystem::get_working_directory());
+		CFileystem vs(CFileystem::get_working_directory());
+
 		String vs_name;
 		String fs_name;
 
-		if(asset.read_bool("has_vs"))
+		fs.forward(asset.get_asset_path());
+		vs.forward(asset.get_asset_path());
+
+
+		if(asset.read_bool("has_vs") && vs.forward("vs_" + asset.get_asset_source_path() + ".vsh"))
 		{
-			vs_name = "vs_"; vs_name += asset.get_asset_source_path(); vs_name += ".vsh";
+
+			vs_name = vs.get_current_directory().as_string();
+
+// 			vs_name = "vs_"; vs_name += asset.get_asset_path(); vs_name += "/"; vs_name += asset.get_asset_source_path(); vs_name += ".vsh";
 		}
 
-		fs_name = "fs_"; fs_name += asset.get_asset_source_path(); fs_name += ".fsh";
+// 		fs_name = "fs_"; fs_name += asset.get_asset_path(); vs_name += "/"; vs_name += asset.get_asset_source_path(); fs_name += ".fsh";
 
+		fs.forward("fs_" + asset.get_asset_source_path() + ".fsh");
+
+		fs_name = fs.get_current_directory().as_string();
 
 		CShaderManager::Get().add_shader_program(asset.get_asset_name(), vs_name, fs_name);
 

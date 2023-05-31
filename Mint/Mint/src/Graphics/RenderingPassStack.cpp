@@ -153,6 +153,8 @@ namespace mint::fx
 
 		for (auto& rp : m_renderingPasses)
 		{
+			rp->__set_default_rendering_texture(get_default_render_texture());
+
 			rp->on_frame_begin(render_camera);
 
 			rp->on_frame(entities);
@@ -178,11 +180,19 @@ namespace mint::fx
 		// Render Render Texture on top of the default Render Texture.
 		BeginTextureMode(m_defaultRT);
 
+
+		rendering_pass->set_custom_combine_shader();
+
 		rendering_pass->set_combine_blending_mode();
+
 
 		DrawTextureRec(render_texture.texture, { 0.0f, 0.0f, (f32)render_texture.texture.width, (f32)-render_texture.texture.height }, { 0.0f, 0.0f }, WHITE);
 
+
 		end_default_rendering_texture();
+
+
+		if (rendering_pass->uses_custom_combine_shader()) rendering_pass->end_custom_combine_shader();
 	}
 
 	void CRenderingPassStack::begin_default_rendering_texture()
@@ -225,6 +235,11 @@ namespace mint::fx
 		DrawTextureRec(m_defaultRT.texture, { 0.0f, 0.0f, (f32)m_defaultRT.texture.width, (f32)-m_defaultRT.texture.height }, { 0.0f, 0.0f }, WHITE);
 
 		EndDrawing();
+	}
+
+	RenderTexture2D* CRenderingPassStack::get_default_render_texture()
+	{
+		return &this->m_defaultRT;
 	}
 
 }

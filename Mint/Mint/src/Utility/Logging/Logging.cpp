@@ -13,7 +13,7 @@ namespace mint
 #if MINT_DEBUG
 		m_verbosity = Verbosity_Debug;
 		m_mode = Mode_Console;
-		SetTraceLogLevel(LOG_INFO | LOG_WARNING | LOG_ERROR | LOG_FATAL);
+		SetTraceLogLevel(LOG_ALL);
 #elif MINT_RELEASE
 		m_verbosity = Verbosity_Release;
 		m_mode = Mode_File;
