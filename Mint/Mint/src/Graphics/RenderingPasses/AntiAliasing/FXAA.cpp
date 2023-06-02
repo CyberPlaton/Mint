@@ -34,8 +34,8 @@ namespace mint::fx
 
 	void CFXAA::terminate()
 	{
-// 		UnloadRenderTexture(m_renderTexture);
-// 		UnloadShader(m_fxaaShader);
+		if(IsRenderTextureReady(m_renderTexture)) UnloadRenderTexture(m_renderTexture);
+		if(IsShaderReady(m_fxaaShader)) UnloadShader(m_fxaaShader);
 	}
 
 	void CFXAA::on_frame_end()
