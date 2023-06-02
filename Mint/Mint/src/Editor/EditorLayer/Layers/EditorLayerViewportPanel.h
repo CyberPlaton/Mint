@@ -9,6 +9,7 @@
 #include "Graphics/RenderingPasses/DebugRenderer/DebugRenderer.h"
 #include "SceneSystem/SAS.h"
 #include "Graphics/RenderingPassStack.h"
+#include "Graphics/RenderingPasses/AntiAliasing/FXAA.h"
 
 
 namespace mint::editor

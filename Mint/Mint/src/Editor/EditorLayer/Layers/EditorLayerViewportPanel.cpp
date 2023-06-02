@@ -149,6 +149,26 @@ namespace mint::editor
 				window.set_is_fullscreen(fullscreen);
 			}
 			
+			if (ImGui::CollapsingHeader("Anti-Aliasing"))
+			{
+				auto fxaa = mint::fx::CRenderingPassStack::Get().get_rendering_pass_as < mint::fx::CFXAA >("CFXAA");
+				auto threshold = fxaa->get_blur_threshold();
+				auto saturation = fxaa->get_saturation();
+				auto rtOffset = fxaa->get_render_texture_offset();
+
+				ImGuiID sid = 10000;
+				ImGuiID scid = 20000;
+
+				CUI::edit_field_f32(threshold, 0.0f, 1.0f, "FXAA Threshold", "", sid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
+				CUI::edit_field_f32(saturation, 0.0f, 1.0f, "FXAA Saturation", "", sid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
+				CUI::edit_field_f32(rtOffset, 0.0f, 1.0f, "FXAA RT Offset", "", sid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
+
+				fxaa->set_blur_threshold(threshold);
+				fxaa->set_saturation(saturation);
+				fxaa->set_render_texture_offset(rtOffset);
+
+
+			}
 			ImGui::EndPopup();
 		}
 	}

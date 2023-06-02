@@ -90,8 +90,8 @@ bool CMainScene::on_load()
 	def.m_textureName = "Knight";
 	def.m_blendMode = BlendMode::BLEND_ALPHA;
 	def.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
-	def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusDstAlpha;
-	def.m_blendingEquation = mint::fx::BlendingEquation_Max;
+	def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
+	def.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
 
 	// Add material for entity.
 	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, def);
@@ -103,9 +103,9 @@ bool CMainScene::on_load()
 	sdef.m_materialName = "Second Material";
 	sdef.m_shaderProgramName = "Sprite";
 	sdef.m_textureName = "Knight";
-	sdef.m_blendMode = BlendMode::BLEND_ADD_COLORS;
+	sdef.m_blendMode = BlendMode::BLEND_ALPHA;
 	sdef.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
-	sdef.m_dstBlendFactor = mint::fx::BlendingFactor_DstColor;
+	sdef.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
 	sdef.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
 
 

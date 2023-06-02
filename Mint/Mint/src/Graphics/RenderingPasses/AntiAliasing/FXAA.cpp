@@ -15,55 +15,21 @@ namespace mint::fx
 
 		m_renderTexture = LoadRenderTexture(window.get_w(), window.get_h());
 
-		if (CShaderManager::Get().load_shader_program("Wave", &m_fxaaShader))
+
+		bool result = CShaderManager::Get().load_shader_program("FXAA", &m_fxaaShader);
+
+		if (result && IsRenderTextureReady(m_renderTexture))
 		{
-			auto freqX = GetShaderLocation(m_fxaaShader, "freqX");
-			auto freqY = GetShaderLocation(m_fxaaShader, "freqY");
-			auto ampX = GetShaderLocation(m_fxaaShader, "ampX");
-			auto ampY = GetShaderLocation(m_fxaaShader, "ampY");
-			auto speedX = GetShaderLocation(m_fxaaShader, "speedX");
-			auto speedY = GetShaderLocation(m_fxaaShader, "speedY");
-			auto size = GetShaderLocation(m_fxaaShader, "size");
-			auto secondes = GetShaderLocation(m_fxaaShader, "secondes");
+			auto blur = GetShaderLocation(m_fxaaShader, "blurThreshold");
+			auto sat = GetShaderLocation(m_fxaaShader, "sat");
 
-
-			f32 vfreqX = 10.0f;
-			f32 vfreqY = 10.0f;
-			f32 vampX = 10.0f;
-			f32 vampY = 10.0f;
-			f32 vspeedX = 10.0f;
-			f32 vspeedY = 10.0f;
-			f32 vsecondes = 10.0f;
-			Vec2 vsize = { window.get_w(), window.get_h() };
-
-			SetShaderValue(m_fxaaShader, freqX, (void*)&vfreqX, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, freqY, (void*)&vfreqY, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, ampX, (void*)&vampX, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, ampY, (void*)&vampY, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, speedX, (void*)&vspeedX, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, speedY, (void*)&vspeedY, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, secondes, (void*)&vsecondes, SHADER_UNIFORM_FLOAT);
-			SetShaderValue(m_fxaaShader, size, (void*)&vsize, SHADER_UNIFORM_VEC2);
+			SetShaderValue(m_fxaaShader, blur, (void*)&m_blurThreshold, SHADER_UNIFORM_FLOAT);
+			SetShaderValue(m_fxaaShader, sat, (void*)&m_saturation, SHADER_UNIFORM_FLOAT);
 
 			return true;
 		}
 
-
-// 		bool result = CShaderManager::Get().load_shader_program("FXAA", &m_fxaaShader);
-// 
-// 		if (result && IsRenderTextureReady(m_renderTexture))
-// 		{
-// 			// Set up uniforms for FXAA.
-// 			auto loc = GetShaderLocation(m_fxaaShader, "frameResolution");
-// 
-// 			Vec2 resolution = { window.get_w(), window.get_h() };
-// 
-// 			SetShaderValue(m_fxaaShader, loc, (void*)&resolution, SHADER_UNIFORM_VEC2);
-// 
-// 			return true;
-// 		}
-// 
-// 		return false;
+ 		return false;
 	}
 
 	void CFXAA::terminate()
@@ -81,11 +47,17 @@ namespace mint::fx
 
 		BeginShaderMode(m_fxaaShader);
 
-		DrawTextureRec(defaultRT.texture, { 0.0f, 0.0f, (f32)defaultRT.texture.width, (f32)-defaultRT.texture.height }, { 0.0f, 0.0f }, WHITE);
+		DrawTextureRec(defaultRT.texture, { 0.0f, 0.0f, (f32)defaultRT.texture.width, (f32)-defaultRT.texture.height }, { m_renderTextureOffset, m_renderTextureOffset }, WHITE);
+
+		DrawTextureRec(defaultRT.texture, { 0.0f, 0.0f, (f32)defaultRT.texture.width, (f32)-defaultRT.texture.height }, { -m_renderTextureOffset, -m_renderTextureOffset }, WHITE);
+
+		DrawTextureRec(defaultRT.texture, { 0.0f, 0.0f, (f32)defaultRT.texture.width, (f32)-defaultRT.texture.height }, { m_renderTextureOffset, -m_renderTextureOffset }, WHITE);
+
+ 		DrawTextureRec(defaultRT.texture, { 0.0f, 0.0f, (f32)defaultRT.texture.width, (f32)-defaultRT.texture.height }, { -m_renderTextureOffset, m_renderTextureOffset }, WHITE);
 
 		EndShaderMode();
 
-		EndTextureMode();
+ 		EndTextureMode();
 	}
 
 	void CFXAA::on_resize(ICamera* render_camera)
@@ -95,13 +67,15 @@ namespace mint::fx
 		m_renderTexture = LoadRenderTexture(render_camera->get_viewport_width(), render_camera->get_viewport_height());
 
 		m_renderCamera = render_camera;
+	}
 
-		// Set up uniforms for FXAA.
-		auto loc = GetShaderLocation(m_fxaaShader, "frameResolution");
+	void CFXAA::on_frame_begin(ICamera* render_camera)
+	{
+		BeginTextureMode(m_renderTexture);
 
-		Vec2 resolution = { render_camera->get_viewport_width(), render_camera->get_viewport_height() };
+		ClearBackground(BLANK);
 
-		SetShaderValue(m_fxaaShader, loc, (void*)&resolution, SHADER_UNIFORM_VEC2);
+ 		EndTextureMode();
 	}
 
 }
