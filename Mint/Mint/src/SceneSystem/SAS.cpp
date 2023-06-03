@@ -323,6 +323,15 @@ namespace mint
 		viewmax[0] = visible_area.get_width();
 		viewmax[1] = visible_area.get_height();
 
+		// Check for when the camera is rotated and adjust the min and max values.
+		if (viewmin[0] > viewmax[0])
+		{
+			std::swap(viewmin[0], viewmax[0]);
+		}
+		if (viewmin[1] > viewmax[1])
+		{
+			std::swap(viewmin[1], viewmax[1]);
+		}
 
 		spatial::BoundingBox< f32, 2 > bbox(viewmin, viewmax);
 		Vector< detail::SQuadTreeNode > result;
