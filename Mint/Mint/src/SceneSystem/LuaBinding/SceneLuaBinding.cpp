@@ -41,10 +41,6 @@ namespace mint::luaglue
 				.addFunction("is_ready", &IScene::is_ready)
 				.addFunction("get_scene_name", &IScene::get_scene_name)
 
-				.addFunction("get_active_camera", &IScene::get_active_camera)
-				.addFunction("push_camera", &IScene::push_camera)
-				.addFunction("pop_camera", &IScene::pop_camera)
-
 				.endClass();
 
 			return true;

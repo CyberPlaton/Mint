@@ -78,13 +78,6 @@ namespace mint
 		virtual void transit_to_scene(const String&) = 0;
 
 
-
-		virtual fx::ICamera* get_active_camera() = 0;
-
-		virtual void push_camera(fx::ICamera*) = 0;
-
-		virtual void pop_camera() = 0;
-
 		virtual CPath get_scene_assets_path() = 0;
 
 		virtual CPath get_scene_persistence_path() = 0;

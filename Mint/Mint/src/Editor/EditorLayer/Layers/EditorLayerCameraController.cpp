@@ -7,10 +7,8 @@ namespace mint::editor
 {
 
 
-	CCameraControllerLayer::CCameraControllerLayer(mint::fx::CCamera2D* editor_camera) :
-		m_camera(nullptr)
+	CCameraControllerLayer::CCameraControllerLayer()
 	{
-		m_camera = editor_camera;
 	}
 
 
@@ -29,27 +27,27 @@ namespace mint::editor
 		}
 		if (CInput::is_key_held_enum(KeyboardKey::KEY_A))
 		{
-			m_camera->translate({ -dt * speed, 0.0f });
+			mint::fx::CCameraManager::Get().translate({ -dt * speed, 0.0f });
 		}
 		if (CInput::is_key_held_enum(KeyboardKey::KEY_D))
 		{
-			m_camera->translate({ dt * speed, 0.0f });
+			mint::fx::CCameraManager::Get().translate({ dt * speed, 0.0f });
 		}
 		if (CInput::is_key_held_enum(KeyboardKey::KEY_W))
 		{
-			m_camera->translate({ 0.0f, -dt * speed });
+			mint::fx::CCameraManager::Get().translate({ 0.0f, -dt * speed });
 		}
 		if (CInput::is_key_held_enum(KeyboardKey::KEY_S))
 		{
-			m_camera->translate({ 0.0f, dt * speed });
+			mint::fx::CCameraManager::Get().translate({ 0.0f, dt * speed });
 		}
 
 
 		if (CInput::is_mouse_button_held(MOUSE_BUTTON_MIDDLE))
 		{
 			auto delta = GetMouseDelta();
-			auto zoom = 1.0f / m_camera->get_zoom();
-			m_camera->translate({ -delta.x * zoom, -delta.y * zoom });
+			auto zoom = 1.0f / mint::fx::CCameraManager::Get().get_zoom();
+			mint::fx::CCameraManager::Get().translate({ -delta.x * zoom, -delta.y * zoom });
 		}
 
 
@@ -57,7 +55,7 @@ namespace mint::editor
 		{
 			wheel_delta *= zoom_speed;
 
-			m_camera->zoom(wheel_delta);
+			mint::fx::CCameraManager::Get().zoom(wheel_delta);
 		}
 
 	}
@@ -77,15 +75,9 @@ namespace mint::editor
 
 	void CCameraControllerLayer::on_ui_frame()
 	{
-		const char* text = TextFormat("Zoom: %.3f", m_camera->get_zoom());
+		const char* text = TextFormat("Zoom: %.3f", mint::fx::CCameraManager::Get().get_zoom());
 
 		DrawText(text, 1, 20, 24, RAYWHITE);
-	}
-
-
-	void CCameraControllerLayer::reload_camera(mint::fx::CCamera2D* editor_camera)
-	{
-		m_camera = editor_camera;
 	}
 
 

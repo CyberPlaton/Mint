@@ -113,7 +113,7 @@ namespace mint::editor
 
 	mint::fx::CCamera2D* CLayer::get_editor_camera()
 	{
-		return  reinterpret_cast<fx::CCamera2D*>(MINT_ACTIVE_SCENE()->get_active_camera());
+		return mint::fx::CCameraManager::Get().get_active_camera();
 	}
 
 

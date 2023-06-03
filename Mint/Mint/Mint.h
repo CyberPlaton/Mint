@@ -4,6 +4,7 @@
 
 #include "IMint.h"
 
+#include "Graphics/Common/Color.h"
 #include "Hardware/GlobalGraphicsSettings.h"
 #include "Hardware/GlobalCPUSettings.h"
 #include "Hardware/GlobalOSSettings.h"
@@ -33,6 +34,10 @@
 #include "RessourceManagement/Common/RessourceLoaders/MaterialLoader.h"
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
+#include "Graphics/SceneCameras/EditorCamera/EditorCamera.h"
+#include "Graphics/SceneCameras/DebugCamera/DebugCamera.h"
+#include "Graphics/SceneCameras/EntityFollowCamera/EntityFollowCamera.h"
+#include "Graphics/SceneCameras/ScriptedCamera/ScriptedCamera.h"
 #include "Graphics/CameraSystem.h"
 
 

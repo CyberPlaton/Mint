@@ -5,6 +5,7 @@
 #include "Common/Common.h"
 #include "Common/Camera2D.h"
 #include "Common/easing.h"
+#include "Utility/STL/Map.h"
 
 
 namespace mint::fx
@@ -36,22 +37,45 @@ namespace mint::fx
 		bool teleport_to_zoom(f32 zoom);
 
 
+		void translate(Vec2 value);
+
+		void rotate(f32 value);
+
+		void zoom(f32 value);
+
+
+		Vec2 get_position();
+
+		f32 get_rotation();
+
+		f32 get_zoom();
+
+
 
 		void on_update(f32 dt);
 
 
+		template< class T, typename... ARGS>
+		void push_camera(const String& name, ARGS&&... args);
 
-		void push_camera(CCamera2D* camera);
+		void pop_camera(const String& name);
 
-		void pop_camera();
 
-		void pop_to_default();
+		template< class T, typename... ARGS>
+		void set_default_camera(const String& name, ARGS&&... args);
 
-		void set_default_camera(CCamera2D* camera);
+		void set_camera_active(const String& name);
+
+		bool is_camera_active(const String& name);
 
 		mint::fx::CCamera2D* get_active_camera();
 
 		mint::fx::CCamera2D* get_default_camera();
+
+		mint::fx::CCamera2D* find_camera(const String& name);
+
+		template< class T >
+		T* find_camera_as(const String& name);
 
 		template< class T >
 		T* get_active_camera_as();
@@ -61,7 +85,9 @@ namespace mint::fx
 
 
 	private:
-		Vector< CCamera2D* > m_cameraStack;
+		CMap< CCamera2D* > m_cameraStack;
+		u64 m_defaultCamera = 0;
+		u64 m_activeCamera = 0;
 
 		bx::EaseFn m_currentEasingFunction;
 
@@ -86,19 +112,73 @@ namespace mint::fx
 		Vec2 m_targetTranslation = { 0.0f, 0.0f };
 		f32 m_targetRotation = 0.0f;
 		f32 m_targetZoom = 0.0f;
+
 	};
 
+	template< class T >
+	T* mint::fx::CCameraManager::find_camera_as(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		if (!m_cameraStack.lookup(h))
+		{
+			return reinterpret_cast< T* >( m_cameraStack.get(h) ) ;
+		}
+	}
+
+	template< class T, typename... ARGS >
+	void mint::fx::CCameraManager::push_camera(const String& name, ARGS&&... args)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		if (!m_cameraStack.lookup(h))
+		{
+			m_cameraStack.add(h, new T(args...));
+		}
+	}
+
+	template< class T, typename... ARGS>
+	void mint::fx::CCameraManager::set_default_camera(const String& name, ARGS&&... args)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		if (!m_cameraStack.lookup(h))
+		{
+			auto camera = new T(args...);
+
+			m_cameraStack.add(h, camera);
+
+
+			m_defaultCamera = h;
+			if (m_activeCamera == 0) m_activeCamera = m_defaultCamera;
+
+
+			m_targetTranslation = camera->get_position();
+			m_targetRotation = camera->get_rotation();
+			m_targetZoom = camera->get_zoom();
+		}
+	}
 
 	template< class T >
 	T* mint::fx::CCameraManager::get_default_camera_as()
 	{
-		return mint::algorithm::vector_get_first_element_as< T* >(m_cameraStack);
+		if (m_cameraStack.lookup(m_defaultCamera))
+		{
+			return reinterpret_cast<T*>(m_cameraStack.get(m_defaultCamera));
+		}
+
+		return nullptr;
 	}
 
 	template< class T >
 	T* mint::fx::CCameraManager::get_active_camera_as()
 	{
-		return mint::algorithm::vector_get_last_element_as< T* >(m_cameraStack);
+		if (m_cameraStack.lookup(m_activeCamera))
+		{
+			return reinterpret_cast<T*>(m_cameraStack.get(m_activeCamera));
+		}
+
+		return nullptr;
 	}
 
 }

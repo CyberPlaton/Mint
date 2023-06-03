@@ -125,7 +125,7 @@ namespace mint
 		view_max[0] = 0;
 		view_max[1] = 0;
 
-		auto area = MINT_ACTIVE_SCENE()->get_active_camera()->get_world_visible_area();
+		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
 		view_min[0] = area.get_x();
 		view_min[1] = area.get_y();
 		view_max[0] = area.get_width();
@@ -206,7 +206,7 @@ namespace mint
 		view_max[0] = 0;
 		view_max[1] = 0;
 
-		auto area = MINT_ACTIVE_SCENE()->get_active_camera()->get_world_visible_area();
+		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
 		view_min[0] = area.get_x();
 		view_min[1] = area.get_y();
 		view_max[0] = area.get_width();
@@ -316,7 +316,7 @@ namespace mint
 		f32 viewmin[2] = { 0 };
 		f32 viewmax[2] = { 0 };
 
-		CRect visible_area = MINT_ACTIVE_SCENE()->get_active_camera()->get_world_visible_area();
+		CRect visible_area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
 
 		viewmin[0] = visible_area.get_x();
 		viewmin[1] = visible_area.get_y();

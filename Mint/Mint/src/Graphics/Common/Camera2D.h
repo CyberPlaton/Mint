@@ -34,6 +34,7 @@ namespace mint::fx
 
 		virtual void zoom(f32 value);
 
+		virtual bool on_update(f32 dt) { return true; }
 
 		mint::Vec2 get_position();
 

@@ -70,8 +70,9 @@ namespace mint
 			set_engine_fps(60.0f);
 			set_engine_window_title("Mint Engine " MINT_ENGINE_VERSION_STRING);
 
+			mint::fx::CColor color = { 255, 150, 50, 255 };
 
-			m_editorCamera = new mint::fx::CCamera2D({ 255, 150, 50, 255 }, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
+			mint::fx::CCameraManager::Get().push_camera< mint::fx::CEditorCamera >("EditorCamera", color, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
 
 			
 			bool result = true;
@@ -101,8 +102,6 @@ namespace mint
 	void CEditor::terminate_editor()
 	{
 		m_layerStack.clear_all_layers();
-
-		delete m_editorCamera; m_editorCamera = nullptr;
 
 		terminate();
 	}
@@ -208,7 +207,9 @@ namespace mint
 		if(m_sceneReloaded && !CSceneManager::Get().is_transitioning())
 		{
 			// Reloading can be done in editing mode only, thus no need to toggle anything, just recreate the camera.
-			MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
+			mint::fx::CColor color = { 255, 150, 50, 255 };
+
+			mint::fx::CCameraManager::Get().push_camera< mint::fx::CCamera2D >("EditorCamera", color, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
 
 			m_sceneReloaded = false;
 		}
@@ -295,7 +296,7 @@ namespace mint
 
 
 		// Create the hierarchy of layers.
-		auto camera_controller = new editor::CCameraControllerLayer(m_editorCamera);
+		auto camera_controller = new editor::CCameraControllerLayer();
 		root->add_child_layer(camera_controller);
 		if(!m_layerStack.try_push_layer(camera_controller))
 		{
@@ -385,7 +386,7 @@ namespace mint
 
 		set_engine_window_title("Mint Engine Editor: Editing Mode");
 
-		MINT_ACTIVE_SCENE()->push_camera(m_editorCamera);
+		mint::fx::CCameraManager::Get().set_camera_active("EditorCamera");
 
 		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
 		mint::scripting::CScriptEngine::Get().set_all_scripts_active(false);
@@ -402,7 +403,7 @@ namespace mint
 
 		set_engine_window_title("Mint Engine Editor");
 
-		MINT_ACTIVE_SCENE()->pop_camera();
+		mint::fx::CCameraManager::Get().set_camera_active("DefaultCamera");
 
 		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
 		mint::scripting::CScriptEngine::Get().set_all_scripts_active(true);

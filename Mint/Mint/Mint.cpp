@@ -108,7 +108,7 @@ namespace mint
 	void CMintEngine::frame()
 	{
 		auto scene = MINT_ACTIVE_SCENE();
-		auto camera = scene->get_active_camera();
+		auto camera = fx::CCameraManager::Get().get_active_camera();
 		auto& frame_entities = CSAS::Get().retrieve_visible_entities();
 
 		fx::CRenderingPassStack::Get().on_frame(camera, frame_entities);

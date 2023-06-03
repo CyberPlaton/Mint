@@ -57,13 +57,6 @@ namespace mint
 
 
 
-		fx::ICamera* get_active_camera() override final;
-
-		void push_camera(fx::ICamera* camera) override final;
-
-		void pop_camera() override final;
-
-
 		CPath get_scene_assets_path() override final;
 
 		CPath get_scene_persistence_path() override final;
@@ -76,12 +69,7 @@ namespace mint
 	protected:
 		Vector< entt::entity > m_entities;
 
-		fx::ICamera* m_camera;
-
-		fx::ICamera* m_cameraOverride;
-
 		CRegistry m_registry;
-
 
 		CPath m_assets;
 		CPath m_persistence;

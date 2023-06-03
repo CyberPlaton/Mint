@@ -43,9 +43,9 @@ namespace mint::fx
 #define MINT_BLACK() mint::fx::CColor(0, 0, 0, 0)
 #define MINT_WHITE() mint::fx::CColor(255, 255, 255, 255)
 
-#define MINT_GREY_LIGHT() mint::fx::CColor(255, 255, 255, 255)
-#define MINT_GREY() mint::fx::CColor(255, 255, 255, 255)
-#define MINT_GREY_DARK() mint::fx::CColor(255, 255, 255, 255)
+#define MINT_GREY_LIGHT() mint::fx::CColor(211, 211, 211, 255)
+#define MINT_GREY() mint::fx::CColor(169, 169, 169, 255)
+#define MINT_GREY_DARK() mint::fx::CColor(105, 105, 105, 255)
 
 #define MINT_BLUE_LIGHT() mint::fx::CColor(102, 178, 255, 255)
 #define MINT_BLUE() mint::fx::CColor(0, 128, 255, 255)

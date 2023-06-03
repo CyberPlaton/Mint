@@ -16,9 +16,7 @@ namespace mint::editor
 	class CCameraControllerLayer : public CLayer
 	{
 	public:
-		CCameraControllerLayer(mint::fx::CCamera2D* editor_camera);
-
-		void reload_camera(mint::fx::CCamera2D* editor_camera);
+		CCameraControllerLayer();
 
 		bool on_initialize() override final;
 
@@ -29,8 +27,6 @@ namespace mint::editor
 		String get_layer_name() override final;
 
 	private:
-		mint::fx::CCamera2D* m_camera;
-
 
 	};
 

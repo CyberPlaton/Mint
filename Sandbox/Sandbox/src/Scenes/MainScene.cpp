@@ -4,10 +4,23 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
 	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 
-  	mint::fx::CCameraManager::Get().set_position({ 2000, 100 }, bx::Easing::SmoothStep, 1.0f, 2.5f);
-	mint::fx::CCameraManager::Get().set_zoom(0.1f, bx::Easing::SmoothStep, 0.25f, 1.0f);
-	mint::fx::CCameraManager::Get().set_rotation(360.0f, bx::Easing::SmoothStep, 0.5f, 5.0f);
+	if (mint::fx::CCameraManager::Get().is_camera_active("DefaultCamera"))
+	{
+// 		mint::fx::CCameraManager::Get().set_position({ 2000, 100 }, bx::Easing::SmoothStep, 1.0f, 2.5f);
+// 		mint::fx::CCameraManager::Get().set_zoom(0.1f, bx::Easing::SmoothStep, 0.25f, 1.0f);
+		mint::fx::CCameraManager::Get().set_rotation(45, bx::Easing::SmoothStep, 1.0f, 5.0f);
+	}
 
+	static int dir = 0;
+
+	if (dir == 0)
+	{
+		if (mint::fx::CCameraManager::Get().set_rotation(45, bx::Easing::SmoothStep, 0.2f, 5.0f)) dir = 1;
+	}
+	else if (dir == 1)
+	{
+		if (mint::fx::CCameraManager::Get().set_rotation(0, bx::Easing::SmoothStep, 0.2f, 5.0f)) dir = 0;
+	}
 }
 
 
@@ -37,6 +50,13 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 bool CMainScene::on_before_load()
 {
+	const auto& window = MINT_ENGINE()->get_main_window_const();
+
+	auto color = MINT_GREY_DARK();
+
+	mint::fx::CCameraManager::Get().set_default_camera< mint::fx::CCamera2D >("DefaultCamera", color, 0, 0, window.get_w(), window.get_h(), 1.0f, 0.0f);
+
+
 	return true;
 }
 
@@ -44,17 +64,6 @@ bool CMainScene::on_before_load()
 bool CMainScene::on_load()
 {
 	using namespace mint;
-
-	const auto& window = MINT_ENGINE()->get_main_window_const();
-
-	m_camera = new mint::fx::CCamera2D({ 150, 150, 0, 255 },
-	window.get_x(), window.get_y(), window.get_w(), window.get_h());
-	m_camera->set_translation({ 0.0f, 0.0f });
-	m_camera->set_rotation(0.0f);
-	m_camera->set_zoom(1.0f);
-
-	mint::fx::CCameraManager::Get().set_default_camera((mint::fx::CCamera2D*)m_camera);
-
 
 	// Create an entity.
 	m_knight = m_registry.create_entity();
@@ -71,11 +80,8 @@ bool CMainScene::on_load()
 	identifier.m_uuid = identifier.m_enttId;
 	identifier.m_debugName = "Knight";
 	hierarchy.m_parent = entt::null;
-// 	transform.m_scale = { 1.0f, 1.0f };
-// 	transform.m_rotation = 45.0f;
-// 	transform.m_position = { 0.0f, 0.0f };
 
-	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f }); // Scaling bugged?
+	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
 	CUCA::transform_set_rotation(m_knight, 0);
 	CUCA::transform_set_position(m_knight, { -100, 100 });
 

@@ -76,7 +76,6 @@ namespace mint
 
 	protected:
 		editor::CLayerStack m_layerStack;
-		mint::fx::CCamera2D* m_editorCamera = nullptr;
 
 		CTimer m_timer;
 

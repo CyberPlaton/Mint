@@ -7,6 +7,7 @@
 #include "Common/Rectangle.h"
 #include "Components/CUCA.h"
 #include "Common/IScene.h"
+#include "Graphics/CameraSystem.h"
 
 #include <limits>
 

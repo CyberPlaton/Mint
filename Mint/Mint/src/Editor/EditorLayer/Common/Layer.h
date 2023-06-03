@@ -9,7 +9,7 @@
 #include "../../IMint.h"
 #include "../../Common/EditorInternationalization.h"
 #include "Utility/FileSystem/Filesystem.h"
-#include "Graphics/Common/Camera2D.h"
+#include "Graphics/CameraSystem.h"
 
 namespace mint::editor
 {
