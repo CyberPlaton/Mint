@@ -16,6 +16,12 @@ namespace mint::algorithm
 
 	bool are_values_sufficiently_different(f32 lh, f32 rh);
 
+	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh);
+
+	bool is_value_in_between(f32 value, f32 lh, f32 rh);
+
+	bool is_value_in_between(Vec2 value, Vec2 lh, Vec2 rh);
+
 	void string_split(const String& string, char delimiter, Vector< String >& storage );
 
 	void string_insert(String& string, const String& to_insert_one, u64 index);

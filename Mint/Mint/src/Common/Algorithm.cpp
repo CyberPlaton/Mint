@@ -52,6 +52,12 @@ namespace mint::algorithm
 		return glm::distance< f32 >(lh, rh) > glm::epsilon< f32 >();
 	}
 
+	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh)
+	{
+		return glm::distance< f32 >(lh.x, rh.x) > glm::epsilon< f32 >() &&
+			   glm::distance< f32 >(lh.y, rh.y) > glm::epsilon< f32 >();
+	}
+
 
 	void string_push_front(String& string, const String& to_prepend_one)
 	{
@@ -117,6 +123,20 @@ namespace mint::algorithm
 		value++;
 
 		return value;
+	}
+
+	bool is_value_in_between(f32 value, f32 lh, f32 rh)
+	{
+		return lh >= value &&
+			   rh <= value;
+	}
+
+	bool is_value_in_between(Vec2 value, Vec2 lh, Vec2 rh)
+	{
+		return lh.x >= value.x &&
+			   rh.x <= value.x &&
+			   lh.y >= value.y &&
+			   rh.y <= value.y;
 	}
 
 

@@ -55,7 +55,7 @@ namespace mint::fx
 		void set_view_clear_color(u8 r, u8 g, u8 b, u8 a);
 
 
-	public:
+	protected:
 		Vec2 m_translation;
 
 		Vec2 m_translationOffset;

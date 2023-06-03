@@ -3,6 +3,11 @@
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
 	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+
+  	mint::fx::CCameraManager::Get().set_position({ 2000, 100 }, bx::Easing::SmoothStep, 1.0f, 2.5f);
+	mint::fx::CCameraManager::Get().set_zoom(0.1f, bx::Easing::SmoothStep, 0.25f, 1.0f);
+	mint::fx::CCameraManager::Get().set_rotation(360.0f, bx::Easing::SmoothStep, 0.5f, 5.0f);
+
 }
 
 
@@ -47,6 +52,8 @@ bool CMainScene::on_load()
 	m_camera->set_translation({ 0.0f, 0.0f });
 	m_camera->set_rotation(0.0f);
 	m_camera->set_zoom(1.0f);
+
+	mint::fx::CCameraManager::Get().set_default_camera((mint::fx::CCamera2D*)m_camera);
 
 
 	// Create an entity.

@@ -97,6 +97,8 @@ namespace mint
 
 		CPluginSystem::Get().on_update(dt);
 
+		mint::fx::CCameraManager::Get().on_update(dt);
+
 		scripting::CScriptEngine::Get().set_should_update(true);
 
 		scripting::CBehaviorEngine::Get().set_should_update(true);
@@ -346,6 +348,9 @@ namespace mint
 #endif
 		}
 
+		// Camera System.
+		result &= mint::fx::CCameraManager::Get().initialize();
+
 
 		// Registry.
 		result &= MINT_SCENE_REGISTRY().initialize();
@@ -464,6 +469,8 @@ namespace mint
 		// Terminate plugins and medium level engine sub systems.
 		CPluginSystem::Get().on_termination();
 
+		// Camera System.
+		mint::fx::CCameraManager::Get().terminate();
 
 		// Scripting engine.
 		scripting::CBehaviorEngine::Get().stop_behavior_engine_thread();

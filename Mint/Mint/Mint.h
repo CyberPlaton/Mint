@@ -33,6 +33,7 @@
 #include "RessourceManagement/Common/RessourceLoaders/MaterialLoader.h"
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
+#include "Graphics/CameraSystem.h"
 
 
 #if MINT_DISTR

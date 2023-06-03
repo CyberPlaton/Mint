@@ -7,7 +7,6 @@
 
 namespace mint::fx
 {
-
 	class CCamera2D : public ICamera
 	{
 	public:
@@ -19,21 +18,21 @@ namespace mint::fx
 
 		void end_camera() override final;
 
-		void set_translation(Vec2 value) override final;
+		virtual void set_translation(Vec2 value);
 
-		void translate(Vec2 value) override final;
+		virtual void translate(Vec2 value);
 
-		void set_translation_offset(Vec2 value) override final;
+		virtual void set_translation_offset(Vec2 value);
 
-		void translate_offset(Vec2 value) override final;
+		virtual void translate_offset(Vec2 value);
 
-		void set_rotation(f32 value) override final;
+		virtual void set_rotation(f32 value);
 
-		void rotate(f32 value) override final;
+		virtual void rotate(f32 value);
 
-		void set_zoom(f32 value) override final;
+		virtual void set_zoom(f32 value);
 
-		void zoom(f32 value) override final;
+		virtual void zoom(f32 value);
 
 
 		mint::Vec2 get_position();
@@ -45,7 +44,7 @@ namespace mint::fx
 		mint::f32 get_zoom();
 
 
-	private:
+	protected:
 		raylib::Camera2D m_camera;
 
 	};
