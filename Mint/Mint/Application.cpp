@@ -72,7 +72,7 @@ namespace mint
 
 			mint::fx::CColor color = { 255, 150, 50, 255 };
 
-			mint::fx::CCameraManager::Get().push_camera< mint::fx::CEditorCamera >("EditorCamera", color, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
+			mint::fx::CCameraManager::Get().push_camera< mint::fx::CCamera2D >("EditorCamera", color, 0, 0, MINT_ENGINE()->get_main_window_const().get_w(), MINT_ENGINE()->get_main_window_const().get_h());
 
 			
 			bool result = true;
