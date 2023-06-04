@@ -11,11 +11,6 @@ namespace mint::fx
 
 	void CFreeMovementCamera::on_update(f32 dt)
 	{
-		CCamera2D::on_update(dt);
-
-
-		if (mint::CUI::ui_has_focus()) return;
-
 		f32 speed = 1.0f;
 		f32 zoom_speed = 1.0f;
 
@@ -54,6 +49,9 @@ namespace mint::fx
 
 			zoom(wheel_delta);
 		}
+
+
+		CCamera2D::on_update(dt);
 	}
 
 }
