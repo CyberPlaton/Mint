@@ -1,5 +1,9 @@
 Runtime Version History:
 
+2023.06.0:
+	o Adding Camera System with a Camera Manager and a flexible usage of cameras with possible different implementations (Strategy Pattern).
+	o Adding Camera Effects to cameras, likewise flexible and acting on the camera (Strategy Pattern).
+
 2023.05.03:
 	o Adding Multiple Rendering Passes. Rendering is done to Texture and this Texture is rendered on flush of the frame.
 	o IRenderingPass can be implemented and registered at runtime to provide special effects and post-processing etc.
