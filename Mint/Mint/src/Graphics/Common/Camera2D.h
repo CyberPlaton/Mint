@@ -4,6 +4,7 @@
 
 #include "Camera.h"
 #include "CameraEffect.h"
+#include "Utility/STL/Map.h"
 
 
 namespace mint::fx
@@ -13,6 +14,8 @@ namespace mint::fx
 	{
 	public:
 		CCamera2D(const CColor& clear_color, u32 x = 0, u32 y = 0, u32 w = 0, u32 h = 0, f32 z = 1.0f, f32 r = 0.0f);
+
+		virtual ~CCamera2D();
 
 		CRect get_world_visible_area() override final;
 
@@ -46,12 +49,32 @@ namespace mint::fx
 
 		mint::f32 get_zoom();
 
+		template< class T, typename... ARGS >
+		void add_camera_effect(const String& name, ARGS&... args);
+
+		void remove_camera_effect(const String& name);
+
+		void remove_all_camera_effects();
+
 
 	protected:
 		raylib::Camera2D m_camera;
 
-		Vector< ICameraEffect* > m_effects;
+		CMap< ICameraEffect* > m_effects;
 	};
+
+	template< class T, typename... ARGS >
+	void mint::fx::CCamera2D::add_camera_effect(const String& name, ARGS&... args)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		if (!m_effects.lookup(h))
+		{
+			auto effect = new T(args...);
+
+			m_effects.add(h, effect);
+		}
+	}
 
 }
 

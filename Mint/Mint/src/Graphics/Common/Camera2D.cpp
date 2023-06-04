@@ -138,10 +138,47 @@ namespace mint::fx
 
 	void CCamera2D::on_update(f32 dt)
 	{
-		for (auto effect : m_effects)
+		auto& effects = m_effects.get_all();
+
+		for (auto effect : effects)
 		{
 			effect->on_update(this, dt);
 		}
+	}
+
+	void CCamera2D::remove_camera_effect(const String& name)
+	{
+		auto h = mint::algorithm::djb_hash(name);
+
+		if (m_effects.lookup(h))
+		{
+			auto effect = m_effects.get(h);
+
+			m_effects.remove(h);
+
+			delete effect; effect = nullptr;
+		}
+	}
+
+	void CCamera2D::remove_all_camera_effects()
+	{
+		auto& effects = m_effects.get_all();
+
+		while (!effects.empty())
+		{
+			auto effect = effects[0];
+
+			effects.erase(effects.begin());
+
+			delete effect; effect = nullptr;
+		}
+
+		m_effects.reset();
+	}
+
+	CCamera2D::~CCamera2D()
+	{
+		remove_all_camera_effects();
 	}
 
 
