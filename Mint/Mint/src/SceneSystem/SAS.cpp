@@ -131,6 +131,15 @@ namespace mint
 		view_max[0] = area.get_width();
 		view_max[1] = area.get_height();
 
+		// Check for when the camera is rotated and adjust the min and max values.
+		if (view_min[0] > view_max[0])
+		{
+			std::swap(view_min[0], view_max[0]);
+		}
+		if (view_min[1] > view_max[1])
+		{
+			std::swap(view_min[1], view_max[1]);
+		}
 
 		for (auto& entity : entities)
 		{
@@ -212,6 +221,15 @@ namespace mint
 		view_max[0] = area.get_width();
 		view_max[1] = area.get_height();
 
+		// Check for when the camera is rotated and adjust the min and max values.
+		if (view_min[0] > view_max[0])
+		{
+			std::swap(view_min[0], view_max[0]);
+		}
+		if (view_min[1] > view_max[1])
+		{
+			std::swap(view_min[1], view_max[1]);
+		}
 
 		for (auto& entity : entities)
 		{

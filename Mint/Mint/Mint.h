@@ -38,6 +38,7 @@
 #include "Graphics/SceneCameras/DebugCamera/DebugCamera.h"
 #include "Graphics/SceneCameras/EntityFollowCamera/EntityFollowCamera.h"
 #include "Graphics/SceneCameras/ScriptedCamera/ScriptedCamera.h"
+#include "Graphics/SceneCameras/FreeMovementCamera/FreeMovementCamera.h"
 #include "Graphics/CameraSystem.h"
 
 

@@ -9,4 +9,9 @@ namespace mint::fx
 	{
 	}
 
+	void CEditorCamera::on_update(f32 dt)
+	{
+
+	}
+
 }

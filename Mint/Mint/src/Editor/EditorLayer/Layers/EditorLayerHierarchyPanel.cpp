@@ -136,7 +136,10 @@ namespace mint::editor
 
 			auto position = CUCA::transform_get_position(GlobalData::Get().s_EditorInspectedEntity);
 
-			mint::fx::CCameraManager::Get().set_position(position, bx::Easing::SmoothStep, 5.0f, 1.5f);
+
+			auto camera = mint::fx::CCameraManager::Get().get_active_camera();
+
+			camera->set_translation(position);
 		}
 
 

@@ -53,6 +53,7 @@
 			"Graphics/SceneCameras/ScriptedCamera",
 			"Graphics/SceneCameras/EditorCamera",
 			"Graphics/SceneCameras/EntityFollowCamera",
+			"Graphics/SceneCameras/FreeMovementCamera",
 			"Graphics/SceneCameras",
 			"Graphics/RenderingPasses/AntiAliasing",
 			"Graphics/RenderingPasses/PrimitiveRenderer",

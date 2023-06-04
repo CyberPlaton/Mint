@@ -136,5 +136,13 @@ namespace mint::fx
 		return m_camera.GetZoom();
 	}
 
+	void CCamera2D::on_update(f32 dt)
+	{
+		for (auto effect : m_effects)
+		{
+			effect->on_update(this, dt);
+		}
+	}
+
 
 }
