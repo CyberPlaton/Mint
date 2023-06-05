@@ -78,13 +78,12 @@ namespace mint
 		CPath m_full;
 
 	private:
-
+		
 
 	protected:
 		bool import_entity(maml::SNode* maml_node) override final;
 
 		bool export_entity(entt::entity entity, maml::SNode* maml_node) override final;
-
 	};
 }
 

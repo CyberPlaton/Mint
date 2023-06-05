@@ -74,7 +74,7 @@ namespace mint
 
 	bool CScene::import_scene(const String& maml_scene_filepath)
 	{
-		maml::CDocument document;
+		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
 
 		auto root = CSerializer::load_maml_document(maml_scene_filepath, document);
 
@@ -86,29 +86,19 @@ namespace mint
 
 		// Import scene entities.
 		auto entities_node = document.find_first_match_in_document("entities");
-		
-		// Get all entity entries.
-		auto& entity_entries = maml::CDocument::get_all_node_properties(entities_node);
+		MINT_ASSERT(entities_node != nullptr, "Invalid operation. Persistence file does not contain entities entry!");
 
-		// Go through all entries and load them as entities.
+		// Go through all entity nodes and load each entity.
+		auto entity_nodes = document.get_node_children(entities_node);
 		bool result;
-		for (auto& entity_path : entity_entries)
+		for (auto& entity_node : entity_nodes)
 		{
-			CFilesystem fs(CFilesystem::get_working_directory());
+			result = import_entity(entity_node);
+			MINT_ASSERT(result == true, "Invalid operation. Entity could not be loaded!");
 
-			if (fs.forward(entity_path.cast< String >()))
+			if (!result)
 			{
-				maml::CDocument entity_document;
-
-				auto entity_root = CSerializer::load_maml_document(fs.get_current_directory().as_string(), entity_document);
-
-				if (entity_root)
-				{
-					result = import_entity(entity_root);
-				}
-				
-				MINT_ASSERT(entity_root != nullptr, "Invalid operation. Entity could not be loaded!");
-				MINT_ASSERT(result == true, "Invalid operation. Entity could not be loaded!");
+				MINT_LOG_ERROR("[{:.4f}][CScene::import_scene] Failed exporting entity!", MINT_APP_TIME);
 			}
 		}
 
@@ -118,7 +108,7 @@ namespace mint
 
 	bool CScene::export_scene(const String& maml_scene_filepath)
 	{
-		maml::CDocument document;
+		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
 
 		auto root = document.get_root();
 
@@ -132,44 +122,27 @@ namespace mint
 		String entity_file_id;
 		for(const auto& entity : m_entities)
 		{
-			// Try exporting the entity file to e.g. "{%SceneName}/entities/Entity_01.entity".
-			maml::CDocument entityDocument(MAML_DOCUMENT_SIZE_SMALL);
+			// Create a new node for the entity to export to.
+			auto entity_node = document.create_node("entity", entities_node);
 
-			auto entity_node = entityDocument.create_node("entity");
+			if (entity_node == nullptr)
+			{
+				// No more room left. Inform for Debug purposes and stop exporting.
+				MINT_ASSERT(entity_node != nullptr, "Invalid operation. Failed exporting entity!");
+				MINT_LOG_ERROR("[{:.4f}][CScene::export_scene] Failed exporting entity, as theres no more room left in the persistence file!", MINT_APP_TIME);
+				break;
+			}
 
+
+			// Try exporting.
 			result = export_entity(entity, entity_node);
 
 			MINT_ASSERT(result == true, "Invalid operation. Failed exporting entity components!");
 
-
-			if (result)
+			if (!result)
 			{
-				// Construct path where to export the entity to.
-				entity_file_id = "Entity_" + std::to_string(CUCA::identifier_get_identifier(entity));
-
-				CFilesystem fs(get_scene_assets_path());
-
-				if (fs.forward("entities"))
-				{
-					fs.append_path(entity_file_id + ".entity");
-
-					result = entityDocument.save_document(fs.get_current_directory().as_string());
-
-					if (!result)
-					{
-						MINT_LOG_ERROR("[{:.4f}][CScene::export_scene] Failed exporting entity file to: \"{}\"", MINT_APP_TIME, fs.get_current_directory().as_string());
-					}
-				}
+				MINT_LOG_ERROR("[{:.4f}][CScene::export_scene] Failed exporting entity: \"{}\"", MINT_APP_TIME, CUCA::identifier_get_debug_name(entity));
 			}
-
-
-			// Set the entity file path as value for entity node if and only if we successfully exported the file.
-			if (result)
-			{
-				document.add_property_to_node(entities_node, entity_file_id, "entities/" + entity_file_id);
-			}
-
-			MINT_ASSERT(result == true, "Invalid operation. Failed exporting entity!");
 		}
 
 
@@ -221,20 +194,16 @@ namespace mint
 
 		entt::entity entity = entt::null;
 
-		auto identifier_node = document.find_first_match_in_node(maml_node, "identifier");
+		auto entity_node = document.find_first_match_in_document("entity");
 
-		MINT_ASSERT(identifier_node != nullptr, "Failed importing entity. Entity does not have a SIdentifier component!");
-
-		auto id = SCAST(u64, -1);
-
-		CSerializer::import_uint(&id, "id", identifier_node, -1);
+		auto id = maml::CDocument::get_uint_property(entity_node, "id", -1);
 
 		entity = m_registry.create_entity(id);
 
 		if (entity == entt::null) return false;
 
 
-		const auto& registry = m_registry.m_registry;
+		auto& registry = m_registry.m_registry;
 
 		bool result = true;
 
@@ -251,6 +220,8 @@ namespace mint
 				}
 			}
 		}
+
+		if (result) add_entity(entity);
 
 		return result;
 	}

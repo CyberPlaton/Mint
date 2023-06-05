@@ -22,6 +22,8 @@ namespace mint::algorithm
 
 	bool is_value_in_between(Vec2 value, Vec2 lh, Vec2 rh);
 
+	u64 string_to_number(const String& string);
+
 	void string_split(const String& string, char delimiter, Vector< String >& storage );
 
 	void string_insert(String& string, const String& to_insert_one, u64 index);

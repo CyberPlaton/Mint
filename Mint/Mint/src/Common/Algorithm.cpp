@@ -139,5 +139,10 @@ namespace mint::algorithm
 			   rh.y <= value.y;
 	}
 
+	u64 string_to_number(const String& string)
+	{
+		return stoul(string);
+	}
+
 
 }

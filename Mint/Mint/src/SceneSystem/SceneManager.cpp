@@ -193,7 +193,14 @@ namespace mint
 
 		if(scene->is_persistent())
 		{
-			scene->export_scene(scene->get_scene_persistence_path().as_string());
+			if (scene->export_scene(scene->get_scene_persistence_path().as_string()))
+			{
+				MINT_LOG_INFO("[{:.4f}][CSceneManager::unload_scene] Success exporting scene: \"{}\"", MINT_APP_TIME, scene->get_scene_persistence_path().as_string());
+			}
+			else
+			{
+				MINT_LOG_CRITICAL("[{:.4f}][CSceneManager::unload_scene] Failed exporting scene: \"{}\"", MINT_APP_TIME, scene->get_scene_persistence_path().as_string());
+			}
 		}
 
 		scene->on_unload();
@@ -240,7 +247,14 @@ namespace mint
 
 		if(scene->is_persistent())
 		{
-			scene->import_scene(scene->get_scene_persistence_path().as_string());
+			if (scene->import_scene(scene->get_scene_persistence_path().as_string()))
+			{
+				MINT_LOG_INFO("[{:.4f}][CSceneManager::load_scene] Success importing scene: \"{}\"", MINT_APP_TIME, scene->get_scene_persistence_path().as_string());
+			}
+			else
+			{
+				MINT_LOG_CRITICAL("[{:.4f}][CSceneManager::load_scene] Failed importing scene: \"{}\"", MINT_APP_TIME, scene->get_scene_persistence_path().as_string());
+			}
 		}
 
 		scene->on_load();

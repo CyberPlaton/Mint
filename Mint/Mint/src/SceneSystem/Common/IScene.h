@@ -18,7 +18,7 @@ namespace mint
 		friend class CSceneManager;
 	public:
 		typedef bool (*ComponentExporterFunction)(entt::entity, entt::id_type, const entt::registry&, maml::SNode*);
-		typedef bool (*ComponentImporterFunction)(entt::entity, entt::id_type, const entt::registry&, maml::SNode*);
+		typedef bool (*ComponentImporterFunction)(entt::entity, entt::id_type, entt::registry&, maml::SNode*);
 
 	public:
 		static IScene* get_active_scene();

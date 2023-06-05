@@ -484,6 +484,28 @@ namespace mint
 	}
 
 
+	mint::Vector< mint::CPath > CFilesystem::get_all_files_in_current_dir_by_extension(const String& extension)
+	{
+		if (is_a_directory())
+		{
+			Vector< CPath > entries;
+
+			for (const auto& path : std::filesystem::directory_iterator{ m_currentPath.as_path() })
+			{
+				std::filesystem::directory_entry query(path);
+
+				if (query.is_regular_file() && query.path().extension() == extension)
+				{
+					entries.emplace_back(path);
+				}
+			}
+
+			return entries;
+		}
+
+		return Vector< CPath >{};
+	}
+
 	mint::CPath CFilesystem::get_full_path_of_file(const String& full_file_name)
 	{
 		for(auto& path: get_all_files_in_current_dir())

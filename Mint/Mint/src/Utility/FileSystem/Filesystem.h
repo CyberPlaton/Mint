@@ -81,6 +81,8 @@ namespace mint
 
 		Vector< CPath > get_all_files_in_current_dir();
 
+		Vector< CPath > get_all_files_in_current_dir_by_extension(const String& extension);
+
 
 		CPath get_full_path_of_file(const String& full_file_name);
 

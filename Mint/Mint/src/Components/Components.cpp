@@ -22,9 +22,15 @@ namespace mint::component
 	}
 
 
-	bool SIdentifier::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SIdentifier::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
 		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+
+		auto& identifier = registry.get< SIdentifier >(entity);
+
+		CSerializer::import_uint(&identifier.m_enttId, "id", node, -1);
+		CSerializer::import_uint(&identifier.m_uuid, "uuid", node, -1);
+		CSerializer::import_string(identifier.m_debugName, "name", node);
 
 		return true;
 	}
@@ -58,9 +64,23 @@ namespace mint::component
 	}
 
 
-	bool SSceneHierarchy::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SSceneHierarchy::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
 		if (entt::type_id< mint::component::SSceneHierarchy >().hash() != hash) return true;
+
+		auto& hierarchy = registry.get< SSceneHierarchy >(entity);
+
+		Vector< CAny > children;
+		u64 parent;
+
+		CSerializer::import_array(children, "children", node);
+		CSerializer::import_uint(&parent, "parent", node, -1);
+
+		hierarchy.m_parent = (entt::entity)parent;
+		for (auto& kid : children)
+		{
+			mint::algorithm::vector_push_back(hierarchy.m_children, kid.cast< entt::entity >());
+		}
 
 		return true;
 	}
@@ -72,15 +92,19 @@ namespace mint::component
 
 		const auto& rigid_body = registry.get< SRigidBody >(entity);
 
-		return true;
+		MINT_LOG_CRITICAL("[{:.4f}][SRigidBody::export_component] Exporting SRigidBody is not supported yet!", MINT_APP_TIME);
+
+		return false;
 	}
 
 
-	bool SRigidBody::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SRigidBody::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SRigidBody >().hash() != hash) return true;
 
-		return true;
+		MINT_LOG_CRITICAL("[{:.4f}][SRigidBody::import_component] Importing SRigidBody is not supported yet!", MINT_APP_TIME);
+
+		return false;
 	}
 
 
@@ -101,9 +125,15 @@ namespace mint::component
 	}
 
 
-	bool STransform::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool STransform::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+		if (entt::type_id< mint::component::STransform >().hash() != hash) return true;
+
+		auto& transform = registry.get< STransform >(entity);
+
+		CSerializer::import_vec2(transform.m_position, "position", node);
+		CSerializer::import_vec2(transform.m_scale, "scale", node);
+		CSerializer::import_float(&transform.m_rotation, "rotation", node);
 
 		return true;
 	}
@@ -129,9 +159,23 @@ namespace mint::component
 	}
 
 
-	bool SSprite::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SSprite::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SSprite >().hash() != hash) return true;
+
+		auto& sprite = registry.get< SSprite >(entity);
+
+		Vec4 color;
+
+		CSerializer::import_bool(&sprite.m_visible, "visible", node);
+		CSerializer::import_bool(&sprite.m_internalVisible, "internal_visible", node);
+		CSerializer::import_uint(&sprite.m_depth, "depth", node, -1);
+		CSerializer::import_bool(&sprite.m_flipX, "flip_x", node);
+		CSerializer::import_bool(&sprite.m_flipY, "flip_y", node);
+		CSerializer::import_vec4(color, "color", node);
+		CSerializer::import_vec2(sprite.m_origin, "origin", node);
+
+		sprite.m_color = color;
 
 		return true;
 	}
@@ -150,9 +194,11 @@ namespace mint::component
 	}
 
 
-	bool SAnimatedSprite::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SAnimatedSprite::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SAnimatedSprite >().hash() != hash) return true;
+
+		auto& animsprite = registry.get< SAnimatedSprite >(entity);
 
 		return true;
 	}
@@ -170,10 +216,13 @@ namespace mint::component
 	}
 
 
-	bool SScript::import_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	bool SScript::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
 		if (entt::type_id< mint::component::SScript >().hash() != hash) return true;
 
+		auto& script = registry.get< SScript >(entity);
+
+		CSerializer::import_uint(&script.m_scriptHandle, "script_handle", node, -1);
 
 		return true;
 	}
