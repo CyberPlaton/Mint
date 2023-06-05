@@ -29,7 +29,7 @@ namespace mint
 #if MINT_DISTR
 		return true;
 #else
-		CFileystem fs(CFileystem::get_working_directory());
+		CFilesystem fs(CFilesystem::get_working_directory());
 
 		if (fs.forward("EditorRessources") && fs.forward("Fonts"))
 		{
@@ -42,7 +42,7 @@ namespace mint
 			};
 			ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
 
-			String file = CFileystem::construct_from(fs.get_current_directory().as_string(), "Cousine-Regular.ttf").as_string();
+			String file = CFilesystem::construct_from(fs.get_current_directory().as_string(), "Cousine-Regular.ttf").as_string();
 
 			auto font = io.Fonts->AddFontFromFileTTF(file.c_str(), 16.0f, &icons_config, ranges);
 			
@@ -54,7 +54,7 @@ namespace mint
 			config.GlyphMinAdvanceX = 14.5f; // Use if you want to make the icon monospaced
 			static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 			
-			String icon_file = CFileystem::construct_from(fs.get_current_directory().as_string(), "fa-solid-900.ttf").as_string();
+			String icon_file = CFilesystem::construct_from(fs.get_current_directory().as_string(), "fa-solid-900.ttf").as_string();
 
 			io.Fonts->AddFontFromFileTTF(icon_file.c_str(), 14.5f, &config, icon_ranges);
 

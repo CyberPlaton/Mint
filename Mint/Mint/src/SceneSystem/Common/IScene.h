@@ -34,6 +34,10 @@ namespace mint
 
 		static ComponentImporterFunction get_component_importer(entt::id_type id);
 
+		static bool does_component_exporter_exist(entt::id_type id);
+
+		static bool does_component_importer_exist(entt::id_type id);
+
 
 
 		virtual void on_update(f32) = 0;

@@ -32,6 +32,7 @@ public:
 
 	void on_unload() override final;
 
+	bool is_persistent() override final { return true; }
 
 	entt::entity m_knight;
 };

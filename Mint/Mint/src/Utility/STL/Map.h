@@ -71,7 +71,7 @@ namespace mint
 	private:
 		void _override_data(u64 identifier, T& data);
 
-		void _restore_integrity_on_remove();
+		void _restore_integrity_on_remove(u64 removed_at_index);
 
 	};
 
@@ -114,9 +114,11 @@ namespace mint
 
 
 	template < typename T >
-	void mint::CMap<T>::_restore_integrity_on_remove()
+	void mint::CMap<T>::_restore_integrity_on_remove(u64 removed_at_index)
 	{
-		for (auto i = 0; i < m_indices.size(); i++)
+		u64 starting_index = removed_at_index;
+
+		for (auto i = starting_index; i < m_indices.size(); i++)
 		{
 			m_indices[i].second -= 1;
 		}
@@ -168,18 +170,19 @@ namespace mint
 	template < typename T >
 	void mint::CMap<T>::remove(u64 identifier)
 	{
-		for (auto i = 0; i < m_indices.size(); i++)
+		u64 index = 0;
+		for (index; index < m_indices.size(); index++)
 		{
-			if(identifier == m_indices[i].first)
+			if(identifier == m_indices[index].first)
 			{
-				m_data.erase(m_data.begin() + m_indices[i].second);
-				m_indices.erase(m_indices.begin() + i);
+				m_data.erase(m_data.begin() + m_indices[index].second);
+				m_indices.erase(m_indices.begin() + index);
 				break;
 			}
 		}
 
 
-		_restore_integrity_on_remove();
+		_restore_integrity_on_remove(index);
 	}
 
 

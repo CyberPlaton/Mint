@@ -5,6 +5,7 @@
 #include "Common/IScene.h"
 #include "Components/Components.h"
 #include "Utility/EventSystem/EventSystem.h"
+#include "Components/CUCA.h"
 
 namespace mint
 {
@@ -50,7 +51,7 @@ namespace mint
 
 		bool export_scene(const String& maml_scene_filepath) override final;
 
-		virtual bool is_persistent() override { return false; }
+		virtual bool is_persistent() { return false; }
 
 
 		void transit_to_scene(const String& scene_name) override final;

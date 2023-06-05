@@ -9,8 +9,8 @@ namespace mint
 	{
 		MINT_ASSERT(ressource_type == "Shader", "Invalid asset type provided!");
 
-		CFileystem fs(CFileystem::get_working_directory());
-		CFileystem vs(CFileystem::get_working_directory());
+		CFilesystem fs(CFilesystem::get_working_directory());
+		CFilesystem vs(CFilesystem::get_working_directory());
 
 		String vs_name;
 		String fs_name;

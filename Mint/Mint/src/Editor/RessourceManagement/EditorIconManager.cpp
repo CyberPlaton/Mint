@@ -56,12 +56,12 @@ namespace mint::editor
 
 		bool result = true;
 
-		mint::CFileystem fs(mint::CFileystem::get_working_directory());
+		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
 		if (fs.forward(icon_ressources_path) &&
 			fs.forward_pretend("Icons.maml"))
 		{
-			mint::CFileystem document_fs(fs.get_current_directory()); document_fs.append_path("Icons.maml");
+			mint::CFilesystem document_fs(fs.get_current_directory()); document_fs.append_path("Icons.maml");
 
 			maml::CDocument document(MAML_DOCUMENT_SIZE_BIG);
 			maml::SNode* root = nullptr;
@@ -82,7 +82,7 @@ namespace mint::editor
 
 					try
 					{
-						mint::CFileystem icon_file_path(fs.get_current_directory());
+						mint::CFilesystem icon_file_path(fs.get_current_directory());
 
 						if (icon_file_path.forward(icon_name))
 						{

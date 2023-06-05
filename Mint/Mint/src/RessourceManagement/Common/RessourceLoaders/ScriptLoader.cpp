@@ -13,7 +13,7 @@ namespace mint
 
 		source = asset.get_asset_source_path();
 
-		CFileystem fs(CFileystem::get_working_directory());
+		CFilesystem fs(CFilesystem::get_working_directory());
 		if (fs.forward(asset.get_asset_path()) && fs.forward(source))
 		{
 			mint::scripting::CScriptEngine::Get().add_script_to_scene(asset.get_asset_name(),

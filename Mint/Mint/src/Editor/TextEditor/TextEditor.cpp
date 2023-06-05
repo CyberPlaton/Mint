@@ -14,7 +14,7 @@ namespace mint::editor
 
 
 		u32 file_size = 0;
-		auto buffer = CFileystem::read_file_at_path(path, &file_size);
+		auto buffer = CFilesystem::read_file_at_path(path, &file_size);
 
 		if (buffer)
 		{

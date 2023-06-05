@@ -15,14 +15,14 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_update(f32 dt)
 	{
-		mint::CFileystem fs(mint::CFileystem::get_working_directory());
+		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
 		mint::String scene_name = MINT_ACTIVE_SCENE()->get_scene_name();
 
 		if (fs.forward("Scenes") && fs.forward_pretend(scene_name))
 		{
-			m_currentScenePathFull = mint::CFileystem::construct_from(fs.get_current_directory().as_string(), scene_name).as_string();
-			m_currentScenePathRelative = mint::CFileystem::construct_from("Scenes", scene_name).as_string();
+			m_currentScenePathFull = mint::CFilesystem::construct_from(fs.get_current_directory().as_string(), scene_name).as_string();
+			m_currentScenePathRelative = mint::CFilesystem::construct_from("Scenes", scene_name).as_string();
 			m_currentSceneName = scene_name;
 		}
 	}
@@ -98,12 +98,12 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::main_frame()
 	{
-		CFileystem fs(m_currentScenePathFull);
+		CFilesystem fs(m_currentScenePathFull);
 
 		// Create "assets" folder if not already there.
 		if (!fs.forward_pretend(GlobalData::Get().s_EditorDefaultSceneRessourcesPath))
 		{
-			CFileystem::create_directory(CFileystem::construct_from(fs.get_current_directory().as_string(), GlobalData::Get().s_EditorDefaultSceneRessourcesPath));
+			CFilesystem::create_directory(CFilesystem::construct_from(fs.get_current_directory().as_string(), GlobalData::Get().s_EditorDefaultSceneRessourcesPath));
 		}
 
 		const bool open = ImGui::TreeNode(m_currentSceneName.c_str());
@@ -137,7 +137,7 @@ namespace mint::editor
 		{
 			show_folder_options(path);
 
-			CFileystem fs(path);
+			CFilesystem fs(path);
 
 			auto dirs = fs.get_all_directories_in_current_dir();
 			auto files = fs.get_all_files_in_current_dir();
@@ -176,7 +176,7 @@ namespace mint::editor
 		{
 			if (ImGui::SmallButton(text.c_str()))
 			{
-				CPath relative = CFileystem::get_relative_path_to_working_directory(path);
+				CPath relative = CFilesystem::get_relative_path_to_working_directory(path);
 
 				m_textEditorStack.emplace_back(relative);
 
@@ -260,9 +260,9 @@ namespace mint::editor
 			if (!name.empty())
 			{
 				// create folder
-				auto path = CFileystem::construct_from(m_createDirectory, name);
+				auto path = CFilesystem::construct_from(m_createDirectory, name);
 
-				if (CFileystem::create_directory(path))
+				if (CFilesystem::create_directory(path))
 				{
 				}
 			}
@@ -317,7 +317,7 @@ namespace mint::editor
 				extension = String(s_EditorAssetPanelFileTypeExtensions[item_current]);
 
 				// create file
-				if (CFileystem::create_file(m_createDirectory, name, extension, false))
+				if (CFilesystem::create_file(m_createDirectory, name, extension, false))
 				{
 				}
 			}
@@ -355,7 +355,7 @@ namespace mint::editor
 
 		if (ImGui::SmallButton("OK"))
 		{
-			if (CFileystem::delete_directory_or_file(m_removeDirectory))
+			if (CFilesystem::delete_directory_or_file(m_removeDirectory))
 			{
 			}
 

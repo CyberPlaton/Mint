@@ -74,7 +74,7 @@ namespace mint
 
 	bool CScene::import_scene(const String& maml_scene_filepath)
 	{
-		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
+		maml::CDocument document;
 
 		auto root = CSerializer::load_maml_document(maml_scene_filepath, document);
 
@@ -86,12 +86,30 @@ namespace mint
 
 		// Import scene entities.
 		auto entities_node = document.find_first_match_in_document("entities");
-		bool result;
-		for(auto& node : maml::CDocument::get_node_children(entities_node))
-		{
-			result = import_entity(node);
+		
+		// Get all entity entries.
+		auto& entity_entries = maml::CDocument::get_all_node_properties(entities_node);
 
-			MINT_ASSERT(result == false, "Failed importing entity!");
+		// Go through all entries and load them as entities.
+		bool result;
+		for (auto& entity_path : entity_entries)
+		{
+			CFilesystem fs(CFilesystem::get_working_directory());
+
+			if (fs.forward(entity_path.cast< String >()))
+			{
+				maml::CDocument entity_document;
+
+				auto entity_root = CSerializer::load_maml_document(fs.get_current_directory().as_string(), entity_document);
+
+				if (entity_root)
+				{
+					result = import_entity(entity_root);
+				}
+				
+				MINT_ASSERT(entity_root != nullptr, "Invalid operation. Entity could not be loaded!");
+				MINT_ASSERT(result == true, "Invalid operation. Entity could not be loaded!");
+			}
 		}
 
 		return true;
@@ -100,7 +118,7 @@ namespace mint
 
 	bool CScene::export_scene(const String& maml_scene_filepath)
 	{
-		maml::CDocument document(MAML_DOCUMENT_SIZE_HUGE);
+		maml::CDocument document;
 
 		auto root = document.get_root();
 
@@ -111,14 +129,49 @@ namespace mint
 		// Export entities.
 		auto entities_node = document.create_node("entities", root);
 		bool result;
+		String entity_file_id;
 		for(const auto& entity : m_entities)
 		{
-			auto entity_node = document.create_node("entity", entities_node);
+			// Try exporting the entity file to e.g. "{%SceneName}/entities/Entity_01.entity".
+			maml::CDocument entityDocument(MAML_DOCUMENT_SIZE_SMALL);
+
+			auto entity_node = entityDocument.create_node("entity");
 
 			result = export_entity(entity, entity_node);
 
-			MINT_ASSERT(result == false, "Failed exporting entity!");
+			MINT_ASSERT(result == true, "Invalid operation. Failed exporting entity components!");
+
+
+			if (result)
+			{
+				// Construct path where to export the entity to.
+				entity_file_id = "Entity_" + std::to_string(CUCA::identifier_get_identifier(entity));
+
+				CFilesystem fs(get_scene_assets_path());
+
+				if (fs.forward("entities"))
+				{
+					fs.append_path(entity_file_id + ".entity");
+
+					result = entityDocument.save_document(fs.get_current_directory().as_string());
+
+					if (!result)
+					{
+						MINT_LOG_ERROR("[{:.4f}][CScene::export_scene] Failed exporting entity file to: \"{}\"", MINT_APP_TIME, fs.get_current_directory().as_string());
+					}
+				}
+			}
+
+
+			// Set the entity file path as value for entity node if and only if we successfully exported the file.
+			if (result)
+			{
+				document.add_property_to_node(entities_node, entity_file_id, "entities/" + entity_file_id);
+			}
+
+			MINT_ASSERT(result == true, "Invalid operation. Failed exporting entity!");
 		}
+
 
 		if(!document.save_document(maml_scene_filepath))
 		{
@@ -192,8 +245,10 @@ namespace mint
 				// Ignore SIdentifier component, as it was already imported.
 				if (entt::type_id< mint::component::SIdentifier >().hash() == curr.first) continue;
 
-
-				result &= IScene::get_component_importer(curr.first)(entity, curr.first, registry, maml_node);
+				if (IScene::does_component_importer_exist(curr.first)) // Import only components for which we registered importers.
+				{
+					result &= IScene::get_component_importer(curr.first)(entity, curr.first, registry, maml_node);
+				}
 			}
 		}
 
@@ -211,7 +266,10 @@ namespace mint
 		{
 			if(auto& storage = curr.second; storage.contains(entity))
 			{
-				result &= IScene::get_component_exporter(curr.first)(entity, curr.first, registry, maml_node);
+				if (IScene::does_component_exporter_exist(curr.first)) // Export only components for which we registered an exporter.
+				{
+					result &= IScene::get_component_exporter(curr.first)(entity, curr.first, registry, maml_node);
+				}
 			}
 		}
 

@@ -20,6 +20,17 @@ namespace mint
 	}
 
 
+	bool IScene::does_component_exporter_exist(entt::id_type id)
+	{
+		return s_componentExporter.lookup(id);
+	}
+
+
+	bool IScene::does_component_importer_exist(entt::id_type id)
+	{
+		return s_componentImporter.lookup(id);
+	}
+
 	mint::IScene::ComponentImporterFunction mint::IScene::get_component_importer(entt::id_type id)
 	{
 		return s_componentImporter.get(id);

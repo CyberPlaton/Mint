@@ -8,7 +8,7 @@ namespace mint
 
 	void CSceneManager::_load_scene_definition(CScene* scene, Vector< CAsset >& scene_assets)
 	{
-		CFileystem fs(CFileystem::get_working_directory());
+		CFilesystem fs(CFilesystem::get_working_directory());
 
 		fs.forward("Scenes");
 		fs.forward(scene->get_scene_name());
@@ -31,8 +31,8 @@ namespace mint
 		CSerializer::import_string(assets, "assets", asset_node);
 		CSerializer::import_string(path, "path", asset_node);
 
-		scene->m_assets = CFileystem::construct_from(fs.get_current_directory(), assets);
-		scene->m_persistence = CFileystem::construct_from(fs.get_current_directory(), entities);
+		scene->m_assets = CFilesystem::construct_from(fs.get_current_directory(), assets);
+		scene->m_persistence = CFilesystem::construct_from(fs.get_current_directory(), entities);
 		scene->m_relative = path;
 		scene->m_full = fs.get_current_directory();
 
@@ -53,7 +53,7 @@ namespace mint
 			CSerializer::import_bool(&recurse, "recursive", node);
 
 
-			CFileystem fpath = fs;
+			CFilesystem fpath = fs;
 			fpath.append_path(assets);
 			fpath.append_path(folder);
 
@@ -71,7 +71,7 @@ namespace mint
 
 	void CSceneManager::_load_scene_asset_ressources(CScene* scene, CAsset& asset)
 	{
-		CFileystem fs(asset.get_asset_source_path());
+		CFilesystem fs(asset.get_asset_source_path());
 
 		String extension, type;
 		extension = asset.get_asset_extension();
@@ -193,7 +193,7 @@ namespace mint
 
 		if(scene->is_persistent())
 		{
-			scene->export_scene(" TODO ");
+			scene->export_scene(scene->get_scene_persistence_path().as_string());
 		}
 
 		scene->on_unload();
@@ -240,7 +240,7 @@ namespace mint
 
 		if(scene->is_persistent())
 		{
-			scene->import_scene(" TODO ");
+			scene->import_scene(scene->get_scene_persistence_path().as_string());
 		}
 
 		scene->on_load();
@@ -263,13 +263,13 @@ namespace mint
 	{
 		Vector< CAsset > scene_assets;
 
-		CFileystem fs(CFileystem::get_working_directory());
+		CFilesystem fs(CFilesystem::get_working_directory());
 
 		fs.forward("Scenes");
 		
 		maml::CDocument document;
 
-		auto root = CSerializer::load_maml_document(CFileystem::construct_from(fs.get_current_directory().as_string(), "common.maml").as_string(), document);
+		auto root = CSerializer::load_maml_document(CFilesystem::construct_from(fs.get_current_directory().as_string(), "common.maml").as_string(), document);
 
 		MINT_ASSERT(root != nullptr, "Failed loading common scene ressources!");
 
@@ -295,7 +295,7 @@ namespace mint
 			CSerializer::import_bool(&recurse, "recursive", node);
 
 
-			CFileystem fpath = fs;
+			CFilesystem fpath = fs;
 			fpath.append_path(path);
 			fpath.append_path(folder);
 
@@ -319,7 +319,7 @@ namespace mint
 
 	void CSceneManager::_load_common_asset_ressource(CAsset& asset)
 	{
-		CFileystem fs(asset.get_asset_source_path());
+		CFilesystem fs(asset.get_asset_source_path());
 
 		String extension, type;
 		extension = asset.get_asset_extension();

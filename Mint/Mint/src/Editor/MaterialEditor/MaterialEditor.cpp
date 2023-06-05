@@ -555,14 +555,14 @@ namespace mint::editor
 		{
 			auto scene_path = MINT_ACTIVE_SCENE()->get_scene_full_path();
 
-			CFileystem fs(scene_path);
+			CFilesystem fs(scene_path);
 
 			if (fs.forward("assets") &&  fs.forward(path))
 			{
-				if (CFileystem::create_file(fs.get_current_directory(), name, String("mat")))
+				if (CFilesystem::create_file(fs.get_current_directory(), name, String("mat")))
 				{
 					// Set Filesystem to be at the created File.
-					CFileystem assetfs(fs);
+					CFilesystem assetfs(fs);
 
 					fs.forward(name + ".mat");
 
@@ -596,7 +596,7 @@ namespace mint::editor
 					if (document.save_document(fs.get_current_directory().as_string()))
 					{
 						// Create Material asset file.
-						if (CFileystem::create_file(assetfs.get_current_directory(), name, String("material")) &&
+						if (CFilesystem::create_file(assetfs.get_current_directory(), name, String("material")) &&
 							assetfs.forward(name + ".material"))
 						{
 							String data;
