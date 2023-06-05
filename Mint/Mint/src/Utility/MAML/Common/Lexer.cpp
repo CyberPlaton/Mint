@@ -15,7 +15,7 @@ namespace maml
 
 	mint::Vector< maml::SToken > CLexer::scan_from_file(const mint::String& maml_file_path)
 	{
-		mint::CFileystem fs(mint::CFileystem::get_working_directory());
+		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 		std::ifstream in;
 
 		if(fs.forward(maml_file_path))
@@ -409,6 +409,14 @@ namespace maml
 		char c = _peek_current();
 
 		while(_is_identifier(c))
+		{
+			current_token += c;
+
+			c = _advance();
+		}
+
+		// Check for digits in the identifier.
+		while (_is_digit(c) || _is_identifier(c))
 		{
 			current_token += c;
 
