@@ -9,13 +9,13 @@
 namespace mint
 {
 
-	class CFileystem
+	class CFilesystem
 	{
 	public:
-		CFileystem();
-		CFileystem(CPath starting_directory);
-		CFileystem(const CFileystem& other);
-		CFileystem& operator=(const CFileystem& other);
+		CFilesystem();
+		CFilesystem(CPath starting_directory);
+		CFilesystem(const CFilesystem& other);
+		CFilesystem& operator=(const CFilesystem& other);
 
 		static CPath construct_from(CPath path, const String& addition);
 

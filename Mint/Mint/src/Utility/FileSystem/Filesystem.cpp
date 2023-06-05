@@ -5,30 +5,30 @@ namespace mint
 {
 
 
-	CFileystem::CFileystem()
+	CFilesystem::CFilesystem()
 	{
 	}
 
 
-	CFileystem::CFileystem(CPath starting_directory) :
+	CFilesystem::CFilesystem(CPath starting_directory) :
 		m_currentPath(starting_directory)
 	{
 	}
 
 
-	CFileystem::CFileystem(const CFileystem& other) :
+	CFilesystem::CFilesystem(const CFilesystem& other) :
 		m_currentPath(other.m_currentPath)
 	{
 	}
 
-	mint::CFileystem& CFileystem::operator=(const CFileystem& other)
+	mint::CFilesystem& CFilesystem::operator=(const CFilesystem& other)
 	{
 		m_currentPath = other.m_currentPath;
 
 		return *this;
 	}
 
-	mint::CPath CFileystem::construct_from(CPath path, const String& addition)
+	mint::CPath CFilesystem::construct_from(CPath path, const String& addition)
 	{
 		CPath p(path);
 
@@ -38,7 +38,7 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::construct_from(const String& path, const String& addition)
+	mint::CPath CFilesystem::construct_from(const String& path, const String& addition)
 	{
 		CPath p(path);
 
@@ -48,13 +48,13 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_working_directory()
+	mint::CPath CFilesystem::get_working_directory()
 	{
 		return std::filesystem::current_path();
 	}
 
 
-	bool CFileystem::set_working_directory(CPath path)
+	bool CFilesystem::set_working_directory(CPath path)
 	{
 		if(path.does_exist() && path.is_directory())
 		{
@@ -67,13 +67,13 @@ namespace mint
 	}
 
 
-	bool CFileystem::create_directory(CPath directory_path, const String& directory_name)
+	bool CFilesystem::create_directory(CPath directory_path, const String& directory_name)
 	{
-		CFileystem fs(directory_path);
+		CFilesystem fs(directory_path);
 
 		fs.get_current_directory().operator/=(directory_name);
 
-		if(!CFileystem::find_directory(directory_path, directory_name))
+		if(!CFilesystem::find_directory(directory_path, directory_name))
 		{
 			return std::filesystem::create_directory(fs.get_current_directory().as_path());
 		}
@@ -82,7 +82,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::create_directory(CPath complete_directory_path)
+	bool CFilesystem::create_directory(CPath complete_directory_path)
 	{
 		if(!complete_directory_path.does_exist())
 		{
@@ -93,9 +93,9 @@ namespace mint
 	}
 
 
-	bool CFileystem::delete_directory_or_file(CPath entry_path, const String& entry_full_name)
+	bool CFilesystem::delete_directory_or_file(CPath entry_path, const String& entry_full_name)
 	{
-		CFileystem fs(entry_path);
+		CFilesystem fs(entry_path);
 
 		fs.get_current_directory().operator/=(entry_full_name);
 
@@ -103,7 +103,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::delete_directory_or_file(CPath complete_entry_path)
+	bool CFilesystem::delete_directory_or_file(CPath complete_entry_path)
 	{
 		std::error_code ec;
 
@@ -118,7 +118,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::create_file(CPath directory_path, String& file_name, String& file_extension, bool add_dot_before_extension)
+	bool CFilesystem::create_file(CPath directory_path, String& file_name, String& file_extension, bool add_dot_before_extension)
 	{
 		if(directory_path.does_exist())
 		{
@@ -147,7 +147,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::find_directory(CPath query_directory, const String& searched_directory_name)
+	bool CFilesystem::find_directory(CPath query_directory, const String& searched_directory_name)
 	{
 		if(query_directory.does_exist())
 		{
@@ -170,7 +170,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::find_file(CPath query_directory, const String& file_stem, const String& file_extension)
+	bool CFilesystem::find_file(CPath query_directory, const String& file_stem, const String& file_extension)
 	{
 		if (query_directory.does_exist())
 		{
@@ -195,7 +195,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::find_file_by_stem(CPath query_directory, const String& file_stem)
+	bool CFilesystem::find_file_by_stem(CPath query_directory, const String& file_stem)
 	{
 		if (query_directory.does_exist())
 		{
@@ -214,7 +214,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::find_file_by_extension(CPath query_directory, const String& file_extension)
+	bool CFilesystem::find_file_by_extension(CPath query_directory, const String& file_extension)
 	{
 		if (query_directory.does_exist())
 		{
@@ -233,7 +233,7 @@ namespace mint
 	}
 
 
-	char* CFileystem::read_file_at_path(CPath complete_path, u32* out_file_size)
+	char* CFilesystem::read_file_at_path(CPath complete_path, u32* out_file_size)
 	{
 		FILE* file = NULL;
 		u32 file_size = 0;
@@ -252,7 +252,7 @@ namespace mint
 
 				fclose(file);
 
-				MINT_LOG_WARN("[{:.4f}][CFileystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
+				MINT_LOG_WARN("[{:.4f}][CFilesystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
 
 				return reinterpret_cast<char*>(buffer);
 			}
@@ -264,7 +264,7 @@ namespace mint
 
 			fclose(file);
 
-			MINT_LOG_WARN("[{:.4f}][CFileystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
+			MINT_LOG_WARN("[{:.4f}][CFilesystem::read_file_at_path] Closed opened FILE \"{}\"!", MINT_APP_TIME, complete_path.as_string());
 
 			return out_data;
 		}
@@ -273,7 +273,7 @@ namespace mint
 	}
 
 
-	char* CFileystem::read_file_data_from_file_handle(FILE* file, u32 file_size)
+	char* CFilesystem::read_file_data_from_file_handle(FILE* file, u32 file_size)
 	{
 		if (file != nullptr && file_size > 0)
 		{
@@ -296,15 +296,15 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_relative_path_to_working_directory(CPath complete_path)
+	mint::CPath CFilesystem::get_relative_path_to_working_directory(CPath complete_path)
 	{
-		CPath wdir_absolute = std::filesystem::absolute(CFileystem::get_working_directory().as_path());
+		CPath wdir_absolute = std::filesystem::absolute(CFilesystem::get_working_directory().as_path());
 
 		return std::filesystem::relative(complete_path.as_path(), wdir_absolute.as_path());
 	}
 
 
-	bool CFileystem::forward_brute_force(CPath path)
+	bool CFilesystem::forward_brute_force(CPath path)
 	{
 		CPath p = get_current_directory();
 
@@ -312,7 +312,7 @@ namespace mint
 
 		if(!p.does_exist())
 		{
-			if (!CFileystem::create_directory(p)) return false;
+			if (!CFilesystem::create_directory(p)) return false;
 		}
 
 		m_currentPath = p;
@@ -321,7 +321,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::forward_brute_force(const String& path)
+	bool CFilesystem::forward_brute_force(const String& path)
 	{
 		CPath p(path);
 
@@ -329,7 +329,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::forward(CPath path)
+	bool CFilesystem::forward(CPath path)
 	{
 		CPath p = m_currentPath;
 
@@ -346,7 +346,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::forward(const String& path)
+	bool CFilesystem::forward(const String& path)
 	{
 		CPath p(path);
 
@@ -354,7 +354,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::forward_pretend(CPath path)
+	bool CFilesystem::forward_pretend(CPath path)
 	{
 		CPath p(path);
 
@@ -362,7 +362,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::forward_pretend(const String& path)
+	bool CFilesystem::forward_pretend(const String& path)
 	{
 		CPath p = m_currentPath;
 
@@ -377,7 +377,7 @@ namespace mint
 	}
 
 
-	bool CFileystem::back()
+	bool CFilesystem::back()
 	{
 		if(m_currentPath.as_path().has_parent_path())
 		{
@@ -390,37 +390,37 @@ namespace mint
 	}
 
 
-	void CFileystem::append_path(CPath path)
+	void CFilesystem::append_path(CPath path)
 	{
 		m_currentPath /= path;
 	}
 
 
-	void CFileystem::append_path(const String& path)
+	void CFilesystem::append_path(const String& path)
 	{
 		m_currentPath /= path;
 	}
 
 
-	mint::CPath CFileystem::get_current_directory()
+	mint::CPath CFilesystem::get_current_directory()
 	{
 		return m_currentPath;
 	}
 
 
-	bool CFileystem::is_a_directory()
+	bool CFilesystem::is_a_directory()
 	{
 		return m_currentPath.is_directory();
 	}
 
 
-	bool CFileystem::is_a_file()
+	bool CFilesystem::is_a_file()
 	{
 		return m_currentPath.is_file();
 	}
 
 
-	Vector< mint::CPath > CFileystem::get_all_entries_in_current_dir()
+	Vector< mint::CPath > CFilesystem::get_all_entries_in_current_dir()
 	{
 		if(is_a_directory())
 		{
@@ -438,7 +438,7 @@ namespace mint
 	}
 
 
-	Vector< mint::CPath > CFileystem::get_all_directories_in_current_dir()
+	Vector< mint::CPath > CFilesystem::get_all_directories_in_current_dir()
 	{
 		if (is_a_directory())
 		{
@@ -461,7 +461,7 @@ namespace mint
 	}
 
 
-	Vector< mint::CPath > CFileystem::get_all_files_in_current_dir()
+	Vector< mint::CPath > CFilesystem::get_all_files_in_current_dir()
 	{
 		if (is_a_directory())
 		{
@@ -484,7 +484,7 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_full_path_of_file(const String& full_file_name)
+	mint::CPath CFilesystem::get_full_path_of_file(const String& full_file_name)
 	{
 		for(auto& path: get_all_files_in_current_dir())
 		{
@@ -495,7 +495,7 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_full_path_of_first_file_by_extension(const String& file_extension)
+	mint::CPath CFilesystem::get_full_path_of_first_file_by_extension(const String& file_extension)
 	{
 		for (auto& path : get_all_files_in_current_dir())
 		{
@@ -506,7 +506,7 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_full_path_of_first_file_by_stem(const String& file_stem)
+	mint::CPath CFilesystem::get_full_path_of_first_file_by_stem(const String& file_stem)
 	{
 		for (auto& path : get_all_files_in_current_dir())
 		{
@@ -517,7 +517,7 @@ namespace mint
 	}
 
 
-	mint::CPath CFileystem::get_full_path_of_directory(const String& directory)
+	mint::CPath CFilesystem::get_full_path_of_directory(const String& directory)
 	{
 		for (auto& path : get_all_directories_in_current_dir())
 		{
