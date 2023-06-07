@@ -2,7 +2,7 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	//CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 }
 
 
@@ -48,71 +48,71 @@ bool CMainScene::on_load()
 	using namespace mint;
 
 	// Create an entity.
-// 	m_knight = m_registry.create_entity();
-// 
-// 	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_knight);
-// 	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
-// 	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
-// 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
-// 	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
-// 	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_knight);
-// 
-// 
-// 	identifier.m_enttId = SCAST(u64, m_knight);
-// 	identifier.m_uuid = identifier.m_enttId;
-// 	identifier.m_debugName = "Knight";
-// 	hierarchy.m_parent = entt::null;
-// 
-// 	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
-// 	CUCA::transform_set_rotation(m_knight, 0);
-// 	CUCA::transform_set_position(m_knight, { -100, 100 });
-// 
-// 
-// 	sprite.m_visible = true;
-// 	sprite.m_internalVisible = true;
-// 	sprite.m_depth = 0;
-// 	sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
-// 	sprite.m_color = { 255, 255, 255, 255 };
-// 	sprite.m_origin = { 0.0f, 0.0f };
-// 
-// 
-// 
-// 	mint::fx::SMaterialDefinition def;
-// 
-// 	// Set material data and bind static uniforms once.
-// 	def.m_materialName = "Default Material";
-// 	def.m_shaderProgramName = "Sprite";
-// 	def.m_textureName = "Knight";
-// 	def.m_blendMode = BlendMode::BLEND_ALPHA;
-// 	def.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
-// 	def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
-// 	def.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
-// 
-// 	// Add material for entity.
-// 	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, def);
-// 
-// 
-// 	mint::fx::SMaterialDefinition sdef;
-// 
-// 	// Set material data and bind static uniforms once.
-// 	sdef.m_materialName = "Second Material";
-// 	sdef.m_shaderProgramName = "Sprite";
-// 	sdef.m_textureName = "Knight";
-// 	sdef.m_blendMode = BlendMode::BLEND_ALPHA;
-// 	sdef.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
-// 	sdef.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
-// 	sdef.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
-// 
-// 
-// 	// Add material for entity.
-// 	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, sdef);
-// 
-// 
-// 	// Set script for entity.
-// 	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
-// 
-// 
-// 	add_entity(m_knight);
+	m_knight = m_registry.create_entity();
+
+	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_knight);
+	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
+	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
+	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
+	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
+	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_knight);
+
+
+	identifier.m_enttId = SCAST(u64, m_knight);
+	identifier.m_uuid = identifier.m_enttId;
+	identifier.m_debugName = "My Knight";
+	hierarchy.m_parent = entt::null;
+
+	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
+	CUCA::transform_set_rotation(m_knight, 0);
+	CUCA::transform_set_position(m_knight, { -100, 100 });
+
+
+	sprite.m_visible = true;
+	sprite.m_internalVisible = true;
+	sprite.m_depth = 0;
+	sprite.m_rect = { 0.0f, 0.0f, 1.0f, 1.0f };
+	sprite.m_color = { 255, 255, 255, 255 };
+	sprite.m_origin = { 0.0f, 0.0f };
+
+
+
+	mint::fx::SMaterialDefinition def;
+
+	// Set material data and bind static uniforms once.
+	def.m_materialName = "Default Material";
+	def.m_shaderProgramName = "Sprite";
+	def.m_textureName = "MountedKnight";
+	def.m_blendMode = BlendMode::BLEND_ALPHA;
+	def.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+	def.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
+	def.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
+
+	// Add material for entity.
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, def);
+
+
+	mint::fx::SMaterialDefinition sdef;
+
+	// Set material data and bind static uniforms once.
+	sdef.m_materialName = "Second Material";
+	sdef.m_shaderProgramName = "Sprite";
+	sdef.m_textureName = "MountedKnight";
+	sdef.m_blendMode = BlendMode::BLEND_ALPHA;
+	sdef.m_srcBlendFactor = mint::fx::BlendingFactor_SrcAlpha;
+	sdef.m_dstBlendFactor = mint::fx::BlendingFactor_OneMinusSrcAlpha;
+	sdef.m_blendingEquation = mint::fx::BlendingEquation_BlendColor;
+
+
+	// Add material for entity.
+	mint::fx::CMaterialManager::Get().add_material_for_entity(m_knight, sdef);
+
+
+	// Set script for entity.
+	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
+
+
+ 	add_entity(m_knight);
 // 
 // 
 // 	/*

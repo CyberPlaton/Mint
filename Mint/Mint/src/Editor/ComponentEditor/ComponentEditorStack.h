@@ -12,6 +12,7 @@
 #include "ComponentEditors/ScriptComponentEditor.h"
 #include "ComponentEditors/SpriteComponentEditor.h"
 #include "ComponentEditors/TransformComponentEditor.h"
+#include "ComponentEditors/DynamicGameobjectComponentEditor.h"
 
 
 namespace mint::editor

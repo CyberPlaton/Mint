@@ -172,6 +172,14 @@ namespace mint::component
 		CSerializer::import_vec2(transform.m_scale, "scale", node);
 		CSerializer::import_float(&transform.m_rotation, "rotation", node);
 
+
+		transform.m_worldTransform = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
+
+									 glm::rotate(Mat4(1.0f), transform.m_rotation, Vec3(0.0f, 0.0f, 1.0f)) *
+
+									 glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 0.0f));
+
+
 		return true;
 	}
 
@@ -302,5 +310,32 @@ namespace mint::component
 		return true;
 	}
 
+
+	bool SDynamicGameobject::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	{
+		// Do nothing. That the entity has this component will be added to an Array.
+		return true;
+	}
+
+	bool SDynamicGameobject::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SDynamicGameobject >().hash() != hash ||
+			registry.all_of< mint::component::SDynamicGameobject >(entity)) return true;
+
+		// Merely add the component.
+		auto& dynamic = registry.emplace< SDynamicGameobject >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&dynamic);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+
+		return true;
+	}
 
 }

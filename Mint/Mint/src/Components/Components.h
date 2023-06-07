@@ -52,6 +52,10 @@ namespace mint::component
 	{
 		REFLECTED_CLASS(SDynamicGameobject);
 
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
+		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node);
+
+
 		u8 m_placeholder = 0;
 	};
 

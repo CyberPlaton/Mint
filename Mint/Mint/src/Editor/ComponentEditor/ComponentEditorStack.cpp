@@ -46,6 +46,10 @@ namespace mint::editor
 		{
 			editor = new CScriptComponentEditor(metaclass);
 		}
+		else if (metaclass_name == "SDynamicGameobject")
+		{
+			editor = new CDynamicGameobjectComponentEditor(metaclass);
+		}
 		else
 		{
 			editor = new CGeneralComponentEditor(metaclass);

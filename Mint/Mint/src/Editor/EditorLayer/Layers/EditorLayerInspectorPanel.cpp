@@ -49,6 +49,10 @@ namespace mint::editor
 			{
 				m_addingComponent = true;
 			}
+
+			ImGui::SameLine();
+			
+			CUI::help_marker("Please note that, in order for a Component to be visible it has to have been added to an entity at least once!");
 		}
 
 		ImGui::EndChild();

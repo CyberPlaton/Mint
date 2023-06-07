@@ -49,6 +49,7 @@ namespace mint
 		IScene::register_component_importer< mint::component::SSprite >(&mint::component::SSprite::import_component);
 		IScene::register_component_importer< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::import_component);
 		IScene::register_component_importer< mint::component::SScript >(&mint::component::SScript::import_component);
+		IScene::register_component_importer< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::import_component);
 	}
 
 
@@ -61,6 +62,7 @@ namespace mint
 		IScene::register_component_exporter< mint::component::SSprite >(&mint::component::SSprite::export_component);
 		IScene::register_component_exporter< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::export_component);
 		IScene::register_component_exporter< mint::component::SScript >(&mint::component::SScript::export_component);
+		IScene::register_component_exporter< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::export_component);
 	}
 
 
