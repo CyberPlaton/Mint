@@ -1,5 +1,10 @@
 Runtime Version History:
 
+2023.06.01:
+	o Scene serialization with entity import and export.
+	o Please note that this version is not supporting import and export of engine system specific ressources
+		like Script, Materials, Shaders etc.
+
 2023.06.0:
 	o Adding Camera System with a Camera Manager and a flexible usage of cameras with possible different implementations (Strategy Pattern).
 	o Adding Camera Effects to cameras, likewise flexible and acting on the camera (Strategy Pattern).
