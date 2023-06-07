@@ -107,6 +107,8 @@ namespace mint
 
 		void print_engine_rendering_pass_stack() override final;
 
+		void print_engine_registered_importers_and_exporters() override final;
+
 	private:
 		bool m_running;
 

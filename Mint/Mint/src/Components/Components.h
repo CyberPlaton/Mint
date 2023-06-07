@@ -9,6 +9,11 @@
 #include "Utility/Logging/Logging.h"
 #include "Utility/Reflection/Reflection.h"
 
+#if MINT_DISTR
+#else
+#include "Utility/Reflection/EntityMetaclassDatabase.h"
+#endif
+
 
 namespace mint::component
 {

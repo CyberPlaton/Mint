@@ -38,6 +38,11 @@ namespace mint
 
 		static bool does_component_importer_exist(entt::id_type id);
 
+		static void get_all_component_importer_hash_value(Vector< u64 >& v);
+
+		static void get_all_component_exporter_hash_value(Vector< u64 >& v);
+
+
 
 
 		virtual void on_update(f32) = 0;

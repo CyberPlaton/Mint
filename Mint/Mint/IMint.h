@@ -82,6 +82,8 @@ namespace mint
 
 		virtual void print_engine_rendering_pass_stack() = 0;
 
+		virtual void print_engine_registered_importers_and_exporters() = 0;
+
 	protected:
 		static IMintEngine* s_engine;
 

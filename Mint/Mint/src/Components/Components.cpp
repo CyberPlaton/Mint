@@ -24,9 +24,20 @@ namespace mint::component
 
 	bool SIdentifier::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SIdentifier >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SIdentifier >().hash() != hash ||
+			registry.all_of< mint::component::SIdentifier >(entity)) return true;
 
-		auto& identifier = registry.get< SIdentifier >(entity);
+		auto& identifier = registry.emplace< SIdentifier >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&identifier);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
 
 		CSerializer::import_uint(&identifier.m_enttId, "id", node, -1);
 		CSerializer::import_uint(&identifier.m_uuid, "uuid", node, -1);
@@ -66,9 +77,22 @@ namespace mint::component
 
 	bool SSceneHierarchy::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SSceneHierarchy >().hash() != hash) return true;
+		// Skip importing duplicate or invalid components.
+		if (entt::type_id< mint::component::SSceneHierarchy >().hash() != hash ||
+		    registry.all_of< mint::component::SSceneHierarchy >(entity)) return true;
 
-		auto& hierarchy = registry.get< SSceneHierarchy >(entity);
+		auto& hierarchy = registry.emplace< SSceneHierarchy >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&hierarchy);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+
 
 		Vector< CAny > children;
 		u64 parent;
@@ -100,7 +124,9 @@ namespace mint::component
 
 	bool SRigidBody::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SRigidBody >().hash() != hash) return true;
+		// Skip importing duplicate or invalid components.
+		if (entt::type_id< mint::component::SRigidBody >().hash() != hash ||
+			registry.all_of< mint::component::SRigidBody >(entity)) return true;
 
 		MINT_LOG_CRITICAL("[{:.4f}][SRigidBody::import_component] Importing SRigidBody is not supported yet!", MINT_APP_TIME);
 
@@ -127,9 +153,20 @@ namespace mint::component
 
 	bool STransform::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::STransform >().hash() != hash) return true;
+		if (entt::type_id< mint::component::STransform >().hash() != hash ||
+			registry.all_of< mint::component::STransform >(entity)) return true;
 
-		auto& transform = registry.get< STransform >(entity);
+		auto& transform = registry.emplace< STransform >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&transform);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
 
 		CSerializer::import_vec2(transform.m_position, "position", node);
 		CSerializer::import_vec2(transform.m_scale, "scale", node);
@@ -161,9 +198,21 @@ namespace mint::component
 
 	bool SSprite::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SSprite >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SSprite >().hash() != hash ||
+			registry.all_of< mint::component::SSprite >(entity)) return true;
 
-		auto& sprite = registry.get< SSprite >(entity);
+		auto& sprite = registry.emplace< SSprite >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&sprite);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+
 
 		Vec4 color;
 
@@ -196,9 +245,21 @@ namespace mint::component
 
 	bool SAnimatedSprite::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SAnimatedSprite >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SAnimatedSprite >().hash() != hash ||
+			registry.all_of< mint::component::SAnimatedSprite >(entity)) return true;
 
-		auto& animsprite = registry.get< SAnimatedSprite >(entity);
+		auto& animsprite = registry.emplace< SAnimatedSprite >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&animsprite);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+
 
 		return true;
 	}
@@ -218,9 +279,20 @@ namespace mint::component
 
 	bool SScript::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
 	{
-		if (entt::type_id< mint::component::SScript >().hash() != hash) return true;
+		if (entt::type_id< mint::component::SScript >().hash() != hash ||
+			registry.all_of< mint::component::SScript >(entity)) return true;
 
-		auto& script = registry.get< SScript >(entity);
+		auto& script = registry.emplace< SScript >(entity);
+
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&script);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
 
 		CSerializer::import_uint(&script.m_scriptHandle, "script_handle", node, -1);
 

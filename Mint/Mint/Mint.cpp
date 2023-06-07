@@ -36,6 +36,7 @@ namespace mint
 		// Rendering Stack can be reported after context was initialized and the renderers created.
 		// Please note that it is possible for renderers to be dependent on the Scene being initialized.
 		print_engine_rendering_pass_stack();
+		print_engine_registered_importers_and_exporters();
 
 
 		m_running = true;
@@ -205,6 +206,31 @@ namespace mint
 	void CMintEngine::print_engine_rendering_pass_stack()
 	{
 		fx::CRenderingPassStack::Get().print_rendering_pass_stack();
+	}
+
+
+	void CMintEngine::print_engine_registered_importers_and_exporters()
+	{
+		Vector< u64 > hash_values;
+
+		MINT_LOG_INFO("Dumping registered component importer and exporter:");
+		MINT_LOG_INFO("\timporters:");
+		IScene::get_all_component_importer_hash_value(hash_values);
+		for (auto i : hash_values)
+		{
+			MINT_LOG_INFO("\t\thash: {}", i);
+		}
+
+		hash_values.clear();
+
+		MINT_LOG_INFO("\texporters:");
+		IScene::get_all_component_exporter_hash_value(hash_values);
+		for (auto i : hash_values)
+		{
+			MINT_LOG_INFO("\t\thash: {}", i);
+		}
+
+		MINT_LOG_SEPARATOR();
 	}
 
 	bool CMintEngine::_prepare_for_init()

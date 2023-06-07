@@ -41,7 +41,7 @@ namespace mint
 			if(MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
 			   MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity))
 			{
-				entities.push_back(entity);
+				mint::algorithm::vector_push_back(entities, entity);
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace mint
 			if (MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
 				!MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity))
 			{
-				entities.push_back(entity);
+				mint::algorithm::vector_push_back(entities, entity);
 			}
 		}
 
@@ -192,32 +192,53 @@ namespace mint
 	{
 		auto& document = *maml_node->m_document;
 
+
 		entt::entity entity = entt::null;
 
-		auto entity_node = document.find_first_match_in_document("entity");
+		auto id = maml::CDocument::get_uint_property(maml_node, "id", -1);
+		auto uuid = maml::CDocument::get_uint_property(maml_node, "uuid", -1);
+		auto name = maml::CDocument::get_string_property(maml_node, "name");
 
-		auto id = maml::CDocument::get_uint_property(entity_node, "id", -1);
+		MINT_LOG_INFO("[{:.4f}][CScene::import_entity] Importing \"{} ({}, {})\":", MINT_APP_TIME, name, id, uuid);
 
 		entity = m_registry.create_entity(id);
 
-		if (entity == entt::null) return false;
+		if (entity == entt::null)
+		{
+			MINT_LOG_ERROR("[\tCreating entity failed.");
+			return false;
+		}
 
 
-		auto& registry = m_registry.m_registry;
+		// Manually import the SIdentifier component.
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(entity);
+		identifier.m_enttId = id;
+		identifier.m_uuid = uuid;
+		identifier.m_debugName = name;
+
 
 		bool result = true;
 
-		for (auto&& curr : registry.storage())
-		{
-			if (auto& storage = curr.second; storage.contains(entity))
-			{
-				// Ignore SIdentifier component, as it was already imported.
-				if (entt::type_id< mint::component::SIdentifier >().hash() == curr.first) continue;
+		// Get the components array.
+		auto& components = maml::CDocument::get_array_property(maml_node, "components");
+		
+		MINT_LOG_INFO("\tComponents to be loaded: {}", components.size());
 
-				if (IScene::does_component_importer_exist(curr.first)) // Import only components for which we registered importers.
-				{
-					result &= IScene::get_component_importer(curr.first)(entity, curr.first, registry, maml_node);
-				}
+		for (auto& component : components)
+		{
+			auto component_id = SCAST(entt::id_type, component.cast< u64 >());
+
+			if (IScene::does_component_importer_exist(component_id))
+			{
+				// Ignore SIdentifier while importing.
+				if(entt::type_id< mint::component::SIdentifier >().hash() != component_id) result &= IScene::get_component_importer(component_id)(entity, component_id, m_registry.m_registry, maml_node);
+
+				if (result) MINT_LOG_INFO("\t\tComponent loaded: {}", component_id);
+				else MINT_LOG_WARN("\t\tComponent loading failed: {}", component_id);
+			}
+			else
+			{
+				MINT_LOG_WARN("[{:.4f}][CScene::import_entity] Component importer for \"{}\" does not exist!", MINT_APP_TIME, component_id);
 			}
 		}
 
@@ -231,6 +252,8 @@ namespace mint
 	{
 		auto& registry = m_registry.m_registry;
 
+		Vector< CAny > components;
+
 		bool result = true;
 
 		for(auto&& curr: registry.storage())
@@ -240,9 +263,14 @@ namespace mint
 				if (IScene::does_component_exporter_exist(curr.first)) // Export only components for which we registered an exporter.
 				{
 					result &= IScene::get_component_exporter(curr.first)(entity, curr.first, registry, maml_node);
+
+					if (result) mint::algorithm::vector_push_back(components, CAny((u64)curr.first));
 				}
 			}
 		}
+
+		// Write to entity the exported component array.
+		maml::CDocument::add_property_to_node(maml_node, "components", components);
 
 		return result;
 	}
