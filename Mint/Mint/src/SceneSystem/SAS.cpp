@@ -206,20 +206,20 @@ namespace mint
 		max[0] = 0;
 		max[1] = 0;
 
-		// Viewport bounding box.
+		// Viewport bounding box. Note: Viewport should not matter for the Static Quad Tree!
 		f32 view_min[2] = { 0 };
-		view_min[0] = 0;
-		view_min[1] = 0;
+		view_min[0] = -1000000;
+		view_min[1] = -1000000;
 
 		f32 view_max[2] = { 0 };
-		view_max[0] = 0;
-		view_max[1] = 0;
+		view_max[0] = 1000000;
+		view_max[1] = 1000000;
 
-		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
-		view_min[0] = area.get_x();
-		view_min[1] = area.get_y();
-		view_max[0] = area.get_width();
-		view_max[1] = area.get_height();
+// 		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
+// 		view_min[0] = area.get_x();
+// 		view_min[1] = area.get_y();
+// 		view_max[0] = area.get_width();
+// 		view_max[1] = area.get_height();
 
 		// Check for when the camera is rotated and adjust the min and max values.
 		if (view_min[0] > view_max[0])
@@ -428,7 +428,10 @@ namespace mint
 		}
 
 
-		SQuadTreeContainer::SQuadTreeContainer(spatial::BoundingBox< f32, 2 > bbox /*= spatial::BoundingBox< f32, 2 >(0.0f, 1.0f)*/) :
+		const mint::f32 SQuadTreeContainer::BBOX_MIN[2] = {0.0f, 0.0f};
+		const mint::f32 SQuadTreeContainer::BBOX_MAX[2] = { 1.0f, 1.0f };
+
+		SQuadTreeContainer::SQuadTreeContainer(spatial::BoundingBox< f32, 2 > bbox /*= spatial::BoundingBox< f32, 2 >(BBOX_MIN, BBOX_MAX)*/) :
 			m_qtree(bbox.min, bbox.max)
 		{
 

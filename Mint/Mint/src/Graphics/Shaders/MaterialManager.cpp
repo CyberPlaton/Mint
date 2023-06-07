@@ -101,13 +101,16 @@ namespace mint::fx
 
 		auto hh = mint::algorithm::djb_hash(def.m_materialName);
 
+		// Create a new Material map for the entity.
 		auto& map = m_materials[h];
 
-		if (!map.lookup(hh))
+		if (map.initialize(MINTFX_MATERIAL_COUNT_MAX) && !map.lookup(hh))
 		{
 			auto material = map.emplace(hh);
 
 			material->read_definition(def);
+
+			return;
 		}
 
 		MINT_ASSERT(false, "Invalid operation. Setting a second default material for an entity is not allowed!");

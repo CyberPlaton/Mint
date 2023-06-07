@@ -541,7 +541,7 @@ namespace spatial {
 		branch.child = NULL;
 
 		for (Iter it = first; it != last; ++it) {
-			const ValueType& value = *it;
+			const ValueType &value = *it;
 			branch.value = value;
 			branch.bbox.set(m_indexable.min(value), m_indexable.max(value));
 			insertImpl(branch, spatial::detail::DummyInsertPredicate(), 0);

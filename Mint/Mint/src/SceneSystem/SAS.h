@@ -37,8 +37,10 @@ namespace mint
 
 		struct SQuadTreeContainer
 		{
-			SQuadTreeContainer(spatial::BoundingBox< f32, 2 > bbox = spatial::BoundingBox< f32, 2 >(0.0f, 1.0f));
+			static const f32 BBOX_MIN[2];
+			static const f32 BBOX_MAX[2];
 
+			SQuadTreeContainer(spatial::BoundingBox< f32, 2 > bbox = spatial::BoundingBox< f32, 2 >(BBOX_MIN, BBOX_MAX));
 
 			spatial::QuadTree<f32, SQuadTreeNode, 16, SQuadTreeIndexable> m_qtree;
 		};

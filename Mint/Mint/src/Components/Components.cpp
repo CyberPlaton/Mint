@@ -184,8 +184,8 @@ namespace mint::component
 
 		Vec2 origin = sprite.m_origin;
 
-		CSerializer::export_bool(sprite.m_visible, "visible", node);
-		CSerializer::export_bool(sprite.m_internalVisible, "internal_visible", node);
+		CSerializer::export_uint(sprite.m_visible == true ? 1 : 0, "visible", node);
+		CSerializer::export_uint(sprite.m_internalVisible == true ? 1 : 0, "internal_visible", node);
 		CSerializer::export_uint(sprite.m_depth, "depth", node);
 		CSerializer::export_bool(sprite.m_flipX, "flip_x", node);
 		CSerializer::export_bool(sprite.m_flipY, "flip_y", node);
@@ -215,9 +215,10 @@ namespace mint::component
 
 
 		Vec4 color;
+		u64 visible, internal_visible;
 
-		CSerializer::import_bool(&sprite.m_visible, "visible", node);
-		CSerializer::import_bool(&sprite.m_internalVisible, "internal_visible", node);
+		CSerializer::import_uint(&visible, "visible", node);
+		CSerializer::import_uint(&internal_visible, "internal_visible", node);
 		CSerializer::import_uint(&sprite.m_depth, "depth", node, -1);
 		CSerializer::import_bool(&sprite.m_flipX, "flip_x", node);
 		CSerializer::import_bool(&sprite.m_flipY, "flip_y", node);
@@ -225,6 +226,8 @@ namespace mint::component
 		CSerializer::import_vec2(sprite.m_origin, "origin", node);
 
 		sprite.m_color = color;
+		sprite.m_visible = visible == 1 ? true : false;
+		sprite.m_internalVisible = internal_visible == 1 ? true : false;
 
 		return true;
 	}

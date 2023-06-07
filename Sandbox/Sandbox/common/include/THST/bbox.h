@@ -35,7 +35,6 @@ namespace spatial {
 		T max[Dimension];
 
 		BoundingBox();
-		BoundingBox(T min, T max);
 		BoundingBox(box::empty_init);
 		BoundingBox(const T min[Dimension], const T max[Dimension]);
 
@@ -101,20 +100,6 @@ namespace spatial {
 	BBOX_TEMPLATE
 		BBOX_QUAL::BoundingBox(const T min[Dimension], const T max[Dimension]) {
 		set(min, max);
-	}
-
-	BBOX_TEMPLATE
-		BBOX_QUAL::BoundingBox(T min, T max){
-
-		T vmin[Dimension];
-		T vmax[Dimension];
-
-		for (int axis = 0; axis < Dimension; ++axis) {
-			vmin[axis] = min;
-			vmax[axis] = max;
-		}
-		
-		set(vmin, vmax);
 	}
 
 	BBOX_TEMPLATE
