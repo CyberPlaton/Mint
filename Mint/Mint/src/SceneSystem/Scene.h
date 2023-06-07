@@ -7,6 +7,11 @@
 #include "Utility/EventSystem/EventSystem.h"
 #include "Components/CUCA.h"
 
+// Include managers required for exporting/importing entity Components.
+#include "Graphics/Shaders/MaterialManager.h"
+#include "Scripting/BehaviorEngine.h"
+
+
 namespace mint
 {
 	class CSceneManager;

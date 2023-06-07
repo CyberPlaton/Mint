@@ -219,9 +219,9 @@ namespace mint
 
 		bool result = true;
 
-		// Get the components array.
+		// Get the components array from entity metadata.
 		auto& components = maml::CDocument::get_array_property(maml_node, "components");
-		
+
 		MINT_LOG_INFO("\tComponents to be loaded: {}", components.size());
 
 		for (auto& component : components)
@@ -241,6 +241,30 @@ namespace mint
 				MINT_LOG_WARN("[{:.4f}][CScene::import_entity] Component importer for \"{}\" does not exist!", MINT_APP_TIME, component_id);
 			}
 		}
+
+		// Get the materials array from entity metadata.
+		auto& materials = maml::CDocument::get_array_property(maml_node, "materials");
+		String material_name;
+
+		MINT_LOG_INFO("\tMaterials to be loaded: {}", materials.size());
+
+		s32 i = -1;
+		for (auto& it : materials)
+		{
+			++i;
+			material_name = it.cast< String >();
+			
+			if (fx::CMaterialManager::Get().set_material_for_entity(material_name, entity))
+			{
+				MINT_LOG_INFO("\t\tMaterial loaded: {}({})", material_name, i);
+				continue;
+			}
+
+			MINT_LOG_WARN("\t\tMaterial loading failed: {}({})", material_name, i);
+		}
+
+		// Get the behavior script from entity metadata.
+
 
 		if (result) add_entity(entity);
 
@@ -269,8 +293,26 @@ namespace mint
 			}
 		}
 
-		// Write to entity the exported component array.
+		// Write to entity the exported component array. This is metadata about the entity and is used in importing but not directly in any component.
 		maml::CDocument::add_property_to_node(maml_node, "components", components);
+
+		// Export entity Material metadata.
+		Vector< CAny > materials;
+		auto& entity_materials = fx::CMaterialManager::Get().get_materials_for_entity(entity);
+		auto material = entity_materials.begin();
+		while (material)
+		{
+			String material_name = material->get_material_name();
+
+			mint::algorithm::vector_push_back(materials, CAny(material_name));
+
+			material = entity_materials.advance(material);
+		}
+		
+		maml::CDocument::add_property_to_node(maml_node, "materials", materials);
+
+		// Export entity Behavior script metadata.
+
 
 		return result;
 	}

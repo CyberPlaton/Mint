@@ -9,12 +9,8 @@ namespace mint
 	{
 		MINT_ASSERT(ressource_type == "Behavior", "Invalid asset type provided!");
 
-		String source;
-
-		source = asset.get_asset_source_path();
-
 		CFilesystem fs(CFilesystem::get_working_directory());
-		if (fs.forward(asset.get_asset_path()) && fs.forward(source))
+		if (fs.forward(asset.get_asset_path()) && fs.forward(asset.get_asset_source_path()))
 		{
 			mint::scripting::CBehaviorEngine::Get().create_behavior_script_prefab(asset.get_asset_name(), 
 																  fs.get_current_directory().as_string());
