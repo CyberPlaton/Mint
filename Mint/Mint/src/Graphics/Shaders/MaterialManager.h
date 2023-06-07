@@ -24,6 +24,8 @@ namespace mint::fx
 
 		bool add_material_for_entity(entt::entity entity, const SMaterialDefinition& material_definition);
 
+		bool set_material_for_entity_at_index(entt::entity entity, const SMaterialDefinition& material_definition, u64 index);
+
 		bool set_material_for_entity(const String& material_name, entt::entity entity);
 
 		void remove_material_from_entity(entt::entity entity, const String& material_name);

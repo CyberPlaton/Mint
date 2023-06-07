@@ -100,6 +100,7 @@ namespace mint::editor
 
 		// Show materials.
 		auto material = materials.begin();
+		u64 index = 0;
 		while (material)
 		{
 			const Texture* image = &CTextureManager::Get().get_texture(material->get_texture_handle());
@@ -110,7 +111,7 @@ namespace mint::editor
 			if (ImGui::ImageButton((ImTextureID)image, { 96, 96 }))
 			{
 				// Spawn a new Material editor for selected Material.
-				m_materialEditorStack.emplace_back(entity, material);
+				m_materialEditorStack.emplace_back(entity, material, index);
 
 				auto& materialeditor = mint::algorithm::vector_get_last_element_as<CMaterialEditor&>(m_materialEditorStack);
 
@@ -122,6 +123,7 @@ namespace mint::editor
 			ImGui::PopID();
 
 			material = materials.advance(material);
+			index++;
 		}
 	}
 

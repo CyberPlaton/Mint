@@ -754,5 +754,16 @@ namespace mint::component
 		transform.m_worldTransform = matrix;
 	}
 
+	bool CUCA::sprite_set_material_at_index(entt::entity entity, const fx::SMaterialDefinition& material_definition, u64 index)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			auto result = fx::CMaterialManager::Get().set_material_for_entity_at_index(entity, material_definition, index);
+
+		);
+
+		return result;
+	}
+
 
 }

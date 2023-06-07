@@ -64,7 +64,7 @@ namespace mint::editor
 	class CMaterialEditor
 	{
 	public:
-		CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material);
+		CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material, u64 material_index);
 		~CMaterialEditor();
 
 
@@ -83,6 +83,8 @@ namespace mint::editor
 		mint::fx::SMaterialDefinition m_materialDefinition;
 
 		entt::entity m_entity;
+
+		u64 m_materialIndex;
 
 		bool m_active;
 

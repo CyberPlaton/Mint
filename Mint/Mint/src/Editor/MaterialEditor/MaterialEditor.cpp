@@ -5,8 +5,8 @@
 namespace mint::editor 
 {
 
-	CMaterialEditor::CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material) :
-		m_ready(false), m_active(false), m_entity(entity), m_windowFlags(0)
+	CMaterialEditor::CMaterialEditor(entt::entity entity, mint::fx::CMaterial* material, u64 material_index) :
+		m_ready(false), m_active(false), m_entity(entity), m_windowFlags(0), m_materialIndex(material_index)
 	{
 		if (is_handle_valid(entity_get_handle(entity)) && material != nullptr)
 		{
@@ -38,7 +38,7 @@ namespace mint::editor
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 
-		String text = String(ICON_FA_WAND_MAGIC_SPARKLES) + " Material Editor for Material \"" + m_materialDefinition.m_materialName + "\" of \"" + CUCA::identifier_get_debug_name(m_entity) + "\"";
+		String text = String(ICON_FA_WAND_MAGIC_SPARKLES) + " Material Editor for \"" + CUCA::identifier_get_debug_name(m_entity) + "\"";
 
 		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
 		ImGui::Begin(text.c_str(), &m_active, m_windowFlags);
@@ -68,6 +68,7 @@ namespace mint::editor
 		ImGuiID scid = 20000;
 
 		CUI::edit_field_string(m_materialDefinition.m_materialName, "Material Name", "", sid++, scid++);
+		CUI::edit_field_uint64(m_materialIndex, 0, MINTFX_MATERIAL_COUNT_MAX, "Material Index", "", sid++, scid++);
 		CUI::edit_field_string(m_materialDefinition.m_textureName, "Texture Name", "", sid++, scid++);
 		CUI::edit_field_string(m_materialDefinition.m_shaderProgramName, "Shader Program Name", "", sid++, scid++);
 
@@ -130,7 +131,8 @@ namespace mint::editor
 
 		if (ImGui::Button("Apply Material"))
 		{
-			CUCA::sprite_add_material(m_entity, m_materialDefinition);
+// 			CUCA::sprite_add_material(m_entity, m_materialDefinition);
+			CUCA::sprite_set_material_at_index(m_entity, m_materialDefinition, m_materialIndex);
 		}
 		if (ImGui::Button("Export Material"))
 		{

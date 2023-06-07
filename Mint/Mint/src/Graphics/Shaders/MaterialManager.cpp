@@ -44,15 +44,19 @@ namespace mint::fx
 
 		if (m_materials.find(h) == m_materials.end())
 		{
+			// Entity does not have any Materials yet.
 			m_materials[h].initialize(MINTFX_MATERIAL_COUNT_MAX);
 		}
 
+
 		if (!m_materials[h].lookup(hh))
 		{
+			// Create a new material entry.
 			material = m_materials[h].emplace(hh);
 		}
 		else
 		{
+			// Replace the existing material with new definition.
 			material = m_materials[h].get(hh);
 		}
 
@@ -68,6 +72,51 @@ namespace mint::fx
 		}
 
 		return false;
+	}
+
+
+	bool CMaterialManager::set_material_for_entity_at_index(entt::entity entity, const SMaterialDefinition& material_definition, u64 index)
+	{
+		auto h = SCAST(u64, entity);
+
+		// Assure correct index..
+		if (index < m_materials[h].size() - 1)
+		{
+			// .. for replacing.
+			auto hh = mint::algorithm::djb_hash(material_definition.m_materialName);
+
+			CMaterial* material = nullptr;
+
+			// Make sure that the name is not already taken.
+			if (!m_materials[h].lookup(hh))
+			{
+				// Replace existing material with new one.
+				material = m_materials[h].replace(hh, index);
+			}
+			else
+			{
+				// Duplicate Material name.
+				return false;
+			}
+
+			MINT_ASSERT(material != nullptr, "Invalid operation. Material was not found!");
+
+			if (material)
+			{
+				material->read_definition(material_definition);
+
+				material->bind_static_uniforms();
+
+				return true;
+			}
+
+			return false;
+		}
+		else
+		{
+			// .. for emplacing.
+			return add_material_for_entity(entity, material_definition);
+		}
 	}
 
 

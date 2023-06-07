@@ -57,7 +57,7 @@ namespace mint
 
 		Object* get_unsafe(u64 index);
 
-		u64 size();
+		u64 size() const;
 
 		bool has_room_for_another_object();
 
@@ -115,6 +115,8 @@ namespace mint
 			return result;
 		}
 
+		Object* replace(u64 identifier, u64 index);
+
 		Object* emplace(u64 identifier);
 
 		Object* get(u64 identifier);
@@ -141,7 +143,7 @@ namespace mint
 		CMap2(const CMap2& rh) = delete;
 		CMap2& operator=(const CMap2& rh) = delete;
 	};
-	
+
 
 	template< typename Object >
 	mint::CMap2<Object>::CMap2()
@@ -236,6 +238,36 @@ namespace mint
 
 
 	template< typename Object >
+	Object* mint::CMap2<Object>::replace(u64 identifier, u64 index)
+	{
+		if (m_data.is_index_valid(index) && index < m_data.size())
+		{
+			// Destroy old object and create new one in his stead.
+			Object* object = m_data.get(index);
+
+			object->~Object();
+
+			object = new (object) Object;
+
+
+			// Replace the old identifier with the new one.
+			for (auto i = 0; i < m_indices.size(); i++)
+			{
+				if (m_indices[i].second == index)
+				{
+					m_indices[i].first = identifier; break;
+				}
+			}
+
+
+			return object;
+		}
+
+		return nullptr;
+	}
+
+
+	template< typename Object >
 	Object* mint::CMap2<Object>::emplace(u64 identifier)
 	{
 		u64 index = m_data.size();
@@ -271,7 +303,7 @@ namespace mint
 	}
 
 	template< typename Object >
-	u64 mint::CObjectAllocator<Object>::size()
+	u64 mint::CObjectAllocator<Object>::size() const
 	{
 		return m_objectCount;
 	}
