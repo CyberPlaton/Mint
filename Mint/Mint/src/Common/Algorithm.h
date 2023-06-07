@@ -24,6 +24,9 @@ namespace mint::algorithm
 
 	u64 string_to_number(const String& string);
 
+	template< typename T >
+	T string_to_generic_number(const String& string);
+
 	void string_split(const String& string, char delimiter, Vector< String >& storage );
 
 	void string_insert(String& string, const String& to_insert_one, u64 index);
@@ -70,6 +73,18 @@ namespace mint::algorithm
 	template < typename R, typename T >
 	R vector_get_first_element_as(Vector< T >& from);
 
+}
+
+template< typename T >
+T mint::algorithm::string_to_generic_number(const String& string)
+{
+	std::stringstream os;
+	T value;
+
+	os << string;
+	os >> value;
+
+	return value;
 }
 
 

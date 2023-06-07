@@ -346,7 +346,9 @@ namespace maml
 
 	mint::f32 CParser::_to_float(const mint::String& text)
 	{
-		return SCAST(mint::f32, std::stod(text.c_str(), nullptr));
+		mint::f32 dvalue = mint::algorithm::string_to_generic_number< mint::f32 >(text);
+
+		return dvalue;
 	}
 
 

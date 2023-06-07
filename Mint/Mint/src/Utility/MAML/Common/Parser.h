@@ -3,6 +3,7 @@
 
 
 #include "Common/Common.h"
+#include "Common/Algorithm.h"
 
 #include "../../Logging/Logging.h"
 

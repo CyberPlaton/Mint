@@ -619,6 +619,8 @@ namespace mint::editor
 					{
 						MINT_LOG_ERROR("[{:.4f}][CMaterialEditor::show_dialog_export_material] Failed exporting Material \"{}\" to \"{}\"!", MINT_APP_TIME, name, fs.get_current_directory().as_string());
 					}
+
+					m_exportingMaterial = false;
 				}
 			}
 		}
