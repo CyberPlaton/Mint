@@ -18,6 +18,7 @@ namespace mint::editor
 
 		static GlobalData* s_GlobalData;
 		
+		static bool s_EditorProfilerEnabled;
 		static const mint::String s_EditorIconsPath;
 		static mint::String s_EditorDefaultSceneRessourcesPath;
 		static const mint::u32 s_DefaultIconSize;

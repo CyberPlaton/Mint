@@ -3,7 +3,7 @@
 
 
 #include "IMint.h"
-
+#include "Utility/Profiling/FunctionProfiler.h"
 #include "Graphics/Common/Color.h"
 #include "Hardware/GlobalGraphicsSettings.h"
 #include "Hardware/GlobalCPUSettings.h"

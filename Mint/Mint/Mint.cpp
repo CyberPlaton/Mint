@@ -243,6 +243,19 @@ namespace mint
 		// Initialize lowest level sub-systems.
 		result &= CLogging::Get().initialize();
 
+		// Function and Memory Profiler.
+#if MINT_PROFILE
+		result &= profiler::CFunctionProfiler::Get().initialize();
+
+		if (result)
+		{
+			profiler::CFunctionProfiler::Get().set_update_interval_in_seconds(3);
+			profiler::CFunctionProfiler::Get().run_profiler_thread();
+		}
+#else
+		MINT_LOG_WARN("[{:.4f}][CMintEngine::_prepare_for_init] Function and Memory profiling disabled!", MINT_APP_TIME);
+#endif
+
 		// Fatal error! We cant even report what happened.
 		if (!result) return false;
 
@@ -535,6 +548,11 @@ namespace mint
 
 		// Event Manager.
 		CEventSystem::Get().terminate();
+
+		// Function and Memory profiler.
+#if MINT_PROFILE
+		profiler::CFunctionProfiler::Get().stop_profiler_thread();
+#endif
 
 		// Logging.
 		CLogging::Get().terminate();

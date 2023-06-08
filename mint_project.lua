@@ -41,6 +41,7 @@
 			"Utility/Input/LuaBinding",
 			"Utility/Input",
 			"Utility/Reflection",
+			"Utility/Profiling",
 			"Utility",
 			"Components/LuaBinding",
 			"Components",

@@ -60,6 +60,13 @@ namespace mint::editor
 			{
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Debug"))
+			{
+				ImGui::Checkbox("Profiler", &editor::GlobalData::Get().s_EditorProfilerEnabled);
+
+				ImGui::EndMenu();
+			}
+
 		}
 		ImGui::EndMainMenuBar();
 	}

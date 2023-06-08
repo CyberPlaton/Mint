@@ -35,7 +35,7 @@ namespace mint::editor
 	f32 GlobalData::s_EditorTransformMaxRotation = mint::math::pi;
 
 	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
-
+	bool GlobalData::s_EditorProfilerEnabled = false;
 
 }
 #endif

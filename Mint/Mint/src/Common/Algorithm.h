@@ -73,6 +73,12 @@ namespace mint::algorithm
 	template < typename R, typename T >
 	R vector_get_first_element_as(Vector< T >& from);
 
+	template < typename T, typename LF >
+	void vector_sort_with_lambda(std::vector< T >& vec, LF&& lambda_function)
+	{
+		std::sort(vec.begin(), vec.end(), lambda_function);
+	}
+
 }
 
 template< typename T >

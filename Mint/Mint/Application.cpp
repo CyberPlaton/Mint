@@ -348,6 +348,15 @@ namespace mint
 			failed = true;
 		}
 		
+		auto profiler = new editor::CProfilerPanelLayer();
+		root->add_child_layer(profiler);
+		if (!m_layerStack.try_push_layer(profiler))
+		{
+			if (failed_on.empty()) failed_on = "CProfilerPanelLayer";
+			failed_count++;
+			failed = true;
+		}
+
 
 		if(failed)
 		{
