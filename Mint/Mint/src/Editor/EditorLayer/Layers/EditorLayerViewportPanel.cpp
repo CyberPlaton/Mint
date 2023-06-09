@@ -8,18 +8,20 @@ namespace mint::editor
 
 	bool CViewportPanelLayer::on_initialize()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_initialize");
 		return true;
 	}
 
 
 	void CViewportPanelLayer::on_update(f32 dt)
 	{
-
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_update");
 	}
 
 
 	void CViewportPanelLayer::on_ui_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_ui_frame");
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 50), percent(get_window_height(), 5.5f) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ percent(get_window_width(), 25), percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);
 		ImGui::Begin("Viewport Panel", &m_enabled, get_flags());
@@ -66,12 +68,14 @@ namespace mint::editor
 
 	mint::String CViewportPanelLayer::get_layer_name()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::get_layer_name");
 		return "CViewportPanelLayer";
 	}
 
 
 	void CViewportPanelLayer::on_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_frame");
 		if(MINT_ENGINE()->is_in_editor_mode())
 		{
 			auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
@@ -104,6 +108,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::main_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::main_frame");
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Viewport"))
@@ -120,6 +125,7 @@ namespace mint::editor
 
 	ImGuiWindowFlags CViewportPanelLayer::get_flags()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::get_flags");
 		return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
 			 | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
 			 | ImGuiWindowFlags_NoScrollbar;
@@ -128,6 +134,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::window_options()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::window_options");
 		if (ImGui::BeginPopup("Viewport Window Options Popup"))
 		{
 			ImGui::SeparatorText("Window Settings");
@@ -176,6 +183,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::camera_options()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::camera_options");
 		if (ImGui::BeginPopup("Viewport Camera Options Popup"))
 		{
 			ImGui::SeparatorText("Editor Camera Settings");
@@ -189,6 +197,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::grid_options()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::grid_options");
 		if (ImGui::BeginPopup("Viewport Grid Options Popup"))
 		{
 			ImGui::SeparatorText("Grid Settings");
@@ -202,6 +211,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::debug_render_options()
 	{
+		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::debug_render_options");
 		if (ImGui::BeginPopup("Viewport Debug Render Options Popup"))
 		{
 			ImGui::SeparatorText("Debug Render Settings");

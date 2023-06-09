@@ -10,6 +10,7 @@
 #include "SceneSystem/SAS.h"
 #include "Graphics/RenderingPassStack.h"
 #include "Graphics/RenderingPasses/AntiAliasing/FXAA.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor

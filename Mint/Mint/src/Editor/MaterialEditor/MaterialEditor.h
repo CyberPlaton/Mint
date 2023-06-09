@@ -7,6 +7,7 @@
 #include "../Common/EditorCommon.h"
 #include "Graphics/Shaders/MaterialManager.h"
 #include "RessourceManagement/TextureManager.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor

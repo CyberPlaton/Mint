@@ -8,6 +8,7 @@
 #include "Common/Algorithm.h"
 #include "../../RessourceManagement/EditorIconManager.h"
 #include "../../TextEditor/TextEditor.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor

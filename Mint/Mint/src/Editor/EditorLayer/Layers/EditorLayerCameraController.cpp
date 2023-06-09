@@ -14,7 +14,7 @@ namespace mint::editor
 
 	void CCameraControllerLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CCameraControllerLayer", "on_update");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_update");
 
 		if (mint::CUI::ui_has_focus()) return;
 
@@ -66,21 +66,21 @@ namespace mint::editor
 
 	bool CCameraControllerLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("CCameraControllerLayer", "on_initialize");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_initialize");
 		return true;
 	}
 
 
 	mint::String CCameraControllerLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("CCameraControllerLayer", "get_layer_name");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::get_layer_name");
 		return "CCameraControllerLayer";
 	}
 
 
 	void CCameraControllerLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CCameraControllerLayer", "on_ui_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_ui_frame");
 	}
 
 

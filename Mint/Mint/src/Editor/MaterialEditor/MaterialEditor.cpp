@@ -35,6 +35,8 @@ namespace mint::editor
 
 	void CMaterialEditor::on_ui_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::on_ui_frame");
+
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 
@@ -54,16 +56,22 @@ namespace mint::editor
 
 	bool CMaterialEditor::is_ready()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::is_ready");
+
 		return m_ready;
 	}
 
 	bool CMaterialEditor::is_active()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::is_active");
+		
 		return m_active;
 	}
 
 	void CMaterialEditor::main_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::main_frame");
+
 		ImGuiID sid = 10000;
 		ImGuiID scid = 20000;
 
@@ -143,6 +151,8 @@ namespace mint::editor
 
 	void CMaterialEditor::show_dialog_add_dynamic_uniform()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::show_dialog_add_dynamic_uniform");
+
 		ImGuiID sid = 30000;
 		ImGuiID scid = 40000;
 
@@ -248,6 +258,8 @@ namespace mint::editor
 
 	void CMaterialEditor::show_dialog_add_static_uniform()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::show_dialog_add_static_uniform");
+
 		ImGuiID sid = 30000;
 		ImGuiID scid = 40000;
 
@@ -354,6 +366,8 @@ namespace mint::editor
 
 	void CMaterialEditor::show_uniform_edit(mint::fx::SShaderUniform& uniform, ImGuiID id, ImGuiID scalar_id)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::show_uniform_edit");
+
 		switch (uniform.get_type())
 		{
 		case SHADER_UNIFORM_FLOAT:
@@ -411,11 +425,15 @@ namespace mint::editor
 
 	void CMaterialEditor::on_update(f32 dt)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::on_update");
+
 	}
 
 
 	void CMaterialEditor::set_blending_src_factor(int option_number)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_src_factor");
+
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_srcBlendFactor = mint::fx::BlendingFactor_Zero; break;
@@ -438,6 +456,8 @@ namespace mint::editor
 
 	void CMaterialEditor::set_blending_dst_factor(int option_number)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_dst_factor");
+
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_dstBlendFactor = mint::fx::BlendingFactor_Zero; break;
@@ -460,6 +480,8 @@ namespace mint::editor
 
 	void CMaterialEditor::set_blending_equation(int option_number)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_equation");
+
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_blendingEquation = mint::fx::BlendingEquation_Add; break;
@@ -480,6 +502,8 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_src_factor_option_number(uint32_t blending_factor)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_src_factor_option_number");
+
 		switch ((mint::fx::BlendingFactor)blending_factor)
 		{
 		case mint::fx::BlendingFactor_Zero:						return 0;
@@ -502,6 +526,8 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_dst_factor_option_number(uint32_t blending_factor)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_dst_factor_option_number");
+
 		switch ((mint::fx::BlendingFactor)blending_factor)
 		{
 		case mint::fx::BlendingFactor_Zero:						return 0;
@@ -524,6 +550,8 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_equation_option_number(uint32_t blending_equation)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_equation_option_number");
+
 		switch ((mint::fx::BlendingEquation)blending_equation)
 		{
 		case mint::fx::BlendingEquation_Add:				return 0;
@@ -544,6 +572,8 @@ namespace mint::editor
 
 	void CMaterialEditor::show_dialog_export_material()
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::show_dialog_export_material");
+
 		static String path;
 		static String name;
 
@@ -637,6 +667,8 @@ namespace mint::editor
 
 	void CMaterialEditor::export_uniform(mint::fx::SShaderUniform& uniform, maml::SNode* node)
 	{
+		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::export_uniform");
+
 		switch (uniform.get_type())
 		{
 		case SHADER_UNIFORM_FLOAT:

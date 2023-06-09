@@ -8,20 +8,20 @@ namespace mint::editor
 
 	bool CProfilerPanelLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "on_initialize");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_initialize");
 		return true;
 	}
 
 
 	void CProfilerPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "on_update");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_update");
 	}
 
 
 	void CProfilerPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "on_ui_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_ui_frame");
 		if (GlobalData::Get().s_EditorProfilerEnabled)
 		{
 			GlobalData::Get().s_EditorProfilerEnabled = m_enabled;
@@ -84,20 +84,20 @@ namespace mint::editor
 
 	mint::String CProfilerPanelLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "get_layer_name");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::get_layer_name");
 		return "CProfilerPanelLayer";
 	}
 
 
 	void CProfilerPanelLayer::on_frame()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "on_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_frame");
 	}
 
 
 	void CProfilerPanelLayer::main_frame()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "main_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::main_frame");
 
 		if (!profiler::CFunctionProfiler::Get().does_category_exist(GlobalData::Get().s_EditorProfilerCategory) &&
 			GlobalData::Get().s_EditorProfilerCategory != "All")
@@ -186,7 +186,7 @@ namespace mint::editor
 
 	ImGuiWindowFlags CProfilerPanelLayer::get_flags()
 	{
-		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "get_flags");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::get_flags");
 		return ImGuiWindowFlags_MenuBar;
 	}
 

@@ -5,6 +5,7 @@
 
 
 #include "../Common/Layer.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor

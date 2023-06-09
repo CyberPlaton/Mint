@@ -9,21 +9,21 @@ namespace mint::editor
 
 	bool CHierarchyPanelLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "on_initialize");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::on_initialize");
 		return true;
 	}
 
 
 	void CHierarchyPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "on_update");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::on_update");
 		m_currentSceneName = MINT_ACTIVE_SCENE()->get_scene_name();
 	}
 
 
 	void CHierarchyPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "on_ui_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::on_ui_frame");
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
@@ -52,21 +52,21 @@ namespace mint::editor
 
 	mint::String CHierarchyPanelLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "get_layer_name");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::get_layer_name");
 		return "CHierarchyPanelLayer";
 	}
 
 
 	ImGuiWindowFlags CHierarchyPanelLayer::get_flags()
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "get_flags");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::get_flags");
 		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 	}
 
 
 	void CHierarchyPanelLayer::show_main_frame()
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "show_main_frame");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::show_main_frame");
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
 		auto& gd = GlobalData::Get();
@@ -106,7 +106,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::show_entity_recursive(entt::entity entity)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "show_entity_recursive");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::show_entity_recursive");
 		// Show entity name
 		auto name = CUCA::identifier_get_debug_name(entity);
 		bool inspected = false;
@@ -200,7 +200,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::check_entity_for_components_sanity(entt::entity entity)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "check_entity_for_components_sanity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::check_entity_for_components_sanity");
 		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
 
 		bool warning = false;
@@ -291,7 +291,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::react_to_selected_entity_option(s32* option)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "react_to_selected_entity_option");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::react_to_selected_entity_option");
 		if (*option == -1) return;
 
 		auto op = *option;
@@ -312,7 +312,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::create_dynamic_child_entity(entt::entity parent)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "create_dynamic_child_entity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::create_dynamic_child_entity");
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
 
@@ -342,7 +342,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::create_dynamic_parent_entity(entt::entity child)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "create_dynamic_parent_entity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::create_dynamic_parent_entity");
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
 
@@ -373,7 +373,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::create_static_child_entity(entt::entity parent)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "create_static_child_entity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::create_static_child_entity");
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
 
@@ -401,7 +401,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::create_static_parent_entity(entt::entity child)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "create_static_parent_entity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::create_static_parent_entity");
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
 
@@ -430,7 +430,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::delete_entity(entt::entity entity)
 	{
-		MINT_PROFILE_SCOPE("CHierarchyPanelLayer", "delete_entity");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::delete_entity");
 		GlobalData::Get().s_EditorOptionEntityToBeDeleted = entity;
 
 		// Handle cases where entity is a parent or a child.
