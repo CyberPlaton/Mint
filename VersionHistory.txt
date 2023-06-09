@@ -1,5 +1,9 @@
 Runtime Version History:
 
+2023.06.03:
+	o Function profiler implemented.
+	o Function profiler panel.
+
 2023.06.02:
 	o Material Editor refactored.
 	o Material import and export, as well as importing and exporting materials for an entity refactored.
