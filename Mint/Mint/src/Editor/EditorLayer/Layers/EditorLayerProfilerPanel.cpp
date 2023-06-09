@@ -35,6 +35,11 @@ namespace mint::editor
 			{
 				if (ImGui::BeginMenu("Categories"))
 				{
+					if (ImGui::MenuItem("All"))
+					{
+						GlobalData::Get().s_EditorProfilerCategory = "All";
+					}
+
 					auto categories = profiler::CFunctionProfiler::Get().get_all_categories();
 
 					for (auto& category : categories)
@@ -94,7 +99,8 @@ namespace mint::editor
 	{
 		MINT_PROFILE_SCOPE("CProfilerPanelLayer", "main_frame");
 
-		if (!profiler::CFunctionProfiler::Get().does_category_exist(GlobalData::Get().s_EditorProfilerCategory))
+		if (!profiler::CFunctionProfiler::Get().does_category_exist(GlobalData::Get().s_EditorProfilerCategory) &&
+			GlobalData::Get().s_EditorProfilerCategory != "All")
 		{
 			ImGui::TextColored(ImVec4(1.0f, 0.1f, 0.1f, 1.0f), TextFormat("Category \"%s\" does not exist! Please select a valid one.", GlobalData::Get().s_EditorProfilerCategory.c_str()));
 			return;
@@ -102,13 +108,27 @@ namespace mint::editor
 
 		Vector< profiler::SFunction > stats;
 
-		if (m_sortByMeantime)
+		if (GlobalData::Get().s_EditorProfilerCategory == "All")
 		{
-			stats = profiler::CFunctionProfiler::Get().get_stats_for_category_sorted_by_meantime(GlobalData::Get().s_EditorProfilerCategory);
+			if (m_sortByMeantime)
+			{
+				stats = profiler::CFunctionProfiler::Get().get_all_stats_sorted_by_meantime();
+			}
+			else
+			{
+				stats = profiler::CFunctionProfiler::Get().get_all_stats_sorted_by_callcount();
+			}
 		}
 		else
 		{
-			stats = profiler::CFunctionProfiler::Get().get_stats_for_category_sorted_by_callcount(GlobalData::Get().s_EditorProfilerCategory);
+			if (m_sortByMeantime)
+			{
+				stats = profiler::CFunctionProfiler::Get().get_stats_for_category_sorted_by_meantime(GlobalData::Get().s_EditorProfilerCategory);
+			}
+			else
+			{
+				stats = profiler::CFunctionProfiler::Get().get_stats_for_category_sorted_by_callcount(GlobalData::Get().s_EditorProfilerCategory);
+			}
 		}
 
 

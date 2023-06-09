@@ -6,7 +6,7 @@
 
 #include "../Common/Layer.h"
 #include "../../ComponentEditor/ComponentEditorStack.h"
-
+#include "Utility/Profiling/FunctionProfiler.h"
 
 namespace mint::editor
 {

@@ -136,6 +136,19 @@ namespace mint::profiler
 			}
 
 		);
+
+		Vector< SFunction > all_data;
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			for (auto& pair : m_stats)
+			{
+				mint::algorithm::vector_push_back(all_data, pair.second);
+			}
+			
+			_sort_functions_by_meantime(all_data, m_allDataSortedByMeantime);
+			_sort_functions_by_callcount(all_data, m_allDataSortedByCallcount);
+		);
 	}
 
 	void CFunctionProfiler::_set_is_running(bool value)
@@ -401,6 +414,28 @@ namespace mint::profiler
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 			const auto v = m_updateInterval;
+
+		);
+
+		return v;
+	}
+
+	mint::Vector< SFunction > CFunctionProfiler::get_all_stats_sorted_by_callcount()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto& v = m_allDataSortedByCallcount;
+
+		);
+
+		return v;
+	}
+
+	mint::Vector< SFunction > CFunctionProfiler::get_all_stats_sorted_by_meantime()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto& v = m_allDataSortedByMeantime;
 
 		);
 

@@ -6,7 +6,7 @@
 
 #include "../Common/Layer.h"
 #include "SceneSystem/Common/IScene.h"
-
+#include "Utility/Profiling/FunctionProfiler.h"
 
 namespace mint::editor
 {

@@ -77,6 +77,10 @@ namespace mint::profiler
 
 		mint::Vector< SFunction > get_stats_for_category_sorted_by_callcount(const String& function_category);
 
+		mint::Vector< SFunction > get_all_stats_sorted_by_callcount();
+
+		mint::Vector< SFunction > get_all_stats_sorted_by_meantime();
+
 
 	private:
 		MINT_CRITICAL_SECTION(m_criticalSection);
@@ -95,6 +99,11 @@ namespace mint::profiler
 		std::unordered_map< u64, Vector< SFunction > > m_dataSortedByMeantime;
 
 		std::unordered_map< u64, Vector< SFunction > > m_dataSortedByCallcount;
+
+		Vector< SFunction > m_allDataSortedByMeantime;
+
+		Vector< SFunction > m_allDataSortedByCallcount;
+
 
 		std::unordered_map< u64, Vector< SFunction* > > m_queue;
 

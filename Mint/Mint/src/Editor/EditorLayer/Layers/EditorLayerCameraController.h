@@ -8,6 +8,7 @@
 #include "Graphics/Common/Camera2D.h"
 #include "Utility/Input/Input.h"
 #include "Common/Timestep.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor
