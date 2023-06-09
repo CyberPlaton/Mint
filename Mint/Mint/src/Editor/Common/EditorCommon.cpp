@@ -36,6 +36,7 @@ namespace mint::editor
 
 	mint::editor::CApplicationComponentsDatabase GlobalData::s_ComponentDatabase;
 	bool GlobalData::s_EditorProfilerEnabled = false;
+	mint::String GlobalData::s_EditorProfilerCategory;
 
 }
 #endif

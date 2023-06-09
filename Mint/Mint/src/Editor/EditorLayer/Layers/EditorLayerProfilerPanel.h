@@ -26,6 +26,8 @@ namespace mint::editor
 		ImGuiWindowFlags CProfilerPanelLayer::get_flags() override final;
 
 	private:
+		bool m_sortByMeantime = false;
+		u32 m_updateInterval = 3;
 
 	private:
 		void main_frame();

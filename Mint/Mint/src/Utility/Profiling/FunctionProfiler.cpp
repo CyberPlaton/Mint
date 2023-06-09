@@ -60,6 +60,8 @@ namespace mint::profiler
 		{
 			if (_should_update())
 			{
+				_restart_timer();
+
 				_internal_computation();
 			}
 			else
@@ -77,8 +79,20 @@ namespace mint::profiler
 
 	void CFunctionProfiler::_internal_computation()
 	{
+		// Copy the incoming queue.
+		std::unordered_map< u64, Vector< SFunction* > > queue;
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			queue = m_queue;
+
+			m_queue.clear();
+
+		);
+
+
 		// Update statistical data.
-		for (auto& pair : m_queue)
+		for (auto& pair : queue)
 		{
 			while (!pair.second.empty())
 			{
@@ -86,11 +100,19 @@ namespace mint::profiler
 
 				if (lookup(pair.first, function->m_name))
 				{
-					_add_up_function_data(pair.first, function);
+					MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+						_add_up_function_data(pair.first, function);
+
+					);
 				}
 				else
 				{
-					_create_function_entry(pair.first, function);
+					MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+						_create_function_entry(pair.first, function);
+
+					);
 				}
 
 
@@ -100,18 +122,20 @@ namespace mint::profiler
 			}
 		}
 
-		m_queue.clear();
-
 
 		// Recompute refined statistical data.
-		for (auto& pair : m_stats)
-		{
-			auto& vmeantime = m_dataSortedByMeantime[pair.first];
-			auto& vcallcount = m_dataSortedByCallcount[pair.first];
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			_sort_functions_by_meantime(pair.second, vmeantime);
-			_sort_functions_by_callcount(pair.second, vcallcount);
-		}
+			for (auto& pair : m_stats)
+			{
+				auto& vmeantime = m_dataSortedByMeantime[pair.first];
+				auto& vcallcount = m_dataSortedByCallcount[pair.first];
+
+				_sort_functions_by_meantime(pair.second, vmeantime);
+				_sort_functions_by_callcount(pair.second, vcallcount);
+			}
+
+		);
 	}
 
 	void CFunctionProfiler::_set_is_running(bool value)
@@ -148,6 +172,8 @@ namespace mint::profiler
 
 			mint::algorithm::vector_push_back(m_queue[h], function);
 
+			m_categories[h] = function_category;
+
 		);
 	}
 
@@ -168,6 +194,17 @@ namespace mint::profiler
 
 		return v;
 	}
+
+
+	void CFunctionProfiler::_restart_timer()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_timer.start_timer();
+
+		);
+	}
+
 
 	void CFunctionProfiler::set_update_interval_in_seconds(u32 seconds)
 	{
@@ -261,11 +298,15 @@ namespace mint::profiler
 
 	bool CFunctionProfiler::lookup(u64 function_category, const String& function_name)
 	{
-		auto& vector = m_stats[function_category];
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-		for (auto& it : vector)
+			const auto & vector = m_stats[function_category];
+
+		);
+
+		for (auto& func : vector)
 		{
-			if (it.m_name == function_name) return true;
+			if (func.m_name == function_name) return true;
 		}
 
 		return false;
@@ -275,14 +316,17 @@ namespace mint::profiler
 	{
 		auto h = mint::algorithm::djb_hash(function_category);
 
-		if (lookup(h, function_name))
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto& vector = m_stats[h];
+
+		);
+
+		for (auto& func : vector)
 		{
-			for (auto& func : m_stats[h])
+			if (func.m_name == function_name)
 			{
-				if (func.m_name == function_name)
-				{
-					return func;
-				}
+				return func;
 			}
 		}
 
@@ -293,24 +337,76 @@ namespace mint::profiler
 	{
 		auto h = mint::algorithm::djb_hash(function_category);
 
-		return m_stats[h];
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_stats[h];
+
+		);
+
+		return v;
 	}
 
 	mint::Vector< mint::profiler::SFunction > CFunctionProfiler::get_stats_for_category_sorted_by_meantime(const String& function_category)
 	{
 		auto h = mint::algorithm::djb_hash(function_category);
 
-		return m_dataSortedByMeantime[h];
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_dataSortedByMeantime[h];
+
+		);
+
+		return v;
 	}
 
 	mint::Vector< mint::profiler::SFunction > CFunctionProfiler::get_stats_for_category_sorted_by_callcount(const String& function_category)
 	{
 		auto h = mint::algorithm::djb_hash(function_category);
 
-		return m_dataSortedByCallcount[h];
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_dataSortedByCallcount[h];
+
+		);
+
+		return v;
 	}
 
-	
+	std::unordered_map< glm::u64, mint::String > CFunctionProfiler::get_all_categories()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_categories;
+
+		);
+
+		return v;
+	}
+
+	bool CFunctionProfiler::does_category_exist(const String& function_category)
+	{
+		auto h = mint::algorithm::djb_hash(function_category);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_categories.find(h) != m_categories.end();
+
+		);
+
+		return v;
+	}
+
+	glm::u32 CFunctionProfiler::get_update_interval_in_seconds()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto v = m_updateInterval;
+
+		);
+
+		return v;
+	}
+
 	SFunction::SFunction()
 	{
 	}

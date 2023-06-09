@@ -53,6 +53,8 @@ namespace mint::profiler
 
 		void set_update_interval_in_seconds(u32 seconds);
 
+		u32 get_update_interval_in_seconds();
+
 
 		void add_function_to_queue(const String& function_category, SFunction* function);
 
@@ -60,6 +62,11 @@ namespace mint::profiler
 
 		bool lookup(u64 function_category, const String& function_name);
 
+
+
+		std::unordered_map< u64, String > get_all_categories();
+
+		bool does_category_exist(const String& function_category);
 
 
 		SFunction get_stats_for_function_raw(const String& function_category, const String& function_name);
@@ -91,6 +98,8 @@ namespace mint::profiler
 
 		std::unordered_map< u64, Vector< SFunction* > > m_queue;
 
+		std::unordered_map< u64, String > m_categories;
+
 
 	private:
 		void _run();
@@ -106,6 +115,8 @@ namespace mint::profiler
 		void _wait_for_termination();
 		
 		u32 _get_update_interval_in_seconds();
+
+		void _restart_timer();
 
 		void _sort_functions_by_meantime(Vector< SFunction >& rawfunctions, Vector< SFunction >& output);
 
@@ -165,8 +176,8 @@ namespace mint::profiler
 #define	MINT_PROFILE_SCOPE(category)
 #else
 #define MINT_PROFILE_SCOPE_EX(name, category, variable_name) mint::profiler::SFunctionProfilerUtility variable_name(name, category)
-#define MINT_PROFILE_SCOPE_CAT(name, category) mint::profiler::SFunctionProfilerUtility profiled_function(name, category)
-#define MINT_PROFILE_SCOPE(category) MINT_PROFILE_SCOPE(MINT_FUNC_SIG, category)
+#define MINT_PROFILE_SCOPE(name, category) mint::profiler::SFunctionProfilerUtility profiled_function(name, category)
+#define MINT_PROFILE_FUNC(category) MINT_PROFILE_SCOPE(MINT_FUNC_SIG, category)
 #endif
 
 }
