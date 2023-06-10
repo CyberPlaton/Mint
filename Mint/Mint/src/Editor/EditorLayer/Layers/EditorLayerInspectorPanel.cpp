@@ -9,7 +9,6 @@ namespace mint::editor
 
 	bool CInspectorPanelLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::on_initialize");
 		return true;
 	}
 
@@ -17,6 +16,7 @@ namespace mint::editor
 	void CInspectorPanelLayer::on_update(f32 dt)
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::on_update");
+
 		m_componentEditorStack.on_update(dt);
 	}
 
@@ -24,6 +24,7 @@ namespace mint::editor
 	void CInspectorPanelLayer::on_ui_frame()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::on_ui_frame");
+
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
@@ -69,7 +70,6 @@ namespace mint::editor
 
 	mint::String CInspectorPanelLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::get_layer_name");
 		return "CInspectorPanelLayer";
 	}
 
@@ -77,6 +77,7 @@ namespace mint::editor
 	void CInspectorPanelLayer::show_main_frame()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::show_main_frame");
+
 		auto& db = GlobalData::Get().s_ComponentDatabase;
 
 		String button_text = ICON_FA_TRASH_CAN "##";
@@ -116,14 +117,12 @@ namespace mint::editor
 
 	ImGuiWindowFlags CInspectorPanelLayer::get_flags()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::get_flags");
 		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 	}
 
 
 	void CInspectorPanelLayer::show_add_component_dialog()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::show_add_component_dialog");
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;
 		auto& db = GlobalData::Get().s_ComponentDatabase;

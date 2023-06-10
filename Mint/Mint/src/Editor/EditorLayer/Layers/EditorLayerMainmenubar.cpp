@@ -9,20 +9,19 @@ namespace mint::editor
 
 	bool CMainmenubarLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::on_initialize");
 		return true;
 	}
 
 
 	void CMainmenubarLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::on_update");
 	}
 
 
 	void CMainmenubarLayer::on_ui_frame()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::on_ui_frame");
+
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("Menu"))
@@ -76,7 +75,6 @@ namespace mint::editor
 
 	mint::String CMainmenubarLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::get_layer_name");
 		return "CMainmenubarLayer";
 	}
 

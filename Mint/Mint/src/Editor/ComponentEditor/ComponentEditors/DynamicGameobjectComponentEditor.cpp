@@ -18,6 +18,8 @@ namespace mint::editor
 
 	void CDynamicGameobjectComponentEditor::on_ui_frame()
 	{
+		MINT_PROFILE_SCOPE("Editor::ComponentEditor", "CDynamicGameobjectComponentEditor::on_ui_frame");
+
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 

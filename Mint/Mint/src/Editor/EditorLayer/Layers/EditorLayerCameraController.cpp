@@ -66,21 +66,18 @@ namespace mint::editor
 
 	bool CCameraControllerLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_initialize");
 		return true;
 	}
 
 
 	mint::String CCameraControllerLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::get_layer_name");
 		return "CCameraControllerLayer";
 	}
 
 
 	void CCameraControllerLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_ui_frame");
 	}
 
 

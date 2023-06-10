@@ -9,7 +9,6 @@ namespace mint::editor
 
 	bool CProjectAssetsPanelLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_initialize");
 		return true;
 	}
 
@@ -17,6 +16,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::on_update(f32 dt)
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_update");
+
 		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
 		mint::String scene_name = MINT_ACTIVE_SCENE()->get_scene_name();
@@ -33,6 +33,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::on_ui_frame()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_ui_frame");
+
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
 
@@ -68,21 +69,18 @@ namespace mint::editor
 
 	mint::String CProjectAssetsPanelLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::get_layer_name");
 		return "CProjectAssetsPanelLayer";
 	}
 
 
 	ImGuiWindowFlags CProjectAssetsPanelLayer::get_flags()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::get_flags");
 		return ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 	}
 
 
 	void CProjectAssetsPanelLayer::menu_bar()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::menu_bar");
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu(u8"Project Assets"))
@@ -105,6 +103,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::main_frame()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::main_frame");
+
 		CFilesystem fs(m_currentScenePathFull);
 
 		// Create "assets" folder if not already there.
@@ -139,6 +138,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::show_folder_contents(CPath& path)
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_folder_contents");
+
 		String text = ICON_FA_FOLDER_TREE + path.get_stem();
 
 		if (ImGui::TreeNode(text.c_str()))
@@ -167,6 +167,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::show_file(CPath& path)
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_file");
+
 		// Show this icon if it is editable, otherwise just as plain text.
 		mint::String text;
 		bool editable = true;
@@ -207,6 +208,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::show_folder_options(CPath& path)
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_folder_options");
+
 		String text = "##" + path.as_string();
 
 		static int item_current = 0;
@@ -243,13 +245,13 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file_options(CPath& path)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_file_options");
 	}
 
 
 	void CProjectAssetsPanelLayer::show_create_folder_dialog()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_create_folder_dialog");
+
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
@@ -299,6 +301,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::show_create_file_dialog()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_create_file_dialog");
+
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
@@ -356,6 +359,7 @@ namespace mint::editor
 	void CProjectAssetsPanelLayer::show_delete_folder_dialog()
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_delete_folder_dialog");
+
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
@@ -389,7 +393,6 @@ namespace mint::editor
 
 	bool CProjectAssetsPanelLayer::is_file_editable(const String& file_extension)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::is_file_editable");
 		for(const auto& ext: s_EditorAssetPanelFileTypeExtensions)
 		{
 			if (strcmp(file_extension.c_str(), ext) == 0) return true;

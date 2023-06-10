@@ -7,6 +7,7 @@
 #include "../../Common/EditorCommon.h"
 #include "Components/Components.h"
 #include "../../IMint.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::editor

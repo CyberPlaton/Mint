@@ -56,22 +56,16 @@ namespace mint::editor
 
 	bool CMaterialEditor::is_ready()
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::is_ready");
-
 		return m_ready;
 	}
 
 	bool CMaterialEditor::is_active()
-	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::is_active");
-		
+	{		
 		return m_active;
 	}
 
 	void CMaterialEditor::main_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::main_frame");
-
 		ImGuiID sid = 10000;
 		ImGuiID scid = 20000;
 
@@ -425,15 +419,12 @@ namespace mint::editor
 
 	void CMaterialEditor::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::on_update");
 
 	}
 
 
 	void CMaterialEditor::set_blending_src_factor(int option_number)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_src_factor");
-
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_srcBlendFactor = mint::fx::BlendingFactor_Zero; break;
@@ -456,8 +447,6 @@ namespace mint::editor
 
 	void CMaterialEditor::set_blending_dst_factor(int option_number)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_dst_factor");
-
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_dstBlendFactor = mint::fx::BlendingFactor_Zero; break;
@@ -480,8 +469,6 @@ namespace mint::editor
 
 	void CMaterialEditor::set_blending_equation(int option_number)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::set_blending_equation");
-
 		switch (option_number)
 		{
 		case 0: m_materialDefinition.m_blendingEquation = mint::fx::BlendingEquation_Add; break;
@@ -502,8 +489,6 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_src_factor_option_number(uint32_t blending_factor)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_src_factor_option_number");
-
 		switch ((mint::fx::BlendingFactor)blending_factor)
 		{
 		case mint::fx::BlendingFactor_Zero:						return 0;
@@ -526,8 +511,6 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_dst_factor_option_number(uint32_t blending_factor)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_dst_factor_option_number");
-
 		switch ((mint::fx::BlendingFactor)blending_factor)
 		{
 		case mint::fx::BlendingFactor_Zero:						return 0;
@@ -550,8 +533,6 @@ namespace mint::editor
 
 	int CMaterialEditor::get_blending_equation_option_number(uint32_t blending_equation)
 	{
-		MINT_PROFILE_SCOPE("Editor::MaterialEditor", "CMaterialEditor::get_blending_equation_option_number");
-
 		switch ((mint::fx::BlendingEquation)blending_equation)
 		{
 		case mint::fx::BlendingEquation_Add:				return 0;

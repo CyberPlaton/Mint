@@ -7,7 +7,6 @@ namespace mint::editor
 {
 	bool CRightmostPanelLayer::on_initialize()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::on_initialize");
 		bool result = true;
 
 		for (const auto& kid : get_children_layers())
@@ -41,14 +40,12 @@ namespace mint::editor
 
 	mint::String CRightmostPanelLayer::get_layer_name()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::get_layer_name");
 		return "CRightmostPanelLayer";
 	}
 
 
 	ImGuiWindowFlags CRightmostPanelLayer::get_flags()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::get_flags");
 		return ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 	}
 }

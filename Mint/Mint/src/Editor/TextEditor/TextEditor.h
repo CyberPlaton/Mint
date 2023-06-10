@@ -7,6 +7,7 @@
 #include "../Common/EditorCommon.h"
 #include "Utility/FileSystem/Filesystem.h"
 #include "ImGuiTextEditor.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 
