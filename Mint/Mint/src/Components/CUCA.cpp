@@ -765,5 +765,16 @@ namespace mint::component
 		return result;
 	}
 
+	void CUCA::behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle)
+	{
+		auto& behavior = MINT_SCENE_REGISTRY().get_component< mint::component::SScript >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_scriptCriticalSection,
+
+			behavior.m_scriptHandle = handle;
+
+		);
+	}
+
 
 }

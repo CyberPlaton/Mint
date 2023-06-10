@@ -244,7 +244,7 @@ namespace mint
 
 		// Get the materials array from entity metadata.
 		auto& materials = maml::CDocument::get_array_property(maml_node, "materials");
-		String material_name;
+		MaterialHandle material_handle;
 
 		MINT_LOG_INFO("\tMaterials to be loaded: {}", materials.size());
 
@@ -252,18 +252,30 @@ namespace mint
 		for (auto& it : materials)
 		{
 			++i;
-			material_name = it.cast< String >();
+			material_handle = it.cast< MaterialHandle >();
 			
-			if (fx::CMaterialManager::Get().set_material_for_entity(material_name, entity))
+			if (fx::CMaterialManager::Get().set_material_for_entity(material_handle, entity))
 			{
-				MINT_LOG_INFO("\t\tMaterial loaded: {}({})", material_name, i);
+				MINT_LOG_INFO("\t\tMaterial loaded: {}({})", material_handle, i);
 				continue;
 			}
 
-			MINT_LOG_WARN("\t\tMaterial loading failed: {}({})", material_name, i);
+			MINT_LOG_WARN("\t\tMaterial loading failed: {}({})", material_handle, i);
 		}
 
 		// Get the behavior script from entity metadata.
+		auto behavior = maml::CDocument::get_string_property(maml_node, "behavior");
+
+		if (scripting::CBehaviorEngine::Get().set_behavior_for_entity(behavior, entity))
+		{
+			MINT_LOG_INFO("\t\Behavior loaded: {}({})", behavior, i);
+		}
+		else
+		{
+			MINT_LOG_WARN("\t\Behavior loading failed: {}({})", behavior, i);
+		}
+
+
 
 
 		if (result) add_entity(entity);
@@ -302,9 +314,9 @@ namespace mint
 		auto material = entity_materials.begin();
 		while (material)
 		{
-			String material_name = material->get_material_name();
+			MaterialHandle handle = mint::algorithm::djb_hash(material->get_material_name());
 
-			mint::algorithm::vector_push_back(materials, CAny(material_name));
+			mint::algorithm::vector_push_back(materials, CAny(handle));
 
 			material = entity_materials.advance(material);
 		}
@@ -312,6 +324,9 @@ namespace mint
 		maml::CDocument::add_property_to_node(maml_node, "materials", materials);
 
 		// Export entity Behavior script metadata.
+		auto& behavior = scripting::CBehaviorEngine::Get().get_entity_behavior(entity);
+
+		maml::CDocument::add_property_to_node(maml_node, "behavior", behavior.get_script_name());
 
 
 		return result;

@@ -195,10 +195,18 @@ namespace mint::fx
 
 	bool CMaterialManager::set_material_for_entity(const String& material_name, entt::entity entity)
 	{
-		String material_file_path = m_materialPrefabs.get(mint::algorithm::djb_hash(material_name)).second;
+		auto h = mint::algorithm::djb_hash(material_name);
+
+		return set_material_for_entity(h, entity);
+	}
+
+	bool CMaterialManager::set_material_for_entity(MaterialHandle material_handle, entt::entity entity)
+	{
+		if (!m_materialPrefabs.lookup(material_handle)) return false;
+
+		String material_file_path = m_materialPrefabs.get(material_handle).second;
 
 		maml::CDocument document;
-
 
 		auto root = CSerializer::load_maml_document(material_file_path, document);
 		if (!root)

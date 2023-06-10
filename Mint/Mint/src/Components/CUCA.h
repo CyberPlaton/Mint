@@ -107,6 +107,12 @@ namespace mint::component
 
 
 
+
+
+		static void behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle);
+
+
+
 	private:
 		static MINT_CRITICAL_SECTION(m_entityCriticalSection);
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);

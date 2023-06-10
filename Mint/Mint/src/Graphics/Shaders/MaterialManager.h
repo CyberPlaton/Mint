@@ -28,6 +28,8 @@ namespace mint::fx
 
 		bool set_material_for_entity(const String& material_name, entt::entity entity);
 
+		bool set_material_for_entity(MaterialHandle material_handle, entt::entity entity);
+
 		void remove_material_from_entity(entt::entity entity, const String& material_name);
 		
 		mint::CMap2< CMaterial >& get_materials_for_entity(entt::entity entity);

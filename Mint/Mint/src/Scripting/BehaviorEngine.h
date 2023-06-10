@@ -35,7 +35,7 @@ namespace mint::scripting
 
 		void create_behavior_script_prefab(const String& script_name, const String& script_file_path);
 
-		void set_behavior_for_entity(const String& script_name, entt::entity entity);
+		bool set_behavior_for_entity(const String& script_name, entt::entity entity);
 
 		void remove_behavior_from_entity(entt::entity entity);
 

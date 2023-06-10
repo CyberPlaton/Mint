@@ -280,10 +280,6 @@ namespace mint::component
 	{
 		if (entt::type_id< mint::component::SScript >().hash() != hash) return true;
 
-		const auto& script = registry.get< SScript >(entity);
-
-		CSerializer::export_uint(script.m_scriptHandle, "script_handle", node);
-
 		return true;
 	}
 
@@ -303,9 +299,6 @@ namespace mint::component
 
 		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
 #endif
-
-
-		CSerializer::import_uint(&script.m_scriptHandle, "script_handle", node, -1);
 
 		return true;
 	}
