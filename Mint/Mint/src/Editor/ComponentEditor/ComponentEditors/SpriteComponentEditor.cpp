@@ -78,6 +78,7 @@ namespace mint::editor
 		auto origin = CUCA::sprite_get_origin(entity);
 		auto color = CUCA::sprite_get_color(entity);
 		auto rect = CUCA::sprite_get_source_rect(entity);
+		auto texture_size = CUCA::sprite_get_size(entity);
 		
 
 		CUI::edit_field_bool(visible, "Visible", "", slid++, scid++);
@@ -86,7 +87,7 @@ namespace mint::editor
 		CUI::edit_field_bool(flipy, "Flip Vertically", "", slid++, scid++);
 		CUI::edit_field_uint64(depth, 0, MINT_SAS_RENDERING_LAYERS_MAX, "Layer", "", slid++, scid++);
 		CUI::edit_field_vec2(origin, 0.0f, 100.0f, "Sprite Origin", "", slid++, scid++);
-		CUI::edit_field_rect(rect, 0.0f, 1.0f, "Source Rectangle", "", slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
+		CUI::edit_field_rect(rect, 0.0f, 8192.0f, "Source Rectangle", "", slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
 		CUI::edit_field_color(color, 0, 255, "Sprite Tint", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 

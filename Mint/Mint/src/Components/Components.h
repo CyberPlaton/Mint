@@ -111,7 +111,7 @@ namespace mint::component
 
 		u64 m_depth = 0;
 
-		CRect m_rect = {0.0f, 0.0f, 1.0f, 1.0f};
+		CRect m_rect = {0.0f, 0.0f, 0.0f, 0.0f };
 
 		bool m_flipX = false;
 

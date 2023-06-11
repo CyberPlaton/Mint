@@ -96,6 +96,10 @@
 			"Hardware/windows",
 			"Hardware/linux",
 			"Hardware",
+			"AnimationSystem/Common",
+			"AnimationSystem/Animators",
+			"AnimationSystem/AnimatorStack",
+			"AnimationSystem",
 			
 			"Editor/EditorLayer/Common",
 			"Editor/EditorLayer/Layers",

@@ -39,6 +39,8 @@
 #include "Graphics/SceneCameras/ScriptedCamera/ScriptedCamera.h"
 #include "Graphics/SceneCameras/FreeMovementCamera/FreeMovementCamera.h"
 #include "Graphics/CameraSystem.h"
+#include "AnimationSystem/AnimationSystem.h"
+#include "AnimationSystem/Animators/FrameAnimator.h"
 
 
 #if MINT_DISTR

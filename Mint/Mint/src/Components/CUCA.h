@@ -65,6 +65,7 @@ namespace mint::component
 		static void sprite_set_origin(entt::entity entity, const Vec2& value);
 		static CRect sprite_get_source_rect(entt::entity entity);
 		static void sprite_set_source_rect(entt::entity entity, const CRect& value);
+		static void sprite_set_source_rect_from_vec(entt::entity entity, const Vec4& value);
 		static bool sprite_is_flipped_x(entt::entity entity);
 		static void sprite_set_is_flipped_x(entt::entity entity, bool value);
 		static bool sprite_is_flipped_y(entt::entity entity);

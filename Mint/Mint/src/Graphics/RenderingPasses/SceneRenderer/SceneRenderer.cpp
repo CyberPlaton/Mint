@@ -61,17 +61,23 @@ namespace mint::fx
 
 				const Vec2& texture_size = material->get_texture_dimension();
 
-				const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
-										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
+// 				const Rectangle& src = { sprite.m_rect.get_x() * texture_size.x,	 sprite.m_rect.get_y() * texture_size.y,
+//  										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
 
+// 				const Rectangle& src = { sprite.m_rect.get_x(),	 sprite.m_rect.get_y(),
+//   										 sprite.m_rect.get_width() * texture_size.x, sprite.m_rect.get_height() * texture_size.y };
+
+ 				const Rectangle& src = { sprite.m_rect.get_x(), sprite.m_rect.get_y(),
+										 sprite.m_rect.get_width(), sprite.m_rect.get_height() };
+ 
+ 				
 				f32 px = position.x - src.width / 2.0f;
 				f32 py = position.y - src.height / 2.0f;
 
 				const Rectangle& dst = { px + sprite.m_origin.x, py + sprite.m_origin.y,
-										 src.width * scale.x, src.height * scale.y };
+ 										 src.width * scale.x, src.height * scale.y };
 
-
-
+				
 				DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { sprite.m_origin.x * scale.x, sprite.m_origin.y * scale.y }, mint::algorithm::radians_to_degree(rotation), sprite.m_color.as_cliteral());
 
 

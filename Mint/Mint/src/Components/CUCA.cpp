@@ -494,6 +494,18 @@ namespace mint::component
 	}
 
 
+	void CUCA::sprite_set_source_rect_from_vec(entt::entity entity, const Vec4& value)
+	{
+		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
+
+			sprite.m_rect.set_rectangle(value.x, value.y, value.z, value.w);
+
+		);
+	}
+
+
 	bool CUCA::sprite_is_flipped_x(entt::entity entity)
 	{
 		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);

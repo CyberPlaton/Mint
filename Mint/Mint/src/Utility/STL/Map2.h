@@ -25,7 +25,7 @@ namespace mint
 		Object* create();
 
 		template< typename... ARGS >
-		Object* create(const ARGS&... args)
+		Object* create_variadic(const ARGS&... args)
 		{
 			if (!has_room_for_another_object()) return nullptr;
 
@@ -46,7 +46,6 @@ namespace mint
 		}
 
 		void remove(u64 index);
-
 
 		Object* begin();
 
@@ -101,11 +100,11 @@ namespace mint
 		Object* advance(Object* object);
 
 
-		template< typename... ARGS >
-		Object* emplace(u64 identifier, const ARGS&... args)
+		template< class T, typename... ARGS >
+		Object* emplace_variadic_child_class(u64 identifier, const ARGS&... args)
 		{
 			u64 index = m_data.size();
-			Object* result = m_data.create(args...);
+			Object* result = m_data.create_variadic_child_class< T >(args...);
 
 			if (result != nullptr)
 			{
@@ -114,6 +113,35 @@ namespace mint
 
 			return result;
 		}
+
+		template< typename... ARGS >
+		Object* replace(u64 identifier, u64 index, const ARGS&... args)
+		{
+			if (m_data.is_index_valid(index) && index < m_data.size())
+			{
+				// Destroy old object and create new one in his stead.
+				Object* object = m_data.get(index);
+
+				object->~Object();
+
+				object = new (object) Object(args...);
+
+				// Replace the old identifier with the new one.
+				for (auto i = 0; i < m_indices.size(); i++)
+				{
+					if (m_indices[i].second == index)
+					{
+						m_indices[i].first = identifier; break;
+					}
+				}
+
+
+				return object;
+			}
+
+			return nullptr;
+		}
+
 
 		Object* replace(u64 identifier, u64 index);
 

@@ -103,6 +103,8 @@ namespace mint
 		scripting::CScriptEngine::Get().set_should_update(true);
 
 		scripting::CBehaviorEngine::Get().set_should_update(true);
+
+		animation::CAnimationSystem::Get().set_should_update(true);
 	}
 
 
@@ -398,6 +400,14 @@ namespace mint
 		result &= scripting::CBehaviorEngine::Get().initialize();
 		result &= scripting::CScriptEngine::Get().initialize();
 
+		// Animation System.
+		result &= animation::CAnimationSystem::Get().initialize();
+		if (result)
+		{
+			animation::CAnimationSystem::Get().run_animation_system_thread();
+		}
+
+
 		if(result)
 		{
 			// Plugin System (initialize plugins).
@@ -511,6 +521,10 @@ namespace mint
 		// Camera System.
 		mint::fx::CCameraManager::Get().terminate();
 
+		// Animation System.
+		animation::CAnimationSystem::Get().stop_animation_system_thread();
+		animation::CAnimationSystem::Get().terminate();
+
 		// Scripting engine.
 		scripting::CBehaviorEngine::Get().stop_behavior_engine_thread();
 		scripting::CScriptEngine::Get().stop_script_engine_thread();
@@ -552,6 +566,7 @@ namespace mint
 		// Function and Memory profiler.
 #if MINT_PROFILE
 		profiler::CFunctionProfiler::Get().stop_profiler_thread();
+		profiler::CFunctionProfiler::Get().terminate();
 #endif
 
 		// Logging.

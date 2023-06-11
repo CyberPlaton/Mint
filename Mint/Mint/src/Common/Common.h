@@ -2,46 +2,6 @@
 #define _MINT_COMMON_H_
 #pragma once
 
-// Forward Define Declaration
-#define MINT_PLATFORM_WINDOWS 0
-#define MINT_PLATFORM_LINUX 0
-#define MINTFX_USE_EMBEDDED_SHADERS 0
-#define MINTFX_OPENGL_330 0
-#define MINTFX_OPENGL_ES20 0
-#define MINTFX_MATERIAL_COUNT_MAX 256
-
-// Platform Detection
-#include "platform.h"
-
-#if BX_PLATFORM_WINDOWS
-#define MINT_PLATFORM_WINDOWS BX_PLATFORM_WINDOWS
-#define MINTFX_OPENGL_330 1
-#elif BX_PLATFORM_LINUX
-#define MINT_PLATFORM_LINUX 1
-#define MINTFX_OPENGL_ES20 1
-#endif
-
-
-// Common Includes
-#include <thread>
-#include <vector>
-#include <string>
-#include <fstream>
-
-
-#include "raylib/raylib-cpp.hpp"
-#include "raylib/rlgl.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/type_trait.hpp"
-#include "glm/gtc/type_ptr.hpp"
-#include "glm/gtx/string_cast.hpp"
-#include "glm/gtx/euler_angles.hpp"
-
-#include "entt/entt.hpp"
-#include "Physics/Common/box2d/box2d.h"
-
 
 // Common primitive data types
 namespace mint
@@ -77,6 +37,51 @@ namespace mint
 	typedef c8 Byte;
 #endif
 }
+
+
+
+
+// Forward Define Declaration
+#define MINT_PLATFORM_WINDOWS 0
+#define MINT_PLATFORM_LINUX 0
+#define MINTFX_USE_EMBEDDED_SHADERS 0
+#define MINTFX_OPENGL_330 0
+#define MINTFX_OPENGL_ES20 0
+#define MINTFX_MATERIAL_COUNT_MAX 256
+#define MINT_ANIMATORS_COUNT_MAX 256
+#define MINT_ANIMATOR_FRAME_NUMBER u8
+
+// Platform Detection
+#include "platform.h"
+
+#if BX_PLATFORM_WINDOWS
+#define MINT_PLATFORM_WINDOWS BX_PLATFORM_WINDOWS
+#define MINTFX_OPENGL_330 1
+#elif BX_PLATFORM_LINUX
+#define MINT_PLATFORM_LINUX 1
+#define MINTFX_OPENGL_ES20 1
+#endif
+
+
+// Common Includes
+#include <thread>
+#include <vector>
+#include <string>
+#include <fstream>
+
+
+#include "raylib/raylib-cpp.hpp"
+#include "raylib/rlgl.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/type_trait.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/string_cast.hpp"
+#include "glm/gtx/euler_angles.hpp"
+
+#include "entt/entt.hpp"
+#include "Physics/Common/box2d/box2d.h"
 
 
 
