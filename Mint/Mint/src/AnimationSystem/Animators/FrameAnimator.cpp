@@ -2,117 +2,123 @@
 
 namespace mint::animation
 {
-
-	CFrameAnimator::CFrameAnimator(const String& animator_name, entt::entity entity) :
-		CAnimator(animator_name, entity)
-	{
-	}
-
-	bool CFrameAnimator::on_initialize()
-	{
-		if (!is_handle_valid(entity_get_handle(m_entity))) return false;
-
-		auto sprite_size = CUCA::sprite_get_size(m_entity);
-
-
-	}
-
-	void CFrameAnimator::on_terminate()
+	namespace frameanim
 	{
 
-	}
-
-	void CFrameAnimator::on_animation_update(f32 dt)
-	{
-		m_frameCounter += dt;
-
-		f32 cursor = glm::lerp(0.0f, 1.0f, bx::getEaseFunc(get_animation_easing_function())(m_frameCounter / get_animation_duration()));
-	
-		if (cursor >= 1.0f)
+		mint::animation::frameanim::SFrameAnimationBehaviorData& SFrameAnimationBehaviorData::add_keyframe(MINT_ANIMATOR_FRAME_NUMBER x, MINT_ANIMATOR_FRAME_NUMBER y)
 		{
-			// Advance to next Keyframe index.
-			m_currentFrameIndex = (++m_currentFrameIndex) % m_keyframes.size();
+			mint::algorithm::vector_push_back(m_keyframes, std::make_pair(x, y));
 
-			m_currentFrame = m_keyframes[m_currentFrameIndex];
-
-
-			// Compute the new source rectangle and set it for the entity.
-			f32 x = m_currentFrame.first * m_frameWidth;
-			f32 y = m_currentFrame.second * m_frameHeight;
-
-			f32 w = m_frameWidth;
-			f32 h = m_frameHeight;
-
- 			u32 textureWidth = m_frameWidth * m_frameCountX;
-			u32 textureHeight = m_frameHeight * m_frameCountY;
-
-
-			CUCA::sprite_set_source_rect_from_vec(get_animator_entity(), { x, y, w, h });
-
-			m_frameCounter = 0.0f;
+			return *this;
 		}
+
+		mint::animation::frameanim::SFrameAnimationBehaviorData& SFrameAnimationBehaviorData::set_frame_count_x(MINT_ANIMATOR_FRAME_NUMBER x)
+		{
+			m_frameCountX = x;
+
+			return *this;
+		}
+
+		mint::animation::frameanim::SFrameAnimationBehaviorData& SFrameAnimationBehaviorData::set_frame_count_y(MINT_ANIMATOR_FRAME_NUMBER y)
+		{
+			m_frameCountY = y;
+
+			return *this;
+		}
+
+		bool on_animator_initialize(CAnimator& animator, void* animation_data)
+		{
+			if (!animator.is_entity_valid() || animation_data == nullptr) return false;
+
+			return true;
+		}
+
+		void on_animator_terminate(CAnimator& animator, void* animation_data)
+		{
+
+		}
+
+		bool on_animation_update(CAnimator& animator, f32 dt, void* animation_data)
+		{
+			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
+
+			auto& data = *reinterpret_cast<SFrameAnimationBehaviorData*>(animation_data);
+
+			animator.advance_animation_counter(dt);
+
+			f32 cursor = glm::lerp(0.0f, 1.0f, bx::getEaseFunc(animator.get_animation_easing_function())(animator.get_animation_counter() / animator.get_animation_duration()));
+
+			if (cursor >= 1.0f)
+			{
+				// Advance to next Keyframe index.
+				data.m_currentFrameIndex = (++data.m_currentFrameIndex) % data.m_keyframes.size();
+
+				data.m_currentFrame = data.m_keyframes[data.m_currentFrameIndex];
+
+
+				// Compute the new source rectangle and set it for the entity.
+				f32 x = data.m_currentFrame.first * data.m_frameWidth;
+				f32 y = data.m_currentFrame.second * data.m_frameHeight;
+
+				f32 w = data.m_frameWidth;
+				f32 h = data.m_frameHeight;
+
+				u32 textureWidth = data.m_frameWidth * data.m_frameCountX;
+				u32 textureHeight = data.m_frameHeight * data.m_frameCountY;
+
+
+				CUCA::sprite_set_source_rect_from_vec(animator.get_animator_entity(), { x, y, w, h });
+
+				animator.set_animation_counter(0.0f);
+			}
+
+			return true;
+		}
+
+		void on_animation_enter(CAnimator& animator, void* animation_data)
+		{
+			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
+
+			auto& data = *reinterpret_cast<SFrameAnimationBehaviorData*>(animation_data);
+
+			// Change texture for required current animator.
+			mint::fx::CMaterialManager::Get().set_material_for_entity(animator.get_animation_material(), animator.get_animator_entity());
+
+			mint::fx::CMaterial* material = CUCA::sprite_get_main_material(animator.get_animator_entity());
+
+			auto size = material->get_texture_dimension();
+
+			data.m_frameWidth = size.x / data.m_frameCountX;
+			data.m_frameHeight = size.y / data.m_frameCountY;
+
+			// Set sprite texture origin and destination to match the sprite size.
+			CUCA::sprite_set_origin(animator.get_animator_entity(), { (size.x / data.m_frameCountX) / 2.0f, (size.y / data.m_frameCountY) / 2.0f });
+
+			data.m_currentFrameIndex = 0;
+			data.m_currentFrame = data.m_keyframes[data.m_currentFrameIndex];
+
+			// Set the material dimension to be in unison with the animation.
+			// This is required in order to draw only a part of the texture as destination rectangle.
+			material->set_texture(material->get_texture_handle(), { data.m_frameWidth, data.m_frameHeight });
+
+
+			// Perform the initial animation update.
+			f32 x = data.m_currentFrame.first * data.m_frameWidth;
+			f32 y = data.m_currentFrame.second * data.m_frameHeight;
+
+			f32 w = data.m_frameWidth;
+			f32 h = data.m_frameHeight;
+
+			u32 textureWidth = data.m_frameWidth * data.m_frameCountX;
+			u32 textureHeight = data.m_frameHeight * data.m_frameCountY;
+
+			CUCA::sprite_set_source_rect_from_vec(animator.get_animator_entity(), { x, y, w, h });
+		}
+
+		void on_animation_exit(CAnimator& animator, void* animation_data)
+		{
+
+		}
+
 	}
-
-	void CFrameAnimator::on_animation_enter()
-	{
-		// Change texture for required current animator.
-		mint::fx::CMaterialManager::Get().set_material_for_entity(get_animation_material(), get_animator_entity());
-
-		mint::fx::CMaterial* material = CUCA::sprite_get_main_material(get_animator_entity());
-	
-		auto size = material->get_texture_dimension();
-
-		m_frameWidth = size.x / m_frameCountX;
-		m_frameHeight = size.y / m_frameCountY;
-
-		// Set sprite texture origin and destination to match the sprite size.
-		CUCA::sprite_set_origin(get_animator_entity(), { (size.x / m_frameCountX) / 2.0f, (size.y / m_frameCountY) / 2.0f });
-
-		m_currentFrameIndex = 0;
-		m_currentFrame = m_keyframes[m_currentFrameIndex];
-
-		// Set the material dimension to be in unison with the animation.
-		// This is required in order to draw only a part of the texture as destination rectangle.
-		material->set_texture(material->get_texture_handle(), { m_frameWidth, m_frameHeight });
-
-
-		// Perform the initial animation update.
-		f32 x = m_currentFrame.first * m_frameWidth;
-		f32 y = m_currentFrame.second * m_frameHeight;
-
-		f32 w = m_frameWidth;
-		f32 h = m_frameHeight;
-
-		u32 textureWidth = m_frameWidth * m_frameCountX;
-		u32 textureHeight = m_frameHeight * m_frameCountY;
-
-		CUCA::sprite_set_source_rect_from_vec(get_animator_entity(), { x, y, w, h });
-	}
-
-	void CFrameAnimator::on_animation_exit()
-	{
-
-	}
-
-	CFrameAnimator& CFrameAnimator::add_keyframe(MINT_ANIMATOR_FRAME_NUMBER x, MINT_ANIMATOR_FRAME_NUMBER y)
-	{
-		mint::algorithm::vector_push_back(m_keyframes, std::make_pair(x, y));
-		
-		return *this;
-	}
-
-	CFrameAnimator& CFrameAnimator::set_frame_count_x(MINT_ANIMATOR_FRAME_NUMBER x)
-	{
-		m_frameCountX = x;
-
-		return *this;
-	}
-
-	CFrameAnimator& CFrameAnimator::set_frame_count_y(MINT_ANIMATOR_FRAME_NUMBER y)
-	{
-		m_frameCountY = y;
-
-		return *this;
-	}
-
 }

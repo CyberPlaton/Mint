@@ -10,7 +10,6 @@
 
 namespace mint::animation
 {
-
 	class IAnimator
 	{
 	public:
@@ -26,6 +25,11 @@ namespace mint::animation
 		virtual void on_animation_exit() = 0;
 
 
+		virtual void advance_animation_counter(f32) = 0;
+
+		virtual f32 get_animation_counter() = 0;
+
+		virtual void set_animation_counter(f32) = 0;
 		
 		virtual void set_animation_easing_function(bx::Easing::Enum) = 0;
 
@@ -51,31 +55,60 @@ namespace mint::animation
 
 		virtual mint::String get_animator_name() = 0;
 
-
-
-		virtual Vec4 convert_source_rect_to_normalized_source_rect(const Vec4&, f32, f32) = 0;
-
+		virtual bool is_entity_valid() = 0;
 	};
-
 
 
 
 	class CAnimator : public IAnimator
 	{
 	public:
-		CAnimator(const String& animator_name, entt::entity entity);
-		virtual ~CAnimator();
+		typedef bool (*Animator_on_animation_update)(CAnimator&, f32, void*);
+		typedef void (*Animator_on_animation_enter)(CAnimator&, void*);
+		typedef void (*Animator_on_animation_exit)(CAnimator&, void*);
+		typedef bool (*Animator_on_animator_initialize)(CAnimator&, void*);
+		typedef void (*Animator_on_animator_terminate)(CAnimator&, void*);
 
 
-		virtual bool on_initialize() { return false; }
 
-		virtual void on_terminate() {}
+	public:
+		CAnimator() = default;
+		~CAnimator() = default;
 
-		virtual void on_animation_enter() {}
+		void set_entity(entt::entity entity) { m_entity = entity; }
+		void set_name(const String& name) { m_name = name; }
 
-		virtual void on_animation_update(f32 dt) {}
+		bool on_initialize() override final;
 
-		virtual void on_animation_exit() {}
+		void on_terminate()  override final;
+
+		void on_animation_enter()  override final;
+
+		void on_animation_update(f32 dt)  override final;
+
+		void on_animation_exit()  override final;
+
+
+		void set_on_animator_initialize_function(Animator_on_animator_initialize function);
+
+		void set_on_animator_terminate_function(Animator_on_animator_terminate function);
+
+		void set_on_animation_enter_function(Animator_on_animation_enter function);
+
+		void set_on_animation_update_function(Animator_on_animation_update function);
+
+		void set_on_animation_exit_function(Animator_on_animation_exit function);
+
+		void set_animator_animation_data(void* data);
+
+
+
+		void advance_animation_counter(f32 dt) override final;
+
+		f32 get_animation_counter() override final;
+
+		void set_animation_counter(f32 value) override final;
+
 
 		void set_animation_easing_function(bx::Easing::Enum function) override final;
 
@@ -101,19 +134,33 @@ namespace mint::animation
 
 		mint::String get_animator_name() override final;
 
-		Vec4 convert_source_rect_to_normalized_source_rect(const Vec4& source_rect, f32 texture_width, f32 texture_height) override final;
+		bool is_entity_valid() override final;
+
 
 	protected:
 		mint::String m_name;
-		entt::entity m_entity;
+		entt::entity m_entity = entt::null;
 
 		String m_animationMaterial;
 
-		u32 m_animationDuration;
-		f32 m_animationSpeed;
+		u32 m_animationDuration = 0;
+		f32 m_animationSpeed = 0.0f;
+
+		f32 m_animationCounter = 0.0f;
 
 		bx::Easing::Enum m_easingFunction;
+
+
+		Animator_on_animation_update m_on_update_function;
+		Animator_on_animator_initialize m_on_initialize_function;
+		Animator_on_animator_terminate m_on_terminate_function;
+		Animator_on_animation_enter m_on_enter_function;
+		Animator_on_animation_exit m_on_exit_function;
+		void* m_on_update_data = nullptr;
+
 	};
+
+
 }
 
 #endif

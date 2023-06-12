@@ -23,16 +23,6 @@ namespace mint::animation
 		return m_name;
 	}
 
-	CAnimator::CAnimator(const String& animator_name, entt::entity entity) :
-		m_name(animator_name), m_entity(entity)
-	{
-	}
-
-	CAnimator::~CAnimator()
-	{
-
-	}
-
 	glm::u32 CAnimator::get_animation_duration()
 	{
 		return m_animationDuration;
@@ -73,10 +63,80 @@ namespace mint::animation
 		return m_easingFunction;
 	}
 
-	mint::Vec4 CAnimator::convert_source_rect_to_normalized_source_rect(const Vec4& source_rect, f32 texture_width, f32 texture_height)
+	bool CAnimator::is_entity_valid()
 	{
-		return { source_rect.x / texture_width, source_rect.y / texture_height,
-				 source_rect.z / texture_width, source_rect.w / texture_height };
+		return is_handle_valid(entity_get_handle(m_entity)) == true;
+	}
+
+
+	void CAnimator::advance_animation_counter(f32 dt)
+	{
+		m_animationCounter += dt * m_animationSpeed;
+	}
+
+	glm::f32 CAnimator::get_animation_counter()
+	{
+		return m_animationCounter;
+	}
+
+	void CAnimator::set_animation_counter(f32 value)
+	{
+		m_animationCounter = glm::clamp(value, 0.0f, 1.0f);
+	}
+
+	void CAnimator::on_animation_update(f32 dt)
+	{
+		m_on_update_function(*this, dt, m_on_update_data);
+	}
+
+	void CAnimator::set_on_animation_update_function(Animator_on_animation_update function)
+	{
+		m_on_update_function = function;
+	}
+
+	void CAnimator::set_on_animator_initialize_function(Animator_on_animator_initialize function)
+	{
+		m_on_initialize_function = function;
+	}
+
+	void CAnimator::set_on_animator_terminate_function(Animator_on_animator_terminate function)
+	{
+		m_on_terminate_function = function;
+	}
+
+	void CAnimator::set_on_animation_enter_function(Animator_on_animation_enter function)
+	{
+		m_on_enter_function = function;
+	}
+
+	void CAnimator::set_on_animation_exit_function(Animator_on_animation_exit function)
+	{
+		m_on_exit_function = function;
+	}
+
+	void CAnimator::set_animator_animation_data(void* data)
+	{
+		m_on_update_data = data;
+	}
+
+	bool CAnimator::on_initialize()
+	{
+		return m_on_initialize_function(*this, m_on_update_data);
+	}
+
+	void CAnimator::on_terminate()
+	{
+		m_on_terminate_function(*this, m_on_update_data);
+	}
+
+	void CAnimator::on_animation_enter()
+	{
+		m_on_enter_function(*this, m_on_update_data);
+	}
+
+	void CAnimator::on_animation_exit()
+	{
+		m_on_exit_function(*this, m_on_update_data);
 	}
 
 }

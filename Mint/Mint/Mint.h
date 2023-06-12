@@ -41,6 +41,7 @@
 #include "Graphics/CameraSystem.h"
 #include "AnimationSystem/AnimationSystem.h"
 #include "AnimationSystem/Animators/FrameAnimator.h"
+#include "AnimationSystem/Animators/ColorAnimator.h"
 
 
 #if MINT_DISTR

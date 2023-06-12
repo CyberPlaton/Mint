@@ -8,45 +8,36 @@
 
 namespace mint::animation
 {
-	class CFrameAnimator : public CAnimator
+	namespace frameanim
 	{
-	public:
-		CFrameAnimator(const String& animator_name, entt::entity entity);
+		struct SFrameAnimationBehaviorData
+		{
+			SFrameAnimationBehaviorData& add_keyframe(MINT_ANIMATOR_FRAME_NUMBER x, MINT_ANIMATOR_FRAME_NUMBER y);
 
-		virtual bool on_initialize();
+			SFrameAnimationBehaviorData& set_frame_count_x(MINT_ANIMATOR_FRAME_NUMBER x);
 
-		virtual void on_terminate();
-
-		virtual void on_animation_enter();
-
-		virtual void on_animation_update(f32 dt);
-
-		virtual void on_animation_exit();
+			SFrameAnimationBehaviorData& set_frame_count_y(MINT_ANIMATOR_FRAME_NUMBER y);
 
 
-		CFrameAnimator& add_keyframe(MINT_ANIMATOR_FRAME_NUMBER x, MINT_ANIMATOR_FRAME_NUMBER y);
+			Vector< std::pair< MINT_ANIMATOR_FRAME_NUMBER, MINT_ANIMATOR_FRAME_NUMBER > > m_keyframes;
 
-		CFrameAnimator& set_frame_count_x(MINT_ANIMATOR_FRAME_NUMBER x);
+			std::pair< MINT_ANIMATOR_FRAME_NUMBER, MINT_ANIMATOR_FRAME_NUMBER > m_currentFrame;
 
-		CFrameAnimator& set_frame_count_y(MINT_ANIMATOR_FRAME_NUMBER y);
+			MINT_ANIMATOR_FRAME_NUMBER m_currentFrameIndex = 0;
 
+			u32 m_frameWidth = 0;
+			u32 m_frameHeight = 0;
 
-	protected:
-		Vector< std::pair< MINT_ANIMATOR_FRAME_NUMBER, MINT_ANIMATOR_FRAME_NUMBER > > m_keyframes;
+			MINT_ANIMATOR_FRAME_NUMBER m_frameCountX = 0;
+			MINT_ANIMATOR_FRAME_NUMBER m_frameCountY = 0;
+		};
 
-		std::pair< MINT_ANIMATOR_FRAME_NUMBER, MINT_ANIMATOR_FRAME_NUMBER > m_currentFrame;
-
-		MINT_ANIMATOR_FRAME_NUMBER m_currentFrameIndex = 0;
-
-		f32 m_frameCounter = 0.0f;
-
-		u32 m_frameWidth = 0;
-		u32 m_frameHeight = 0;
-
-		MINT_ANIMATOR_FRAME_NUMBER m_frameCountX = 0;
-		MINT_ANIMATOR_FRAME_NUMBER m_frameCountY = 0;
-
-	};
+		bool on_animator_initialize(CAnimator& animator, void* animation_data);
+		void on_animator_terminate(CAnimator& animator, void* animation_data);
+		bool on_animation_update(CAnimator& animator, f32 dt, void* animation_data);
+		void on_animation_enter(CAnimator& animator, void* animation_data);
+		void on_animation_exit(CAnimator& animator, void* animation_data);
+	}
 
 }
 

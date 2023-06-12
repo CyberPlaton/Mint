@@ -35,18 +35,18 @@ namespace mint::animation
 		
 		bool is_entity_registered(entt::entity entity);
 
-		template < class T, typename... ARGS >
-		bool try_push_entity_animator(entt::entity entity, const String& animator_name, ARGS&&... args);
 
-		template < class T, typename... ARGS >
-		bool try_push_entity_animator_at_index(entt::entity entity, const String& animator_name, u64 index, ARGS&&... args);
+		void set_entity_animation_state(entt::entity entity, const String& state_name);
 
-		void remove_entity_animator(entt::entity entity, const String& animator_name);
+		void add_entity_animation_state(entt::entity entity, const String& state_name);
+		
+		void remove_entity_animation_state(entt::entity entity, const String& state_name);
 
-		CAnimator* get_entity_animator(entt::entity entity, const String& animator_name);
 
-		template < class T >
-		T* get_entity_animator_as(entt::entity entity, const String& animator_name);
+		CAnimator* try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name);
+		
+		void remove_entity_animator(entt::entity entity, const String& state_name, const String& animator_name);
+
 
 
 	private:
@@ -76,64 +76,6 @@ namespace mint::animation
 		void _wait_for_termination();
 	};
 
-	template < class T >
-	T* mint::animation::CAnimationSystem::get_entity_animator_as(entt::entity entity, const String& animator_name)
-	{
-		T* result = nullptr;
-
-		if (is_entity_registered(entity))
-		{
-			auto h = SCAST(u64, entity);
-
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				result = m_animatorStacks[h].get_entity_animator_as< T >(animator_name);
-
-			);
-		}
-
-		return result;
-	}
-
-
-	template < class T, typename... ARGS >
-	bool mint::animation::CAnimationSystem::try_push_entity_animator(entt::entity entity, const String& animator_name, ARGS&&... args)
-	{
-		bool result = false;
-
-		if (is_entity_registered(entity))
-		{
-			auto h = SCAST(u64, entity);
-
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				result = m_animatorStacks[h].try_push_entity_animator< T >(animator_name, args...);
-
-			);
-		}
-
-		return result;
-	}
-
-
-	template < class T, typename... ARGS >
-	bool mint::animation::CAnimationSystem::try_push_entity_animator_at_index(entt::entity entity, const String& animator_name, u64 index, ARGS&&... args)
-	{
-		bool result = false;
-
-		if (is_entity_registered(entity))
-		{
-			auto h = SCAST(u64, entity);
-
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				result = m_animatorStacks[h].try_push_entity_animator_at_index< T >(animator_name, index, args...);
-
-			);
-		}
-
-		return result;
-	}
 }
 
 #endif

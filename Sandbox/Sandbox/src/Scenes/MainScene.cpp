@@ -84,33 +84,82 @@ bool CMainScene::on_load()
     // Set animator for entity.
     animation::CAnimationSystem::Get().request_entity_registration(m_knight);
 
-    animation::CAnimationSystem::Get().try_push_entity_animator< animation::CFrameAnimator >(m_knight, "Test", "Test", m_knight);
-    
-    auto animator = animation::CAnimationSystem::Get().get_entity_animator(m_knight, "Test");
+	// Frame animator.
+	animation::CAnimationSystem::Get().add_entity_animation_state(m_knight, "Default");
 
-    animator->set_animation_duration(1);
+	animation::CAnimationSystem::Get().set_entity_animation_state(m_knight, "Default");
 
-    animator->set_animation_easing_function(bx::Easing::SmoothStep);
+	auto animator = animation::CAnimationSystem::Get().try_push_entity_animator(m_knight, "Default", "FrameAnimator");
 
-    animator->set_animation_speed(1.0f);
+	// Set animator required data.
+	animator->set_animation_duration(1);
 
-    animator->set_animation_material("mat_blacksmith_idle");
+	animator->set_animation_easing_function(bx::Easing::SmoothStep);
 
-    auto fanimator = animation::CAnimationSystem::Get().get_entity_animator_as< animation::CFrameAnimator >(m_knight, "Test");
+	animator->set_animation_speed(1.0f);
 
-    fanimator->set_frame_count_x(16);
+	animator->set_animation_material("mat_blacksmith_idle");
 
-    fanimator->set_frame_count_y(4);
+	// Set animator functions.
+	animator->set_on_animator_initialize_function(mint::animation::frameanim::on_animator_initialize);
+	animator->set_on_animator_terminate_function(mint::animation::frameanim::on_animator_terminate);
+	animator->set_on_animation_enter_function(mint::animation::frameanim::on_animation_enter);
+	animator->set_on_animation_update_function(mint::animation::frameanim::on_animation_update);
+	animator->set_on_animation_exit_function(mint::animation::frameanim::on_animation_exit);
 
-    for (auto y = 0; y < 4; y++)
-    {
+	// Set animation frame data.
+	auto data = new mint::animation::frameanim::SFrameAnimationBehaviorData();
+
+	data->set_frame_count_x(16);
+	data->set_frame_count_y(4);
+
+	for (auto y = 0; y < 4; y++)
+	{
 		for (auto x = 0; x < 16; x++)
 		{
-            fanimator->add_keyframe(x, y);
+			data->add_keyframe(x, y);
 		}
-    }
+	}
 
-    fanimator->on_animation_enter();
+	animator->set_animator_animation_data(data);
+
+	animator->on_animation_enter(); // Perform on enter per Hand, as the engine does not do it currently.
+
+
+
+
+	// Color animator.
+	auto color_animator = animation::CAnimationSystem::Get().try_push_entity_animator(m_knight, "Default", "ColorAnimator");
+
+	color_animator->set_animation_duration(10);
+
+	color_animator->set_animation_easing_function(bx::Easing::SmoothStep);
+
+	color_animator->set_animation_speed(1.0f);
+
+	// Set animator functions.
+	color_animator->set_on_animator_initialize_function(mint::animation::coloranim::on_animator_initialize);
+	color_animator->set_on_animator_terminate_function(mint::animation::coloranim::on_animator_terminate);
+	color_animator->set_on_animation_enter_function(mint::animation::coloranim::on_animation_enter);
+	color_animator->set_on_animation_update_function(mint::animation::coloranim::on_animation_update);
+	color_animator->set_on_animation_exit_function(mint::animation::coloranim::on_animation_exit);
+
+	// Set animator data.
+	auto cdata = new mint::animation::coloranim::SColorAnimationBehaviorData();
+
+	cdata->set_base_color(MINT_RED_LIGHT());
+
+	cdata->set_destination_color(MINT_GREEN());
+
+	color_animator->set_animator_animation_data(cdata);
+
+	color_animator->on_animation_enter(); // Perform on enter per Hand, as the engine does not do it currently.
+
+
+
+
+
+
 
 
   	add_entity(m_knight);

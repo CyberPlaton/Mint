@@ -25,7 +25,7 @@ namespace mint
 		Object* create();
 
 		template< typename... ARGS >
-		Object* create_variadic(const ARGS&... args)
+		Object* create(const ARGS&... args)
 		{
 			if (!has_room_for_another_object()) return nullptr;
 
@@ -100,11 +100,11 @@ namespace mint
 		Object* advance(Object* object);
 
 
-		template< class T, typename... ARGS >
-		Object* emplace_variadic_child_class(u64 identifier, const ARGS&... args)
+		template< typename... ARGS >
+		Object* emplace(u64 identifier, const ARGS&... args)
 		{
 			u64 index = m_data.size();
-			Object* result = m_data.create_variadic_child_class< T >(args...);
+			Object* result = m_data.create(args...);
 
 			if (result != nullptr)
 			{

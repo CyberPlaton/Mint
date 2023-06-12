@@ -62,7 +62,8 @@ namespace mint::animation
 		return v;
 	}
 
-	void CAnimationSystem::remove_entity_animator(entt::entity entity, const String& animator_name)
+	
+	void CAnimationSystem::remove_entity_animator(entt::entity entity, const String& state_name, const String& animator_name)
 	{
 		if (is_entity_registered(entity))
 		{
@@ -70,7 +71,7 @@ namespace mint::animation
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				m_animatorStacks[h].remove_entity_animator(animator_name);
+				m_animatorStacks[h].remove_entity_animator(state_name, animator_name);
 
 			);
 		}
@@ -192,9 +193,52 @@ namespace mint::animation
 		}
 	}
 
-	mint::animation::CAnimator* CAnimationSystem::get_entity_animator(entt::entity entity, const String& animator_name)
+
+	void CAnimationSystem::set_entity_animation_state(entt::entity entity, const String& state_name)
 	{
-		CAnimator* result = nullptr;
+		if (is_entity_registered(entity))
+		{
+			auto h = SCAST(u64, entity);
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				m_animatorStacks[h].set_current_state(state_name);
+
+			);
+		}
+	}
+
+	void CAnimationSystem::add_entity_animation_state(entt::entity entity, const String& state_name)
+	{
+		if (is_entity_registered(entity))
+		{
+			auto h = SCAST(u64, entity);
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				m_animatorStacks[h].add_animation_state(state_name);
+
+			);
+		}
+	}
+
+	void CAnimationSystem::remove_entity_animation_state(entt::entity entity, const String& state_name)
+	{
+		if (is_entity_registered(entity))
+		{
+			auto h = SCAST(u64, entity);
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				m_animatorStacks[h].remove_animation_state(state_name);
+
+			);
+		}
+	}
+
+	mint::animation::CAnimator* CAnimationSystem::try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name)
+	{
+		mint::animation::CAnimator* animator = nullptr;
 
 		if (is_entity_registered(entity))
 		{
@@ -202,12 +246,12 @@ namespace mint::animation
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				result = m_animatorStacks[h].get_entity_animator_as< CAnimator >(animator_name);
+				animator = m_animatorStacks[h].try_push_animator(entity, state_name, animator_name);
 
 			);
 		}
 
-		return result;
+		return animator;
 	}
 
 }
