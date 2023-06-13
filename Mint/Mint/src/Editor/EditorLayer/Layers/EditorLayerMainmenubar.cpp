@@ -20,7 +20,7 @@ namespace mint::editor
 
 	void CMainmenubarLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CMainmenubarLayer::on_ui_frame", "Editor::Layer");
 
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -63,7 +63,10 @@ namespace mint::editor
 			}
 			if (ImGui::BeginMenu("Debug"))
 			{
-				ImGui::Checkbox("Profiler", &editor::GlobalData::Get().s_EditorProfilerEnabled);
+				ImGui::Checkbox("Show Profiler", &editor::GlobalData::Get().s_EditorProfilerEnabled);
+				ImGui::Checkbox("Behaviors enabled", &editor::GlobalData::Get().s_EditorBehaviorScriptsEnabled);
+				ImGui::Checkbox("Scripts enabled", &editor::GlobalData::Get().s_EditorScriptScriptsEnabled);
+				ImGui::Checkbox("Animations enabled", &editor::GlobalData::Get().s_EditorAnimationsEnabled);
 
 				ImGui::EndMenu();
 			}

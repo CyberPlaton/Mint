@@ -12,7 +12,7 @@ namespace mint::editor
 
 	void CSpriteComponentEditor::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::ComponentEditor", "CSpriteComponentEditor::on_update");
+		MINT_PROFILE_SCOPE("CSpriteComponentEditor::on_update", "Editor::ComponentEditor");
 
 		for (auto i = 0; i < m_materialEditorStack.size(); i++)
 		{
@@ -33,7 +33,7 @@ namespace mint::editor
 
 	void CSpriteComponentEditor::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::ComponentEditor", "CSpriteComponentEditor::on_ui_frame");
+		MINT_PROFILE_SCOPE("CSpriteComponentEditor::on_ui_frame", "Editor::ComponentEditor");
 
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;

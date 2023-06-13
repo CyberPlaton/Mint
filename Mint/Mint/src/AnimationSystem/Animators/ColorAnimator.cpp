@@ -11,7 +11,6 @@ namespace mint::animation
 
 			auto& data = *reinterpret_cast<SColorAnimationBehaviorData*>(animation_data);
 
-
 			animator.advance_animation_counter(dt);
 
 			fx::CColor final_color;
@@ -19,21 +18,24 @@ namespace mint::animation
 			if (data.m_forward)
 			{
 				// Interpolate color in direction of dest color.
-				Vec3 base_color = { data.m_baseColor.m_r, data.m_baseColor.m_g, data.m_baseColor.m_b };
-				Vec3 dest_color = { data.m_destColor.m_r, data.m_destColor.m_g, data.m_destColor.m_b };
+				Vec4 base_color = { data.m_baseColor.m_r, data.m_baseColor.m_g, data.m_baseColor.m_b, data.m_baseColor.m_a };
+				Vec4 dest_color = { data.m_destColor.m_r, data.m_destColor.m_g, data.m_destColor.m_b, data.m_destColor.m_a };
 
-				Vec3 color = glm::lerp(base_color, dest_color, bx::getEaseFunc(animator.get_animation_easing_function())(animator.get_animation_counter() / animator.get_animation_duration()));
+				auto ease = animator.get_current_easing_t_between_zero_and_one();
+
+				Vec4 color = glm::lerp(base_color, dest_color, ease);
+
 
 				auto ec = CUCA::sprite_get_color(animator.get_animator_entity());
-				Vec3 entity_color = { ec.m_r, ec.m_g, ec.m_b };
+
+				Vec4 entity_color = { ec.m_r, ec.m_g, ec.m_b, ec.m_a };
 
 				color = glm::mix(color, entity_color, 0.5f);
 
-				final_color.set_color(SCAST(u8, color.r), SCAST(u8, color.g), SCAST(u8, color.b), SCAST(u8, 255));
+				final_color.set_color(SCAST(u8, color.r) % 256, SCAST(u8, color.g) % 256, SCAST(u8, color.b) % 256, SCAST(u8, color.a) % 256);
 
 
-
-				if (ec.as_rgba() == data.m_destColor.as_rgba())
+				if (final_color == data.m_destColor)
 				{
 					animator.set_animation_counter(0.0f);
 					data.m_forward = false;
@@ -42,26 +44,30 @@ namespace mint::animation
 			else
 			{
 				// Interpolate color in direction of base color.
-				Vec3 base_color = { data.m_baseColor.m_r, data.m_baseColor.m_g, data.m_baseColor.m_b };
-				Vec3 dest_color = { data.m_destColor.m_r, data.m_destColor.m_g, data.m_destColor.m_b };
+				Vec4 base_color = { data.m_baseColor.m_r, data.m_baseColor.m_g, data.m_baseColor.m_b, data.m_baseColor.m_a };
+				Vec4 dest_color = { data.m_destColor.m_r, data.m_destColor.m_g, data.m_destColor.m_b, data.m_destColor.m_a };
 
-				Vec3 color = glm::lerp(dest_color, base_color, bx::getEaseFunc(animator.get_animation_easing_function())(animator.get_animation_counter() / animator.get_animation_duration()));
+				auto ease = animator.get_current_easing_t_between_zero_and_one();
+
+				Vec4 color = glm::lerp(dest_color, base_color, ease);
+
 
 				auto ec = CUCA::sprite_get_color(animator.get_animator_entity());
-				Vec3 entity_color = { ec.m_r, ec.m_g, ec.m_b };
+
+				Vec4 entity_color = { ec.m_r, ec.m_g, ec.m_b, ec.m_a };
 
 				color = glm::mix(color, entity_color, 0.5f);
 
-				final_color.set_color(SCAST(u8, color.r), SCAST(u8, color.g), SCAST(u8, color.b), SCAST(u8, 255));
+				final_color.set_color(SCAST(u8, color.r) % 256, SCAST(u8, color.g) % 256, SCAST(u8, color.b) % 256, SCAST(u8, color.a) % 256);
 
 
-
-				if (ec.as_rgba() == data.m_baseColor.as_rgba())
+				if (final_color == data.m_baseColor)
 				{
 					animator.set_animation_counter(0.0f);
 					data.m_forward = true;
 				}
 			}
+
 
 			CUCA::sprite_set_color(animator.get_animator_entity(), final_color);
 

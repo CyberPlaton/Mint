@@ -19,6 +19,10 @@ namespace mint::editor
 		static GlobalData* s_GlobalData;
 		
 		static bool s_EditorProfilerEnabled;
+		static bool s_EditorBehaviorScriptsEnabled;
+		static bool s_EditorScriptScriptsEnabled;
+		static bool s_EditorAnimationsEnabled;
+
 		static mint::String s_EditorProfilerCategory;
 		static const mint::String s_EditorIconsPath;
 		static mint::String s_EditorDefaultSceneRessourcesPath;

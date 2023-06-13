@@ -114,5 +114,21 @@ namespace mint::fx
 		return { m_r, m_g, m_b, m_a };
 	}
 
+	bool CColor::operator==(const CColor& rh)
+	{
+		const s8 diff_r = m_r - rh.m_r;
+		const s8 diff_g = m_g - rh.m_g;
+		const s8 diff_b = m_b - rh.m_b;
+		const s8 diff_a = m_a - rh.m_a;
+
+		const bool r = diff_r <= 3 && diff_r >= -3;
+		const bool g = diff_g <= 3 && diff_g >= -3;
+		const bool b = diff_b <= 3 && diff_b >= -3;
+		const bool a = diff_a <= 3 && diff_a >= -3;
+
+
+		return r && g && b && a;
+	}
+
 
 }

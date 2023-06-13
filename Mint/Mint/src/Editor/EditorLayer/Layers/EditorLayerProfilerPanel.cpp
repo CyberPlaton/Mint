@@ -19,7 +19,7 @@ namespace mint::editor
 
 	void CProfilerPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CProfilerPanelLayer::on_ui_frame", "Editor::Layer");
 
 		if (GlobalData::Get().s_EditorProfilerEnabled)
 		{
@@ -94,7 +94,7 @@ namespace mint::editor
 
 	void CProfilerPanelLayer::main_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::main_frame");
+		MINT_PROFILE_SCOPE("CProfilerPanelLayer::main_frame", "Editor::Layer");
 
 		if (!profiler::CFunctionProfiler::Get().does_category_exist(GlobalData::Get().s_EditorProfilerCategory) &&
 			GlobalData::Get().s_EditorProfilerCategory != "All")

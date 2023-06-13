@@ -15,7 +15,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_update");
+		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::on_update", "Editor::Layer");
 
 		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
@@ -32,7 +32,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::on_ui_frame", "Editor::Layer");
 
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
@@ -102,7 +102,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::main_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::main_frame");
+		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::main_frame", "Editor::Layer");
 
 		CFilesystem fs(m_currentScenePathFull);
 
@@ -137,8 +137,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_contents(CPath& path)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_folder_contents");
-
 		String text = ICON_FA_FOLDER_TREE + path.get_stem();
 
 		if (ImGui::TreeNode(text.c_str()))
@@ -166,8 +164,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_file(CPath& path)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_file");
-
 		// Show this icon if it is editable, otherwise just as plain text.
 		mint::String text;
 		bool editable = true;
@@ -207,8 +203,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_options(CPath& path)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_folder_options");
-
 		String text = "##" + path.as_string();
 
 		static int item_current = 0;
@@ -250,8 +244,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_create_folder_dialog()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_create_folder_dialog");
-
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
@@ -300,8 +292,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_create_file_dialog()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_create_file_dialog");
-
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 
@@ -358,8 +348,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_delete_folder_dialog()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::show_delete_folder_dialog");
-
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
 

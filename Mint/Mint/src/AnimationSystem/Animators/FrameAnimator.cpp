@@ -38,15 +38,19 @@ namespace mint::animation
 
 		}
 
+
 		bool on_animation_update(CAnimator& animator, f32 dt, void* animation_data)
 		{
 			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
 
 			auto& data = *reinterpret_cast<SFrameAnimationBehaviorData*>(animation_data);
 
+			// Advance counter on each frame.
 			animator.advance_animation_counter(dt);
 
-			f32 cursor = glm::lerp(0.0f, 1.0f, bx::getEaseFunc(animator.get_animation_easing_function())(animator.get_animation_counter() / animator.get_animation_duration()));
+			auto ease = animator.get_current_easing_t_between_zero_and_one();
+
+			f32 cursor = glm::lerp(0.0f, 1.0f, ease);
 
 			if (cursor >= 1.0f)
 			{

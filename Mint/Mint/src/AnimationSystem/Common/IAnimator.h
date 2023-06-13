@@ -4,8 +4,10 @@
 
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
+#include "Utility/Logging/Logging.h"
 #include "Common/easing.h"
 #include "Components/CUCA.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::animation
@@ -28,6 +30,8 @@ namespace mint::animation
 		virtual void advance_animation_counter(f32) = 0;
 
 		virtual f32 get_animation_counter() = 0;
+
+		virtual f32 get_current_easing_t_between_zero_and_one() = 0;
 
 		virtual void set_animation_counter(f32) = 0;
 		
@@ -108,6 +112,8 @@ namespace mint::animation
 		f32 get_animation_counter() override final;
 
 		void set_animation_counter(f32 value) override final;
+
+		f32 get_current_easing_t_between_zero_and_one() override final;
 
 
 		void set_animation_easing_function(bx::Easing::Enum function) override final;

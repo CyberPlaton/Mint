@@ -38,5 +38,10 @@ namespace mint::editor
 	bool GlobalData::s_EditorProfilerEnabled = false;
 	mint::String GlobalData::s_EditorProfilerCategory = "All";
 
+
+	bool GlobalData::s_EditorBehaviorScriptsEnabled = true;
+	bool GlobalData::s_EditorScriptScriptsEnabled = true;
+	bool GlobalData::s_EditorAnimationsEnabled = true;
+
 }
 #endif

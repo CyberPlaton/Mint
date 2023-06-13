@@ -60,6 +60,8 @@ namespace mint::animation
 
 	void CAnimatorStack::on_update(f32 dt)
 	{
+		MINT_PROFILE_SCOPE("CAnimatorStack::on_update", "Engine::Animation");
+
 		if (!m_currentState.empty())
 		{
 			auto h = mint::algorithm::djb_hash(m_currentState);

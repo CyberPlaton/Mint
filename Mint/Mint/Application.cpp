@@ -92,6 +92,13 @@ namespace mint
 
 			m_timer.start_timer();
 
+
+			// Set systems to be running. This is required for those that can be toggled on and off.
+			mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
+			mint::scripting::CScriptEngine::Get().set_all_scripts_active(true);
+			mint::animation::CAnimationSystem::Get().set_all_animations_active(true);
+
+
 			return result;
 		}
 
@@ -177,6 +184,15 @@ namespace mint
 
 	void CEditor::on_editor_before_update()
 	{
+		// Update whether certain systems should be running.
+		auto behaviors_active = editor::GlobalData::Get().s_EditorBehaviorScriptsEnabled;
+		auto scripts_active = editor::GlobalData::Get().s_EditorScriptScriptsEnabled;
+		auto animations_active = editor::GlobalData::Get().s_EditorAnimationsEnabled;
+
+		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(behaviors_active);
+		mint::scripting::CScriptEngine::Get().set_all_scripts_active(scripts_active);
+		mint::animation::CAnimationSystem::Get().set_all_animations_active(animations_active);
+
 		on_before_update();
 
 		m_layerStack.on_before_update();
@@ -397,8 +413,9 @@ namespace mint
 
 		mint::fx::CCameraManager::Get().set_camera_active("EditorCamera");
 
-		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(false);
-		mint::scripting::CScriptEngine::Get().set_all_scripts_active(false);
+		editor::GlobalData::Get().s_EditorBehaviorScriptsEnabled = false;
+		editor::GlobalData::Get().s_EditorScriptScriptsEnabled = false;
+		editor::GlobalData::Get().s_EditorAnimationsEnabled = false;
 	}
 
 
@@ -414,8 +431,9 @@ namespace mint
 
 		mint::fx::CCameraManager::Get().set_camera_active("DefaultCamera");
 
-		mint::scripting::CBehaviorEngine::Get().set_all_behaviors_active(true);
-		mint::scripting::CScriptEngine::Get().set_all_scripts_active(true);
+		editor::GlobalData::Get().s_EditorBehaviorScriptsEnabled = true;
+		editor::GlobalData::Get().s_EditorScriptScriptsEnabled = true;
+		editor::GlobalData::Get().s_EditorAnimationsEnabled = true;
 	}
 
 

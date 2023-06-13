@@ -27,8 +27,9 @@ namespace mint::animation
 
 		void set_should_update(bool value);
 
+		void set_all_animations_active(bool value);
 
-
+		bool are_animations_active();
 
 
 		bool request_entity_registration(entt::entity entity);
@@ -58,7 +59,7 @@ namespace mint::animation
 
 		bool m_update;
 
-
+		bool m_animationsActive;
 
 		std::unordered_map< u64, CAnimatorStack > m_animatorStacks;
 

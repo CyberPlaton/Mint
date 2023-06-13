@@ -2,7 +2,7 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+	//CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 }
 
 
@@ -60,7 +60,7 @@ bool CMainScene::on_load()
  
  	identifier.m_enttId = SCAST(u64, m_knight);
  	identifier.m_uuid = identifier.m_enttId;
- 	identifier.m_debugName = "Blacksmith";
+ 	identifier.m_debugName = "Gopnik";
  	hierarchy.m_parent = entt::null;
  
  	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
@@ -96,9 +96,9 @@ bool CMainScene::on_load()
 
 	animator->set_animation_easing_function(bx::Easing::SmoothStep);
 
-	animator->set_animation_speed(1.0f);
+	animator->set_animation_speed(5.0f);
 
-	animator->set_animation_material("mat_blacksmith_idle");
+	animator->set_animation_material("mat_gopnik_idle");
 
 	// Set animator functions.
 	animator->set_on_animator_initialize_function(mint::animation::frameanim::on_animator_initialize);
@@ -110,12 +110,12 @@ bool CMainScene::on_load()
 	// Set animation frame data.
 	auto data = new mint::animation::frameanim::SFrameAnimationBehaviorData();
 
-	data->set_frame_count_x(16);
-	data->set_frame_count_y(4);
+	data->set_frame_count_x(6);
+	data->set_frame_count_y(1);
 
-	for (auto y = 0; y < 4; y++)
+	for (auto y = 0; y < 1; y++)
 	{
-		for (auto x = 0; x < 16; x++)
+		for (auto x = 0; x < 6; x++)
 		{
 			data->add_keyframe(x, y);
 		}
@@ -131,7 +131,7 @@ bool CMainScene::on_load()
 	// Color animator.
 	auto color_animator = animation::CAnimationSystem::Get().try_push_entity_animator(m_knight, "Default", "ColorAnimator");
 
-	color_animator->set_animation_duration(10);
+	color_animator->set_animation_duration(25);
 
 	color_animator->set_animation_easing_function(bx::Easing::SmoothStep);
 

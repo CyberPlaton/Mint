@@ -31,6 +31,8 @@ namespace mint::fx
 
 		Color as_cliteral() const;
 
+		bool operator==(const CColor& rh);
+
 
 		u8 m_r;
 		u8 m_g;

@@ -18,7 +18,7 @@ namespace mint::editor
 
 	void CScriptComponentEditor::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::ComponentEditor", "CScriptComponentEditor::on_ui_frame");
+		MINT_PROFILE_SCOPE("CScriptComponentEditor::on_ui_frame", "Editor::ComponentEditor");
 
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;

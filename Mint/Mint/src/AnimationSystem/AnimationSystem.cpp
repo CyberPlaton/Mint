@@ -143,7 +143,18 @@ namespace mint::animation
 
 	void CAnimationSystem::_internal_computation()
 	{
+		MINT_PROFILE_SCOPE("CAnimationSystem::_internal_computation", "Engine::Animation");
+
 		set_should_update(false);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto active = m_animationsActive;
+
+		);
+
+		if (!active) return;
+
 
 		f32 dt = MINT_ENGINE()->get_engine_frametime();
 
@@ -252,6 +263,15 @@ namespace mint::animation
 		}
 
 		return animator;
+	}
+
+	void CAnimationSystem::set_all_animations_active(bool value)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_animationsActive = value;
+
+		);
 	}
 
 }

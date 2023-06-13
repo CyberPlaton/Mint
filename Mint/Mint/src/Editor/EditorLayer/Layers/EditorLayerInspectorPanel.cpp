@@ -15,7 +15,7 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::on_update");
+		MINT_PROFILE_SCOPE("CInspectorPanelLayer::on_update", "Editor::Layer");
 
 		m_componentEditorStack.on_update(dt);
 	}
@@ -23,7 +23,7 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CInspectorPanelLayer::on_ui_frame", "Editor::Layer");
 
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
@@ -76,7 +76,7 @@ namespace mint::editor
 
 	void CInspectorPanelLayer::show_main_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CInspectorPanelLayer::show_main_frame");
+		MINT_PROFILE_SCOPE("CInspectorPanelLayer::show_main_frame", "Editor::Layer");
 
 		auto& db = GlobalData::Get().s_ComponentDatabase;
 

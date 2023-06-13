@@ -28,6 +28,8 @@ namespace mint::scripting
 
 		void set_all_behaviors_active(bool value);
 
+		bool are_behaviors_active();
+
 		bool is_running();
 
 		void set_should_update(bool value);

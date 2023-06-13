@@ -21,7 +21,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CHierarchyPanelLayer::on_ui_frame", "Editor::Layer");
 
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
@@ -63,7 +63,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::show_main_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::show_main_frame");
+		MINT_PROFILE_SCOPE("CHierarchyPanelLayer::show_main_frame", "Editor::Layer");
 
 		auto scene = MINT_ACTIVE_SCENE();
 		auto& registry = scene->get_registry();
@@ -421,8 +421,6 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::delete_entity(entt::entity entity)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CHierarchyPanelLayer::delete_entity");
-
 		GlobalData::Get().s_EditorOptionEntityToBeDeleted = entity;
 
 		// Handle cases where entity is a parent or a child.

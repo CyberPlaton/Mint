@@ -37,6 +37,8 @@ namespace mint::scripting
 
 		void set_all_scripts_active(bool value);
 
+		bool are_scripts_active();
+
 	private:
 		static CScriptEngine* s_CScriptEngine;
 

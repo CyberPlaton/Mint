@@ -86,6 +86,8 @@ namespace mint::animation
 
 	void CAnimator::on_animation_update(f32 dt)
 	{
+		MINT_PROFILE_SCOPE("CAnimator::on_animation_update", "Engine::Animation");
+
 		m_on_update_function(*this, dt, m_on_update_data);
 	}
 
@@ -121,22 +123,35 @@ namespace mint::animation
 
 	bool CAnimator::on_initialize()
 	{
+		MINT_PROFILE_SCOPE("CAnimator::on_initialize", "Engine::Animation");
+
 		return m_on_initialize_function(*this, m_on_update_data);
 	}
 
 	void CAnimator::on_terminate()
 	{
+		MINT_PROFILE_SCOPE("CAnimator::on_terminate", "Engine::Animation");
+
 		m_on_terminate_function(*this, m_on_update_data);
 	}
 
 	void CAnimator::on_animation_enter()
 	{
+		MINT_PROFILE_SCOPE("CAnimator::on_animation_enter", "Engine::Animation");
+
 		m_on_enter_function(*this, m_on_update_data);
 	}
 
 	void CAnimator::on_animation_exit()
 	{
+		MINT_PROFILE_SCOPE("CAnimator::on_animation_exit", "Engine::Animation");
+
 		m_on_exit_function(*this, m_on_update_data);
+	}
+
+	glm::f32 CAnimator::get_current_easing_t_between_zero_and_one()
+	{
+		return bx::getEaseFunc(get_animation_easing_function())(get_animation_counter() / get_animation_duration());
 	}
 
 }

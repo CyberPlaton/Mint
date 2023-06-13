@@ -22,7 +22,7 @@ namespace mint::editor
 
 	void CLeftmostPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CLeftmostPanelLayer::on_update");
+		MINT_PROFILE_SCOPE("CLeftmostPanelLayer::on_update", "Editor::Layer");
 
 		CLayer::on_update(dt);
 	}
@@ -30,7 +30,7 @@ namespace mint::editor
 
 	void CLeftmostPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CLeftmostPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CLeftmostPanelLayer::on_ui_frame", "Editor::Layer");
 
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 25), percent(get_window_height(), 98) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ 0.0f, percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);

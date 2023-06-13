@@ -19,7 +19,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_ui_frame");
+		MINT_PROFILE_SCOPE("CViewportPanelLayer::on_ui_frame", "Editor::Layer");
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 50), percent(get_window_height(), 5.5f) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ percent(get_window_width(), 25), percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);
 		ImGui::Begin("Viewport Panel", &m_enabled, get_flags());
@@ -72,7 +72,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::on_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_frame");
+		MINT_PROFILE_SCOPE("CViewportPanelLayer::on_frame", "Editor::Layer");
 		if(MINT_ENGINE()->is_in_editor_mode())
 		{
 			auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
@@ -129,7 +129,6 @@ namespace mint::editor
 
 	void CViewportPanelLayer::window_options()
 	{
-		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::window_options");
 		if (ImGui::BeginPopup("Viewport Window Options Popup"))
 		{
 			ImGui::SeparatorText("Window Settings");
