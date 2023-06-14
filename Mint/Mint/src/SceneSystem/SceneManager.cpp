@@ -209,6 +209,8 @@ namespace mint
 		// Unloading the scene basically means reset the system to default state.
 		CEventSystem::Get().reset();
 
+		animation::CAnimationSystem::Get().reset();
+
 		scripting::CScriptEngine::Get().reset();
 
 		scripting::CBehaviorEngine::Get().reset();

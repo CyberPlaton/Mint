@@ -324,9 +324,19 @@ namespace mint
 		maml::CDocument::add_property_to_node(maml_node, "materials", materials);
 
 		// Export entity Behavior script metadata.
-		auto& behavior = scripting::CBehaviorEngine::Get().get_entity_behavior(entity);
+		if (scripting::CBehaviorEngine::Get().does_entity_have_behavior_set(entity))
+		{
+			auto& behavior = scripting::CBehaviorEngine::Get().get_entity_behavior(entity);
 
-		maml::CDocument::add_property_to_node(maml_node, "behavior", behavior.get_script_name());
+			maml::CDocument::add_property_to_node(maml_node, "behavior", behavior.get_script_name());
+		}
+
+		// Export entity Animation metadata.
+		if (animation::CAnimationSystem::Get().is_entity_registered(entity))
+		{
+
+		}
+
 
 
 		return result;

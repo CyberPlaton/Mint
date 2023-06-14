@@ -14,6 +14,7 @@
 #include "Physics/PhysicsSystem.h"
 #include "RessourceManagement/ShaderManager.h"
 #include "RessourceManagement/TextureManager.h"
+#include "AnimationSystem/AnimationSystem.h"
 
 
 namespace mint

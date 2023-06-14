@@ -10,6 +10,7 @@
 // Include managers required for exporting/importing entity Components.
 #include "Graphics/Shaders/MaterialManager.h"
 #include "Scripting/BehaviorEngine.h"
+#include "AnimationSystem/AnimationSystem.h"
 
 
 namespace mint
