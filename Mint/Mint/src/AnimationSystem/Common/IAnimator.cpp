@@ -84,41 +84,11 @@ namespace mint::animation
 		m_animationCounter = glm::clamp(value, 0.0f, 1.0f);
 	}
 
-	void CAnimator::on_animation_update(f32 dt)
+	bool CAnimator::on_animation_update(f32 dt)
 	{
 		MINT_PROFILE_SCOPE("CAnimator::on_animation_update", "Engine::Animation");
 
-		m_on_update_function(*this, dt, m_on_update_data);
-	}
-
-	void CAnimator::set_on_animation_update_function(Animator_on_animation_update function)
-	{
-		m_on_update_function = function;
-	}
-
-	void CAnimator::set_on_animator_initialize_function(Animator_on_animator_initialize function)
-	{
-		m_on_initialize_function = function;
-	}
-
-	void CAnimator::set_on_animator_terminate_function(Animator_on_animator_terminate function)
-	{
-		m_on_terminate_function = function;
-	}
-
-	void CAnimator::set_on_animation_enter_function(Animator_on_animation_enter function)
-	{
-		m_on_enter_function = function;
-	}
-
-	void CAnimator::set_on_animation_exit_function(Animator_on_animation_exit function)
-	{
-		m_on_exit_function = function;
-	}
-
-	void CAnimator::set_animator_animation_data(void* data)
-	{
-		m_on_update_data = data;
+		return m_on_update_function(*this, dt, m_on_update_data);
 	}
 
 	bool CAnimator::on_initialize()
@@ -154,4 +124,33 @@ namespace mint::animation
 		return bx::getEaseFunc(get_animation_easing_function())(get_animation_counter() / get_animation_duration());
 	}
 
+	void CAnimator::set_on_animation_update_function(Animator_on_animation_update function)
+	{
+		m_on_update_function = function;
+	}
+
+	void CAnimator::set_on_animator_initialize_function(Animator_on_animator_initialize function)
+	{
+		m_on_initialize_function = function;
+	}
+
+	void CAnimator::set_on_animator_terminate_function(Animator_on_animator_terminate function)
+	{
+		m_on_terminate_function = function;
+	}
+
+	void CAnimator::set_on_animation_enter_function(Animator_on_animation_enter function)
+	{
+		m_on_enter_function = function;
+	}
+
+	void CAnimator::set_on_animation_exit_function(Animator_on_animation_exit function)
+	{
+		m_on_exit_function = function;
+	}
+
+	void CAnimator::set_animator_animation_data(void* data)
+	{
+		m_on_update_data = data;
+	}
 }

@@ -54,6 +54,7 @@ namespace mint::component
 		static void sprite_set_is_internal_visible(entt::entity entity, bool value);
 		static void sprite_add_material(entt::entity entity, const fx::SMaterialDefinition& material_definition);
 		static bool sprite_set_material_at_index(entt::entity entity, const fx::SMaterialDefinition& material_definition, u64 index);
+		static bool sprite_set_material_at_index(entt::entity entity, const String& material_name, u64 index);
 		static mint::CMap2< fx::CMaterial >& sprite_get_all_materials(entt::entity entity);
 		static fx::CMaterial* sprite_get_main_material(entt::entity entity);
 		static bool sprite_is_visible(entt::entity entity);

@@ -89,7 +89,24 @@ bool CMainScene::on_load()
 
 	animation::CAnimationSystem::Get().set_entity_animation_state(m_knight, "Default");
 
-	auto animator = animation::CAnimationSystem::Get().try_push_entity_animator(m_knight, "Default", "FrameAnimator");
+	// Set animation frame data.
+	auto data = new mint::animation::frameanim::SFrameAnimationBehaviorData();
+	data->set_frame_count_x(6);
+	data->set_frame_count_y(1);
+	for (auto y = 0; y < 1; y++)
+	{
+		for (auto x = 0; x < 6; x++)
+		{
+			data->add_keyframe(x, y);
+		}
+	}
+
+	auto animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::frameanim::SFrameAnimationBehaviorData >(m_knight, "Default", "FrameAnimator", data, 
+		mint::animation::frameanim::on_animation_update,
+		mint::animation::frameanim::on_animation_enter,
+		mint::animation::frameanim::on_animation_exit,
+		mint::animation::frameanim::on_animator_initialize,
+		mint::animation::frameanim::on_animator_terminate);
 
 	// Set animator required data.
 	animator->set_animation_duration(1);
@@ -100,65 +117,25 @@ bool CMainScene::on_load()
 
 	animator->set_animation_material("mat_gopnik_idle");
 
-	// Set animator functions.
-	animator->set_on_animator_initialize_function(mint::animation::frameanim::on_animator_initialize);
-	animator->set_on_animator_terminate_function(mint::animation::frameanim::on_animator_terminate);
-	animator->set_on_animation_enter_function(mint::animation::frameanim::on_animation_enter);
-	animator->set_on_animation_update_function(mint::animation::frameanim::on_animation_update);
-	animator->set_on_animation_exit_function(mint::animation::frameanim::on_animation_exit);
-
-	// Set animation frame data.
-	auto data = new mint::animation::frameanim::SFrameAnimationBehaviorData();
-
-	data->set_frame_count_x(6);
-	data->set_frame_count_y(1);
-
-	for (auto y = 0; y < 1; y++)
-	{
-		for (auto x = 0; x < 6; x++)
-		{
-			data->add_keyframe(x, y);
-		}
-	}
-
-	animator->set_animator_animation_data(data);
-
-	animator->on_animation_enter(); // Perform on enter per Hand, as the engine does not do it currently.
-
-
-
 
 	// Color animator.
-	auto color_animator = animation::CAnimationSystem::Get().try_push_entity_animator(m_knight, "Default", "ColorAnimator");
+	// Set animator data.
+	auto cdata = new mint::animation::coloranim::SColorAnimationBehaviorData();
+	cdata->set_base_color(MINT_RED_LIGHT());
+	cdata->set_destination_color(MINT_GREEN());
+
+	auto color_animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::coloranim::SColorAnimationBehaviorData >(m_knight, "Default", "ColorAnimator", cdata,
+		mint::animation::coloranim::on_animation_update,
+		mint::animation::coloranim::on_animation_enter,
+		mint::animation::coloranim::on_animation_exit,
+		mint::animation::coloranim::on_animator_initialize,
+		mint::animation::coloranim::on_animator_terminate);
 
 	color_animator->set_animation_duration(25);
 
 	color_animator->set_animation_easing_function(bx::Easing::SmoothStep);
 
 	color_animator->set_animation_speed(1.0f);
-
-	// Set animator functions.
-	color_animator->set_on_animator_initialize_function(mint::animation::coloranim::on_animator_initialize);
-	color_animator->set_on_animator_terminate_function(mint::animation::coloranim::on_animator_terminate);
-	color_animator->set_on_animation_enter_function(mint::animation::coloranim::on_animation_enter);
-	color_animator->set_on_animation_update_function(mint::animation::coloranim::on_animation_update);
-	color_animator->set_on_animation_exit_function(mint::animation::coloranim::on_animation_exit);
-
-	// Set animator data.
-	auto cdata = new mint::animation::coloranim::SColorAnimationBehaviorData();
-
-	cdata->set_base_color(MINT_RED_LIGHT());
-
-	cdata->set_destination_color(MINT_GREEN());
-
-	color_animator->set_animator_animation_data(cdata);
-
-	color_animator->on_animation_enter(); // Perform on enter per Hand, as the engine does not do it currently.
-
-
-
-
-
 
 
 

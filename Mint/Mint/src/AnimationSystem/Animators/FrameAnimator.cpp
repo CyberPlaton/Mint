@@ -86,7 +86,7 @@ namespace mint::animation
 			auto& data = *reinterpret_cast<SFrameAnimationBehaviorData*>(animation_data);
 
 			// Change texture for required current animator.
-			mint::fx::CMaterialManager::Get().set_material_for_entity(animator.get_animation_material(), animator.get_animator_entity());
+			CUCA::sprite_set_material_at_index(animator.get_animator_entity(), animator.get_animation_material(), 0);
 
 			mint::fx::CMaterial* material = CUCA::sprite_get_main_material(animator.get_animator_entity());
 

@@ -80,7 +80,7 @@ namespace mint::fx
 		auto h = SCAST(u64, entity);
 
 		// Assure correct index..
-		if (index < m_materials[h].size() - 1)
+		if (index < m_materials[h].size())
 		{
 			// .. for replacing.
 			auto hh = mint::algorithm::djb_hash(material_definition.m_materialName);
@@ -119,13 +119,87 @@ namespace mint::fx
 		}
 	}
 
+	bool CMaterialManager::set_material_for_entity_at_index(const String& material_name, u64 index, entt::entity entity)
+	{
+		auto material_handle = mint::algorithm::djb_hash(material_name);
+
+		if (!m_materialPrefabs.lookup(material_handle)) return false;
+
+		String material_file_path = m_materialPrefabs.get(material_handle).second;
+
+		maml::CDocument document;
+
+		auto root = CSerializer::load_maml_document(material_file_path, document);
+		if (!root)
+		{
+			return false;
+		}
+
+		auto node = document.find_first_match_in_document("material");
+		if (!node)
+		{
+			return false;
+		}
+
+		String mat_name;
+		String texture_name;
+		String shader_name;
+
+
+		CSerializer::import_string(mat_name, "name", node);
+		CSerializer::import_string(texture_name, "texture", node);
+		CSerializer::import_string(shader_name, "shader", node);
+
+		u64 blendmode = 0, blendingsrcfactor = 0, blendingdstfactor = 0, blendingequation = 0;
+
+		CSerializer::import_uint(&blendmode, "blendingmode", node);
+		CSerializer::import_uint(&blendingsrcfactor, "blendingsrcfactor", node);
+		CSerializer::import_uint(&blendingdstfactor, "blendingdstfactor", node);
+		CSerializer::import_uint(&blendingequation, "blendingequation", node);
+
+
+		// Set data for Material Definition.
+		mint::fx::SMaterialDefinition materialdef;
+		materialdef.m_materialName = mat_name;
+		materialdef.m_textureName = texture_name;
+		materialdef.m_shaderProgramName = shader_name;
+		materialdef.m_blendMode = (BlendMode)blendmode;
+		materialdef.m_srcBlendFactor = (u32)blendingsrcfactor;
+		materialdef.m_dstBlendFactor = (u32)blendingdstfactor;
+		materialdef.m_blendingEquation = (u32)blendingequation;
+
+
+		// Uniforms. We discern between static and dynamic.
+		auto staticuniforms = maml::CDocument::find_first_match_in_node(node, "staticuniforms");
+		auto dynamicuniforms = maml::CDocument::find_first_match_in_node(node, "dynamicuniforms");
+
+
+		if (staticuniforms)
+		{
+			auto& properties = maml::CDocument::get_all_node_properties(staticuniforms);
+
+			_load_uniforms(materialdef.m_staticUniforms, properties);
+		}
+		if (dynamicuniforms)
+		{
+			auto& properties = maml::CDocument::get_all_node_properties(dynamicuniforms);
+
+			_load_uniforms(materialdef.m_dynamicUniforms, properties);
+		}
+
+
+		return set_material_for_entity_at_index(entity, materialdef, index);
+	}
+
 
 	mint::CMap2< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
 	{
-		auto h = SCAST(u64, entity);
+ 		auto h = SCAST(u64, entity);
 
 		if(m_materials.find(h) == m_materials.end())
 		{
+			MINT_LOG_WARN("[{:.4f}][CMaterialManager::get_materials_for_entity] Entity \"{}\" does not have a material and a default one will be set!", MINT_APP_TIME, h);
+
 			auto& materials = m_materials[h];
 
 			set_default_main_material_for_entity(entity);
@@ -143,30 +217,21 @@ namespace mint::fx
 	}
 
 
-	void CMaterialManager::set_default_main_material_for_entity(entt::entity entity, const String& default_texture /*= "DefaultSprite"*/, const String& default_shader /*= "Sprite"*/, BlendMode blending_mode/*= BLEND_ALPHA*/, BlendingEquation blending_equation /*= BlendingEquation_BlendColor*/, BlendingFactor blending_src_factor /*= BlendingFactor_SrcAlpha*/, BlendingFactor blending_dst_factor /*= BlendingFactor_OneMinusSrcAlpha*/)
+	void CMaterialManager::set_default_main_material_for_entity(entt::entity entity)
 	{
 		auto h = SCAST(u64, entity);
 		
-		SMaterialDefinition def;
-
-		def.m_materialName = "Default Material";
-		def.m_textureName = default_texture;
-		def.m_shaderProgramName = default_shader;
-		def.m_blendMode = blending_mode;
-		def.m_srcBlendFactor = blending_src_factor;
-		def.m_dstBlendFactor = blending_dst_factor;
-		def.m_blendingEquation = blending_equation;
-
-		auto hh = mint::algorithm::djb_hash(def.m_materialName);
+		auto hh = mint::algorithm::djb_hash("mat_default");
 
 		// Create a new Material map for the entity.
 		auto& map = m_materials[h];
 
-		if (map.initialize(MINTFX_MATERIAL_COUNT_MAX) && !map.lookup(hh))
+		if (map.initialize(MINTFX_MATERIAL_COUNT_MAX))
 		{
-			auto material = map.emplace(hh);
-
-			material->read_definition(def);
+			if (!set_material_for_entity(hh, entity))
+			{
+				MINT_LOG_WARN("[{:.4f}][CMaterialManager::set_default_main_material_for_entity] Failed to set default material for entity \"{}\"!", MINT_APP_TIME, h);
+			}
 
 			return;
 		}

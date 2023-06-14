@@ -247,23 +247,6 @@ namespace mint::animation
 		}
 	}
 
-	mint::animation::CAnimator* CAnimationSystem::try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name)
-	{
-		mint::animation::CAnimator* animator = nullptr;
-
-		if (is_entity_registered(entity))
-		{
-			auto h = SCAST(u64, entity);
-
-			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
-
-				animator = m_animatorStacks[h].try_push_animator(entity, state_name, animator_name);
-
-			);
-		}
-
-		return animator;
-	}
 
 	void CAnimationSystem::set_all_animations_active(bool value)
 	{
@@ -272,6 +255,17 @@ namespace mint::animation
 			m_animationsActive = value;
 
 		);
+	}
+
+	bool CAnimationSystem::are_animations_active()
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const bool v = m_animationsActive;
+
+		);
+
+		return v;
 	}
 
 }

@@ -133,7 +133,6 @@ namespace mint::editor
 
 		if (ImGui::Button("Apply Material"))
 		{
-// 			CUCA::sprite_add_material(m_entity, m_materialDefinition);
 			CUCA::sprite_set_material_at_index(m_entity, m_materialDefinition, m_materialIndex);
 		}
 		if (ImGui::Button("Export Material"))

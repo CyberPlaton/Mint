@@ -43,8 +43,13 @@ namespace mint::animation
 		
 		void remove_entity_animation_state(entt::entity entity, const String& state_name);
 
-
-		CAnimator* try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name);
+		template< class T >
+		CAnimator* try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name, T* animator_data,
+			CAnimator::Animator_on_animation_update update_function,
+			CAnimator::Animator_on_animation_enter enter_function,
+			CAnimator::Animator_on_animation_exit exit_function,
+			CAnimator::Animator_on_animator_initialize initialize_function,
+			CAnimator::Animator_on_animator_terminate terminate_function);
 		
 		void remove_entity_animator(entt::entity entity, const String& state_name, const String& animator_name);
 
@@ -76,6 +81,37 @@ namespace mint::animation
 
 		void _wait_for_termination();
 	};
+
+
+	template< class T >
+	CAnimator* mint::animation::CAnimationSystem::try_push_entity_animator(entt::entity entity, const String& state_name, const String& animator_name, T* animator_data,
+		CAnimator::Animator_on_animation_update update_function,
+		CAnimator::Animator_on_animation_enter enter_function,
+		CAnimator::Animator_on_animation_exit exit_function,
+		CAnimator::Animator_on_animator_initialize initialize_function,
+		CAnimator::Animator_on_animator_terminate terminate_function)
+	{
+		mint::animation::CAnimator* animator = nullptr;
+
+		if (is_entity_registered(entity))
+		{
+			auto h = SCAST(u64, entity);
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				animator = m_animatorStacks[h].try_push_animator(entity, state_name, animator_name, (void*)animator_data, 
+					update_function,
+					enter_function,
+					exit_function,
+					initialize_function,
+					terminate_function);
+
+			);
+		}
+
+		return animator;
+	}
+
 
 }
 

@@ -22,7 +22,7 @@ namespace mint::animation
 
 		virtual void on_animation_enter() = 0;
 
-		virtual void on_animation_update(f32) = 0;
+		virtual bool on_animation_update(f32) = 0;
 
 		virtual void on_animation_exit() = 0;
 
@@ -88,7 +88,7 @@ namespace mint::animation
 
 		void on_animation_enter()  override final;
 
-		void on_animation_update(f32 dt)  override final;
+		bool on_animation_update(f32 dt)  override final;
 
 		void on_animation_exit()  override final;
 
