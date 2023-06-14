@@ -52,14 +52,7 @@ namespace mint::animation
 			}
 
 
-			auto rotation = CUCA::transform_get_rotation(animator.get_animator_entity());
-			auto position = CUCA::transform_get_position(animator.get_animator_entity());
-
-			CUCA::transform_set_transform_matrix(animator.get_animator_entity(), glm::translate(Mat4(1.0f), Vec3(position, 0.0f)) *
-
-																				 glm::rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f)) *
-
-																				 glm::scale(Mat4(1.0f), Vec3(final_scale, 0.0f)));
+			CUCA::transform_set_scale(animator.get_animator_entity(), final_scale);
 
 			return true;
 		}
