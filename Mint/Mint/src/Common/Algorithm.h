@@ -14,9 +14,9 @@ namespace mint::algorithm
 
 	u64 djb_hash(const String& str);
 
-	bool are_values_sufficiently_different(f32 lh, f32 rh);
+	bool are_values_sufficiently_different(f32 lh, f32 rh, f32 epsilon = glm::epsilon< f32 >());
 
-	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh);
+	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh, f32 epsilon = glm::epsilon< f32 >());
 
 	bool is_value_in_between(f32 value, f32 lh, f32 rh);
 

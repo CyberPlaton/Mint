@@ -47,15 +47,22 @@ namespace mint::algorithm
 	}
 
 
-	bool are_values_sufficiently_different(f32 lh, f32 rh)
+	bool are_values_sufficiently_different(f32 lh, f32 rh, f32 epsilon /*=glm::epsilon< f32 >()*/)
 	{
-		return glm::distance< f32 >(lh, rh) > glm::epsilon< f32 >();
+		f32 d = glm::abs(lh - rh);
+
+		return d > epsilon;
 	}
 
-	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh)
+	bool are_values_sufficiently_different(Vec2 lh, Vec2 rh, f32 epsilon /*=glm::epsilon< f32 >()*/)
 	{
-		return glm::distance< f32 >(lh.x, rh.x) > glm::epsilon< f32 >() &&
-			   glm::distance< f32 >(lh.y, rh.y) > glm::epsilon< f32 >();
+		const f32 diff_x = glm::abs(lh.x - rh.x);
+		const f32 diff_y = glm::abs(lh.y - rh.y);
+
+		const bool x = diff_x > epsilon;
+		const bool y = diff_y > epsilon;
+
+		return x || y;
 	}
 
 

@@ -138,6 +138,43 @@ bool CMainScene::on_load()
 	color_animator->set_animation_speed(1.0f);
 
 
+	// Translation animator.
+	auto tdata = new mint::animation::translationanim::STranslationAnimationBehaviorData();
+	tdata->set_base_translation({ 0.0f, -100.0f });
+	tdata->set_destination_translation({ 0.0f, 100.0f });
+
+	auto translation_animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::translationanim::STranslationAnimationBehaviorData >(m_knight, "Default", "TranslationAnimator", tdata,
+		mint::animation::translationanim::on_animation_update,
+		mint::animation::translationanim::on_animation_enter,
+		mint::animation::translationanim::on_animation_exit,
+		mint::animation::translationanim::on_animator_initialize,
+		mint::animation::translationanim::on_animator_terminate);
+
+	translation_animator->set_animation_duration(5);
+
+	translation_animator->set_animation_easing_function(bx::Easing::SmoothStep);
+
+	translation_animator->set_animation_speed(1.0f);
+
+
+	// Scale animator.
+	auto sdata = new mint::animation::scaleanim::SScaleAnimationBehaviorData();
+	sdata->set_base_scale({ 0.5f, 0.5f });
+	sdata->set_destination_scale({ 5.0f, 5.0f });
+
+	auto scale_animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::scaleanim::SScaleAnimationBehaviorData >(m_knight, "Default", "ScaleAnimator", sdata,
+		mint::animation::scaleanim::on_animation_update,
+		mint::animation::scaleanim::on_animation_enter,
+		mint::animation::scaleanim::on_animation_exit,
+		mint::animation::scaleanim::on_animator_initialize,
+		mint::animation::scaleanim::on_animator_terminate);
+
+	scale_animator->set_animation_duration(5);
+
+	scale_animator->set_animation_easing_function(bx::Easing::SmoothStep);
+
+ 	scale_animator->set_animation_speed(1.0f);
+
 
   	add_entity(m_knight);
 

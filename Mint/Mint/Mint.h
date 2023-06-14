@@ -42,6 +42,8 @@
 #include "AnimationSystem/AnimationSystem.h"
 #include "AnimationSystem/Animators/FrameAnimator.h"
 #include "AnimationSystem/Animators/ColorAnimator.h"
+#include "AnimationSystem/Animators/ScaleAnimator.h"
+#include "AnimationSystem/Animators/TranslationAnimator.h"
 
 
 #if MINT_DISTR
