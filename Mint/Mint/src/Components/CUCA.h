@@ -150,7 +150,7 @@ bool mint::component::CUCA::entity_has_component(entt::entity entity)
 {
 	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 
 		const bool result = registry.has_component< T >(entity);
 	);
@@ -163,7 +163,7 @@ T& mint::component::CUCA::entity_get_component(entt::entity entity)
 {
 	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 
 		auto& component = registry.get_component< T >(entity);
 	);
@@ -176,7 +176,7 @@ T& mint::component::CUCA::entity_add_component(entt::entity entity)
 {
 	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 
 		auto& component = registry.add_component< T >(entity);
 	);
@@ -190,7 +190,7 @@ void mint::component::CUCA::entity_remove_component(entt::entity entity)
 {
 	MINT_BEGIN_CRITICAL_SECTION(m_entityCriticalSection,
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 
 		registry.remove_component< T >(entity);
 	);
