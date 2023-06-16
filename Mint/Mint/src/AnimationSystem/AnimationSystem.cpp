@@ -8,6 +8,11 @@ namespace mint::animation
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
+		CAnimatorStack::register_animator_importer("Frameanimator", frameanim::importer);
+		CAnimatorStack::register_animator_importer("Coloranimator", coloranim::importer);
+		CAnimatorStack::register_animator_importer("Scaleanimator", scaleanim::importer);
+		CAnimatorStack::register_animator_importer("Translationanimator", translationanim::importer);
+
 		return true;
 	}
 
@@ -266,6 +271,195 @@ namespace mint::animation
 		);
 
 		return v;
+	}
+
+	void CAnimationSystem::create_animation_prefab(const String& animation_name, const String& animation_file_path)
+	{
+		auto h = mint::algorithm::djb_hash(animation_name);
+
+		m_animationPrefabs.add(h, std::make_pair(animation_name.c_str(), animation_file_path.c_str()));
+	}
+
+	bool CAnimationSystem::set_entity_animation(entt::entity entity, const String& animation_name)
+	{
+		auto h = SCAST(u64, entity);
+		auto hh = mint::algorithm::djb_hash(animation_name);
+
+		if (is_entity_registered(entity) && m_animationPrefabs.lookup(hh))
+		{
+			auto path = m_animationPrefabs.get(hh).second;
+
+			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+				const bool v = m_animatorStacks[h].load_animation_for_entity_from_file(entity, path);
+
+			);
+
+			return v;
+		}
+
+		return false;
+	}
+
+
+	namespace frameanim
+	{
+
+		mint::animation::CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node)
+		{
+			/*
+			* material="mat_gopnik_idle"
+			* framesx=n
+			* framesy=m
+			* keyframes=[1 1, 1 2, 1 3, ...]
+			*/
+
+			auto data = new SFrameAnimationBehaviorData();
+
+			auto animator = stack.try_push_animator(entity, state_name, animator_name, data,
+													mint::animation::frameanim::on_animation_update,
+													mint::animation::frameanim::on_animation_enter,
+													mint::animation::frameanim::on_animation_exit,
+													mint::animation::frameanim::on_animator_initialize,
+													mint::animation::frameanim::on_animator_terminate);
+
+			if (animator == nullptr)
+			{
+				stack.remove_entity_animator(state_name, animator_name);
+
+				return nullptr;
+			}
+
+			auto material = maml::CDocument::get_string_property(node, "material");
+			auto keyframes = maml::CDocument::get_array_property(node, "keyframes");
+			auto framesx = maml::CDocument::get_uint_property(node, "framesx");
+			auto framesy = maml::CDocument::get_uint_property(node, "framesy");
+
+			data->set_frame_count_x(framesx);
+			data->set_frame_count_y(framesy);
+
+			for (auto& any : keyframes)
+			{
+				auto keyframe = any.cast< Vec2 >();
+
+				data->add_keyframe(keyframe.x, keyframe.y);
+			}
+
+			animator->set_animation_material(material);
+
+			return animator;
+		}
+	}
+
+	namespace coloranim
+	{
+
+		mint::animation::CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node)
+		{
+			/*
+			* basecolor=255 255 0 255
+			* destcolor=255 0 0 255
+			*/
+
+			auto data = new SColorAnimationBehaviorData();
+
+			auto animator = stack.try_push_animator(entity, state_name, animator_name, data,
+													mint::animation::coloranim::on_animation_update,
+													mint::animation::coloranim::on_animation_enter,
+													mint::animation::coloranim::on_animation_exit,
+													mint::animation::coloranim::on_animator_initialize,
+													mint::animation::coloranim::on_animator_terminate);
+		
+			if (animator == nullptr)
+			{
+				stack.remove_entity_animator(state_name, animator_name);
+
+				return nullptr;
+			}
+
+			auto basecolor = maml::CDocument::get_vector4_property(node, "basecolor");
+			auto destcolor = maml::CDocument::get_vector4_property(node, "destcolor");
+
+			data->set_base_color(basecolor);
+			data->set_destination_color(destcolor);
+
+			return animator;
+		}
+
+	}
+
+	namespace scaleanim
+	{
+
+		mint::animation::CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node)
+		{
+			/*
+			* basescale=1.0 2.5
+			* destcolor=0.5 0.5
+			*/
+
+			auto data = new SScaleAnimationBehaviorData();
+
+			auto animator = stack.try_push_animator(entity, state_name, animator_name, data,
+													mint::animation::scaleanim::on_animation_update,
+													mint::animation::scaleanim::on_animation_enter,
+													mint::animation::scaleanim::on_animation_exit,
+													mint::animation::scaleanim::on_animator_initialize,
+													mint::animation::scaleanim::on_animator_terminate);
+
+			if (animator == nullptr)
+			{
+				stack.remove_entity_animator(state_name, animator_name);
+
+				return nullptr;
+			}
+
+			auto basescale = maml::CDocument::get_vector2_property(node, "basescale");
+			auto destscale = maml::CDocument::get_vector2_property(node, "destscale");
+
+			data->set_base_scale(basescale);
+			data->set_destination_scale(destscale);
+
+			return animator;
+		}
+
+	}
+
+	namespace translationanim
+	{
+
+		mint::animation::CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node)
+		{
+			/*
+			* basepos=0.0 0.0
+			* destpos=2500.2 1000.0
+			*/
+
+			auto data = new STranslationAnimationBehaviorData();
+
+			auto animator = stack.try_push_animator(entity, state_name, animator_name, data,
+													mint::animation::translationanim::on_animation_update,
+													mint::animation::translationanim::on_animation_enter,
+													mint::animation::translationanim::on_animation_exit,
+													mint::animation::translationanim::on_animator_initialize,
+													mint::animation::translationanim::on_animator_terminate);
+
+			if (animator == nullptr)
+			{
+				stack.remove_entity_animator(state_name, animator_name);
+
+				return nullptr;
+			}
+
+			auto basepos = maml::CDocument::get_vector2_property(node, "basepos");
+			auto destpos = maml::CDocument::get_vector2_property(node, "destpos");
+
+			data->set_base_translation(basepos);
+			data->set_destination_translation(destpos);
+
+			return animator;
+		}
+
 	}
 
 }

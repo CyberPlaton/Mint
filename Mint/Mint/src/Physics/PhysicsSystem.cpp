@@ -76,9 +76,9 @@ namespace mint
 	{
 		m_world->Step(dt, m_config.m_velocityIterations, m_config.m_positionIterations);
 
-		for(auto& entity: MINT_SCENE_REGISTRY().get_registry_view< mint::component::SRigidBody >())
+		for(auto& entity: MINT_SCENE_REGISTRY()->get_registry_view< mint::component::SRigidBody >())
 		{
-			const auto& rb = MINT_SCENE_REGISTRY().get_component< mint::component::SRigidBody >(entity);
+			const auto& rb = MINT_SCENE_REGISTRY()->get_component< mint::component::SRigidBody >(entity);
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 

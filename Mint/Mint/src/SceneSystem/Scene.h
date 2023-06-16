@@ -6,6 +6,7 @@
 #include "Components/Components.h"
 #include "Utility/EventSystem/EventSystem.h"
 #include "Components/CUCA.h"
+#include "SAS.h"
 
 // Include managers required for exporting/importing entity Components.
 #include "Graphics/Shaders/MaterialManager.h"
@@ -38,6 +39,9 @@ namespace mint
 		virtual void on_unload() override {};
 
 
+		void submit_dynamic_entities()  override final;
+		void submit_static_entities()  override final;
+
 
 		void add_entity(entt::entity entity) override final;
 
@@ -49,7 +53,7 @@ namespace mint
 
 		Vector< entt::entity > get_static_entities() override final;
 
-		CRegistry& get_registry() override final;
+		CRegistry* get_registry() override final;
 
 
 

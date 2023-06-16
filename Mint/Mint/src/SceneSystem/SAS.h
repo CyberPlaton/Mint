@@ -85,11 +85,11 @@ namespace mint
 	private:
 		static CSAS* s_CSAS;
 
-		bool m_internalLoop;
+		bool m_internalLoop = false;
 
-		bool m_running;
+		bool m_running = false;
 
-		bool m_update;
+		bool m_update = false;
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
@@ -104,7 +104,7 @@ namespace mint
 
 		std::array< Vector< entt::entity >, MINT_SAS_OUT_QUEUE_COUNT_MAX > m_outQueue;
 
-		u32 m_currentOut;
+		u32 m_currentOut = 0;
 
 
 	private:

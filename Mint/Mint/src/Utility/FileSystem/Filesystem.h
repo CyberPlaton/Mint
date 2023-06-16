@@ -49,6 +49,8 @@ namespace mint
 
 		static CPath get_relative_path_to_working_directory(CPath complete_path);
 
+		static CPath get_file_parent_directory_relative_to_working_directory(CPath complete_file_path);
+
 
 		bool forward_brute_force(CPath path);
 

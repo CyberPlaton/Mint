@@ -155,7 +155,9 @@ namespace mint
 		CEventSystem::Get().update();
 
 
-		CSAS::Get().submit_scene_dynamic_entities(MINT_ACTIVE_SCENE()->get_dynamic_entities());
+		// Populate spatial acceleration structure with current dynamic entities
+		// and let it update the Quad Tree.
+		MINT_ACTIVE_SCENE()->submit_dynamic_entities();
 		CSAS::Get().set_should_update(true);
 
 
@@ -243,6 +245,11 @@ namespace mint
 
 
 		// Initialize lowest level sub-systems.
+		
+		// IScene.
+		result &= IScene::initialize();
+		
+		// Logging.
 		result &= CLogging::Get().initialize();
 
 		// Function and Memory Profiler.
@@ -273,6 +280,8 @@ namespace mint
 		CRessourceLoaderFactory::register_ressource_loader("Script", &CScriptLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Behavior", &CBehaviorLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Material", &CMaterialLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("Animation", &CAnimationLoader::create);
+
 
 
 		// Global OS settings.
@@ -394,18 +403,11 @@ namespace mint
 
 
 		// Registry.
-		result &= MINT_SCENE_REGISTRY().initialize();
+		result &= MINT_SCENE_REGISTRY()->initialize();
 
 		// Scripting and Behavior engine.
 		result &= scripting::CBehaviorEngine::Get().initialize();
 		result &= scripting::CScriptEngine::Get().initialize();
-
-		// Animation System.
-		result &= animation::CAnimationSystem::Get().initialize();
-		if (result)
-		{
-			animation::CAnimationSystem::Get().run_animation_system_thread();
-		}
 
 
 		if(result)
@@ -471,7 +473,11 @@ namespace mint
 		// Lighting.
 
 		// Animation System.
-
+		result &= animation::CAnimationSystem::Get().initialize();
+		if (result)
+		{
+			animation::CAnimationSystem::Get().run_animation_system_thread();
+		}
 
 		// CSAS.
 		result &= CSAS::Get().initialize();
@@ -479,7 +485,6 @@ namespace mint
 		{
 			CSAS::Get().run_sas_thread();
 		}
-
 
 		CPluginSystem::Get().finalize_initialize();
 
@@ -571,6 +576,9 @@ namespace mint
 
 		// Logging.
 		CLogging::Get().terminate();
+
+		// IScene.
+		IScene::terminate();
 	}
 
 

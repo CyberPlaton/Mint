@@ -184,6 +184,11 @@ namespace mint
 		m_current = scene;
 
 		load_scene(scene);
+
+		// Populate spatial acceleration structure with entities.
+		// Static entities are submitted once, dynamic entities are submitted each starting with this.
+		m_current->submit_dynamic_entities();
+		m_current->submit_static_entities();
 	}
 
 
@@ -221,7 +226,7 @@ namespace mint
 
 		CSAS::Get().reset();
 
-		MINT_SCENE_REGISTRY().reset(scene->get_entities());
+		MINT_SCENE_REGISTRY()->reset(scene->get_entities());
 
 		CShaderManager::Get().reset();
 
@@ -260,12 +265,6 @@ namespace mint
 		}
 
 		scene->on_load();
-
-
-		// Initialize the spatial acceleration structure. 
-		CSAS::Get().submit_scene_dynamic_entities(scene->get_dynamic_entities());
-
-		CSAS::Get().submit_scene_static_entities(scene->get_static_entities());
 	}
 
 

@@ -41,7 +41,7 @@ namespace mint::editor
 		ImGuiID slid = 10000;
 		ImGuiID scid = 20000;
 
-		auto& transform = MINT_ACTIVE_SCENE()->get_registry().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_ACTIVE_SCENE()->get_registry()->get_component< mint::component::STransform >(entity);
 		
 
 		CUI::edit_field_vec2(transform.m_position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,

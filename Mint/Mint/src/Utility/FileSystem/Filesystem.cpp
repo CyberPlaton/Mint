@@ -304,6 +304,15 @@ namespace mint
 	}
 
 
+	mint::CPath CFilesystem::get_file_parent_directory_relative_to_working_directory(CPath complete_file_path)
+	{
+		CFilesystem fs(CFilesystem::get_relative_path_to_working_directory(complete_file_path));
+
+		fs.back();
+
+		return fs.get_current_directory();
+	}
+
 	bool CFilesystem::forward_brute_force(CPath path)
 	{
 		CPath p = get_current_directory();

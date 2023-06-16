@@ -11,24 +11,52 @@ namespace mint
 
 	CScene::~CScene()
 	{
-		m_entities.clear();
+		MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+			m_entities.clear();
+
+		);
 	}
 
 
+	void CScene::submit_dynamic_entities()
+	{
+		CSAS::Get().submit_scene_dynamic_entities(get_dynamic_entities());
+	}
+
+	void CScene::submit_static_entities()
+	{
+		CSAS::Get().submit_scene_static_entities(get_static_entities());
+	}
+
 	void CScene::add_entity(entt::entity entity)
 	{
-		m_entities.push_back(entity);
+		MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+			mint::algorithm::vector_push_back(m_entities, entity);
+
+		);
 	}
 
 
 	void CScene::remove_entity(entt::entity entity)
 	{
-		mint::algorithm::vector_erase(m_entities, entity);
+		MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+			mint::algorithm::vector_erase(m_entities, entity);
+
+		);
 	}
 
 	mint::Vector< entt::entity > CScene::get_entities()
 	{
-		return m_entities;
+		MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+			auto& entities = m_entities;
+
+		);
+
+		return entities;
 	}
 
 
@@ -38,11 +66,14 @@ namespace mint
 
 		for(auto& entity: get_entities())
 		{
-			if(MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
-			   MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity))
-			{
-				mint::algorithm::vector_push_back(entities, entity);
-			}
+			MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+				if (MINT_SCENE_REGISTRY()->has_component< mint::component::SSprite >(entity) &&
+					MINT_SCENE_REGISTRY()->has_component< mint::component::SDynamicGameobject >(entity))
+				{
+					mint::algorithm::vector_push_back(entities, entity);
+				}
+			);
 		}
 
 		return entities;
@@ -55,20 +86,29 @@ namespace mint
 
 		for (auto& entity : get_entities())
 		{
-			if (MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
-				!MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity))
-			{
-				mint::algorithm::vector_push_back(entities, entity);
-			}
+			MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+				if (MINT_SCENE_REGISTRY()->has_component< mint::component::SSprite >(entity) &&
+					!MINT_SCENE_REGISTRY()->has_component< mint::component::SDynamicGameobject >(entity))
+				{
+					mint::algorithm::vector_push_back(entities, entity);
+				}
+			);
 		}
 
 		return entities;
 	}
 
 
-	mint::CRegistry& CScene::get_registry()
+	mint::CRegistry* CScene::get_registry()
 	{
-		return m_registry;
+		MINT_BEGIN_CRITICAL_SECTION(IScene::m_criticalSection,
+
+			const auto reg = &m_registry;
+
+		);
+
+		return reg;
 	}
 
 
@@ -205,7 +245,7 @@ namespace mint
 
 		if (entity == entt::null)
 		{
-			MINT_LOG_ERROR("[\tCreating entity failed.");
+			MINT_LOG_ERROR("\tCreating entity failed.");
 			return false;
 		}
 

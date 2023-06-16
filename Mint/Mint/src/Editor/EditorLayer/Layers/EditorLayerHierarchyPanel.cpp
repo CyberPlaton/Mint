@@ -66,7 +66,7 @@ namespace mint::editor
 		MINT_PROFILE_SCOPE("CHierarchyPanelLayer::show_main_frame", "Editor::Layer");
 
 		auto scene = MINT_ACTIVE_SCENE();
-		auto& registry = scene->get_registry();
+		auto& registry = *scene->get_registry();
 		auto& gd = GlobalData::Get();
 
 		if (gd.s_EditorOptionEntityToBeDeleted != entt::null)
@@ -197,7 +197,7 @@ namespace mint::editor
 
 	void CHierarchyPanelLayer::check_entity_for_components_sanity(entt::entity entity)
 	{
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 
 		bool warning = false;
 		String info_message;
@@ -308,7 +308,7 @@ namespace mint::editor
 	void CHierarchyPanelLayer::create_dynamic_child_entity(entt::entity parent)
 	{
 		auto scene = MINT_ACTIVE_SCENE();
-		auto& registry = scene->get_registry();
+		auto& registry = *scene->get_registry();
 
 
 		auto entity = registry.create_entity();
@@ -337,7 +337,7 @@ namespace mint::editor
 	void CHierarchyPanelLayer::create_dynamic_parent_entity(entt::entity child)
 	{
 		auto scene = MINT_ACTIVE_SCENE();
-		auto& registry = scene->get_registry();
+		auto& registry = *scene->get_registry();
 
 
 		auto entity = registry.create_entity();
@@ -367,7 +367,7 @@ namespace mint::editor
 	void CHierarchyPanelLayer::create_static_child_entity(entt::entity parent)
 	{
 		auto scene = MINT_ACTIVE_SCENE();
-		auto& registry = scene->get_registry();
+		auto& registry = *scene->get_registry();
 
 
 		auto entity = registry.create_entity();
@@ -394,7 +394,7 @@ namespace mint::editor
 	void CHierarchyPanelLayer::create_static_parent_entity(entt::entity child)
 	{
 		auto scene = MINT_ACTIVE_SCENE();
-		auto& registry = scene->get_registry();
+		auto& registry = *scene->get_registry();
 
 
 		auto entity = registry.create_entity();

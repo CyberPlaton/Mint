@@ -7,6 +7,8 @@ namespace mint
 
 	bool CTextureLoader::load_ressource(const String& ressource_type, CAsset& asset)
 	{
+		MINT_ASSERT(ressource_type == "Texture", "Invalid asset type provided!");
+
 		String name, type, source;
 		u64 w, h;
 

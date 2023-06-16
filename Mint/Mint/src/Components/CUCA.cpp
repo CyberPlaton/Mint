@@ -40,7 +40,7 @@ namespace mint::component
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			auto value = MINT_SCENE_REGISTRY().get_component< SSprite >(entity).m_depth;
+			auto value = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity).m_depth;
 		
 		);
 
@@ -50,11 +50,11 @@ namespace mint::component
 
 	void CUCA::transform_set_position(entt::entity entity, Vec2 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to translate an entity without a Transform component!");
 
 		// Update data.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 		
 		transform.m_position = value;
 
@@ -68,11 +68,11 @@ namespace mint::component
 
 	void CUCA::transform_translate(entt::entity entity, Vec2 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 					"Invalid operation. Trying to translate an entity without a Transform component!");
 
 		// Set new data value.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 		
 		transform.m_position += value;
 
@@ -86,11 +86,11 @@ namespace mint::component
 
 	void CUCA::transform_set_rotation(entt::entity entity, f32 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
 		// Update the data.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 		
 		transform.m_rotation = value;
 
@@ -104,11 +104,11 @@ namespace mint::component
 
 	void CUCA::transform_rotate(entt::entity entity, f32 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
 		// Update data.
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 		
 		transform.m_rotation += value;
 
@@ -122,9 +122,9 @@ namespace mint::component
 
 	void CUCA::_rigid_body_update_translation(entt::entity entity, Vec2 value)
 	{
-		if(MINT_SCENE_REGISTRY().has_component< mint::component::SRigidBody >(entity))
+		if(MINT_SCENE_REGISTRY()->has_component< mint::component::SRigidBody >(entity))
 		{
-			auto& rb = MINT_SCENE_REGISTRY().get_component< mint::component::SRigidBody >(entity);
+			auto& rb = MINT_SCENE_REGISTRY()->get_component< mint::component::SRigidBody >(entity);
 
 			MINT_BEGIN_CRITICAL_SECTION(m_rigidBodyCriticalSection,
 
@@ -137,9 +137,9 @@ namespace mint::component
 
 	void CUCA::_rigid_body_update_rotation(entt::entity entity, f32 value)
 	{
-		if (MINT_SCENE_REGISTRY().has_component< mint::component::SRigidBody >(entity))
+		if (MINT_SCENE_REGISTRY()->has_component< mint::component::SRigidBody >(entity))
 		{
-			auto& rb = MINT_SCENE_REGISTRY().get_component< mint::component::SRigidBody >(entity);
+			auto& rb = MINT_SCENE_REGISTRY()->get_component< mint::component::SRigidBody >(entity);
 
 			MINT_BEGIN_CRITICAL_SECTION(m_rigidBodyCriticalSection,
 
@@ -168,10 +168,10 @@ namespace mint::component
 
 	void CUCA::transform_scale(entt::entity entity, Vec2 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to scale an entity without a Transform component!");
 
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 
 		// Set new value.
 		transform.m_scale += value;
@@ -186,10 +186,10 @@ namespace mint::component
 
 	void CUCA::transform_set_scale(entt::entity entity, Vec2 value)
 	{
-		MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::STransform >(entity) == true,
+		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to scale an entity without a Transform component!");
 
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 
 		// Set new value.
 		transform.m_scale = value;
@@ -204,9 +204,9 @@ namespace mint::component
 
 	void CUCA::_rigid_body_update_scale(entt::entity entity, Vec2 value)
 	{
-		if (MINT_SCENE_REGISTRY().has_component< mint::component::SRigidBody >(entity))
+		if (MINT_SCENE_REGISTRY()->has_component< mint::component::SRigidBody >(entity))
 		{
-			auto& rb = MINT_SCENE_REGISTRY().get_component< mint::component::SRigidBody >(entity);
+			auto& rb = MINT_SCENE_REGISTRY()->get_component< mint::component::SRigidBody >(entity);
 
 			rb.m_body->DestroyFixture(rb.m_body->GetFixtureList());
 
@@ -245,7 +245,7 @@ namespace mint::component
 
 	mint::String CUCA::identifier_get_debug_name(entt::entity entity)
 	{
-		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
 
@@ -259,7 +259,7 @@ namespace mint::component
 
 	void CUCA::identifier_set_debug_name(entt::entity entity, const String& name)
 	{
-		auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+		auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
 
@@ -270,7 +270,7 @@ namespace mint::component
 
 	u64 CUCA::identifier_get_identifier(entt::entity entity)
 	{
-		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
 
@@ -284,7 +284,7 @@ namespace mint::component
 
 	u64 CUCA::identifier_get_uuid(entt::entity entity)
 	{
-		const auto& id = MINT_SCENE_REGISTRY().get_component< SIdentifier >(entity);
+		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
 
@@ -298,7 +298,7 @@ namespace mint::component
 
 	bool CUCA::hierarchy_has_parent(entt::entity entity)
 	{
-		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		const auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -312,7 +312,7 @@ namespace mint::component
 
 	bool CUCA::hierarchy_has_children(entt::entity entity)
 	{
-		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		const auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -326,7 +326,7 @@ namespace mint::component
 
 	entt::entity CUCA::hierarchy_get_parent(entt::entity entity)
 	{
-		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		const auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -340,7 +340,7 @@ namespace mint::component
 
 	mint::Vector< entt::entity > CUCA::hierarchy_get_children(entt::entity entity)
 	{
-		const auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		const auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -354,7 +354,7 @@ namespace mint::component
 
 	void CUCA::hierarchy_set_parent(entt::entity entity, entt::entity parent)
 	{
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -366,7 +366,7 @@ namespace mint::component
 
 	void CUCA::hierarchy_add_child(entt::entity entity, entt::entity child)
 	{
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -378,7 +378,7 @@ namespace mint::component
 
 	void CUCA::hierarchy_remove_child(entt::entity entity, entt::entity child)
 	{
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_hierarchyCriticalSection,
 
@@ -392,7 +392,7 @@ namespace mint::component
 
 	bool CUCA::sprite_is_visible(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -406,7 +406,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_is_visible(entt::entity entity, bool value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -418,7 +418,7 @@ namespace mint::component
 
 	bool CUCA::sprite_is_internal_visible(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -432,7 +432,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_depth(entt::entity entity, u64 value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -444,7 +444,7 @@ namespace mint::component
 
 	mint::Vec2 CUCA::sprite_get_origin(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -458,7 +458,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_origin(entt::entity entity, const Vec2& value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -470,7 +470,7 @@ namespace mint::component
 
 	mint::CRect CUCA::sprite_get_source_rect(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -484,7 +484,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_source_rect(entt::entity entity, const CRect& value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -496,7 +496,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_source_rect_from_vec(entt::entity entity, const Vec4& value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -508,7 +508,7 @@ namespace mint::component
 
 	bool CUCA::sprite_is_flipped_x(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -522,7 +522,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_is_flipped_x(entt::entity entity, bool value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -534,7 +534,7 @@ namespace mint::component
 
 	bool CUCA::sprite_is_flipped_y(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -548,7 +548,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_is_flipped_y(entt::entity entity, bool value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -560,7 +560,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_is_internal_visible(entt::entity entity, bool value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -572,7 +572,7 @@ namespace mint::component
 
 	mint::fx::CColor CUCA::sprite_get_color(entt::entity entity)
 	{
-		const auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		const auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -586,7 +586,7 @@ namespace mint::component
 
 	void CUCA::sprite_set_color(entt::entity entity, const fx::CColor& value)
 	{
-		auto& sprite = MINT_SCENE_REGISTRY().get_component< SSprite >(entity);
+		auto& sprite = MINT_SCENE_REGISTRY()->get_component< SSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
@@ -598,7 +598,7 @@ namespace mint::component
 
 	u64 CUCA::animated_sprite_get_animation_speed(entt::entity entity)
 	{
-		const auto& animsprite = MINT_SCENE_REGISTRY().get_component< SAnimatedSprite >(entity);
+		const auto& animsprite = MINT_SCENE_REGISTRY()->get_component< SAnimatedSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_animatedSpriteCriticalSection,
 
@@ -612,7 +612,7 @@ namespace mint::component
 
 	void CUCA::animated_sprite_set_animation_speed(entt::entity entity, u64 value)
 	{
-		auto& animsprite = MINT_SCENE_REGISTRY().get_component< SAnimatedSprite >(entity);
+		auto& animsprite = MINT_SCENE_REGISTRY()->get_component< SAnimatedSprite >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_animatedSpriteCriticalSection,
 
@@ -636,13 +636,12 @@ namespace mint::component
 
 	mint::CRect CUCA::sprite_get_destination_rect(entt::entity entity)
 	{
-		auto& mat = CUCA::_get_world_transform(entity);
+		auto mat = CUCA::_get_world_transform(entity);
 
 		auto position = CUCA::extract_position_from_world_transform(mat);
 		auto scale = CUCA::extract_scale_from_world_transform(mat);
 		auto size = CUCA::sprite_get_size(entity);
 		auto origin = CUCA::sprite_get_origin(entity);
-
 
 		MINT_ASSERT((std::isnan(position.x) || std::isnan(position.y)) == false,
 					"Invalid operation. Position of an Entity became invalid or was not set correctly!");
@@ -697,7 +696,7 @@ namespace mint::component
 
 	mint::Mat4 CUCA::_get_local_transform(entt::entity entity)
 	{
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 
 		auto value = glm::translate(Mat4(1.0f), Vec3(transform.m_position, 0.0f)) *
 
@@ -711,23 +710,36 @@ namespace mint::component
 
 	mint::Mat4 CUCA::_get_world_transform(entt::entity entity)
 	{
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+			mint::Mat4 final_matrix = transform.m_worldTransform;
+
+		);
+
+
 
 		if( CUCA::hierarchy_has_parent(entity))
 		{
 			auto& parent_transform = CUCA::_get_world_transform(CUCA::hierarchy_get_parent(entity));
 
-			return parent_transform * transform.m_worldTransform;
+			MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+				final_matrix = parent_transform * final_matrix;
+
+			);
 		}
 
-		return transform.m_worldTransform;
+		return final_matrix;
 	}
 
 
 	void CUCA::_update_world_transform_recursive(entt::entity entity)
 	{
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< mint::component::SSceneHierarchy >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< mint::component::SSceneHierarchy >(entity);
 
 		// Update own transform matrix.
 		transform.m_worldTransform = _get_local_transform(entity);
@@ -753,7 +765,7 @@ namespace mint::component
 
 	void CUCA::hierarchy_remove_parent(entt::entity entity)
 	{
-		auto& hierarchy = MINT_SCENE_REGISTRY().get_component< SSceneHierarchy >(entity);
+		auto& hierarchy = MINT_SCENE_REGISTRY()->get_component< SSceneHierarchy >(entity);
 
 		CUCA::hierarchy_remove_child(hierarchy.m_parent, entity);
 	}
@@ -761,7 +773,7 @@ namespace mint::component
 
 	void CUCA::transform_set_transform_matrix(entt::entity entity, const Mat4& matrix)
 	{
-		auto& transform = MINT_SCENE_REGISTRY().get_component< mint::component::STransform >(entity);
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 
 		transform.m_worldTransform = matrix;
 	}
@@ -792,7 +804,7 @@ namespace mint::component
 
 	void CUCA::behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle)
 	{
-		auto& behavior = MINT_SCENE_REGISTRY().get_component< mint::component::SScript >(entity);
+		auto& behavior = MINT_SCENE_REGISTRY()->get_component< mint::component::SScript >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_scriptCriticalSection,
 

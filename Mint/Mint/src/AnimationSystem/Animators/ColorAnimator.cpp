@@ -9,6 +9,9 @@ namespace mint::animation
 		{
 			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
 
+			MINT_PROFILE_SCOPE("coloranim::on_animation_update", "Engine::Animation");
+
+
 			auto& data = *reinterpret_cast<SColorAnimationBehaviorData*>(animation_data);
 
 			animator.advance_animation_counter(dt);
@@ -88,6 +91,9 @@ namespace mint::animation
 		void on_animation_enter(CAnimator& animator, void* animation_data)
 		{
 			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
+
+			MINT_PROFILE_SCOPE("coloranim::on_animation_enter", "Engine::Animation");
+
 
 			auto& data = *reinterpret_cast<SColorAnimationBehaviorData*>(animation_data);
 

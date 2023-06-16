@@ -141,10 +141,12 @@ namespace mint
 			std::swap(view_min[1], view_max[1]);
 		}
 
+		mint::CRect dest;
+
 		for (auto& entity : entities)
 		{
-			MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
-						MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity),
+			MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::SSprite >(entity) &&
+						MINT_SCENE_REGISTRY()->has_component< mint::component::SDynamicGameobject >(entity),
 						"Submitting dynamic entities is allowed only for dynamic entities with a Sprite component!");
 
 			if (!CUCA::sprite_is_visible(entity) || !CUCA::sprite_is_internal_visible(entity)) continue;
@@ -152,7 +154,7 @@ namespace mint
 			detail::SQuadTreeNode node;
 			node.m_entity = entity;
 
-			auto dest = CUCA::sprite_get_destination_rect(entity);
+			dest = CUCA::sprite_get_destination_rect(entity);
 			
 			f32 entity_min[2] = { 0 };
 			entity_min[0] = dest.get_x();
@@ -215,12 +217,6 @@ namespace mint
 		view_max[0] = 1000000;
 		view_max[1] = 1000000;
 
-// 		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
-// 		view_min[0] = area.get_x();
-// 		view_min[1] = area.get_y();
-// 		view_max[0] = area.get_width();
-// 		view_max[1] = area.get_height();
-
 		// Check for when the camera is rotated and adjust the min and max values.
 		if (view_min[0] > view_max[0])
 		{
@@ -231,10 +227,12 @@ namespace mint
 			std::swap(view_min[1], view_max[1]);
 		}
 
+		mint::CRect dest;
+
 		for (auto& entity : entities)
 		{
-			MINT_ASSERT(MINT_SCENE_REGISTRY().has_component< mint::component::SSprite >(entity) &&
-					   !MINT_SCENE_REGISTRY().has_component< mint::component::SDynamicGameobject >(entity),
+			MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::SSprite >(entity) &&
+					   !MINT_SCENE_REGISTRY()->has_component< mint::component::SDynamicGameobject >(entity),
 					   "Submitting static entities is allowed only for static entities with a Sprite component!");
 
 			if (!CUCA::sprite_is_visible(entity) || !CUCA::sprite_is_internal_visible(entity)) continue;
@@ -243,7 +241,7 @@ namespace mint
 			detail::SQuadTreeNode node;
 			node.m_entity = entity;
 
-			auto dest = CUCA::sprite_get_destination_rect(entity);
+			dest = CUCA::sprite_get_destination_rect(entity);
 
 			f32 entity_min[2] = { 0 };
 			entity_min[0] = dest.get_x();

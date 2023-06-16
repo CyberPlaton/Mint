@@ -26,7 +26,7 @@ namespace mint::fx
 
 	void CSceneRenderer::on_frame(Vector< entt::entity >& entities)
 	{
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry();
+		auto& registry = *MINT_ACTIVE_SCENE()->get_registry();
 		auto& material_manager = CMaterialManager::Get();
 		auto& texture_manager = CTextureManager::Get();
 

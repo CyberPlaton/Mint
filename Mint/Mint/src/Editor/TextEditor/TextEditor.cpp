@@ -10,7 +10,7 @@ namespace mint::editor
 	CTextEditor::CTextEditor(mint::CPath path) :
 		m_filepath(path), m_ready(false), m_changed(false), m_saved(false), m_windowFlags(0), m_inputFlags(0)
 	{
-		MINT_PROFILE_SCOPE("Editor::TextEditor", "CTextEditor::CTextEditor");
+		MINT_PROFILE_SCOPE("CTextEditor::CTextEditor", "Editor::TextEditor");
 
 		if (!is_valid_file(path)) return;
 
@@ -43,7 +43,7 @@ namespace mint::editor
 
 	void CTextEditor::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("Editor::TextEditor", "CTextEditor::on_ui_frame");
+		MINT_PROFILE_SCOPE("CTextEditor::on_ui_frame", "Editor::TextEditor");
 
 		auto w = GlobalData::Get().s_DefaultEditorTextEditorWidth;
 		auto h = GlobalData::Get().s_DefaultEditorTextEditorHeight;

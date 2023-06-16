@@ -4,19 +4,43 @@
 namespace mint
 {
 	mint::IScene* IScene::s_activeScene = nullptr;
+	MINT_CRITICAL_SECTION(IScene::m_criticalSection);
+
 	mint::CMap< mint::IScene::ComponentExporterFunction > IScene::s_componentExporter;
 	mint::CMap< mint::IScene::ComponentImporterFunction > IScene::s_componentImporter;
 
 
+	bool IScene::initialize()
+	{
+		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
+
+		return true;
+	}
+
+	void IScene::terminate()
+	{
+		DELETE_CRITICAL_SECTION(m_criticalSection);
+	}
+
 	mint::IScene* IScene::get_active_scene()
 	{
-		return IScene::s_activeScene;
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			const auto pointer = IScene::s_activeScene;
+
+		);
+
+		return pointer;
 	}
 
 
 	void IScene::set_active_scene(IScene* scene)
 	{
-		s_activeScene = scene;
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			IScene::s_activeScene = scene;
+
+		);
 	}
 
 

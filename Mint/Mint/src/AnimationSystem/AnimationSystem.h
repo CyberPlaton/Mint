@@ -5,6 +5,12 @@
 #include "AnimatorStack/AnimatorStack.h"
 #include "../../IMint.h"
 
+// Include animators for importing them from file.
+#include "Animators/ColorAnimator.h"
+#include "Animators/FrameAnimator.h"
+#include "Animators/ScaleAnimator.h"
+#include "Animators/TranslationAnimator.h"
+
 
 namespace mint::animation
 {
@@ -37,6 +43,13 @@ namespace mint::animation
 		bool is_entity_registered(entt::entity entity);
 
 
+		void create_animation_prefab(const String& animation_name, const String& animation_file_path);
+
+		bool set_entity_animation(entt::entity entity, const String& animation_name);
+
+
+
+
 		void set_entity_animation_state(entt::entity entity, const String& state_name);
 
 		void add_entity_animation_state(entt::entity entity, const String& state_name);
@@ -67,6 +80,8 @@ namespace mint::animation
 		bool m_animationsActive;
 
 		std::unordered_map< u64, CAnimatorStack > m_animatorStacks;
+
+		CMap< std::pair< String, String > > m_animationPrefabs;
 
 	private:
 		void _run();
@@ -113,6 +128,22 @@ namespace mint::animation
 	}
 
 
+	namespace frameanim
+	{
+		CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node);
+	}
+	namespace coloranim
+	{
+		CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node);
+	}
+	namespace scaleanim
+	{
+		CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node);
+	}
+	namespace translationanim
+	{
+		CAnimator* importer(entt::entity entity, const String& state_name, const String& animator_name, const String& animator_type, CAnimatorStack& stack, maml::SNode* node);
+	}
 }
 
 #endif

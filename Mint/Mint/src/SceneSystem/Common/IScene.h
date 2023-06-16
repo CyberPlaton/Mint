@@ -21,6 +21,8 @@ namespace mint
 		typedef bool (*ComponentImporterFunction)(entt::entity, entt::id_type, entt::registry&, maml::SNode*);
 
 	public:
+		static bool initialize();
+		static void terminate();
 		static IScene* get_active_scene();
 		static void set_active_scene(IScene* scene);
 		
@@ -43,6 +45,9 @@ namespace mint
 		static void get_all_component_exporter_hash_value(Vector< u64 >& v);
 
 
+
+		virtual void submit_dynamic_entities() = 0;
+		virtual void submit_static_entities() = 0;
 
 
 		virtual void on_update(f32) = 0;
@@ -73,7 +78,7 @@ namespace mint
 
 		virtual Vector< entt::entity > get_static_entities() = 0;
 
-		virtual CRegistry& get_registry() = 0;
+		virtual CRegistry* get_registry() = 0;
 
 
 
@@ -95,12 +100,17 @@ namespace mint
 
 		virtual CPath get_scene_full_path() = 0;
 
+
 	private:
 		static IScene* s_activeScene;
 
 		static CMap< ComponentExporterFunction > s_componentExporter;
 
 		static CMap< ComponentImporterFunction > s_componentImporter;
+
+
+	protected:
+		static MINT_CRITICAL_SECTION(m_criticalSection);
 
 
 	protected:

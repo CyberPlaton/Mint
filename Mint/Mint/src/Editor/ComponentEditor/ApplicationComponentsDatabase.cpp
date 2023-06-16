@@ -35,7 +35,7 @@ namespace mint::editor
 			return false;
 		}
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry().get_entt_registry_ref();
+		auto& registry = MINT_ACTIVE_SCENE()->get_registry()->get_entt_registry_ref();
 
 		m_componentAddFunctions.get(h)(registry, entity);
 
@@ -86,7 +86,7 @@ namespace mint::editor
 			return false;
 		}
 
-		auto& registry = MINT_ACTIVE_SCENE()->get_registry().get_entt_registry_ref();
+		auto& registry = MINT_ACTIVE_SCENE()->get_registry()->get_entt_registry_ref();
 
 		m_componentRemoveFunctions.get(h)(registry, entity);
 
