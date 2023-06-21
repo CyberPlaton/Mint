@@ -33,6 +33,9 @@ namespace mint
 		// Create the anti-aliasing Post-Processing renderer.
 		fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CFXAA());
 
+		fx::CRenderingPassStack::Get().try_push_rendering_pass(new CWorldQueryDebugRender());
+
+
 		// Rendering Stack can be reported after context was initialized and the renderers created.
 		// Please note that it is possible for renderers to be dependent on the Scene being initialized.
 		print_engine_rendering_pass_stack();
@@ -90,9 +93,10 @@ namespace mint
 
 	void CMintEngine::on_update(f32 dt)
 	{
-		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().update(dt);
-
 		MINT_ACTIVE_SCENE()->on_update(dt);
+
+
+		CPhysicsSystem::Get().update(dt);
 
 		CSceneManager::Get().update();
 
@@ -335,19 +339,10 @@ namespace mint
 		}
 		if (physics_node)
 		{
-			bool use = false;
-
-			CSerializer::import_bool(&use, "use", physics_node);
-			if(use)
-			{
-				CSerializer::import_bool(&physics_desc.m_debugRender, "debugRender", physics_node);
-				CSerializer::import_float(&physics_desc.m_fixedTimestep, "fixedTimestep", physics_node);
-				CSerializer::import_uint(&physics_desc.m_positionIterations, "positionIterations", physics_node);
-				CSerializer::import_uint(&physics_desc.m_velocityIterations, "velocityIterations", physics_node);
-				CSerializer::import_vec2(physics_desc.m_gravity, "gravity", physics_node);
-			
-				CPhysicsSystem::set_use_physics(true);
-			}
+			CSerializer::import_float(&physics_desc.m_fixedTimestep, "fixedTimestep", physics_node);
+			CSerializer::import_uint(&physics_desc.m_positionIterations, "positionIterations", physics_node);
+			CSerializer::import_uint(&physics_desc.m_velocityIterations, "velocityIterations", physics_node);
+			CSerializer::import_vec2(physics_desc.m_gravity, "gravity", physics_node);
 		}
 		if (package_manifest_node)
 		{
@@ -426,7 +421,7 @@ namespace mint
 	bool CMintEngine::_pre_init(CWindow::SDescription& wdesc, CPhysicsSystem::SDescription& pdesc)
 	{
 		if (!m_mainWindow.initialize(wdesc)) return false;
-		if (CPhysicsSystem::get_use_physics() && !CPhysicsSystem::Get().initialize(pdesc)) return false;
+		if (!CPhysicsSystem::Get().initialize(pdesc)) return false;
 
 		set_engine_fps(SCAST(f32, wdesc.m_targetFPS));
 
@@ -450,6 +445,9 @@ namespace mint
 
 		// Scene Manager.
 		result &= CSceneManager::Get().initialize();
+
+		// World Query Interface.
+		result &= CWorldQuery::Get().initialize();
 
 		// Service Locator.
 		result &= CServiceLocator::Get().initialize();
@@ -504,17 +502,19 @@ namespace mint
 		// Prepare plugin shutdown and terminate high level engine sub systems.
 		CPluginSystem::Get().on_pre_termination();
 
-
 		// Spatial acceleration structure.
 		CSAS::Get().stop_sas_thread();
-
 		CSAS::Get().terminate();
-
 
 		// Renderers and Renderer Stack.
 		fx::CRenderingPassStack::Get().terminate();
 
 		// Animation system.
+		animation::CAnimationSystem::Get().stop_animation_system_thread();
+		animation::CAnimationSystem::Get().terminate();
+
+		// Physics system.
+		CPhysicsSystem::Get().terminate();
 	}
 
 
@@ -525,10 +525,6 @@ namespace mint
 
 		// Camera System.
 		mint::fx::CCameraManager::Get().terminate();
-
-		// Animation System.
-		animation::CAnimationSystem::Get().stop_animation_system_thread();
-		animation::CAnimationSystem::Get().terminate();
 
 		// Scripting engine.
 		scripting::CBehaviorEngine::Get().stop_behavior_engine_thread();
@@ -558,6 +554,9 @@ namespace mint
 	{
 		// Terminate plugins and lowest level engine sub systems.
 		CPluginSystem::Get().on_post_termination();
+
+		// World Query Interface.
+		CWorldQuery::Get().terminate();
 
 		// Scene Manager.
 		CSceneManager::Get().terminate();

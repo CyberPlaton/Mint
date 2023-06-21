@@ -7,6 +7,9 @@
 #include "SceneSystem/Common/IScene.h"
 #include "Graphics/Shaders/MaterialManager.h"
 #include "Scripting/BehaviorEngine.h"
+#include "WorldQuery/WorldQuery.h"
+
+
 
 namespace mint
 {
@@ -139,6 +142,8 @@ namespace mint::component
 		static void _rigid_body_update_translation(entt::entity entity, Vec2 value);
 		static void _rigid_body_update_rotation(entt::entity entity, f32 value);
 		static void _rigid_body_update_scale(entt::entity entity, Vec2 value);
+
+		static void _world_query_update_entity_proxy(entt::entity entity, const Vec2& displacement);
 	};
 
 

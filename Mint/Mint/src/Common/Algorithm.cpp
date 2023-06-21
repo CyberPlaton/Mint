@@ -151,5 +151,41 @@ namespace mint::algorithm
 		return stoul(string);
 	}
 
+	b2AABB compute_aabb(const mint::CRect& destination_rect)
+	{
+		auto x = destination_rect.get_x();
+		auto y = destination_rect.get_y();
+		auto w = destination_rect.get_width();
+		auto h = destination_rect.get_height();
+
+		return compute_aabb({ x + w / 2.0f, y + h / 2.0f }, { w / 2.0f, h / 2.0f });
+ 	}
+
+	b2AABB compute_aabb(const Vec2& point, const Vec2& halfextents)
+	{
+		b2AABB aabb;
+
+		aabb.lowerBound = { point.x - halfextents.x, point.y - halfextents.y };
+ 		aabb.upperBound = { point.x + halfextents.x, point.y + halfextents.y };
+
+		return aabb;
+	}
+
+	mint::CRect compute_rect_from_aabb(const b2AABB& aabb)
+	{
+		mint::CRect rect;
+
+		b2Vec2 center = aabb.GetCenter();
+		b2Vec2 halfheights = aabb.GetExtents();
+
+		rect.set_rectangle(center.x - halfheights.x, center.y - halfheights.y, halfheights.x * 2, halfheights.y * 2);
+
+		return rect;
+	}
+
+	mint::Vec2 vec2_compute_center_between_two_vectors(const Vec2& p1, const Vec2& p2)
+	{
+		return { 0.5f * (p1.x + p2.x), 0.5f * (p1.y + p2.y) };
+	}
 
 }

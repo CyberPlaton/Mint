@@ -3,6 +3,8 @@
 
 
 #include "Common.h"
+#include "Rectangle.h"
+
 
 #include <sstream>
 #include <algorithm>
@@ -10,6 +12,28 @@
 
 namespace mint::algorithm
 {
+
+	Vec2 vec2_compute_center_between_two_vectors(const Vec2& p1, const Vec2& p2);
+
+	/* Please note the difference between our coordinate system and box2d:
+	*
+	* Box2D:
+	*		Y+
+	*		|
+	*		|
+	*		----- X+
+	* Mint:
+	*		----- X+
+	*		|
+	*		|
+	*		Y+
+	*/
+	b2AABB compute_aabb(const mint::CRect& destination_rect);
+	
+	b2AABB compute_aabb(const Vec2& point, const Vec2& halfextents);
+
+	mint::CRect compute_rect_from_aabb(const b2AABB& aabb);
+
 	u64 get_next_power_of_2(u64 value);
 
 	u64 djb_hash(const String& str);

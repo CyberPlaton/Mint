@@ -45,6 +45,8 @@
 #include "AnimationSystem/Animators/ColorAnimator.h"
 #include "AnimationSystem/Animators/ScaleAnimator.h"
 #include "AnimationSystem/Animators/TranslationAnimator.h"
+#include "WorldQuery/WorldQuery.h"
+#include "WorldQuery/WorldQueryDebugRenderer.h"
 
 
 #if MINT_DISTR

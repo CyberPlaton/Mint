@@ -36,12 +36,7 @@ namespace mint
 		};
 
 	public:
-		STATIC_GET(CPhysicsSystem, s_CPhysicsSystem);
-
-		static void set_use_physics(bool value);
-
-		static bool get_use_physics();
-
+		STATIC_GET(CPhysicsSystem, s_CPhysicsSystem)
 
 		bool initialize(SDescription& desc);
 
@@ -49,21 +44,22 @@ namespace mint
 
 		void reset();
 		
-		void update(f32 dt = 0.0f);
+		void update(f32 dt);
+
+		void set_physics_active(bool value);
+
+		bool are_physics_active();
 
 
 
 	private:
-		static CPhysicsSystem* s_CPhysicsSystem;
-
-		static bool s_usePhysics;
-
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		b2World* m_world;
+		b2World* m_world = nullptr;
 
 		SDescription m_config;
-	
+
+		bool m_active = true;
 	};
 }
 

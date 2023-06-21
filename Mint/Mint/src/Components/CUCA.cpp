@@ -56,6 +56,8 @@ namespace mint::component
 		// Update data.
 		auto& transform = MINT_SCENE_REGISTRY()->get_component< mint::component::STransform >(entity);
 		
+		const auto previous = transform.m_position;
+
 		transform.m_position = value;
 
 		// Update transform matrix and children if any.
@@ -63,6 +65,9 @@ namespace mint::component
 
 		// Update physics data.
 		_rigid_body_update_translation(entity, transform.m_position);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, { previous.x - value.x, previous.y - value.y });
 	}
 
 
@@ -81,6 +86,9 @@ namespace mint::component
 
 		// Update physics data.
 		_rigid_body_update_translation(entity, transform.m_position);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, {value.x, value.y});
 	}
 
 
@@ -99,6 +107,9 @@ namespace mint::component
 
 		// Update physics data.
 		_rigid_body_update_rotation(entity, transform.m_rotation);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, {0.0f, 0.0f});
 	}
 
 
@@ -117,6 +128,9 @@ namespace mint::component
 
 		// Update physics if required.
 		_rigid_body_update_rotation(entity, transform.m_rotation);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, {0.0f, 0.0f});
 	}
 
 
@@ -181,6 +195,9 @@ namespace mint::component
 
 		// Update physics if required.
 		_rigid_body_update_scale(entity, transform.m_scale);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, {0.0f, 0.0f});
 	}
 
 
@@ -199,6 +216,9 @@ namespace mint::component
 
 		// Update physics if required.
 		_rigid_body_update_scale(entity, transform.m_scale);
+
+		// Update world query proxy.
+		_world_query_update_entity_proxy(entity, { 0.0f, 0.0f });
 	}
 
 
@@ -638,31 +658,40 @@ namespace mint::component
 	{
 		auto mat = CUCA::_get_world_transform(entity);
 
+		CRect rect;
+
 		auto position = CUCA::extract_position_from_world_transform(mat);
 		auto scale = CUCA::extract_scale_from_world_transform(mat);
-		auto size = CUCA::sprite_get_size(entity);
-		auto origin = CUCA::sprite_get_origin(entity);
 
-		MINT_ASSERT((std::isnan(position.x) || std::isnan(position.y)) == false,
-					"Invalid operation. Position of an Entity became invalid or was not set correctly!");
 
-		MINT_ASSERT((std::isnan(scale.x) || std::isnan(scale.y)) == false,
-			"Invalid operation. Scale of an Entity became invalid or was not set correctly!");
+		if (CUCA::entity_has_component< mint::component::SSprite >(entity))
+		{
+			auto size = CUCA::sprite_get_size(entity);
+			auto origin = CUCA::sprite_get_origin(entity);
 
-		MINT_ASSERT((std::isnan(size.x) || std::isnan(size.y)) == false,
-			"Invalid operation. Texture size of an Entity became invalid or was not set correctly!");
+			MINT_ASSERT((std::isnan(position.x) || std::isnan(position.y)) == false,
+				"Invalid operation. Position of an Entity became invalid or was not set correctly!");
 
-		MINT_ASSERT((std::isnan(origin.x) || std::isnan(origin.y)) == false,
-			"Invalid operation. Texture origin of an Entity became invalid or was not set correctly!");
+			MINT_ASSERT((std::isnan(scale.x) || std::isnan(scale.y)) == false,
+				"Invalid operation. Scale of an Entity became invalid or was not set correctly!");
 
-		f32 x = position.x - origin.x * scale.x;
-		f32 y = position.y - origin.y * scale.y;
+			MINT_ASSERT((std::isnan(size.x) || std::isnan(size.y)) == false,
+				"Invalid operation. Texture size of an Entity became invalid or was not set correctly!");
 
-		return {
-			x, y,
-			size.x * scale.x, size.y * scale.y
- 		};
+			MINT_ASSERT((std::isnan(origin.x) || std::isnan(origin.y)) == false,
+				"Invalid operation. Texture origin of an Entity became invalid or was not set correctly!");
 
+			f32 x = position.x - origin.x * scale.x;
+			f32 y = position.y - origin.y * scale.y;
+
+			rect = { x, y, size.x * scale.x, size.y * scale.y };
+		}
+		else
+		{
+			rect = { position.x, position.y, scale.x, scale.y };
+		}
+
+		return rect;
 	}
 
 
@@ -811,6 +840,21 @@ namespace mint::component
 			behavior.m_scriptHandle = handle;
 
 		);
+	}
+
+	void CUCA::_world_query_update_entity_proxy(entt::entity entity, const Vec2& displacement)
+	{
+		if (CWorldQuery::Get().is_entity_registered(entity))
+		{
+			auto& rect = CUCA::sprite_get_destination_rect(entity);
+
+			auto x = rect.get_x();
+			auto y = rect.get_y();
+			auto w = rect.get_width();
+			auto h = rect.get_height();
+
+			CWorldQuery::Get().update_entity_proxy(entity, mint::algorithm::compute_aabb({x - w / 2.0f, y - h / 2.0f}, { w / 2.0f, h / 2.0f }), displacement);
+		}
 	}
 
 

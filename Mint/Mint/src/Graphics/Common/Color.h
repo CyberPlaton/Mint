@@ -42,7 +42,7 @@ namespace mint::fx
 }
 
 
-#define MINT_BLACK() mint::fx::CColor(0, 0, 0, 0)
+#define MINT_BLACK() mint::fx::CColor(0, 0, 0, 255)
 #define MINT_WHITE() mint::fx::CColor(255, 255, 255, 255)
 
 #define MINT_GREY_LIGHT() mint::fx::CColor(211, 211, 211, 255)

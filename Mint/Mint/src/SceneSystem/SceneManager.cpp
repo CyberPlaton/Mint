@@ -222,7 +222,7 @@ namespace mint
 
 		fx::CMaterialManager::Get().reset();
 
-		if (CPhysicsSystem::get_use_physics()) CPhysicsSystem::Get().reset();
+		CPhysicsSystem::Get().reset();
 
 		CSAS::Get().reset();
 

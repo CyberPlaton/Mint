@@ -40,6 +40,8 @@ namespace mint::fx
 			const auto& transform = registry.get_component< mint::component::STransform >(entity);
 			const auto& sprite = registry.get_component< mint::component::SSprite >(entity);
 
+			if (!sprite.m_internalVisible) continue;
+
 
 			auto& materials = material_manager.get_materials_for_entity(entity);
 

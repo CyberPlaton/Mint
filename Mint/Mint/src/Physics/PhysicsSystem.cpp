@@ -3,25 +3,6 @@
 
 namespace mint
 {
-
-	mint::CPhysicsSystem* CPhysicsSystem::s_CPhysicsSystem = nullptr;
-
-
-	bool CPhysicsSystem::s_usePhysics = false;
-
-
-	void CPhysicsSystem::set_use_physics(bool value)
-	{
-		s_usePhysics = value;
-	}
-
-
-	bool CPhysicsSystem::get_use_physics()
-	{
-		return s_usePhysics;
-	}
-
-
 	bool CPhysicsSystem::initialize(SDescription& desc)
 	{
 		b2Vec2 g(desc.m_gravity.x, desc.m_gravity.y);
@@ -72,8 +53,10 @@ namespace mint
 	}
 
 
-	void CPhysicsSystem::update(f32 dt /*= 0.0f*/)
+	void CPhysicsSystem::update(f32 dt)
 	{
+		if (!are_physics_active()) return;
+
 		m_world->Step(dt, m_config.m_velocityIterations, m_config.m_positionIterations);
 
 		for(auto& entity: MINT_SCENE_REGISTRY()->get_registry_view< mint::component::SRigidBody >())
@@ -100,5 +83,16 @@ namespace mint
 		}
 	}
 
+
+	void CPhysicsSystem::set_physics_active(bool value)
+	{
+		m_active = value;
+	}
+
+
+	bool CPhysicsSystem::are_physics_active()
+	{
+		return m_active;
+	}
 
 }

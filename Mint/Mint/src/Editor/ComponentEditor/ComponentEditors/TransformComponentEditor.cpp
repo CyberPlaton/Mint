@@ -43,6 +43,7 @@ namespace mint::editor
 
 		auto& transform = MINT_ACTIVE_SCENE()->get_registry()->get_component< mint::component::STransform >(entity);
 		
+		auto previous_position = transform.m_position;
 
 		CUI::edit_field_vec2(transform.m_position, gd.s_EditorTransformMinPosition, gd.s_EditorTransformMaxPosition,
 							 "Position", "Entities current position in the world, this affects all children positions recursively", slid++, scid++);
@@ -65,6 +66,20 @@ namespace mint::editor
 													 glm::rotate(Mat4(1.0f), transform.m_rotation, Vec3(0.0f, 0.0f, 1.0f)) *
 
 													 glm::scale(Mat4(1.0f), Vec3(transform.m_scale, 0.0f)));
+
+
+		
+		auto displacement = transform.m_position - previous_position;
+
+		if (displacement.x >= b2_aabbExtension || displacement.x <= b2_aabbExtension ||
+			displacement.y >= b2_aabbExtension || displacement.y <= b2_aabbExtension )
+		{
+			auto dest_rect = CUCA::sprite_get_destination_rect(entity);
+
+			auto aabb = mint::algorithm::compute_aabb(dest_rect);
+
+			CWorldQuery::Get().update_entity_proxy(entity, aabb, displacement);
+		}
 	}
 
 

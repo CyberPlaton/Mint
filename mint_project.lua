@@ -100,6 +100,10 @@
 			"AnimationSystem/Animators",
 			"AnimationSystem/AnimatorStack",
 			"AnimationSystem",
+			"WorldQuery/Common",
+			"WorldQuery",
+			
+
 			
 			"Editor/EditorLayer/Common",
 			"Editor/EditorLayer/Layers",

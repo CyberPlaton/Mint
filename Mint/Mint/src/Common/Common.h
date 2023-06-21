@@ -50,6 +50,7 @@ namespace mint
 #define MINTFX_MATERIAL_COUNT_MAX 256
 #define MINT_ANIMATORS_COUNT_MAX 256
 #define MINT_ANIMATOR_FRAME_NUMBER u8
+#define MINT_QUERIES_COUNT_MAX 1024
 
 // Platform Detection
 #include "platform.h"

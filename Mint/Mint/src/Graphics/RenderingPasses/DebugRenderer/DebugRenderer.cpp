@@ -20,7 +20,7 @@ namespace mint::fx
 		{
 			auto dest = CUCA::sprite_get_destination_rect(entity);
 
-			CPrimitiveRenderer::RenderRectangle({ dest.get_x(), dest.get_y() }, { dest.get_width(), dest.get_height() }, MINT_BLUE_DARK(), 2.0f);
+			CPrimitiveRenderer::render_rectangle_lines({ dest.get_x(), dest.get_y() }, { dest.get_width(), dest.get_height() }, MINT_BLUE_DARK(), 2.0f);
 		}
 	}
 
@@ -45,7 +45,7 @@ namespace mint::fx
 			auto origin = CUCA::sprite_get_origin(entity);
 			auto scale = CUCA::transform_get_scale(entity);
 
-			CPrimitiveRenderer::RenderCircleOutlined({ dest.get_x() + origin.x * scale.x, dest.get_y() + origin.y * scale.y }, 10.0f, MINT_GREEN_LIGHT(), MINT_GREEN_DARK());
+			CPrimitiveRenderer::render_circle_outlined_lines({ dest.get_x() + origin.x * scale.x, dest.get_y() + origin.y * scale.y }, 10.0f, MINT_GREEN_LIGHT(), MINT_GREEN_DARK());
 		}
 	}
 

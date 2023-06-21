@@ -11,12 +11,6 @@ namespace mint::editor
 
 		if(!m_componentAddFunctions.lookup(h))
 		{
-			if(component_name == "SRigidBody" && 
-			  !CPhysicsSystem::get_use_physics())
-			{
-				return;
-			}
-
 			m_componentAddFunctions.add(h, add_component_to_entity_function);
 
 			m_componentRemoveFunctions.add(h, remove_component_from_entity_function);
