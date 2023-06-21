@@ -7,6 +7,7 @@
 #include "../Common/Layer.h"
 #include "../../RessourceManagement/EditorIconManager.h"
 #include "Graphics/RenderingPasses/DebugRenderer/DebugRenderer.h"
+#include "WorldQuery/WorldQueryDebugRenderer.h"
 #include "SceneSystem/SAS.h"
 #include "Graphics/RenderingPassStack.h"
 #include "Graphics/RenderingPasses/AntiAliasing/FXAA.h"
@@ -38,6 +39,8 @@ namespace mint::editor
 		bool m_renderDestinationRect = false;
 		bool m_renderOriginPoint = false;
 
+		bool m_renderAABBs = false;
+		bool m_renderAABBFullInformation = false;
 
 
 	private:

@@ -43,5 +43,8 @@ namespace mint::editor
 	bool GlobalData::s_EditorScriptScriptsEnabled = true;
 	bool GlobalData::s_EditorAnimationsEnabled = true;
 
+
+	mint::Vec4 GlobalData::s_EditorWorldQueryAABBColor = {150, 0, 0, 30};
+
 }
 #endif

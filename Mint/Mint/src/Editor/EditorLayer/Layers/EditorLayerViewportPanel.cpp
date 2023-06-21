@@ -78,15 +78,28 @@ namespace mint::editor
 		if(MINT_ENGINE()->is_in_editor_mode())
 		{
 			auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
+			auto wqr = fx::CRenderingPassStack::Get().get_rendering_pass_as< CWorldQueryDebugRender >("CWorldQueryDebugRender");
 
+			// General debug rendering.
 			if (m_renderDestinationRect) dr->set_render_destination_rectangle(true);
 			else dr->set_render_destination_rectangle(false);
-
 
 			if (m_renderOriginPoint) dr->set_render_sprite_origin(true);
 			else dr->set_render_sprite_origin(false);
 
 
+			// World Query debug rendering.
+			if (m_renderAABBs)
+			{
+				wqr->set_render_aabbs(true);
+				wqr->set_aabb_color(GlobalData::Get().s_EditorWorldQueryAABBColor);
+			}
+			else wqr->set_render_aabbs(false);
+
+			if (m_renderAABBFullInformation) wqr->set_render_full_information(true);
+			else wqr->set_render_full_information(false);
+
+			
  			if(m_debugRenderAll)
  			{
 				dr->set_render_all_entities(true);
@@ -219,9 +232,14 @@ namespace mint::editor
 			ImGui::Checkbox("Destination Rectangle", &m_renderDestinationRect);
 			ImGui::Checkbox("Origin Point", &m_renderOriginPoint);
 
+			ImGui::Checkbox("World Query AABB", &m_renderAABBs);
+			ImGui::Checkbox("World Query Full Information", &m_renderAABBFullInformation);
+
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000);
 
 			ImGui::EndPopup();
 		}
+
 	}
 
 

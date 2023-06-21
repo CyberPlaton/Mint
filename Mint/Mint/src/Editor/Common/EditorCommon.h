@@ -55,6 +55,8 @@ namespace mint::editor
 		static f32 s_EditorTransformMinRotation;
 		static f32 s_EditorTransformMaxRotation;
 
+		static Vec4 s_EditorWorldQueryAABBColor;
+
 		static CApplicationComponentsDatabase s_ComponentDatabase;
 	};
 

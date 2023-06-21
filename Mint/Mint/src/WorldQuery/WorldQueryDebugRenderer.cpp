@@ -8,6 +8,7 @@ namespace mint
 
 	bool CWorldQueryDebugRender::initialize()
 	{
+		m_aabbColor = { 153, 0, 0, 30 };
 		return true;
 	}
 
@@ -23,14 +24,15 @@ namespace mint
 
 	void CWorldQueryDebugRender::on_frame(Vector< entt::entity >& entities)
 	{
-		for (auto& proxy : CWorldQuery::Get().m_registeredProxies)
+		if (m_renderAABBs)
 		{
-			CRect rect = mint::algorithm::compute_rect_from_aabb(proxy.second.m_aabb);
+			for (auto& proxy : CWorldQuery::Get().m_registeredProxies)
+			{
+				CRect rect = mint::algorithm::compute_rect_from_aabb(proxy.second.m_aabb);
 
-			fx::CPrimitiveRenderer::render_rectangle_lines({ rect.get_x(), rect.get_y() }, { rect.get_width(), rect.get_height() }, MINT_RED_DARK(), 1.5f);
+				fx::CPrimitiveRenderer::render_aabb_filled(proxy.second.m_aabb, m_aabbColor, m_renderFullInformation);
 
-			fx::CPrimitiveRenderer::render_aabb_filled(proxy.second.m_aabb, { 0, 200, 125, 30 });
-
+			}
 		}
 	}
 
