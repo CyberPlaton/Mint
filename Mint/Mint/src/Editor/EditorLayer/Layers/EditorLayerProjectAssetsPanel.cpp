@@ -15,7 +15,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::on_update", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_update");
 
 		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
@@ -32,7 +32,7 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::on_ui_frame", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CProjectAssetsPanelLayer::on_ui_frame");
 
 		auto width = ImGui::GetWindowWidth();
 		auto height = ImGui::GetWindowHeight();
@@ -102,8 +102,6 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::main_frame()
 	{
-		MINT_PROFILE_SCOPE("CProjectAssetsPanelLayer::main_frame", "Editor::Layer");
-
 		CFilesystem fs(m_currentScenePathFull);
 
 		// Create "assets" folder if not already there.

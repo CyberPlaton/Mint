@@ -19,6 +19,8 @@ namespace mint
 
 	bool CWorldQuery::register_entity_proxy(entt::entity entity, const mint::CRect& destination_rect)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::register_entity_proxy");
+
 		auto h = SCAST(u64, entity);
 
 		if (m_registeredProxies.find(h) != m_registeredProxies.end()) return true;
@@ -36,6 +38,8 @@ namespace mint
 
 	bool CWorldQuery::is_entity_registered(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::is_entity_registered");
+
 		auto h = SCAST(u64, entity);
 
 		return m_registeredProxies.find(h) != m_registeredProxies.end();
@@ -43,6 +47,8 @@ namespace mint
 
 	void CWorldQuery::remove_entity_proxy(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::remove_entity_proxy");
+
 		auto h = SCAST(u64, entity);
 
 		if (m_registeredProxies.find(h) == m_registeredProxies.end()) return;
@@ -54,6 +60,8 @@ namespace mint
 
 	bool CWorldQuery::update_entity_proxy(entt::entity entity, const b2AABB& aabb, const Vec2& displacement)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::update_entity_proxy");
+
 		auto h = SCAST(u64, entity);
 
 		if (m_registeredProxies.find(h) == m_registeredProxies.end()) return false;
@@ -70,6 +78,8 @@ namespace mint
 	
 	mint::u32 CWorldQuery::get_entity_count_at_point_in_radius(const CRect& rect)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::get_entity_count_at_point_in_radius");
+
 		u32 result = 0;
 
 		b2AABB aabb = mint::algorithm::compute_aabb(rect);

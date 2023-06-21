@@ -93,7 +93,7 @@ namespace mint::animation
 
 	void CAnimatorStack::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CAnimatorStack::on_update", "Engine::Animation");
+		MINT_PROFILE_SCOPE("Engine::Animation", "CAnimatorStack::on_update");
 
 		if (is_handle_valid(m_currentState))
 		{

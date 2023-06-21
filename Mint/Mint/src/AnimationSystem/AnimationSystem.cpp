@@ -148,7 +148,7 @@ namespace mint::animation
 
 	void CAnimationSystem::_internal_computation()
 	{
-		MINT_PROFILE_SCOPE("CAnimationSystem::_internal_computation", "Engine::Animation");
+		MINT_PROFILE_SCOPE("Engine::Animation", "CAnimationSystem::_internal_computation");
 
 		set_should_update(false);
 

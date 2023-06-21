@@ -20,14 +20,16 @@ namespace mint::editor
 
 	void CRightmostPanelLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CRightmostPanelLayer::on_update", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::on_update");
+
 		CLayer::on_update(dt);
 	}
 
 
 	void CRightmostPanelLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CRightmostPanelLayer::on_ui_frame", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::on_ui_frame");
+
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 25), percent(get_window_height(), 98) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ get_window_width() - percent(get_window_width(), 25), percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);
 		ImGui::Begin("Rightmost Panel", &m_enabled, get_flags());

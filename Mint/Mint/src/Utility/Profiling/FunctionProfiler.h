@@ -184,9 +184,9 @@ namespace mint::profiler
 #define	MINT_PROFILE_SCOPE_CAT(category, name)
 #define	MINT_PROFILE_SCOPE(category)
 #else
-#define MINT_PROFILE_SCOPE_EX(category, name, variable_name) mint::profiler::SFunctionProfilerUtility variable_name(name, category)
-#define MINT_PROFILE_SCOPE(category, name) mint::profiler::SFunctionProfilerUtility profiled_function(name, category)
-#define MINT_PROFILE_FUNC(category) MINT_PROFILE_SCOPE(MINT_FUNC_SIG, category)
+#define MINT_PROFILE_SCOPE_EX(category, name, variable_name) mint::profiler::SFunctionProfilerUtility variable_name(category, name)
+#define MINT_PROFILE_SCOPE(category, name) mint::profiler::SFunctionProfilerUtility profiled_function(category, name)
+#define MINT_PROFILE_FUNC(category) MINT_PROFILE_SCOPE(category, MINT_FUNC_SIG)
 #endif
 
 }

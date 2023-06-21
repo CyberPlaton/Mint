@@ -20,7 +20,7 @@ namespace mint::editor
 
 	void CMainmenubarLayer::on_ui_frame()
 	{
-		MINT_PROFILE_SCOPE("CMainmenubarLayer::on_ui_frame", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CMainmenubarLayer::on_ui_frame");
 
 		if (ImGui::BeginMainMenuBar())
 		{

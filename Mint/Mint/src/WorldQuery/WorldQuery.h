@@ -6,6 +6,7 @@
 #include "Common/Algorithm.h"
 #include "Common/WorldQueryFilter.h"
 #include "Common/WorldQueryResult.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint

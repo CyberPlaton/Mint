@@ -35,7 +35,7 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 	ImGui::Begin("World Query");
 
-	CUI::edit_field_rect(rect, 1.0f, 1000.0f, "Query Rectangle", "", sid++, scid++);
+	CUI::edit_field_rect(rect, -2000.0f, 2000.0f, "Query Rectangle", "", sid++, scid++);
 
 	u32 result = CWorldQuery::Get().get_entity_count_at_point_in_radius(rect);
 
@@ -226,7 +226,7 @@ bool CMainScene::on_load()
 
 
 	mint::CRandom random;
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 150; i++)
 	{
 		// Create an entity.
 		entt::entity entity = m_registry.create_entity();
@@ -245,7 +245,7 @@ bool CMainScene::on_load()
 
 		CUCA::transform_set_scale(entity, { 1.0f, 1.0f }); // Scaling bugged?
 		CUCA::transform_set_rotation(entity, 0.0f);
- 		CUCA::transform_set_position(entity, { random.normalized_float() * 512, random.normalized_float() * 512 });
+ 		CUCA::transform_set_position(entity, { random.normalized_float() * 1024, random.normalized_float() * 1024 });
 		
 
 		sprite.m_visible = true;

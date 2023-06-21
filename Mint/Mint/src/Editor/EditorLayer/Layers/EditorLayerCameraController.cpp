@@ -14,7 +14,7 @@ namespace mint::editor
 
 	void CCameraControllerLayer::on_update(f32 dt)
 	{
-		MINT_PROFILE_SCOPE("CCameraControllerLayer::on_update", "Editor::Layer");
+		MINT_PROFILE_SCOPE("Editor::Layer", "CCameraControllerLayer::on_update");
 
 		if (mint::CUI::ui_has_focus()) return;
 

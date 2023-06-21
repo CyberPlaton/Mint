@@ -9,7 +9,7 @@ namespace mint::animation
 		{
 			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
 
-			MINT_PROFILE_SCOPE("scaleanim::on_animation_update", "Engine::Animation");
+			MINT_PROFILE_SCOPE("Engine::Animation", "scaleanim::on_animation_update");
 
 
 			auto& data = *reinterpret_cast<SScaleAnimationBehaviorData*>(animation_data);
@@ -75,7 +75,7 @@ namespace mint::animation
 		{
 			MINT_ASSERT(animation_data != nullptr, "Invalid operation. Animation data was nullptr!");
 
-			MINT_PROFILE_SCOPE("scaleanim::on_animation_enter", "Engine::Animation");
+			MINT_PROFILE_SCOPE("Engine::Animation", "scaleanim::on_animation_enter");
 
 
 			auto& data = *reinterpret_cast<SScaleAnimationBehaviorData*>(animation_data);
