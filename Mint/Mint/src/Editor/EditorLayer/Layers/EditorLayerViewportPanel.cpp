@@ -80,13 +80,6 @@ namespace mint::editor
 			auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
 			auto wqr = fx::CRenderingPassStack::Get().get_rendering_pass_as< CWorldQueryDebugRender >("CWorldQueryDebugRender");
 
-			// General debug rendering.
-			if (m_renderDestinationRect) dr->set_render_destination_rectangle(true);
-			else dr->set_render_destination_rectangle(false);
-
-			if (m_renderOriginPoint) dr->set_render_sprite_origin(true);
-			else dr->set_render_sprite_origin(false);
-
 
 			// World Query debug rendering.
 			if (m_renderAABBs)
@@ -99,6 +92,14 @@ namespace mint::editor
 			if (m_renderAABBFullInformation) wqr->set_render_full_information(true);
 			else wqr->set_render_full_information(false);
 
+
+
+			// General debug rendering.
+			if (m_renderDestinationRect) dr->set_render_destination_rectangle(true);
+			else dr->set_render_destination_rectangle(false);
+
+			if (m_renderOriginPoint) dr->set_render_sprite_origin(true);
+			else dr->set_render_sprite_origin(false);
 			
  			if(m_debugRenderAll)
  			{
