@@ -1,5 +1,10 @@
 Runtime Version History:
 
+2023.06.06:
+	o Adding World Query.
+	o Adding Group Id to entities.
+
+
 2023.06.05:
 	o Scale and Translation animators.
 	o Minor fixes and changes.
