@@ -16,7 +16,7 @@ namespace mint
 		SetTraceLogLevel(LOG_WARNING | LOG_ERROR | LOG_FATAL);
 #elif MINT_RELEASE
 		m_verbosity = Verbosity_Release;
-		m_mode = Mode_File;
+		m_mode = Mode_Console;
 		SetTraceLogLevel(LOG_WARNING | LOG_ERROR | LOG_FATAL);
 #else
 		m_verbosity = Verbosity_Distr;
@@ -25,21 +25,23 @@ namespace mint
 #endif
 		
 
-#if MINT_DEBUG
-		spdlog::set_pattern("%^[%n] %v%$");
-		s_consoleLog = spdlog::stdout_color_mt("DEBUG");
-#else
+#if MINT_DISTR
 		spdlog::set_pattern("%^[%n] %v%$");
 		spdlog::flush_every(std::chrono::seconds(1));
 		spdlog::flush_on(spdlog::level::level_enum::trace);
 
-#if MINT_RELEASE
-		s_fileLog = spdlog::basic_logger_mt("RELEASE", "Mint.log");
-#endif
-#if MINT_DISTR
 		s_fileLog = spdlog::basic_logger_mt("DISTR", "Mint.log");
+#else
+#if MINT_DEBUG
+		spdlog::set_pattern("%^[%n] %v%$");
+		s_consoleLog = spdlog::stdout_color_mt("DEBUG");
+#elif MINT_RELEASE
+		spdlog::set_pattern("%^[%n] %v%$");
+		s_consoleLog = spdlog::stdout_color_mt("RELEASE");
 #endif
+
 #endif
+
 		m_timer.start_timer();
 
 		String date = CTimer::get_local_date_time();

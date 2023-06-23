@@ -2,7 +2,7 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	//CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 }
 
 
@@ -85,47 +85,47 @@ bool CMainScene::on_load()
 	using namespace mint;
 
 	// Create an entity.
-//  	m_knight = m_registry.create_entity();
-//  
-//  	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_knight);
-//  	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
-//  	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
-//  	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
-//  	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
-//  	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_knight);
-//  
-//  
-//  	identifier.m_enttId = SCAST(u64, m_knight);
-//  	identifier.m_uuid = identifier.m_enttId;
-//  	identifier.m_debugName = "Gopnik";
-//  	hierarchy.m_parent = entt::null;
-//  
-//  	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
-//  	CUCA::transform_set_rotation(m_knight, 0);
-//  	CUCA::transform_set_position(m_knight, { 0, 0 });
-//  
-//  
-//  	sprite.m_visible = true;
-//  	sprite.m_internalVisible = true;
-//  	sprite.m_depth = 0;
-//  	sprite.m_rect = { 0.0f, 0.0f, 0.0f, 0.0f };
-//  	sprite.m_color = { 255, 255, 255, 255 };
-//  	sprite.m_origin = { 0.0f, 0.0f };
-// 
-//  
-//  
-//  	// Set script for entity.
-//  	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
-//  
-// 
-//     // Set animator for entity.
-// 	animation::CAnimationSystem::Get().request_entity_registration(m_knight);
-// 
-// 	animation::CAnimationSystem::Get().set_entity_animation(m_knight, "anim_gopnik_idle");
+	m_knight = m_registry.create_entity();
+
+	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_knight);
+	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_knight);
+	auto& transform = m_registry.add_component< mint::component::STransform >(m_knight);
+	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_knight);
+	auto& script = m_registry.add_component< mint::component::SScript >(m_knight);
+	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_knight);
 
 
-// 
-// 	// Frame animator.
+	identifier.m_enttId = SCAST(u64, m_knight);
+	identifier.m_uuid = identifier.m_enttId;
+	identifier.m_debugName = "Gopnik";
+	hierarchy.m_parent = entt::null;
+
+	CUCA::transform_set_scale(m_knight, { 1.0f, 1.0f });
+	CUCA::transform_set_rotation(m_knight, 0);
+	CUCA::transform_set_position(m_knight, { 0, 0 });
+
+
+	sprite.m_visible = true;
+	sprite.m_internalVisible = true;
+	sprite.m_depth = 1;
+	sprite.m_rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+	sprite.m_color = { 255, 255, 255, 255 };
+	sprite.m_origin = { 0.0f, 0.0f };
+
+
+
+	// Set script for entity.
+	mint::scripting::CBehaviorEngine::Get().set_behavior_for_entity("SoldierController", m_knight);
+
+
+	// Set animator for entity.
+	animation::CAnimationSystem::Get().request_entity_registration(m_knight);
+
+	animation::CAnimationSystem::Get().set_entity_animation(m_knight, "anim_gopnik_idle");
+
+
+
+	// Frame animator.
 // 	animation::CAnimationSystem::Get().add_entity_animation_state(m_knight, "Default");
 // 
 // 	animation::CAnimationSystem::Get().set_entity_animation_state(m_knight, "Default");
@@ -142,7 +142,7 @@ bool CMainScene::on_load()
 // 		}
 // 	}
 // 
-// 	auto animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::frameanim::SFrameAnimationBehaviorData >(m_knight, "Default", "FrameAnimator", data, 
+// 	auto animator = animation::CAnimationSystem::Get().try_push_entity_animator< mint::animation::frameanim::SFrameAnimationBehaviorData >(m_knight, "Default", "FrameAnimator", data,
 // 		mint::animation::frameanim::on_animation_update,
 // 		mint::animation::frameanim::on_animation_enter,
 // 		mint::animation::frameanim::on_animation_exit,
@@ -214,22 +214,22 @@ bool CMainScene::on_load()
 // 
 // 	scale_animator->set_animation_easing_function(bx::Easing::SmoothStep);
 // 
-//  	scale_animator->set_animation_speed(1.0f);
+//   	scale_animator->set_animation_speed(1.0f);
 
 
-  	//add_entity(m_knight);
+  	add_entity(m_knight);
 
  
 	/*
 		TESTING REFLECTION
 	*/
-// #if MINT_DISTR
-// #else
-// 	auto& reflected = m_registry.add_component< MyComponent >(m_knight);
-// 	reflected.m_entity = SCAST(u64, m_knight);
-// 	reflected.m_name = identifier.m_debugName;
-// 	reflected.m_isReflected = true;
-// #endif
+#if MINT_DISTR
+#else
+	auto& reflected = m_registry.add_component< MyComponent >(m_knight);
+	reflected.m_entity = SCAST(u64, m_knight);
+	reflected.m_name = identifier.m_debugName;
+	reflected.m_isReflected = true;
+ #endif
 
 
 
