@@ -86,6 +86,8 @@ namespace mint
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
+			m_masterQueryType = WorldQueryType_EntityCount;
+
 			m_masterQueryKey = (m_masterQueryKey + 1) % MINT_QUERIES_COUNT_MAX;
 
 			Query(this, aabb);
@@ -93,31 +95,39 @@ namespace mint
 			result = m_queryResultEntityCount;
 
 			m_queryResultEntityCount = 0;
+			m_masterQueryType = WorldQueryType_None;
 		);
-		
-		return result;
+
+ 		return result;
 	}
 
-// 	mint::f32 CWorldQuery::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, f32 fraction)
-// 	{ 
-// 		return 0.0f;
-// 	}
-// 
-// 	bool CWorldQuery::ReportFixture(b2Fixture* fixture)
-// 	{
-// 		auto pfixture = reinterpret_cast<SWorldQueryProxy*>(fixture->GetUserData().pointer);
-// 
-// 		// Already checked this fixture.
-// 		if (m_masterQueryKey == pfixture->m_queryKey) return true;
-// 
-// 		// Assign query key.
-// 		pfixture->m_queryKey = m_masterQueryKey;
-// 
-// 		// Increment query result count.
-// 		m_queryResults[m_masterQueryKey].m_count++;
-// 
-// 		return true;
-// 	}
+
+	mint::Vector< mint::SWorldQueryProxy > CWorldQuery::get_entities_at_point_in_radius(const CRect& rect)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::get_entities_at_point_in_radius");
+
+		Vector< SWorldQueryProxy > result;
+
+		b2AABB aabb = mint::algorithm::compute_aabb(rect);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryType = WorldQueryType_EntityArray;
+
+			m_masterQueryKey = (m_masterQueryKey + 1) % MINT_QUERIES_COUNT_MAX;
+
+			Query(this, aabb);
+
+			result = m_queryResultEntityArray;
+
+			m_queryResultEntityArray.clear();
+			m_masterQueryType = WorldQueryType_None;
+		);
+
+
+		return result;
+	}
 
 	bool CWorldQuery::QueryCallback(s32 proxyId)
 	{
@@ -127,7 +137,28 @@ namespace mint
 
 		proxy.m_queryKey = m_masterQueryKey;
 
-		m_queryResultEntityCount++;
+
+		// Check whether there is a filter and we should apply it.
+		if(m_masterQueryHasFilter && !m_masterQueryFilter->does_proxy_pass_filter(proxy))
+		{
+			return true;
+		}
+
+
+		// Determine what to do based on query type.
+		switch (m_masterQueryType)
+		{
+		case WorldQueryType_EntityCount:
+		{
+			m_queryResultEntityCount++; break;
+		}
+		case WorldQueryType_EntityArray:
+		{
+			mint::algorithm::vector_push_back(m_queryResultEntityArray, proxy); break;
+		}
+		default: return false;
+		}
+
 
 		return true;
 	}

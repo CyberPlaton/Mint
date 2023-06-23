@@ -4,23 +4,15 @@
 
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
-#include "Common/WorldQueryFilter.h"
-#include "Common/WorldQueryResult.h"
 #include "Utility/Profiling/FunctionProfiler.h"
+#include "Common/WorldQueryFilter.h"
+#include "Common/WorldQueryType.h"
 
 
 namespace mint
 {
-
-	struct SWorldQueryProxy
-	{
-		entt::entity m_entity = entt::null;
-		b2AABB m_aabb;
-		s32 m_b2ProxyId = -1;
-		s32 m_queryKey = -1;
-	};
-
 	class CWorldQueryDebugRender;
+
 
 	class CWorldQuery : protected b2DynamicTree
 	{
@@ -45,52 +37,88 @@ namespace mint
 
 		u32 get_entity_count_at_point_in_radius(const CRect& rect);
 
+		template< class FilterType >
+		u32 get_entity_count_at_point_in_radius(const CRect& rect, FilterType* filter);
+
+
+		Vector< SWorldQueryProxy > get_entities_at_point_in_radius(const CRect& rect);
+
+		template< class FilterType >
+		Vector< SWorldQueryProxy > get_entities_at_point_in_radius(const CRect& rect, FilterType* filter);
 
 
 
-		/// @brief Raycast query callback. Called for each fixture intersecting with the raycast.
-		/// Please note that there is no order in reporting fixtures!
-		/// @param fixture Fixture intersecting with the raycast.
-		/// @param point Point in world of the intersection.
-		/// @param normal Normal vector of the intersection.
-		/// @param fraction Fraction of the ray where the intersection takes place, i.e. 1.5f means the 1.5x length of the ray, and 0.5f means 0.5x length of the ray.
-		/// @return -1.0f for ignoring the intersection,
-		///			{0.0f ... 1.0f} for adjusting the ray length: 
-		///				0.0f => set ray length to 0.0x, basically removing it.
-		///				1.0f => keep full ray length.
-		///				0.nf => set ray length to 0.nx. Return "fraction" variable to make the ray just long enough and continue raycasting.
-// 		f32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, f32 fraction) override final;
 
-
-		/// @brief AABB query callback. Called for each fixture in given query area.
-		/// @param fixture Fixture inside the query area.
-		/// @return True to keep querying, False to stop.
-// 		bool ReportFixture(b2Fixture* fixture) override final;
-
-		/// @brief 
-		/// @param proxyId 
-		/// @return 
 		bool QueryCallback(s32 proxyId);
-		
-		/// @brief 
-		/// @param input 
-		/// @param proxyId 
-		/// @return 
+	
 		f32 RayCastCallback(const b2RayCastInput& input, s32 proxyId);
-
 
 	private:
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 		u32 m_masterQueryKey = 0;
+		WorldQueryType m_masterQueryType;
+		
+		bool m_masterQueryHasFilter = false;
+		CWorldQueryFilter* m_masterQueryFilter = nullptr;
 
-		u64 m_queryResultEntityCount = 0;
 
 		std::unordered_map< u64, SWorldQueryProxy > m_registeredProxies;
 
 		std::unordered_map< s32, u64 > m_registeredProxyIds;
 
+
+		u64 m_queryResultEntityCount = 0;
+		Vector< SWorldQueryProxy > m_queryResultEntityArray;
 	};
+
+
+	template< class FilterType >
+	Vector< SWorldQueryProxy > mint::CWorldQuery::get_entities_at_point_in_radius(const CRect& rect, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+		
+		);
+
+		auto& result = get_entities_at_point_in_radius(rect);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
+
+
+	template< class FilterType >
+	u32 mint::CWorldQuery::get_entity_count_at_point_in_radius(const CRect& rect, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+
+		);
+
+		auto& result = get_entity_count_at_point_in_radius(rect);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
 
 
 }

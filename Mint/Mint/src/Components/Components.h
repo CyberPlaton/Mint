@@ -30,6 +30,8 @@ namespace mint::component
 
 		u64 m_enttId = 0;
 
+		u64 m_groupId = 0;
+
 		String m_debugName;
 	};
 

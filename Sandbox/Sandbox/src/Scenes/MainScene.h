@@ -13,6 +13,17 @@ struct MyComponent INHERITS(mint::reflection::SBase)
 };
 
 
+class TestWorldQueryFilter : public mint::CWorldQueryFilter
+{
+public:
+	bool does_proxy_pass_filter(const mint::SWorldQueryProxy& proxy) override final
+	{
+		auto entity = proxy.m_entity;
+
+		return CUCA::identifier_get_debug_name(entity) == "Entity_2";
+	}
+
+};
 
 class CMainScene : public mint::CScene
 {

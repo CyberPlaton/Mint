@@ -47,10 +47,14 @@ namespace mint
 #define MINTFX_USE_EMBEDDED_SHADERS 0
 #define MINTFX_OPENGL_330 0
 #define MINTFX_OPENGL_ES20 0
+#define MINT_SAS_RENDERING_LAYERS_MAX 100
+#define MINT_SAS_OUT_QUEUE_COUNT_MAX 3
 #define MINTFX_MATERIAL_COUNT_MAX 256
 #define MINT_ANIMATORS_COUNT_MAX 256
 #define MINT_ANIMATOR_FRAME_NUMBER u8
 #define MINT_QUERIES_COUNT_MAX 1024
+#define MINT_QUERIES_FILTERS_COUNT_MAX 32
+
 
 // Platform Detection
 #include "platform.h"
@@ -118,11 +122,10 @@ namespace mint
 
 
 // Common macros
+#define BIT(n) 1 << n
 
 #define SCAST(type, value) static_cast< type >(value)
 
-#define MINT_SAS_RENDERING_LAYERS_MAX 100
-#define MINT_SAS_OUT_QUEUE_COUNT_MAX 3
 #define MINT_INVALID_HANDLE SCAST(u64, -1)
 
 

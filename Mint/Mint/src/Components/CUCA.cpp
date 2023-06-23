@@ -288,6 +288,30 @@ namespace mint::component
 		);
 	}
 
+	void CUCA::identifier_set_group_id(entt::entity entity, u64 group_id)
+	{
+		auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			id.m_groupId = group_id;
+
+		);
+	}
+
+	u64 CUCA::identifier_get_group_id(entt::entity entity)
+	{
+		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
+
+			auto gid = id.m_groupId;
+
+		);
+
+		return gid;
+	}
+
 	u64 CUCA::identifier_get_identifier(entt::entity entity)
 	{
 		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);

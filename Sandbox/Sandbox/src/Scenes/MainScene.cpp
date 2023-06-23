@@ -41,6 +41,16 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 	ImGui::Text(TextFormat("Query result: %d", result));
 
+
+	TestWorldQueryFilter filter;
+	Vector< SWorldQueryProxy > result_entities = CWorldQuery::Get().get_entities_at_point_in_radius< TestWorldQueryFilter >(rect, &filter);
+
+	for (auto& entity : result_entities)
+	{
+		ImGui::Text(TextFormat("Query result entity: %zu", (u64)entity.m_entity));
+	}
+
+
 	ImGui::End();
 
 
