@@ -37,6 +37,7 @@
 			"Utility/Serialization",
 			"Utility/ServiceSystem/Services",
 			"Utility/ServiceSystem",
+			"Utility/STL/Common",
 			"Utility/STL",
 			"Utility/Input/LuaBinding",
 			"Utility/Input",

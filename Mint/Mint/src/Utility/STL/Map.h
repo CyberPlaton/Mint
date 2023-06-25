@@ -253,8 +253,6 @@ namespace mint
 	{
 		reset();
 	}
-
-
 }
 
 

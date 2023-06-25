@@ -198,6 +198,12 @@ namespace mint
 		m_layerStack.on_before_update();
 	}
 
+	struct SSomeObject
+	{
+		SSomeObject() = default;
+
+		mint::f32 m_value;
+	};
 
 	void CEditor::on_editor_update(f32 dt)
 	{
