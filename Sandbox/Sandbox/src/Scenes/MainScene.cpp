@@ -29,41 +29,70 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 	MINT_ENGINE()->set_engine_fps(engine_dt);
 
 
-	static mint::CRect rect = { 0.0f, 0.0f, 1.0f, 1.0f };
-	b2AABB aabb = mint::algorithm::compute_aabb(rect);
-	ImGuiID sid = 10000, scid = 20000;
-
-	ImGui::Begin("World Query");
-
-	CUI::edit_field_rect(rect, -2000.0f, 2000.0f, "Query Rectangle", "", sid++, scid++);
-
-	u32 result = CWorldQuery::Get().get_entity_count_at_point_in_radius(rect);
-
-	ImGui::Text(TextFormat("Query result: %d", result));
-
-
-	TestWorldQueryFilter filter;
-	Vector< SWorldQueryProxy > result_entities = CWorldQuery::Get().get_entities_at_point_in_radius< TestWorldQueryFilter >(rect, &filter);
-
-	for (auto& entity : result_entities)
-	{
-		ImGui::Text(TextFormat("Query result entity: %zu", (u64)entity.m_entity));
-	}
-
-
-	ImGui::End();
-
-
-	fx::CCameraManager::Get().get_active_camera()->use_camera();
-
-	// Render aabb, this is the same as rendering a rect computed from aabb.
-	fx::CPrimitiveRenderer::render_aabb_filled(aabb, { 125, 125, 125, 30 });
-
-	// Render rect.
-	fx::CPrimitiveRenderer::render_rectangle_filled(rect, { 0, 255, 125, 30 });
-
-
-	fx::CCameraManager::Get().get_active_camera()->end_camera();
+	// World Query testing with visualization.
+// 	static mint::CRect rect = { 0.0f, 0.0f, 1.0f, 1.0f };
+// 	b2AABB aabb = mint::algorithm::compute_aabb(rect);
+// 	static Vec2 ray_start = { 0.0f, 0.0f };
+// 	static Vec2 ray_end = {1.0f, 1.0f};
+// 
+// 	ImGuiID sid = 10000, scid = 20000;
+// 
+// 	ImGui::Begin("World Query");
+// 
+// 	CUI::edit_field_rect(rect, -2000.0f, 2000.0f, "Query Rectangle", "", sid++, scid++);
+// 
+// 	u32 result = CWorldQuery::Get().get_entity_count_at_point_in_radius(rect);
+// 
+// 	ImGui::Text(TextFormat("Count query AABB: %d", result));
+// 
+// 	TestWorldQueryFilter filter;
+// 	Vector< SWorldQueryProxy > result_entities = CWorldQuery::Get().get_entities_at_point_in_radius< TestWorldQueryFilter >(rect, &filter);
+// 
+// 	for (auto& entity : result_entities)
+// 	{
+// 		ImGui::Text(TextFormat("Filter Query AABB: %zu (entt::entity)", (u64)entity.m_entity));
+// 	}
+// 
+// 	bool any_result = CWorldQuery::Get().get_any_entity_at_point_in_radius(rect);
+// 
+// 	ImGui::Text(TextFormat("Any query AABB: %s", any_result == true ? "True" : "False"));
+// 
+// 
+// 	ImGui::Separator();
+// 
+// 	CUI::edit_field_vec2(ray_start, -2000.0f, 2000.0f, "Query ray start", "", sid++, scid++);
+// 	CUI::edit_field_vec2(ray_end, -2000.0f, 2000.0f, "Query ray end", "", sid++, scid++);
+// 
+// 	result = CWorldQuery::Get().get_entity_count_by_ray_intersection(ray_start, ray_end);
+// 
+// 	ImGui::Text(TextFormat("Count query Raycast: %d", result));
+// 
+// 	result_entities = CWorldQuery::Get().get_entities_by_ray_intersection< TestWorldQueryFilter >(ray_start, ray_end, &filter);
+// 
+// 	for (auto& entity : result_entities)
+// 	{
+// 		ImGui::Text(TextFormat("Filter Query Raycast: %zu (entt::entity)", (u64)entity.m_entity));
+// 	}
+// 
+// 	any_result = CWorldQuery::Get().get_any_entity_ray_intersection(ray_start, ray_end);
+// 
+// 	ImGui::Text(TextFormat("Any query Raycast: %s", any_result == true ? "True" : "False"));
+// 
+// 	ImGui::End();
+// 
+// 
+// 	fx::CCameraManager::Get().get_active_camera()->use_camera();
+// 
+// 	// Render aabb, this is the same as rendering a rect computed from aabb.
+// 	fx::CPrimitiveRenderer::render_aabb_filled(aabb, { 125, 125, 125, 30 });
+// 
+// 	// Render rect.
+// 	fx::CPrimitiveRenderer::render_rectangle_filled(rect, { 0, 255, 125, 30 });
+// 
+// 	// Render raycast.
+// 	fx::CPrimitiveRenderer::render_line(ray_start, ray_end, MINT_RED(), 2.0f);
+// 
+// 	fx::CCameraManager::Get().get_active_camera()->end_camera();
 }
 
 

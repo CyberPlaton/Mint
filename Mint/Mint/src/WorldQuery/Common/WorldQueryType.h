@@ -10,6 +10,7 @@ namespace mint
 		WorldQueryType_None = 0,
 		WorldQueryType_EntityCount,
 		WorldQueryType_EntityArray,
+		WorldQueryType_AnyOccurrence,
 	};
 
 }

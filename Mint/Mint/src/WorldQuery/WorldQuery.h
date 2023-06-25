@@ -36,6 +36,12 @@ namespace mint
 		bool update_entity_proxy(entt::entity entity, const b2AABB& aabb, const Vec2& displacement);
 
 
+		bool get_any_entity_at_point_in_radius(const CRect& rect);
+
+		template< class FilterType >
+		bool get_any_entity_at_point_in_radius(const CRect& rect, FilterType* filter);
+
+
 		u32 get_entity_count_at_point_in_radius(const CRect& rect);
 
 		template< class FilterType >
@@ -46,6 +52,26 @@ namespace mint
 
 		template< class FilterType >
 		Vector< SWorldQueryProxy > get_entities_at_point_in_radius(const CRect& rect, FilterType* filter);
+
+
+		u32 get_entity_count_by_ray_intersection(const Vec2& start, const Vec2& end);
+
+		template< class FilterType >
+		u32 get_entity_count_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter);
+
+
+		Vector< SWorldQueryProxy > get_entities_by_ray_intersection(const Vec2& start, const Vec2& end);
+
+		template< class FilterType >
+		Vector< SWorldQueryProxy > get_entities_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter);
+
+
+		bool get_any_entity_ray_intersection(const Vec2& start, const Vec2& end);
+
+
+		template< class FilterType >
+		bool get_any_entity_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter);
+
 
 
 
@@ -70,8 +96,101 @@ namespace mint
 
 		u64 m_queryResultEntityCount = 0;
 		Vector< SWorldQueryProxy > m_queryResultEntityArray;
+		bool m_queryResultAnyOccurrence = false;
 	};
 
+	template< class FilterType >
+	bool mint::CWorldQuery::get_any_entity_at_point_in_radius(const CRect& rect, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+
+		);
+
+		auto result = get_any_entity_at_point_in_radius(rect);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
+
+	template< class FilterType >
+	bool mint::CWorldQuery::get_any_entity_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+
+		);
+
+		auto result = get_any_entity_ray_intersection(start, end);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
+
+	template< class FilterType >
+	u32 mint::CWorldQuery::get_entity_count_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+
+		);
+
+		auto result = get_entity_count_by_ray_intersection(start, end);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
+
+	template< class FilterType >
+	Vector< SWorldQueryProxy >
+		mint::CWorldQuery::get_entities_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+	{
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = true;
+			m_masterQueryFilter = filter;
+
+		);
+
+		auto& result = get_entities_by_ray_intersection(start, end);
+
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			m_masterQueryHasFilter = false;
+			m_masterQueryFilter = nullptr;
+
+		);
+
+		return result;
+	}
 
 	template< class FilterType >
 	Vector< SWorldQueryProxy > mint::CWorldQuery::get_entities_at_point_in_radius(const CRect& rect, FilterType* filter)
