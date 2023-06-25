@@ -1,5 +1,11 @@
 Runtime Version History:
 
+2023.06.07:
+	o Initial version of World Query complete with AABB and Raycast queries.
+	o Queries can be to check for any intersecting, the count of intersections and for all intersected proxies (entities).
+	o Developer defined query Filters can be applied to further specialize the query request.
+
+
 2023.06.06:
 	o Adding World Query.
 	o Adding Group Id to entities.
