@@ -846,7 +846,9 @@ namespace mint::component
 
 	void CUCA::_world_query_update_entity_proxy(entt::entity entity, const Vec2& displacement)
 	{
-		if (CWorldQuery::Get().is_entity_registered(entity))
+		if (CWorldQuery::Get().is_entity_registered(entity) && 
+			(displacement.x >= b2_aabbExtension || displacement.x <= b2_aabbExtension ||
+			 displacement.y >= b2_aabbExtension || displacement.y <= b2_aabbExtension))
 		{
 			auto& rect = CUCA::sprite_get_destination_rect(entity);
 
@@ -855,7 +857,7 @@ namespace mint::component
 			auto w = rect.get_width();
 			auto h = rect.get_height();
 
-			CWorldQuery::Get().update_entity_proxy(entity, mint::algorithm::compute_aabb({x - w / 2.0f, y - h / 2.0f}, { w / 2.0f, h / 2.0f }), displacement);
+			CWorldQuery::Get().update_entity_proxy(entity, mint::algorithm::compute_aabb(rect), displacement);
 		}
 	}
 
