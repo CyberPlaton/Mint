@@ -30,9 +30,28 @@ namespace mint::component
 
 		u64 m_enttId = 0;
 
+		String m_debugName;
+	};
+
+
+	struct SWorldSettings INHERITS(mint::reflection::SBase)
+	{
+		REFLECTED_CLASS(SWorldSettings);
+
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry & registry, maml::SNode * node);
+		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry & registry, maml::SNode * node);
+
+		/// @brief Developer defined group the entity belongs to.
 		u64 m_groupId = 0;
 
-		String m_debugName;
+		/// @brief Whether the entity is active. Important for behavior execution, physics and filtering etc.
+		bool m_enabled = true;
+
+		/// @brief Whether a filter can be applied to entity.
+		bool m_filterEnabled = true;
+
+		/// @brief Whether the entity is findable through World Query.
+		bool m_queryable = true;
 	};
 
 

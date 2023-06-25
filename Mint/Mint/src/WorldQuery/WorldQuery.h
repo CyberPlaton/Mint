@@ -7,6 +7,7 @@
 #include "Utility/Profiling/FunctionProfiler.h"
 #include "Common/WorldQueryFilter.h"
 #include "Common/WorldQueryType.h"
+#include "Utility/STL/BinarySearchTree.h"
 
 
 namespace mint
@@ -62,8 +63,7 @@ namespace mint
 		bool m_masterQueryHasFilter = false;
 		CWorldQueryFilter* m_masterQueryFilter = nullptr;
 
-
-		std::unordered_map< u64, SWorldQueryProxy > m_registeredProxies;
+		CBinarySearchTree< SWorldQueryProxy > m_registeredProxies;
 
 		std::unordered_map< s32, u64 > m_registeredProxyIds;
 

@@ -54,6 +54,7 @@ namespace mint
 #define MINT_ANIMATOR_FRAME_NUMBER u8
 #define MINT_QUERIES_COUNT_MAX 1024
 #define MINT_QUERIES_FILTERS_COUNT_MAX 32
+#define MINT_ENTITY_COUNT_MAX 65535
 
 
 // Platform Detection

@@ -8,6 +8,8 @@ namespace mint
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
+		m_registeredProxies.initialize(MINT_ENTITY_COUNT_MAX);
+
 		return true;
 	}
 
@@ -23,15 +25,18 @@ namespace mint
 
 		auto h = SCAST(u64, entity);
 
-		if (m_registeredProxies.find(h) != m_registeredProxies.end()) return true;
+		if (m_registeredProxies.lookup(h)) return true;
 
 		b2AABB aabb = mint::algorithm::compute_aabb(destination_rect);
 
-		m_registeredProxies[h].m_entity = entity;
-		m_registeredProxies[h].m_b2ProxyId = CreateProxy(aabb, &m_registeredProxies[h]);
-		m_registeredProxies[h].m_aabb = aabb;
+		auto proxy = m_registeredProxies.add_node(h);
 
-		m_registeredProxyIds[m_registeredProxies[h].m_b2ProxyId] = h;
+		proxy->m_entity = entity;
+		proxy->m_b2ProxyId = CreateProxy(aabb, (void*)proxy);
+		proxy->m_aabb = aabb;
+
+		m_registeredProxyIds[proxy->m_b2ProxyId] = h;
+
 
 		return true;
 	}
@@ -42,7 +47,7 @@ namespace mint
 
 		auto h = SCAST(u64, entity);
 
-		return m_registeredProxies.find(h) != m_registeredProxies.end();
+		return m_registeredProxies.lookup(h);
 	}
 
 	void CWorldQuery::remove_entity_proxy(entt::entity entity)
@@ -51,11 +56,13 @@ namespace mint
 
 		auto h = SCAST(u64, entity);
 
-		if (m_registeredProxies.find(h) == m_registeredProxies.end()) return;
+		if (!m_registeredProxies.lookup(h)) return;
 
-		DestroyProxy(m_registeredProxies[h].m_b2ProxyId);
+		auto proxy = m_registeredProxies.get(h);
 
-		m_registeredProxies.erase(h);
+		DestroyProxy(proxy->m_b2ProxyId);
+
+		m_registeredProxies.remove_node(h);
 	}
 
 	bool CWorldQuery::update_entity_proxy(entt::entity entity, const b2AABB& aabb, const Vec2& displacement)
@@ -64,11 +71,13 @@ namespace mint
 
 		auto h = SCAST(u64, entity);
 
-		if (m_registeredProxies.find(h) == m_registeredProxies.end()) return false;
+		if (!m_registeredProxies.lookup(h)) return false;
 
-		if (MoveProxy(m_registeredProxies[h].m_b2ProxyId, aabb, { displacement.x, displacement.y }))
+		auto proxy = m_registeredProxies.get(h);
+
+		if (MoveProxy(proxy->m_b2ProxyId, aabb, { displacement.x, displacement.y }))
 		{
-			m_registeredProxies[h].m_aabb = aabb;
+			proxy->m_aabb = aabb;
 			return true;
 		}
 
@@ -131,15 +140,15 @@ namespace mint
 
 	bool CWorldQuery::QueryCallback(s32 proxyId)
 	{
-		auto& proxy = m_registeredProxies[m_registeredProxyIds[proxyId]];
+		auto proxy = m_registeredProxies.get(m_registeredProxyIds[proxyId]);
 
-		if (m_masterQueryKey == proxy.m_queryKey) return true;
+		if (m_masterQueryKey == proxy->m_queryKey) return true;
 
-		proxy.m_queryKey = m_masterQueryKey;
+		proxy->m_queryKey = m_masterQueryKey;
 
 
 		// Check whether there is a filter and we should apply it.
-		if(m_masterQueryHasFilter && !m_masterQueryFilter->does_proxy_pass_filter(proxy))
+		if(m_masterQueryHasFilter && !m_masterQueryFilter->does_proxy_pass_filter(*proxy))
 		{
 			return true;
 		}
@@ -154,7 +163,15 @@ namespace mint
 		}
 		case WorldQueryType_EntityArray:
 		{
-			mint::algorithm::vector_push_back(m_queryResultEntityArray, proxy); break;
+			// Create proxy copy for output.
+			SWorldQueryProxy pcopy;
+
+			pcopy.m_entity = proxy->m_entity;
+			pcopy.m_aabb = proxy->m_aabb;
+			pcopy.m_b2ProxyId = proxy->m_b2ProxyId;
+			pcopy.m_queryKey = proxy->m_queryKey;
+
+			mint::algorithm::vector_push_back(m_queryResultEntityArray, pcopy); break;
 		}
 		default: return false;
 		}

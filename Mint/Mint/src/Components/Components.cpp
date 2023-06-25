@@ -4,6 +4,45 @@
 namespace mint::component
 {
 
+	bool SWorldSettings::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SWorldSettings >().hash() != hash) return true;
+
+		const auto& ws = registry.get< SWorldSettings >(entity);
+
+		CSerializer::export_uint(ws.m_groupId, "group", node);
+		CSerializer::export_bool(ws.m_enabled, "enabled", node);
+		CSerializer::export_bool(ws.m_filterEnabled, "filter", node);
+		CSerializer::export_bool(ws.m_queryable, "query", node);
+
+		return true;
+	}
+
+
+	bool SWorldSettings::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SWorldSettings >().hash() != hash ||
+			registry.all_of< mint::component::SWorldSettings >(entity)) return true;
+
+		auto& ws = registry.emplace< SWorldSettings >(entity);
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&ws);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+
+		CSerializer::import_uint(&ws.m_groupId, "group", node, 0);
+		CSerializer::import_bool(&ws.m_enabled, "enabled", node, true);
+		CSerializer::import_bool(&ws.m_filterEnabled, "filter", node, true);
+		CSerializer::import_bool(&ws.m_queryable, "query", node, true);
+
+		return true;
+	}
+
 
 	bool SIdentifier::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
 	{
@@ -13,10 +52,7 @@ namespace mint::component
 
 		CSerializer::export_uint(identifier.m_enttId, "id", node);
 		CSerializer::export_uint(identifier.m_uuid, "uuid", node);
-
-#ifndef MINT_DISTR
 		CSerializer::export_string(identifier.m_debugName, "name", node);
-#endif
 
 		return true;
 	}

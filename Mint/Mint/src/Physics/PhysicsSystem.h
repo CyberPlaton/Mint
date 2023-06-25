@@ -17,22 +17,22 @@ namespace mint
 	public:
 		struct SDescription
 		{
-			Vec2 m_gravity;
+			Vec2 m_gravity = { 0.0f, 0.0f };
 
-			u64 m_velocityIterations;
+			u64 m_velocityIterations = 0;
 
-			u64 m_positionIterations;
+			u64 m_positionIterations = 0;
 
-			f32 m_fixedTimestep;
+			f32 m_fixedTimestep = 0.0f;
 
-			bool m_debugRender;
+			bool m_debugRender = false;
 
-			b2Draw* m_debugRenderer;
+			b2Draw* m_debugRenderer = nullptr;
 
-			bool m_drawShapes;
-			bool m_drawJoints;
-			bool m_drawAABBs;
-			bool m_drawCenterOfMasses;
+			bool m_drawShapes = false;
+			bool m_drawJoints = false;
+			bool m_drawAABBs = false;
+			bool m_drawCenterOfMasses = false;
 		};
 
 	public:

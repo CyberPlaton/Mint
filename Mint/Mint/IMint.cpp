@@ -23,6 +23,7 @@ namespace mint
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_animatedSpriteCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
+		INITIALIZE_CRITICAL_SECTION(CUCA::m_worldSettingsCriticalSection);
 	}
 
 
@@ -37,6 +38,7 @@ namespace mint
 		DELETE_CRITICAL_SECTION(CUCA::m_animatedSpriteCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
+		DELETE_CRITICAL_SECTION(CUCA::m_worldSettingsCriticalSection);
 	}
 
 
@@ -50,6 +52,7 @@ namespace mint
 		IScene::register_component_importer< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::import_component);
 		IScene::register_component_importer< mint::component::SScript >(&mint::component::SScript::import_component);
 		IScene::register_component_importer< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::import_component);
+		IScene::register_component_importer< mint::component::SWorldSettings >(&mint::component::SWorldSettings::import_component);
 	}
 
 
@@ -63,6 +66,7 @@ namespace mint
 		IScene::register_component_exporter< mint::component::SAnimatedSprite >(&mint::component::SAnimatedSprite::export_component);
 		IScene::register_component_exporter< mint::component::SScript >(&mint::component::SScript::export_component);
 		IScene::register_component_exporter< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::export_component);
+		IScene::register_component_exporter< mint::component::SWorldSettings >(&mint::component::SWorldSettings::export_component);
 	}
 
 

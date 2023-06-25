@@ -79,11 +79,19 @@ namespace mint::component
 
 		static String identifier_get_debug_name(entt::entity entity);
 		static void identifier_set_debug_name(entt::entity entity, const String& name);
-		static void identifier_set_group_id(entt::entity entity, u64 group_id);
-		static u64 identifier_get_group_id(entt::entity entity);
-
 		static u64 identifier_get_identifier(entt::entity entity);
 		static u64 identifier_get_uuid(entt::entity entity);
+
+
+		static void world_set_group_id(entt::entity entity, u64 group_id);
+		static u64 world_get_group_id(entt::entity entity);
+		static void world_set_entity_enabled(entt::entity entity, bool value);
+		static bool world_get_entity_enabled(entt::entity entity);
+		static void world_set_entity_filter_enabled(entt::entity entity, bool value);
+		static bool world_get_entity_filter_enabled(entt::entity entity);
+		static void world_set_entity_queryable(entt::entity entity, bool value);
+		static bool world_get_entity_queryable(entt::entity entity);
+
 
 
 		static bool hierarchy_has_parent(entt::entity entity);
@@ -123,6 +131,7 @@ namespace mint::component
 	private:
 		static MINT_CRITICAL_SECTION(m_entityCriticalSection);
 		static MINT_CRITICAL_SECTION(m_identifierCriticalSection);
+		static MINT_CRITICAL_SECTION(m_worldSettingsCriticalSection);
 		static MINT_CRITICAL_SECTION(m_hierarchyCriticalSection);
 		static MINT_CRITICAL_SECTION(m_transformCriticalSection);
 		static MINT_CRITICAL_SECTION(m_rigidBodyCriticalSection);

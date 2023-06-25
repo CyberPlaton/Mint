@@ -12,6 +12,7 @@ namespace mint::component
 	MINT_CRITICAL_SECTION(CUCA::m_hierarchyCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_identifierCriticalSection);
 	MINT_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
+	MINT_CRITICAL_SECTION(CUCA::m_worldSettingsCriticalSection);
 	
 
 
@@ -288,29 +289,6 @@ namespace mint::component
 		);
 	}
 
-	void CUCA::identifier_set_group_id(entt::entity entity, u64 group_id)
-	{
-		auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
-
-			id.m_groupId = group_id;
-
-		);
-	}
-
-	u64 CUCA::identifier_get_group_id(entt::entity entity)
-	{
-		const auto& id = MINT_SCENE_REGISTRY()->get_component< SIdentifier >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_identifierCriticalSection,
-
-			auto gid = id.m_groupId;
-
-		);
-
-		return gid;
-	}
 
 	u64 CUCA::identifier_get_identifier(entt::entity entity)
 	{
@@ -881,5 +859,100 @@ namespace mint::component
 		}
 	}
 
+	void CUCA::world_set_entity_enabled(entt::entity entity, bool value)
+	{
+		auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			ws.m_enabled = value;
+
+		);
+	}
+
+	void CUCA::world_set_group_id(entt::entity entity, u64 group_id)
+	{
+		auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			ws.m_groupId = group_id;
+
+		);
+	}
+
+	u64 CUCA::world_get_group_id(entt::entity entity)
+	{
+		const auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			auto id = ws.m_groupId;
+
+		);
+
+		return id;
+	}
+
+	bool CUCA::world_get_entity_enabled(entt::entity entity)
+	{
+		const auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			auto enabled = ws.m_enabled;
+
+		);
+
+		return enabled;
+	}
+
+	void CUCA::world_set_entity_filter_enabled(entt::entity entity, bool value)
+	{
+		auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			ws.m_filterEnabled = value;
+
+		);
+	}
+
+	bool CUCA::world_get_entity_filter_enabled(entt::entity entity)
+	{
+		const auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			auto enabled = ws.m_filterEnabled;
+
+		);
+
+		return enabled;
+	}
+
+	void CUCA::world_set_entity_queryable(entt::entity entity, bool value)
+	{
+		auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			ws.m_queryable = value;
+
+		);
+	}
+
+	bool CUCA::world_get_entity_queryable(entt::entity entity)
+	{
+		const auto& ws = MINT_SCENE_REGISTRY()->get_component< SWorldSettings >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+
+			auto query = ws.m_queryable;
+
+		);
+
+		return query;
+	}
 
 }
