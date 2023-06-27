@@ -447,7 +447,7 @@ namespace mint
 		result &= CSceneManager::Get().initialize();
 
 		// World Query Interface.
-		result &= CWorldQuery::Get().initialize();
+		result &= world::CWorldQuery::Get().initialize();
 
 		// Service Locator.
 		result &= CServiceLocator::Get().initialize();
@@ -556,7 +556,7 @@ namespace mint
 		CPluginSystem::Get().on_post_termination();
 
 		// World Query Interface.
-		CWorldQuery::Get().terminate();
+		world::CWorldQuery::Get().terminate();
 
 		// Scene Manager.
 		CSceneManager::Get().terminate();

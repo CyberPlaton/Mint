@@ -26,12 +26,12 @@ namespace mint
 	{
 		if (m_renderAABBs)
 		{
-			auto proxy = CWorldQuery::Get().m_registeredProxies.begin();
+			auto proxy = world::CWorldQuery::Get().m_registeredProxies.begin();
 			while (proxy)
 			{
 				fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
 
-				proxy = CWorldQuery::Get().m_registeredProxies.advance(proxy);
+				proxy = world::CWorldQuery::Get().m_registeredProxies.advance(proxy);
 			}
 		}
 	}

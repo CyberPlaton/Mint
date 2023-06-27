@@ -7,18 +7,18 @@
 #include "Utility/Profiling/FunctionProfiler.h"
 #include "Common/WorldQueryFilter.h"
 #include "Common/WorldQueryType.h"
-#include "Utility/STL/BinarySearchTree.h"
+#include "WorldQueryDatabase.h"
 
 
-namespace mint
+namespace mint { class CWorldQueryDebugRender; }
+
+namespace mint::world
 {
-	class CWorldQueryDebugRender;
-
 
 	class CWorldQuery : protected b2DynamicTree
 	{
 
-		friend class CWorldQueryDebugRender;
+		friend class mint::CWorldQueryDebugRender;
 
 	public:
 		STATIC_GET(CWorldQuery, s_CWorldQuery);
@@ -100,7 +100,7 @@ namespace mint
 	};
 
 	template< class FilterType >
-	bool mint::CWorldQuery::get_any_entity_at_point_in_radius(const CRect& rect, FilterType* filter)
+	bool mint::world::CWorldQuery::get_any_entity_at_point_in_radius(const CRect& rect, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -123,7 +123,7 @@ namespace mint
 	}
 
 	template< class FilterType >
-	bool mint::CWorldQuery::get_any_entity_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+	bool mint::world::CWorldQuery::get_any_entity_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -146,7 +146,7 @@ namespace mint
 	}
 
 	template< class FilterType >
-	u32 mint::CWorldQuery::get_entity_count_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+	u32 mint::world::CWorldQuery::get_entity_count_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -170,7 +170,7 @@ namespace mint
 
 	template< class FilterType >
 	Vector< SWorldQueryProxy >
-		mint::CWorldQuery::get_entities_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
+		mint::world::CWorldQuery::get_entities_by_ray_intersection(const Vec2& start, const Vec2& end, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -193,7 +193,7 @@ namespace mint
 	}
 
 	template< class FilterType >
-	Vector< SWorldQueryProxy > mint::CWorldQuery::get_entities_at_point_in_radius(const CRect& rect, FilterType* filter)
+	Vector< SWorldQueryProxy > mint::world::CWorldQuery::get_entities_at_point_in_radius(const CRect& rect, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -217,7 +217,7 @@ namespace mint
 
 
 	template< class FilterType >
-	u32 mint::CWorldQuery::get_entity_count_at_point_in_radius(const CRect& rect, FilterType* filter)
+	u32 mint::world::CWorldQuery::get_entity_count_at_point_in_radius(const CRect& rect, FilterType* filter)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 

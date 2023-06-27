@@ -1,6 +1,6 @@
 #include "WorldQueryProxy.h"
 
-namespace mint
+namespace mint::world
 {
 	SWorldQueryProxy::SWorldQueryProxy() :
 		m_entity(entt::null), m_b2ProxyId(-1), m_queryKey(-1)

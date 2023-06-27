@@ -5,7 +5,7 @@
 #include "Common/Common.h"
 
 
-namespace mint
+namespace mint::world
 {
 
 	struct SWorldQueryProxy

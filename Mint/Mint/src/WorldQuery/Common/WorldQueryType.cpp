@@ -1,6 +1,6 @@
 #include "WorldQueryType.h"
 
-namespace mint
+namespace mint::world
 {
 
 }

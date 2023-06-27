@@ -102,6 +102,7 @@
 			"AnimationSystem/AnimatorStack",
 			"AnimationSystem",
 			"WorldQuery/Common",
+			"WorldQuery/Database",
 			"WorldQuery",
 			
 

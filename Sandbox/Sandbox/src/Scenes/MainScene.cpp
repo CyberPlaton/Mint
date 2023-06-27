@@ -43,19 +43,19 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 	CUI::edit_field_rect(rect, -2000.0f, 2000.0f, "Query Rectangle", "", sid++, scid++);
 
-	u32 result = CWorldQuery::Get().get_entity_count_at_point_in_radius(rect);
+	u32 result = world::CWorldQuery::Get().get_entity_count_at_point_in_radius(rect);
 
 	ImGui::Text(TextFormat("Count query AABB: %d", result));
 
 	TestWorldQueryFilter filter;
-	Vector< SWorldQueryProxy > result_entities = CWorldQuery::Get().get_entities_at_point_in_radius< TestWorldQueryFilter >(rect, &filter);
+	Vector< world::SWorldQueryProxy > result_entities = world::CWorldQuery::Get().get_entities_at_point_in_radius< TestWorldQueryFilter >(rect, &filter);
 
 	for (auto& entity : result_entities)
 	{
 		ImGui::Text(TextFormat("Filter Query AABB: %zu (entt::entity)", (u64)entity.m_entity));
 	}
 
-	bool any_result = CWorldQuery::Get().get_any_entity_at_point_in_radius(rect);
+	bool any_result = world::CWorldQuery::Get().get_any_entity_at_point_in_radius(rect);
 
 	ImGui::Text(TextFormat("Any query AABB: %s", any_result == true ? "True" : "False"));
 
@@ -65,18 +65,18 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 	CUI::edit_field_vec2(ray_start, -2000.0f, 2000.0f, "Query ray start", "", sid++, scid++);
 	CUI::edit_field_vec2(ray_end, -2000.0f, 2000.0f, "Query ray end", "", sid++, scid++);
 
-	result = CWorldQuery::Get().get_entity_count_by_ray_intersection(ray_start, ray_end);
+	result = world::CWorldQuery::Get().get_entity_count_by_ray_intersection(ray_start, ray_end);
 
 	ImGui::Text(TextFormat("Count query Raycast: %d", result));
 
-	result_entities = CWorldQuery::Get().get_entities_by_ray_intersection< TestWorldQueryFilter >(ray_start, ray_end, &filter);
+	result_entities = world::CWorldQuery::Get().get_entities_by_ray_intersection< TestWorldQueryFilter >(ray_start, ray_end, &filter);
 
 	for (auto& entity : result_entities)
 	{
 		ImGui::Text(TextFormat("Filter Query Raycast: %zu (entt::entity)", (u64)entity.m_entity));
 	}
 
-	any_result = CWorldQuery::Get().get_any_entity_ray_intersection(ray_start, ray_end);
+	any_result = world::CWorldQuery::Get().get_any_entity_ray_intersection(ray_start, ray_end);
 
 	ImGui::Text(TextFormat("Any query Raycast: %s", any_result == true ? "True" : "False"));
 
@@ -114,6 +114,11 @@ bool CMainScene::on_before_load()
 bool CMainScene::on_load()
 {
 	using namespace mint;
+	using namespace mint::world;
+
+	perform_all_database_tests();
+
+
 
 	// Create an entity.
 // 	m_knight = m_registry.create_entity();
@@ -229,4 +234,81 @@ void CMainScene::on_before_unload()
 void CMainScene::on_unload()
 {
 
+}
+
+void CMainScene::setup_test_database(mint::world::CDatabase& db)
+{
+	using namespace mint::world;
+	using namespace mint;
+
+	u64 node_id = 1000;
+	u64 edge_id = 2000;
+	db.create_node(node_id++, "Player", mint::world::NodeType_Entity);
+	db.create_node(node_id++, "Walter", mint::world::NodeType_Entity);
+	db.create_node(node_id++, "Hans", mint::world::NodeType_Entity);
+
+	db.create_node(node_id++, "Friendly", mint::world::NodeType_Attitude);
+	db.create_node(node_id++, "Raider", mint::world::NodeType_Membership);
+	db.create_node(node_id++, "NPC", mint::world::NodeType_Classification);
+
+	db.create_edge("Player", "Friendly", edge_id++, "Attitude", 27.0f);
+	db.create_edge("Player", "Walter", edge_id++, "Like", 13.3f);
+	db.create_edge("Player", "Hans", edge_id++, "Like", 77.5f);
+
+	db.create_edge("Walter", "Friendly", edge_id++, "Attitude", 27.0f);
+	db.create_edge("Walter", "Raider", edge_id++, "Raider", 100.0f);
+	db.create_edge("Walter", "NPC", edge_id++, "NPC", 100.0f);
+	db.create_edge("Walter", "Player", edge_id++, "Like", 15.2f);
+
+	db.create_edge("Hans", "NPC", edge_id++, "NPC", 100.0f);
+	db.create_edge("Hans", "Raider", edge_id++, "Raider", 100.0f);
+}
+
+void CMainScene::perform_all_database_tests()
+{
+	using namespace mint::world;
+	using namespace mint;
+
+	CDatabase db; db.initialize();
+
+	setup_test_database(db);
+
+	// Get all raiders.
+	Vector< SToken > bytecode = {
+		SToken{ Opcode_SetQueryMode, CAny(QueryMode_All)},
+		SToken{ Opcode_SetQueryResultType, CAny(ResultType_Membership) },
+		SToken{ Opcode_SetQueryOrderObjectSubject, CAny(false) },
+		SToken{ Opcode_SetQuerySubject, CAny("Raider")},
+		SToken{ Opcode_SetWeightValue, CAny(0.0f)},
+		SToken{ Opcode_SetLogicalWeightOperator, CAny(LogicalWeightOperator::LogicalWeightOperator_GreaterEqual)},
+		SToken{ Opcode_SetQueryObject, CAny("Raider")},
+	};
+
+	perform_database_test(db, bytecode, "Query for all entities belonging to the \"Raider\" faction");
+
+
+	// Get all player likers.
+	bytecode = {
+		SToken{ Opcode_SetQueryMode, CAny(QueryMode_All)},
+		SToken{ Opcode_SetQueryResultType, CAny(ResultType_Relationship) },
+		SToken{ Opcode_SetQueryOrderObjectSubject, CAny(false) },
+		SToken{ Opcode_SetQuerySubject, CAny("Like")},
+		SToken{ Opcode_SetWeightValue, CAny(0.0f)},
+		SToken{ Opcode_SetLogicalWeightOperator, CAny(LogicalWeightOperator::LogicalWeightOperator_GreaterEqual)},
+		SToken{ Opcode_SetQueryObject, CAny("Player")},
+	};
+
+	perform_database_test(db, bytecode, "Query for all entities that \"Like\" the \"Player\" for any amount");
+}
+
+void CMainScene::perform_database_test(mint::world::CDatabase& db, mint::Vector< mint::world::SToken >& bytecode, const mint::String& description)
+{
+	auto result = db.testing_run(bytecode);
+
+	MINT_LOG_INFO("[Database Test]\"{}\", result:", description);
+	for (auto& edge : result)
+	{
+		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
+	}
+	MINT_LOG_SEPARATOR();
 }

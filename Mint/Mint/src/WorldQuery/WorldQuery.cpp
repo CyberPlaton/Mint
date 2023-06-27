@@ -1,7 +1,7 @@
 #include "WorldQuery.h"
 
 
-namespace mint
+namespace mint::world
 {
 
 	bool CWorldQuery::initialize()
@@ -137,7 +137,7 @@ namespace mint
 	}
 
 
-	mint::Vector< mint::SWorldQueryProxy > CWorldQuery::get_entities_at_point_in_radius(const CRect& rect)
+	mint::Vector< mint::world::SWorldQueryProxy > CWorldQuery::get_entities_at_point_in_radius(const CRect& rect)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::get_entities_at_point_in_radius");
 
@@ -195,7 +195,7 @@ namespace mint
 		return result;
 	}
 
-	mint::Vector< mint::SWorldQueryProxy > CWorldQuery::get_entities_by_ray_intersection(const Vec2& start, const Vec2& end)
+	mint::Vector< mint::world::SWorldQueryProxy > CWorldQuery::get_entities_by_ray_intersection(const Vec2& start, const Vec2& end)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::get_entities_by_ray_intersection");
 

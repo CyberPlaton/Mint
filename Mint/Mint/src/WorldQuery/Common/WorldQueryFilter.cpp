@@ -1,6 +1,6 @@
 #include "WorldQueryFilter.h"
 
-namespace mint
+namespace mint::world
 {
 
 }

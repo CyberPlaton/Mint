@@ -5,7 +5,7 @@
 #include "WorldQueryProxy.h"
 
 
-namespace mint
+namespace mint::world
 {
 	class CWorldQueryFilter
 	{

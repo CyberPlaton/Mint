@@ -78,7 +78,7 @@ namespace mint::editor
 
 			auto aabb = mint::algorithm::compute_aabb(dest_rect);
 
-			CWorldQuery::Get().update_entity_proxy(entity, aabb, displacement);
+			world::CWorldQuery::Get().update_entity_proxy(entity, aabb, displacement);
 		}
 	}
 

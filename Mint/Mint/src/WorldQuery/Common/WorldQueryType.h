@@ -2,7 +2,7 @@
 #define _MINT_WORLD_QUERY_TYPE_H_
 
 
-namespace mint
+namespace mint::world
 {
 
 	enum WorldQueryType
