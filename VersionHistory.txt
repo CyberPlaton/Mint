@@ -1,5 +1,10 @@
 Runtime Version History:
 
+2023.06.08:
+	o Initial version of World Query Database.
+	o Defining graph-like database from code and performing simple queries possible.
+
+
 2023.06.07:
 	o Initial version of World Query complete with AABB and Raycast queries.
 	o Queries can be to check for any intersecting, the count of intersections and for all intersected proxies (entities).
