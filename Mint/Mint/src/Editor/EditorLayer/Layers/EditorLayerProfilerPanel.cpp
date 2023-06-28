@@ -21,10 +21,10 @@ namespace mint::editor
 	{
 		MINT_PROFILE_SCOPE("Editor::Layer", "CProfilerPanelLayer::on_ui_frame");
 
-		if (GlobalData::Get().s_EditorProfilerEnabled)
-		{
-			GlobalData::Get().s_EditorProfilerEnabled = m_enabled;
+		m_enabled = GlobalData::Get().s_EditorProfilerEnabled;
 
+		if (m_enabled)
+		{
 			ImGui::SetNextWindowSize({ percent(get_window_width(), 25), percent(get_window_height(), 25) }, ImGuiCond_Once);
 			ImGui::SetNextWindowPos({ percent(get_window_width(), 50), percent(get_window_height(), 50) }, ImGuiCond_Appearing);
 			ImGui::Begin("Profiler Panel", &m_enabled, get_flags());
@@ -55,7 +55,7 @@ namespace mint::editor
 				if (ImGui::BeginMenu("Sorting"))
 				{
 					ImGui::Checkbox("Sort by execution time", &m_sortByMeantime);
-					
+
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Update Interval"))
@@ -75,9 +75,9 @@ namespace mint::editor
 			main_frame();
 
 			ImGui::End();
-
-			GlobalData::Get().s_EditorProfilerEnabled = m_enabled;
 		}
+
+		GlobalData::Get().s_EditorProfilerEnabled = m_enabled;
 	}
 
 

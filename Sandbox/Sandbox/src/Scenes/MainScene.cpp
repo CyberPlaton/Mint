@@ -273,42 +273,50 @@ void CMainScene::perform_all_database_tests()
 
 	setup_test_database(db);
 
-	// Get all raiders.
-	Vector< SToken > bytecode = {
-		SToken{ Opcode_SetQueryMode, CAny(QueryMode_All)},
-		SToken{ Opcode_SetQueryResultType, CAny(ResultType_Membership) },
-		SToken{ Opcode_SetQueryOrderObjectSubject, CAny(false) },
-		SToken{ Opcode_SetQuerySubject, CAny("Raider")},
-		SToken{ Opcode_SetWeightValue, CAny(0.0f)},
-		SToken{ Opcode_SetLogicalWeightOperator, CAny(LogicalWeightOperator::LogicalWeightOperator_GreaterEqual)},
-		SToken{ Opcode_SetQueryObject, CAny("Raider")},
-	};
 
-	perform_database_test(db, bytecode, "Query for all entities belonging to the \"Raider\" faction");
+	auto result = db.query_get_all_object_subject("Player", "Like", 10.0f, mint::world::LogicalWeightOperator_Greater);
 
-
-	// Get all player likers.
-	bytecode = {
-		SToken{ Opcode_SetQueryMode, CAny(QueryMode_All)},
-		SToken{ Opcode_SetQueryResultType, CAny(ResultType_Relationship) },
-		SToken{ Opcode_SetQueryOrderObjectSubject, CAny(false) },
-		SToken{ Opcode_SetQuerySubject, CAny("Like")},
-		SToken{ Opcode_SetWeightValue, CAny(0.0f)},
-		SToken{ Opcode_SetLogicalWeightOperator, CAny(LogicalWeightOperator::LogicalWeightOperator_GreaterEqual)},
-		SToken{ Opcode_SetQueryObject, CAny("Player")},
-	};
-
-	perform_database_test(db, bytecode, "Query for all entities that \"Like\" the \"Player\" for any amount");
-}
-
-void CMainScene::perform_database_test(mint::world::CDatabase& db, mint::Vector< mint::world::SToken >& bytecode, const mint::String& description)
-{
-	auto result = db.testing_run(bytecode);
-
-	MINT_LOG_INFO("[Database Test]\"{}\", result:", description);
+	MINT_LOG_INFO("[Database Test] Get all that \"Player\" \"Like\"s for at least 10.0f:");
 	for (auto& edge : result)
 	{
 		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
 	}
 	MINT_LOG_SEPARATOR();
+
+
+
+	result = db.query_get_all_subject_object("Like", "Walter");
+
+	MINT_LOG_INFO("[Database Test] Get all those who \"Like\" \"Walter\" for any amount:");
+	for (auto& edge : result)
+	{
+		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
+	}
+	MINT_LOG_SEPARATOR();
+
+
+
+	result = db.query_get_all_subject_object("*", "Walter");
+
+	MINT_LOG_INFO("[Database Test] Get all those who have any relationship to \"Walter\" for any amount:");
+	for (auto& edge : result)
+	{
+		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
+	}
+	MINT_LOG_SEPARATOR();
+
+
+
+	result = db.query_get_all_object_subject("Player", "*");
+
+	MINT_LOG_INFO("[Database Test] Get all those to which \"Player\" has any relationship for any amount:");
+	for (auto& edge : result)
+	{
+		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
+	}
+	MINT_LOG_SEPARATOR();
+}
+
+void CMainScene::perform_database_test(mint::world::CDatabase& db, mint::Vector< mint::world::SToken >& bytecode, const mint::String& description)
+{
 }

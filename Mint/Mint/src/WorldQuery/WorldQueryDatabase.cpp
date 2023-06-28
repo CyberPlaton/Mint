@@ -3,15 +3,32 @@
 namespace mint::world
 {
 
-	mint::Vector< CEdge > CDatabase::query_get_all_object_subject(CNode* object, u64 subject, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
+	mint::Vector< CEdge > CDatabase::query_get_all_object_subject(const String& object, const String& subject, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_object_subject");
+
+		// Setup database query.
+		_reset_query_data();
+		m_currentQueryResultType = ResultType_Node;
+		m_currentQueryMode = QueryMode_All;
+		m_currentQueryObjectSubject = true;
+		m_currentQueryObjectWeight = weight;
+		m_currentQueryLogicalWeightOperator = op;
+
 		mint::Vector< CEdge > result;
 
-		for (auto& edge : object->m_outgoingEdges.get_all())
+		if (!_set_query_object_and_subject(object, subject))
+		{
+			return result;
+		}
+
+
+		for (auto& edge : m_currentQueryObjectNode->m_outgoingEdges.get_all())
 		{
 			auto h = mint::algorithm::djb_hash(edge.get_label());
+			auto any_hash = mint::algorithm::djb_hash("*");
 
-			if (h == subject)
+			if (h == m_currentQuerySubjectHash || any_hash == m_currentQuerySubjectHash)
 			{
 				if (weight > 0.0f)
 				{
@@ -57,6 +74,8 @@ namespace mint::world
 
 	bool CDatabase::create_node(u64 id, const String& label, NodeType type)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::create_node");
+
 		if (!m_nodes.lookup(id))
 		{
 			auto node = m_nodes.add_node(id);
@@ -78,6 +97,8 @@ namespace mint::world
 
 	bool CDatabase::create_edge(u64 from_node_id, u64 to_node_id, u64 edge_id, const String& label, f32 weight)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::create_edge");
+
 		if (m_nodes.lookup(from_node_id))
 		{
 			auto from = m_nodes.get(from_node_id);
@@ -93,6 +114,8 @@ namespace mint::world
 
 	bool CDatabase::create_edge(const String& from_node_label, const String& to_node_label, u64 edge_id, const String& label, f32 weight)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::create_edge");
+
 		auto from_node_id = mint::algorithm::djb_hash(from_node_label);
 		auto to_node_id = mint::algorithm::djb_hash(to_node_label);
 
@@ -125,15 +148,34 @@ namespace mint::world
 	{
 	}
 
-	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object(u64 subject, CNode* object, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
+	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object(const String& subject, const String& object, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
 	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_subject_object");
+
+		// Setup database query.
+		_reset_query_data();
+		m_currentQueryResultType = ResultType_Node;
+		m_currentQueryMode = QueryMode_All;
+		m_currentQueryObjectSubject = false;
+		m_currentQueryObjectWeight = weight;
+		m_currentQueryLogicalWeightOperator = op;
+
+
 		mint::Vector< CEdge > result;
 
-		for (auto& edge : object->m_ingoingEdges.get_all())
+
+		if (!_set_query_object_and_subject(object, subject))
+		{
+			return result;
+		}
+
+
+		for (auto& edge : m_currentQueryObjectNode->m_ingoingEdges.get_all())
 		{
 			auto h = mint::algorithm::djb_hash(edge.get_label());
+			auto any_hash = mint::algorithm::djb_hash("*");
 
-			if (h == subject)
+			if (h == m_currentQuerySubjectHash || m_currentQuerySubjectHash == any_hash)
 			{
 				if (weight > 0.0f)
 				{
@@ -179,6 +221,7 @@ namespace mint::world
 
 	void CDatabase::_reset_query_data()
 	{
+		m_currentQueryObjectNode = nullptr;
 		m_currentQueryObjectIdentifier = 0;
 		m_currentQueryObjectLabel.clear();
 		m_currentQuerySubjectHash = 0;
@@ -188,186 +231,34 @@ namespace mint::world
 		m_currentQueryLogicalWeightOperator = LogicalWeightOperator_None;
 	}
 
-	mint::Vector< mint::world::CEdge > CDatabase::testing_run(Vector< SToken >& bytecode)
+
+	bool CDatabase::_set_query_object_and_subject(const String& object, const String& subject)
 	{
-		for (auto cursor = 0; cursor < bytecode.size(); cursor++)
+		bool result = false;
+		
+		// Object.
+		auto oh = mint::algorithm::djb_hash(object);
+		auto sh = mint::algorithm::djb_hash(subject);
+
+
+		if (m_identifiers.find(oh) != m_identifiers.end())
 		{
-			SToken& byte = bytecode[cursor];
+			m_currentQueryObjectIdentifier = m_identifiers[oh];
+			m_currentQueryObjectLabel = object;
 
-			switch (byte.m_code)
-			{
-			case Opcode_SetQueryMode:
-			{
-				m_currentQueryMode = byte.m_value.cast< QueryMode >();
-				break;
-			}
-			case Opcode_SetQueryResultType:
-			{
-				m_currentQueryResultType = byte.m_value.cast< ResultType >();
-				break;
-			}
-			case Opcode_SetQueryObject:
-			{
-				if (byte.m_value.is< String >())
-				{
-					m_currentQueryObjectLabel = byte.m_value.cast< String >();
-				}
-				else if (byte.m_value.is< const char* >())
-				{
-					m_currentQueryObjectLabel = byte.m_value.cast< const char* >();
-				}
-				else if (byte.m_value.is< u64 >())
-				{
-					m_currentQueryObjectLabel.clear();
-					m_currentQueryObjectIdentifier = byte.m_value.cast< u64 >();
+			m_currentQueryObjectNode = m_nodes.get(m_currentQueryObjectIdentifier);
 
-					break;
-				}
-
-
-				auto h = mint::algorithm::djb_hash(m_currentQueryObjectLabel);
-
-
-				if (m_identifiers.find(h) != m_identifiers.end())
-				{
-					m_currentQueryObjectIdentifier = m_identifiers[h];
-				}
-
-				break;
-			}
-			case Opcode_SetQuerySubject:
-			{
-				if (byte.m_value.is< String >())
-				{
-					m_currentQuerySubjectLabel = byte.m_value.cast< String >();
-				}
-				else if (byte.m_value.is< const char* >())
-				{
-					m_currentQuerySubjectLabel = byte.m_value.cast< const char* >();
-				}
-				else if (byte.m_value.is< u64 >())
-				{
-					m_currentQuerySubjectLabel.clear();
-					m_currentQuerySubjectHash = byte.m_value.cast< u64 >();
-
-					break;
-				}
-
-				auto h = mint::algorithm::djb_hash(m_currentQuerySubjectLabel);
-
-				m_currentQuerySubjectHash = h;
-
-				break;
-			}
-			case Opcode_SetQueryOrderObjectSubject:
-			{
-				m_currentQueryObjectSubject = byte.m_value.cast< bool >();
-				break;
-			}
-			case Opcode_SetWeightValue:
-			{
-				m_currentQueryObjectWeight = byte.m_value.cast< f32 >();
-				break;
-			}
-			case Opcode_SetLogicalWeightOperator:
-			{
-				m_currentQueryLogicalWeightOperator = byte.m_value.cast< LogicalWeightOperator >();
-				break;
-			}
-			default: break;
-			}
+			result = (m_currentQueryObjectNode != nullptr);
+		}
+		else
+		{
+			MINT_ASSERT(false, "Invalid operation. Could not locate object in the database!");
 		}
 
-		mint::Vector< CEdge > query_result;
+		m_currentQuerySubjectHash = sh;
+		m_currentQuerySubjectLabel = subject;
 
-		switch (m_currentQueryMode)
-		{
-		case QueryMode_All:
-		{
-			auto node = m_nodes.get(m_currentQueryObjectIdentifier);
-
-			if (m_currentQueryObjectSubject)
-			{
-				// Obtain outgoing edges from object to other nodes.
-				query_result = query_get_all_object_subject(node, m_currentQuerySubjectHash, m_currentQueryObjectWeight, m_currentQueryLogicalWeightOperator);
-			}
-			else
-			{
-				// Obtain ingoing edges from other nodes to node with given subject.
-				query_result = query_get_all_subject_object(m_currentQuerySubjectHash, node, m_currentQueryObjectWeight, m_currentQueryLogicalWeightOperator);
-			}
-			break;
-		}
-		case QueryMode_Any:
-		{
-			break;
-		}
-		case QueryMode_Count:
-		{
-			break;
-		}
-		default: {MINT_ASSERT(false, "Invalid operation. Unknown query mode specified!"); break; }
-		}
-
-
-		switch (m_currentQueryResultType)
-		{
-		case ResultType_Attitude:
-		{
-			// Filter for edges that point to attitude nodes.
-			mint::Vector< CEdge > result;
-
-			for (auto& edge : query_result)
-			{
-				if (edge.get_to_node()->get_type() == NodeType_Attitude) mint::algorithm::vector_push_back(result, edge);
-			}
-
-			return result;
-		}
-		case ResultType_Relationship:
-		{
-			// Filter for edges that are relationships, i.e. point to entity nodes.
-			mint::Vector< CEdge > result;
-
-			for (auto& edge : query_result)
-			{
-				if (edge.get_to_node()->get_type() == NodeType_Entity) mint::algorithm::vector_push_back(result, edge);
-			}
-
-			return result;
-
-		}
-		case ResultType_Membership:
-		{
-			// Filter for edges that point to membership nodes.
-			mint::Vector< CEdge > result;
-
-			for (auto& edge : query_result)
-			{
-				if (edge.get_to_node()->get_type() == NodeType_Membership) mint::algorithm::vector_push_back(result, edge);
-			}
-
-			return result;
-		}
-		case ResultType_Classification:
-		{
-			// Filter for edges that point to classification nodes.
-			mint::Vector< CEdge > result;
-
-			for (auto& edge : query_result)
-			{
-				if (edge.get_to_node()->get_type() == NodeType_Classification) mint::algorithm::vector_push_back(result, edge);
-			}
-
-			return result;
-		}
-		case ResultType_Node:
-		{
-			// Do not filter at all.
-			return query_result;
-		}
-		default: {MINT_ASSERT(false, "Invalid operation. Unknown query result type specified!"); break; }
-		}
+		return result;
 	}
 
 }

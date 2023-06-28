@@ -35,6 +35,8 @@ namespace mint::world
 
 		bool update_entity_proxy(entt::entity entity, const b2AABB& aabb, const Vec2& displacement);
 
+		SWorldQueryProxy* get_entity_proxy(entt::entity entity);
+
 
 		bool get_any_entity_at_point_in_radius(const CRect& rect);
 

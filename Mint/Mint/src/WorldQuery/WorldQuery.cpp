@@ -377,4 +377,16 @@ namespace mint::world
 		return raycast_result;
 	}
 
+	mint::world::SWorldQueryProxy* CWorldQuery::get_entity_proxy(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_registeredProxies.lookup(h))
+		{
+			auto proxy = m_registeredProxies.get(h);
+
+			return proxy;
+		}
+	}
+
 }

@@ -33,15 +33,6 @@ namespace mint::editor
 		ImGuiWindowFlags CViewportPanelLayer::get_flags() override final;
 
 	private:
-		bool m_debugRenderSelected = false;
-		bool m_debugRenderAll = false;
-
-		bool m_renderDestinationRect = false;
-		bool m_renderOriginPoint = false;
-
-		bool m_renderAABBs = false;
-		bool m_renderAABBFullInformation = false;
-
 
 	private:
 		void main_frame();

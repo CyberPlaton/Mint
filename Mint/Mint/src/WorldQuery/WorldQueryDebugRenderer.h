@@ -21,12 +21,17 @@ namespace mint
 		void on_frame(Vector< entt::entity >& entities)  override final;
 		void on_frame_end()  override final;
 
+
 		void set_render_aabbs(bool value) { m_renderAABBs = value; }
 		void set_render_full_information(bool value) { m_renderFullInformation = value; }
 		void set_aabb_color(const mint::fx::CColor& color) { m_aabbColor = color; }
-
+		void set_render_all_entities(bool value);
+		void add_entity_to_filter(entt::entity entity);
+		void clear_entity_filter();
 
 	private:
+		bool m_renderAll = false;
+		entt::entity m_entityFilter = entt::null;
 		bool m_renderAABBs = false;
 		bool m_renderFullInformation = false;
 		mint::fx::CColor m_aabbColor;

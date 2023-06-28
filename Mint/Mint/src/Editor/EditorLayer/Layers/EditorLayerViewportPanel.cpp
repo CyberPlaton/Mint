@@ -82,37 +82,42 @@ namespace mint::editor
 
 
 			// World Query debug rendering.
-			if (m_renderAABBs)
+			if (GlobalData::Get().s_EditorDebugRenderAABBs)
 			{
 				wqr->set_render_aabbs(true);
 				wqr->set_aabb_color(GlobalData::Get().s_EditorWorldQueryAABBColor);
 			}
 			else wqr->set_render_aabbs(false);
 
-			if (m_renderAABBFullInformation) wqr->set_render_full_information(true);
+			if (GlobalData::Get().s_EditorDebugRenderAABBFullInformation) wqr->set_render_full_information(true);
 			else wqr->set_render_full_information(false);
 
 
 
 			// General debug rendering.
-			if (m_renderDestinationRect) dr->set_render_destination_rectangle(true);
+			if (GlobalData::Get().s_EditorDebugRenderDestinationRect) dr->set_render_destination_rectangle(true);
 			else dr->set_render_destination_rectangle(false);
 
-			if (m_renderOriginPoint) dr->set_render_sprite_origin(true);
+			if (GlobalData::Get().s_EditorDebugRenderOriginPoint) dr->set_render_sprite_origin(true);
 			else dr->set_render_sprite_origin(false);
 			
- 			if(m_debugRenderAll)
+ 			if(GlobalData::Get().s_EditorDebugRenderAll)
  			{
 				dr->set_render_all_entities(true);
 				dr->clear_entity_filter();
+
+				wqr->set_render_all_entities(true);
+				wqr->clear_entity_filter();
  			}
  			else
  			{
 				dr->set_render_all_entities(false);
+				wqr->set_render_all_entities(false);
 
  				if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
  				{
 					dr->add_entity_to_filter(GlobalData::Get().s_EditorInspectedEntity);
+					wqr->add_entity_to_filter(GlobalData::Get().s_EditorInspectedEntity);
  				}
  			} 
 		}
@@ -223,18 +228,18 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Debug Render Settings");
 
-			ImGui::Checkbox("Render All", &m_debugRenderAll);
-			m_debugRenderSelected = !m_debugRenderAll;
+			ImGui::Checkbox("Render All", &GlobalData::Get().s_EditorDebugRenderAll);
+			GlobalData::Get().s_EditorDebugRenderSelected = !GlobalData::Get().s_EditorDebugRenderAll;
 
 			ImGui::SameLine();
 
 			CUI::help_marker("Change whether to draw debug information for all game objects or for the inspected one only!");
 
-			ImGui::Checkbox("Destination Rectangle", &m_renderDestinationRect);
-			ImGui::Checkbox("Origin Point", &m_renderOriginPoint);
+			ImGui::Checkbox("Destination Rectangle", &GlobalData::Get().s_EditorDebugRenderDestinationRect);
+			ImGui::Checkbox("Origin Point", &GlobalData::Get().s_EditorDebugRenderOriginPoint);
 
-			ImGui::Checkbox("World Query AABB", &m_renderAABBs);
-			ImGui::Checkbox("World Query Full Information", &m_renderAABBFullInformation);
+			ImGui::Checkbox("World Query AABB", &GlobalData::Get().s_EditorDebugRenderAABBs);
+			ImGui::Checkbox("World Query Full Information", &GlobalData::Get().s_EditorDebugRenderAABBFullInformation);
 
 			CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000);
 

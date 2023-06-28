@@ -26,12 +26,21 @@ namespace mint
 	{
 		if (m_renderAABBs)
 		{
-			auto proxy = world::CWorldQuery::Get().m_registeredProxies.begin();
-			while (proxy)
+			if (m_renderAll)
 			{
-				fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
+				auto proxy = world::CWorldQuery::Get().m_registeredProxies.begin();
+				while (proxy)
+				{
+					fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
 
-				proxy = world::CWorldQuery::Get().m_registeredProxies.advance(proxy);
+					proxy = world::CWorldQuery::Get().m_registeredProxies.advance(proxy);
+				}
+			}
+			else
+			{
+				auto proxy = world::CWorldQuery::Get().get_entity_proxy(m_entityFilter);
+
+				fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
 			}
 		}
 	}
@@ -39,4 +48,20 @@ namespace mint
 	void CWorldQueryDebugRender::on_frame_end()
 	{
 	}
+
+	void CWorldQueryDebugRender::set_render_all_entities(bool value)
+	{
+		m_renderAll = value;
+	}
+
+	void CWorldQueryDebugRender::add_entity_to_filter(entt::entity entity)
+	{
+		m_entityFilter = entity;
+	}
+
+	void CWorldQueryDebugRender::clear_entity_filter()
+	{
+		m_entityFilter = entt::null;
+	}
+
 }

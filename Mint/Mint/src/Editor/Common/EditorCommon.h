@@ -18,6 +18,14 @@ namespace mint::editor
 
 		static GlobalData* s_GlobalData;
 		
+		static bool s_EditorDebugRenderAll;
+		static bool s_EditorDebugRenderSelected;
+		static bool s_EditorDebugRenderDestinationRect;
+		static bool s_EditorDebugRenderOriginPoint;
+		static bool s_EditorDebugRenderAABBs;
+		static bool s_EditorDebugRenderAABBFullInformation;
+
+
 		static bool s_EditorProfilerEnabled;
 		static bool s_EditorBehaviorScriptsEnabled;
 		static bool s_EditorScriptScriptsEnabled;

@@ -9,6 +9,7 @@
 #include "Common/Any.h"
 #include "Utility/Logging/Logging.h"
 #include "Utility/STL/BinarySearchTree.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 
 namespace mint::world
@@ -62,12 +63,13 @@ namespace mint::world
 		bool create_edge(const String& from_node_label, const String& to_node_label, u64 edge_id, const String& label, f32 weight);
 
 
-		mint::Vector< CEdge > testing_run(Vector< SToken >& bytecode);
+		//mint::Vector< CEdge > testing_run(Vector< SToken >& bytecode);
 
 
-		Vector< CEdge > query_get_all_object_subject(CNode* object, u64 subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
+		Vector< CEdge > query_get_all_object_subject(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
 
-		Vector< CEdge > query_get_all_subject_object(u64 subject, CNode* object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
+		Vector< CEdge > query_get_all_subject_object(const String& subject, const String& object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
+
 
 
 	private:
@@ -81,6 +83,7 @@ namespace mint::world
 		QueryMode m_currentQueryMode = QueryMode_None;
 		
 		/// @brief Referring to the main query object, i.e. the node of interest.
+		CNode* m_currentQueryObjectNode = nullptr;
 		u64 m_currentQueryObjectIdentifier = 0;
 		String m_currentQueryObjectLabel;
 		
@@ -103,6 +106,7 @@ namespace mint::world
 	private:
 		void _reset_query_data();
 	
+		bool _set_query_object_and_subject(const String& object, const String& subject);
 
 	};
 

@@ -46,5 +46,12 @@ namespace mint::editor
 
 	mint::Vec4 GlobalData::s_EditorWorldQueryAABBColor = {150, 0, 0, 30};
 
+	bool GlobalData::s_EditorDebugRenderAABBFullInformation = false;
+	bool GlobalData::s_EditorDebugRenderAABBs = false;
+	bool GlobalData::s_EditorDebugRenderOriginPoint = false;
+	bool GlobalData::s_EditorDebugRenderDestinationRect = false;
+	bool GlobalData::s_EditorDebugRenderSelected = false;
+	bool GlobalData::s_EditorDebugRenderAll = false;
+
 }
 #endif
