@@ -26,6 +26,23 @@ public:
 };
 
 
+class TestWorldQueryDatabaseFilter : public mint::world::CWorldQueryDatabaseFilter
+{
+public:
+	TestWorldQueryDatabaseFilter(const mint::String& label) : m_label(label)
+	{
+	}
+
+	bool does_edge_pass_filter(mint::world::CEdge* edge) override final 
+	{
+		return edge->get_label() == m_label;
+	}
+
+private:
+	mint::String m_label = 0;
+};
+
+
 
 class CMainScene : public mint::CScene
 {

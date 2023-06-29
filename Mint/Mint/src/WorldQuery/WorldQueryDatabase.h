@@ -5,6 +5,7 @@
 #include "Database/WorldQueryDatabaseNode.h"
 #include "Database/WorldQueryDatabaseQueryMode.h"
 #include "Database/WorldQueryDatabaseQueryResultType.h"
+#include "Common/WorldQueryFilter.h"
 
 #include "Common/Any.h"
 #include "Utility/Logging/Logging.h"
@@ -66,9 +67,9 @@ namespace mint::world
 		//mint::Vector< CEdge > testing_run(Vector< SToken >& bytecode);
 
 
-		Vector< CEdge > query_get_all_object_subject(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
+		Vector< CEdge > query_get_all_object_subject(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
 
-		Vector< CEdge > query_get_all_subject_object(const String& subject, const String& object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None);
+		Vector< CEdge > query_get_all_subject_object(const String& subject, const String& object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
 
 
 
@@ -78,6 +79,9 @@ namespace mint::world
 
 		/// @brief Mapping object (node) labels to unique ids. Node can then be found through id in BST.
 		std::unordered_map< u64, u64 > m_identifiers;
+
+		/// @brief Filter to apply on nodes or edges that are being queried.
+		CWorldQueryDatabaseFilter* m_currentQueryFilter = nullptr;
 
 		ResultType m_currentQueryResultType = ResultType_None;
 		QueryMode m_currentQueryMode = QueryMode_None;

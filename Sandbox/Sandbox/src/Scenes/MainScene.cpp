@@ -306,8 +306,8 @@ void CMainScene::perform_all_database_tests()
 	MINT_LOG_SEPARATOR();
 
 
-
-	result = db.query_get_all_object_subject("Player", "*");
+	TestWorldQueryDatabaseFilter filter("Attitude");
+	result = db.query_get_all_object_subject("Player", "*", 0.0f, mint::world::LogicalWeightOperator_None, &filter);
 
 	MINT_LOG_INFO("[Database Test] Get all those to which \"Player\" has any relationship for any amount:");
 	for (auto& edge : result)

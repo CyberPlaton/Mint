@@ -3,7 +3,8 @@
 namespace mint::world
 {
 
-	mint::Vector< CEdge > CDatabase::query_get_all_object_subject(const String& object, const String& subject, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
+	mint::Vector< CEdge > CDatabase::query_get_all_object_subject(const String& object, const String& subject, f32 weight /*= 0.0f*/, 
+		LogicalWeightOperator op /*= LogicalWeightOperator_None*/, CWorldQueryDatabaseFilter* filter /*= nullptr*/)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_object_subject");
 
@@ -14,6 +15,7 @@ namespace mint::world
 		m_currentQueryObjectSubject = true;
 		m_currentQueryObjectWeight = weight;
 		m_currentQueryLogicalWeightOperator = op;
+		m_currentQueryFilter = filter;
 
 		mint::Vector< CEdge > result;
 
@@ -25,6 +27,17 @@ namespace mint::world
 
 		for (auto& edge : m_currentQueryObjectNode->m_outgoingEdges.get_all())
 		{
+			if (m_currentQueryFilter)
+			{
+				if (!(m_currentQueryFilter->does_edge_pass_filter(&edge) &&
+					  m_currentQueryFilter->does_from_node_pass_filter(edge.get_from_node()) &&
+					  m_currentQueryFilter->does_to_node_pass_filter(edge.get_to_node())))
+				{
+					// Edge or nodes did not pass the filter, ignore and continue.
+					continue;
+				}
+			}
+
 			auto h = mint::algorithm::djb_hash(edge.get_label());
 			auto any_hash = mint::algorithm::djb_hash("*");
 
@@ -148,7 +161,8 @@ namespace mint::world
 	{
 	}
 
-	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object(const String& subject, const String& object, f32 weight /*= 0.0f*/, LogicalWeightOperator op /*= LogicalWeightOperator_None*/)
+	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object(const String& subject, const String& object, f32 weight /*= 0.0f*/, 
+		LogicalWeightOperator op /*= LogicalWeightOperator_None*/, CWorldQueryDatabaseFilter* filter /*= nullptr*/)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_subject_object");
 
@@ -159,6 +173,7 @@ namespace mint::world
 		m_currentQueryObjectSubject = false;
 		m_currentQueryObjectWeight = weight;
 		m_currentQueryLogicalWeightOperator = op;
+		m_currentQueryFilter = filter;
 
 
 		mint::Vector< CEdge > result;
@@ -172,6 +187,18 @@ namespace mint::world
 
 		for (auto& edge : m_currentQueryObjectNode->m_ingoingEdges.get_all())
 		{
+			if (m_currentQueryFilter)
+			{
+				if (!(m_currentQueryFilter->does_edge_pass_filter(&edge) &&
+					m_currentQueryFilter->does_from_node_pass_filter(edge.get_from_node()) &&
+					m_currentQueryFilter->does_to_node_pass_filter(edge.get_to_node())))
+				{
+					// Edge or nodes did not pass the filter, ignore and continue.
+					continue;
+				}
+			}
+
+
 			auto h = mint::algorithm::djb_hash(edge.get_label());
 			auto any_hash = mint::algorithm::djb_hash("*");
 
@@ -229,6 +256,7 @@ namespace mint::world
 		m_currentQueryObjectSubject = false;
 		m_currentQueryObjectWeight = 0.0f;
 		m_currentQueryLogicalWeightOperator = LogicalWeightOperator_None;
+		m_currentQueryFilter = nullptr;
 	}
 
 
