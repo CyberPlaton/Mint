@@ -243,7 +243,7 @@ void CMainScene::setup_test_database(mint::world::CDatabase& db)
 
 	u64 node_id = 1000;
 	u64 edge_id = 2000;
-	db.create_node(node_id++, "Player", mint::world::NodeType_Entity);
+	db.create_node(node_id++, "Player", mint::world::NodeType_Entity, m_knight);
 	db.create_node(node_id++, "Walter", mint::world::NodeType_Entity);
 	db.create_node(node_id++, "Hans", mint::world::NodeType_Entity);
 
@@ -306,7 +306,7 @@ void CMainScene::perform_all_database_tests()
 	MINT_LOG_SEPARATOR();
 
 
-	TestWorldQueryDatabaseFilter filter("Attitude");
+	TestWorldQueryDatabaseFilter filter("Attitude", m_knight);
 	result = db.query_get_all_object_subject("Player", "*", 0.0f, mint::world::LogicalWeightOperator_None, &filter);
 
 	MINT_LOG_INFO("[Database Test] Get all those to which \"Player\" has any relationship for any amount:");

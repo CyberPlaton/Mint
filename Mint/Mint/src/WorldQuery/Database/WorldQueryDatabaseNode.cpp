@@ -79,4 +79,9 @@ namespace mint::world
 		}
 	}
 
+	CAny& CNode::get_user_data()
+	{
+		return m_userData;
+	}
+
 }

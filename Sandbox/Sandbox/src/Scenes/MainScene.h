@@ -29,17 +29,24 @@ public:
 class TestWorldQueryDatabaseFilter : public mint::world::CWorldQueryDatabaseFilter
 {
 public:
-	TestWorldQueryDatabaseFilter(const mint::String& label) : m_label(label)
+	TestWorldQueryDatabaseFilter(const mint::String& label, entt::entity entity) : m_label(label), m_entity(entity)
 	{
 	}
 
 	bool does_edge_pass_filter(mint::world::CEdge* edge) override final 
 	{
-		return edge->get_label() == m_label;
+		auto from = edge->get_from_node();
+		auto& data = from->get_user_data();
+		auto entity = data.cast< entt::entity >();
+
+		if (entity == m_entity && edge->get_label() == m_label) return true;
+
+		return false;
 	}
 
 private:
 	mint::String m_label = 0;
+	entt::entity m_entity = entt::null;
 };
 
 

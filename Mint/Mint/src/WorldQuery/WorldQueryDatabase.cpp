@@ -97,7 +97,6 @@ namespace mint::world
 			node->set_label(label);
 			node->set_type(type);
 
-
 			auto h = mint::algorithm::djb_hash(label);
 
 			m_identifiers[h] = id;

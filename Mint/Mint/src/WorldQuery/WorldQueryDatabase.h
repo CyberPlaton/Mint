@@ -56,15 +56,19 @@ namespace mint::world
 		void terminate();
 
 
-
 		bool create_node(u64 id, const String& label, NodeType type);
+
+		template< typename T >
+		bool create_node(u64 id, const String& label, NodeType type, T& user_data);
+
+		template< typename T >
+		bool create_node(u64 id, const String& label, NodeType type, T&& user_data);
+
 
 		bool create_edge(u64 from_node_id, u64 to_node_id, u64 edge_id, const String& label, f32 weight);
 
 		bool create_edge(const String& from_node_label, const String& to_node_label, u64 edge_id, const String& label, f32 weight);
 
-
-		//mint::Vector< CEdge > testing_run(Vector< SToken >& bytecode);
 
 
 		Vector< CEdge > query_get_all_object_subject(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
@@ -113,6 +117,38 @@ namespace mint::world
 		bool _set_query_object_and_subject(const String& object, const String& subject);
 
 	};
+
+	template< typename T >
+	bool mint::world::CDatabase::create_node(u64 id, const String& label, NodeType type, T&& user_data)
+	{
+		T& _d = user_data;
+
+		return create_node(id, label, type, _d);
+	}
+
+	template< typename T >
+	bool mint::world::CDatabase::create_node(u64 id, const String& label, NodeType type, T& user_data)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::create_node");
+
+		if (!m_nodes.lookup(id))
+		{
+			auto node = m_nodes.add_node(id);
+
+			node->set_id(id);
+			node->set_label(label);
+			node->set_type(type);
+			node->set_user_data(user_data);
+
+			auto h = mint::algorithm::djb_hash(label);
+
+			m_identifiers[h] = id;
+
+			return true;
+		}
+
+		return false;
+	}
 
 }
 
