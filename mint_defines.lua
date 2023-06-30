@@ -13,6 +13,8 @@ function windows_defines()
 			defines{
 				"MINT_DEBUG=1",
 				"MINT_PROFILE=1",
+				"MINT_USE_WORLD_QUERY_DATABASE=1",
+				"MINTFX_USE_EMBEDDED_SHADERS=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=2",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -27,6 +29,8 @@ function windows_defines()
 			defines{
 				"MINT_RELEASE=1",
 				"MINT_PROFILE=1",
+				"MINT_USE_WORLD_QUERY_DATABASE=1",
+				"MINTFX_USE_EMBEDDED_SHADERS=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -42,6 +46,8 @@ function windows_defines()
 			defines{
 				"MINT_DISTR=1",
 				"MINT_PROFILE=0",
+				"MINT_USE_WORLD_QUERY_DATABASE=1",
+				"MINTFX_USE_EMBEDDED_SHADERS=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",

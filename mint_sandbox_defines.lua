@@ -11,8 +11,6 @@ function windows_defines()
 			optimize "Off"
 			symbols "On"
 			defines{
-				"MINT_DEBUG=1",
-				"MINT_PROFILE=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=2",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -25,8 +23,6 @@ function windows_defines()
 			optimize "Full"
 			symbols "On"
 			defines{
-				"MINT_RELEASE=1",
-				"MINT_PROFILE=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -40,8 +36,6 @@ function windows_defines()
 			optimize "Full"
 			symbols "Off"
 			defines{
-				"MINT_DISTR=1",
-				"MINT_PROFILE=0",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -63,7 +57,6 @@ function linux_defines()
 			optimize "Off"
 			symbols "On"
 			defines{
-				"MINT_DEBUG=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=2",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -76,7 +69,6 @@ function linux_defines()
 			optimize "Full"
 			symbols "On"
 			defines{
-				"MINT_RELEASE=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",
@@ -90,7 +82,6 @@ function linux_defines()
 			optimize "Full"
 			symbols "Off"
 			defines{
-				"MINT_DISTR=1",
 				"__STDC_FORMAT_MACROS",
 				"_ITERATOR_DEBUG_LEVEL=0",
 				"_CRT_SECURE_NO_WARNINGS",

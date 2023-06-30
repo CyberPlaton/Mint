@@ -5,6 +5,7 @@
 #include "Common/Common.h"
 #include "Common/Algorithm.h"
 #include "Utility/Profiling/FunctionProfiler.h"
+#include "Utility/Logging/Logging.h"
 #include "Common/WorldQueryFilter.h"
 #include "Common/WorldQueryType.h"
 #include "WorldQueryDatabase.h"

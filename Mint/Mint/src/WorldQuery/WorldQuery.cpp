@@ -11,14 +11,22 @@ namespace mint::world
 		bool result = true;
 
 		result &= m_registeredProxies.initialize(MINT_ENTITY_COUNT_MAX);
+
+#if MINT_USE_WORLD_QUERY_DATABASE
 		result &= m_queryDatabase.initialize(MINT_ENTITY_COUNT_MAX);
+#else
+		MINT_LOG_WARN("[{:.4f}][CWorldQuery::initialize] Not using World Query Database!", MINT_APP_TIME);
+#endif
 
 		return result;
 	}
 
 	void CWorldQuery::terminate()
 	{
+#if MINT_USE_WORLD_QUERY_DATABASE
 		m_queryDatabase.terminate();
+#else
+#endif
 
 		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
