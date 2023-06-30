@@ -3,14 +3,14 @@
 namespace mint::world
 {
 
-	mint::Vector< CEdge > CDatabase::query_get_all_object_subject(const String& object, const String& subject, f32 weight /*= 0.0f*/, 
+	mint::Vector< CEdge > CDatabase::query_get_all_object_subject_edges(const String& object, const String& subject, f32 weight /*= 0.0f*/,
 		LogicalWeightOperator op /*= LogicalWeightOperator_None*/, CWorldQueryDatabaseFilter* filter /*= nullptr*/)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_object_subject");
 
 		// Setup database query.
 		_reset_query_data();
-		m_currentQueryResultType = ResultType_Node;
+		m_currentQueryResultType = ResultType_Edge;
 		m_currentQueryMode = QueryMode_All;
 		m_currentQueryObjectSubject = true;
 		m_currentQueryObjectWeight = weight;
@@ -160,14 +160,14 @@ namespace mint::world
 	{
 	}
 
-	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object(const String& subject, const String& object, f32 weight /*= 0.0f*/, 
+	mint::Vector< mint::world::CEdge > CDatabase::query_get_all_subject_object_edges(const String& subject, const String& object, f32 weight /*= 0.0f*/,
 		LogicalWeightOperator op /*= LogicalWeightOperator_None*/, CWorldQueryDatabaseFilter* filter /*= nullptr*/)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CDatabase::query_get_all_subject_object");
 
 		// Setup database query.
 		_reset_query_data();
-		m_currentQueryResultType = ResultType_Node;
+		m_currentQueryResultType = ResultType_Edge;
 		m_currentQueryMode = QueryMode_All;
 		m_currentQueryObjectSubject = false;
 		m_currentQueryObjectWeight = weight;

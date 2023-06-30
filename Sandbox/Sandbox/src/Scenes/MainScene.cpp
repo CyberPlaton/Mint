@@ -274,7 +274,7 @@ void CMainScene::perform_all_database_tests()
 	setup_test_database(db);
 
 
-	auto result = db.query_get_all_object_subject("Player", "Like", 10.0f, mint::world::LogicalWeightOperator_Greater);
+	auto result = db.query_get_all_object_subject_edges("Player", "Like", 10.0f, mint::world::LogicalWeightOperator_Greater);
 
 	MINT_LOG_INFO("[Database Test] Get all that \"Player\" \"Like\"s for at least 10.0f:");
 	for (auto& edge : result)
@@ -285,7 +285,7 @@ void CMainScene::perform_all_database_tests()
 
 
 
-	result = db.query_get_all_subject_object("Like", "Walter");
+	result = db.query_get_all_subject_object_edges("Like", "Walter");
 
 	MINT_LOG_INFO("[Database Test] Get all those who \"Like\" \"Walter\" for any amount:");
 	for (auto& edge : result)
@@ -296,7 +296,7 @@ void CMainScene::perform_all_database_tests()
 
 
 
-	result = db.query_get_all_subject_object("*", "Walter");
+	result = db.query_get_all_subject_object_edges("*", "Walter");
 
 	MINT_LOG_INFO("[Database Test] Get all those who have any relationship to \"Walter\" for any amount:");
 	for (auto& edge : result)
@@ -307,7 +307,7 @@ void CMainScene::perform_all_database_tests()
 
 
 	TestWorldQueryDatabaseFilter filter("Attitude", m_knight);
-	result = db.query_get_all_object_subject("Player", "*", 0.0f, mint::world::LogicalWeightOperator_None, &filter);
+	result = db.query_get_all_object_subject_edges("Player", "*", 0.0f, mint::world::LogicalWeightOperator_None, &filter);
 
 	MINT_LOG_INFO("[Database Test] Get all those to which \"Player\" has any relationship for any amount:");
 	for (auto& edge : result)

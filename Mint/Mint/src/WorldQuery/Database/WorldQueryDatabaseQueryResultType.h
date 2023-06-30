@@ -8,11 +8,7 @@ namespace mint::world
 	enum ResultType
 	{
 		ResultType_None = 0,
-		ResultType_Node,
-		ResultType_Relationship,
-		ResultType_Membership,
-		ResultType_Attitude,
-		ResultType_Classification
+		ResultType_Edge,
 	};
 
 }

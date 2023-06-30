@@ -70,11 +70,23 @@ namespace mint::world
 		bool create_edge(const String& from_node_label, const String& to_node_label, u64 edge_id, const String& label, f32 weight);
 
 
+		/// @brief Query the database for a node and its associated data. 
+		///		   This function queries for outgoing edges that are labeled 
+		///		   as the Subject from the Object to other nodes.
+		///		   	   
+		/// @param object Label of the Node of interest. Nodes are uniquely named.
+		/// @param subject Label of the Subject of interest describing a relationship, i.e. "Like".
+		/// @param weight Optional. Filter weight.
+		/// @param op Optional. Logical operator for the filter weight.
+		/// @param filter Optional. User defined filter for edges found. The filter can check for specific user data etc.
+		/// @return Array of edges fulfilling the requirements and filters.
+		Vector< CEdge > query_get_all_object_subject_edges(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
 
-		Vector< CEdge > query_get_all_object_subject(const String& object, const String& subject, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
 
-		Vector< CEdge > query_get_all_subject_object(const String& subject, const String& object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
-
+		/// @brief Query the database for a node and its associated data. 
+		///		   This function queries for ingoing edges that are labeled 
+		///		   as the Subject from other nodes to the Object node.
+		Vector< CEdge > query_get_all_subject_object_edges(const String& subject, const String& object, f32 weight = 0.0f, LogicalWeightOperator op = LogicalWeightOperator_None, CWorldQueryDatabaseFilter* filter = nullptr);
 
 
 	private:
