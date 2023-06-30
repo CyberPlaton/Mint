@@ -320,6 +320,16 @@ void CMainScene::perform_all_database_tests()
 	db.remove_edge(1000, 2000);
 	db.remove_edge(2001);
 	db.remove_node(1000);
+
+
+	result = db.query_get_all_subject_object_edges("Like", "Hans");
+
+	MINT_LOG_INFO("[Database Test] Get all those who \"Like\" \"Hans\" for any amount:");
+	for (auto& edge : result)
+	{
+		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
+	}
+	MINT_LOG_SEPARATOR();
 }
 
 void CMainScene::perform_database_test(mint::world::CDatabase& db, mint::Vector< mint::world::SToken >& bytecode, const mint::String& description)
