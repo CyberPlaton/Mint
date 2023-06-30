@@ -212,7 +212,7 @@ bool CMainScene::on_load()
 		
 		add_entity(entity);
 
-		CWorldQuery::Get().register_entity_proxy(entity, CUCA::sprite_get_destination_rect(entity));
+		CWorldQuery::Get().register_entity_proxy(entity, CUCA::sprite_get_destination_rect(entity), CUCA::identifier_get_debug_name(entity));
 	}
 
 
@@ -269,7 +269,7 @@ void CMainScene::perform_all_database_tests()
 	using namespace mint::world;
 	using namespace mint;
 
-	CDatabase db; db.initialize();
+	CDatabase db; db.initialize(MINT_ENTITY_COUNT_MAX);
 
 	setup_test_database(db);
 
@@ -315,6 +315,11 @@ void CMainScene::perform_all_database_tests()
 		MINT_LOG_INFO("\tLabel=\"{}\", Weight=\"{}\", From=\"{}\", To=\"{}\"", edge.get_label(), edge.get_weight(), edge.get_from_node()->get_label(), edge.get_to_node()->get_label());
 	}
 	MINT_LOG_SEPARATOR();
+
+
+	db.remove_edge(1000, 2000);
+	db.remove_edge(2001);
+	db.remove_node(1000);
 }
 
 void CMainScene::perform_database_test(mint::world::CDatabase& db, mint::Vector< mint::world::SToken >& bytecode, const mint::String& description)

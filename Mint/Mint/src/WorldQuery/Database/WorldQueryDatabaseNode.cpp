@@ -45,16 +45,20 @@ namespace mint::world
 	}
 
 
-	void CNode::remove_edge(u64 id)
+	bool CNode::remove_edge(u64 id)
 	{
+		bool erased = false;
 		if (m_ingoingEdges.lookup(id))
 		{
 			m_ingoingEdges.remove(id);
+			erased = true;
 		}
 		else if (m_outgoingEdges.lookup(id))
 		{
 			m_outgoingEdges.remove(id);
+			erased = true;
 		}
+		return erased;
 	}
 
 	void CNode::add_outgoing_edge(u64 id, const String& label, f32 weight, CNode* to)
@@ -67,6 +71,13 @@ namespace mint::world
 
 			to->add_ingoing_edge(id, label, weight, this);
 		}
+		else
+		{
+			// Adjust weight of the existing edge.
+			auto& edge = m_outgoingEdges.get_ref(id);
+			
+			edge.set_weight(weight);
+		}
 	}
 
 	void CNode::add_ingoing_edge(u64 id, const String& label, f32 weight, CNode* from)
@@ -77,11 +88,37 @@ namespace mint::world
 		{
 			m_ingoingEdges.add(id, edge);
 		}
+		else
+		{
+			// Adjust weight of the existing edge.
+			auto& edge = m_ingoingEdges.get_ref(id);
+
+			edge.set_weight(weight);
+		}
 	}
 
 	CAny& CNode::get_user_data()
 	{
 		return m_userData;
+	}
+
+	CNode::~CNode()
+	{
+		// Removing all edges involves removing them in target nodes and
+		// in nodes that sent them too.
+		auto& iedges = m_ingoingEdges.get_all();
+		
+		for (auto& edge : iedges)
+		{
+			edge.get_from_node()->remove_edge(edge.get_id());
+		}
+
+		auto& oedges = m_outgoingEdges.get_all();
+
+		for (auto& edge : oedges)
+		{
+			edge.get_to_node()->remove_edge(edge.get_id());
+		}
 	}
 
 }

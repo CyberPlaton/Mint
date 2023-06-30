@@ -27,7 +27,7 @@ namespace mint::world
 
 		void terminate();
 
-		bool register_entity_proxy(entt::entity entity, const mint::CRect& destination_rect);
+		bool register_entity_proxy(entt::entity entity, const mint::CRect& destination_rect, const String& label);
 
 		bool is_entity_registered(entt::entity entity);
 
@@ -36,6 +36,7 @@ namespace mint::world
 		bool update_entity_proxy(entt::entity entity, const b2AABB& aabb, const Vec2& displacement);
 
 		SWorldQueryProxy* get_entity_proxy(entt::entity entity);
+
 
 
 		bool get_any_entity_at_point_in_radius(const CRect& rect);
@@ -76,6 +77,24 @@ namespace mint::world
 
 
 
+		bool create_membership_node(const String& label);
+		
+		bool create_attitude_node(const String& label);
+		
+		bool create_classification_node(const String& label);
+
+		bool remove_node(const String& label);
+
+		bool add_membership(entt::entity entity, const String& label, f32 value);
+
+		bool add_attitude(entt::entity entity, const String& label, f32 value);
+
+		bool add_classification(entt::entity entity, const String& label, f32 value);
+
+
+
+
+
 
 
 		bool QueryCallback(s32 proxyId);
@@ -84,6 +103,8 @@ namespace mint::world
 
 	private:
 		MINT_CRITICAL_SECTION(m_criticalSection);
+
+		CDatabase m_queryDatabase;
 
 		u32 m_masterQueryKey = 0;
 		WorldQueryType m_masterQueryType;
@@ -99,6 +120,12 @@ namespace mint::world
 		u64 m_queryResultEntityCount = 0;
 		Vector< SWorldQueryProxy > m_queryResultEntityArray;
 		bool m_queryResultAnyOccurrence = false;
+
+
+	private:
+		bool _add_entity_relationship_edge(u64 from_node_id, const String& to_node_label, const String& edge_label, u64 edge_id, f32 edge_weight);
+		bool _add_entity_entity_edge(entt::entity entity, entt::entity to_entity);
+
 	};
 
 	template< class FilterType >

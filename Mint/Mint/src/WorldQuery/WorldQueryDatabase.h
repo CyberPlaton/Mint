@@ -49,9 +49,9 @@ namespace mint::world
 	class CDatabase
 	{
 	public:
-		CDatabase() = default;
+		CDatabase();
 
-		bool initialize();
+		bool initialize(u64 expected_object_count, u64 alignment = 0);
 
 		void terminate();
 
@@ -64,10 +64,25 @@ namespace mint::world
 		template< typename T >
 		bool create_node(u64 id, const String& label, NodeType type, T&& user_data);
 
+		bool remove_node(u64 id);
+
 
 		bool create_edge(u64 from_node_id, u64 to_node_id, u64 edge_id, const String& label, f32 weight);
 
 		bool create_edge(const String& from_node_label, const String& to_node_label, u64 edge_id, const String& label, f32 weight);
+
+
+		/// @brief Remove edge by identifier. Slow: involves searched for the edge through nodes.
+		/// @param edge_id Unique identifier of the edge.
+		/// @return True if removed.
+		bool remove_edge(u64 edge_id);
+
+
+		/// @brief Remove edge by identifier. Faster: as node is given we remove the edge directly.
+		/// @param node_id Unique identifier of the node.
+		/// @param edge_id Unique identifier of the edge.
+		/// @return True if removed.
+		bool remove_edge(u64 node_id, u64 edge_id);
 
 
 		/// @brief Query the database for a node and its associated data. 

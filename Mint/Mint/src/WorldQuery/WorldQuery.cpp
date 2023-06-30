@@ -8,23 +8,29 @@ namespace mint::world
 	{
 		INITIALIZE_CRITICAL_SECTION(m_criticalSection);
 
-		m_registeredProxies.initialize(MINT_ENTITY_COUNT_MAX);
+		bool result = true;
 
-		return true;
+		result &= m_registeredProxies.initialize(MINT_ENTITY_COUNT_MAX);
+		result &= m_queryDatabase.initialize(MINT_ENTITY_COUNT_MAX);
+
+		return result;
 	}
 
 	void CWorldQuery::terminate()
 	{
+		m_queryDatabase.terminate();
+
 		DELETE_CRITICAL_SECTION(m_criticalSection);
 	}
 
 
-	bool CWorldQuery::register_entity_proxy(entt::entity entity, const mint::CRect& destination_rect)
+	bool CWorldQuery::register_entity_proxy(entt::entity entity, const mint::CRect& destination_rect, const String& label)
 	{
 		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::register_entity_proxy");
 
 		auto h = SCAST(u64, entity);
 
+		// Try registering in the Dynamic Tree.
 		if (m_registeredProxies.lookup(h)) return true;
 
 		b2AABB aabb = mint::algorithm::compute_aabb(destination_rect);
@@ -37,6 +43,8 @@ namespace mint::world
 
 		m_registeredProxyIds[proxy->m_b2ProxyId] = h;
 
+		// Try registering in the Database.
+		if (!m_queryDatabase.create_node(h, label, NodeType_Entity, entity)) return false;
 
 		return true;
 	}
@@ -387,6 +395,78 @@ namespace mint::world
 
 			return proxy;
 		}
+	}
+
+	bool CWorldQuery::create_membership_node(const String& label)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::create_membership_node");
+
+		bool result = m_queryDatabase.create_node(mint::algorithm::djb_hash(label), label, NodeType_Membership);
+
+		return result;
+	}
+
+	bool CWorldQuery::create_attitude_node(const String& label)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::create_attitude_node");
+
+		bool result = m_queryDatabase.create_node(mint::algorithm::djb_hash(label), label, NodeType_Attitude);
+
+		return result;
+	}
+
+	bool CWorldQuery::create_classification_node(const String& label)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::create_classification_node");
+
+		bool result = m_queryDatabase.create_node(mint::algorithm::djb_hash(label), label, NodeType_Classification);
+
+		return result;
+	}
+
+	bool CWorldQuery::remove_node(const String& label)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::remove_node");
+
+		bool result = m_queryDatabase.remove_node(mint::algorithm::djb_hash(label));
+
+		return result;
+	}
+
+	bool CWorldQuery::add_membership(entt::entity entity, const String& label, f32 value)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::add_membership");
+
+		auto h = SCAST(u64, entity);
+
+		if (!m_registeredProxies.lookup(h)) return false;
+
+		auto hh = mint::algorithm::djb_hash(label);
+
+		bool result = _add_entity_relationship_edge(h, label, label, hh, value);
+
+		return result;
+	}
+
+	bool CWorldQuery::add_attitude(entt::entity entity, const String& label, f32 value)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::add_attitude");
+
+		return add_membership(entity, label, value);
+	}
+
+	bool CWorldQuery::add_classification(entt::entity entity, const String& label, f32 value)
+	{
+		MINT_PROFILE_SCOPE("Engine::WorldQuery", "CWorldQuery::add_classification");
+
+		return add_membership(entity, label, value);
+	}
+
+	bool CWorldQuery::_add_entity_relationship_edge(u64 from_node_id, const String& to_node_label, const String& edge_label, u64 edge_id, f32 edge_weight)
+	{
+		bool result = m_queryDatabase.create_edge(from_node_id, mint::algorithm::djb_hash(to_node_label), edge_id, edge_label, edge_weight);
+
+		return result;
 	}
 
 }

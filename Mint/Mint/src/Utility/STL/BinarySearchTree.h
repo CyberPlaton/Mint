@@ -128,7 +128,7 @@ namespace mint
 
 		MINT_ASSERT(lookup(identifier) == true, "Invalid operation. Removing not existing node is not allowed!");
 
-		m_objects.remove(m_indices[identifier]);
+		m_objects.remove(m_indices[identifier]); // Object destructor called inside.
 		m_indices.erase(m_indices.find(identifier));
 	}
 

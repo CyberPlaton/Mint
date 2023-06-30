@@ -29,6 +29,7 @@ namespace mint::world
 	public:
 		CNode();
 		CNode(NodeType type, const String& label, u64 id);
+		~CNode();
 
 
 		u64 get_id() const;
@@ -51,7 +52,7 @@ namespace mint::world
 
 		void add_outgoing_edge(u64 id, const String& label, f32 weight, CNode* to);
 		void add_ingoing_edge(u64 id, const String& label, f32 weight, CNode* from);
-		void remove_edge(u64 id);
+		bool remove_edge(u64 id);
 
 		
 	private:

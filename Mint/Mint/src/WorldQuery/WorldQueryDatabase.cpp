@@ -151,9 +151,10 @@ namespace mint::world
 		return false;
 	}
 
-	bool CDatabase::initialize()
+
+	bool CDatabase::initialize(u64 expected_object_count, u64 alignment /*= 0*/)
 	{
-		return m_nodes.initialize(MINT_ENTITY_COUNT_MAX);
+		return m_nodes.initialize(expected_object_count, alignment);
 	}
 
 	void CDatabase::terminate()
@@ -286,6 +287,50 @@ namespace mint::world
 		m_currentQuerySubjectLabel = subject;
 
 		return result;
+	}
+
+	CDatabase::CDatabase()
+	{
+	}
+
+	bool CDatabase::remove_node(u64 id)
+	{
+		if (m_nodes.lookup(id))
+		{
+			m_nodes.remove_node(id);
+
+			// Remove id from node identifiers.
+			m_identifiers.erase(id);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool CDatabase::remove_edge(u64 edge_id)
+	{
+		auto node = m_nodes.begin();
+		while (node)
+		{
+			if (node->remove_edge(edge_id)) return true;
+
+			node = m_nodes.advance(node);
+		}
+
+		return false;
+	}
+
+	bool CDatabase::remove_edge(u64 node_id, u64 edge_id)
+	{
+		if (m_nodes.lookup(node_id))
+		{
+			m_nodes.get(node_id)->remove_edge(edge_id);
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
