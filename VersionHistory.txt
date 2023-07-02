@@ -1,5 +1,9 @@
 Runtime Version History:
 
+2023.07.01:
+	o Initial version of Particle System.
+
+
 2023.06.08:
 	o Initial version of World Query Database.
 	o Defining graph-like database from code and performing simple queries possible.
@@ -71,6 +75,9 @@ Runtime Version History:
 
 
 Editor Version History:
+
+2023.07.01:
+	o ParticleEmitter component editor added to existing editors of common components.
 
 2023.05.01:
 	o Material Editor implemented, allowing:
