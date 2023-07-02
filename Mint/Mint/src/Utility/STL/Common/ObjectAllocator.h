@@ -51,6 +51,10 @@ namespace mint
 
 		Object* advance(Object* object);
 
+		Object* reverse_begin();
+
+		Object* reverse_advance(Object* object);
+
 
 		Object* get(u64 index);
 
@@ -84,6 +88,32 @@ namespace mint
 		u64 m_usedAlignment;
 	};
 
+
+	template< typename Object >
+	Object* mint::CObjectAllocator<Object>::reverse_advance(Object* object)
+	{
+		auto start = reinterpret_cast<u64> (m_memoryBlockStart);
+
+		if (reinterpret_cast<u64>(object) - sizeof(Object) < start)
+		{
+			return nullptr;
+		}
+
+		// Return the start of the memory location of the previous object relative to given one.
+		return reinterpret_cast<Object*>(reinterpret_cast< u64 >(object) - sizeof(Object));
+	}
+
+	template< typename Object >
+	Object* mint::CObjectAllocator<Object>::reverse_begin()
+	{
+		if (m_objectCount == 0)
+		{
+			return nullptr;
+		}
+
+		// Return the start of the memory location of the last object.
+		return reinterpret_cast<Object*>(m_memoryBlockStart + m_objectCount * sizeof(Object) - 1);
+	}
 
 
 	template< typename Object >

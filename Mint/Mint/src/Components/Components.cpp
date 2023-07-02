@@ -3,6 +3,34 @@
 
 namespace mint::component
 {
+	bool SParticleEmitter::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SParticleEmitter >().hash() != hash) return true;
+
+		const auto& pe = registry.get< SParticleEmitter >(entity);
+
+		return true;
+	}
+
+
+	bool SParticleEmitter::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SParticleEmitter >().hash() != hash ||
+			registry.all_of< mint::component::SParticleEmitter >(entity)) return true;
+
+		auto& pe = registry.emplace< SParticleEmitter >(entity);
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&pe);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+		return true;
+	}
+
 
 	bool SWorldSettings::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
 	{

@@ -37,4 +37,9 @@ namespace mint::fx
 		m_defaultRenderTexture = texture;
 	}
 
+	void CRenderingPass::set_rendering_pass_name(const String& rendering_pass_name)
+	{
+		m_renderingPassName = rendering_pass_name;
+	}
+
 }

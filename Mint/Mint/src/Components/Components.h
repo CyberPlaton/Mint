@@ -34,6 +34,17 @@ namespace mint::component
 	};
 
 
+	struct SParticleEmitter INHERITS(mint::reflection::SBase)
+	{
+		REFLECTED_CLASS(SParticleEmitter);
+
+		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry & registry, maml::SNode * node);
+		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry & registry, maml::SNode * node);
+
+		u8 m_placeholder = 0;
+	};
+
+
 	struct SWorldSettings INHERITS(mint::reflection::SBase)
 	{
 		REFLECTED_CLASS(SWorldSettings);

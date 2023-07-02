@@ -11,7 +11,7 @@ namespace mint::editor
 	{
 		String metaclass_name = metaclass->get_metaclass_name();
 
-		if(find_component_editor(metaclass_name) >= 0)
+		if(find_component_editor(metaclass_name) > 0)
 		{
 			return true;
 		}
@@ -49,6 +49,10 @@ namespace mint::editor
 		else if (metaclass_name == "SDynamicGameobject")
 		{
 			editor = new CDynamicGameobjectComponentEditor(metaclass);
+		}
+		else if (metaclass_name == "SParticleEmitter")
+		{
+			editor = new CParticleEmitterComponentEditor(metaclass);
 		}
 		else
 		{

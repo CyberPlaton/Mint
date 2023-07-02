@@ -78,4 +78,5 @@ public:
 
 
 	entt::entity m_knight;
+	entt::entity m_particle;
 };

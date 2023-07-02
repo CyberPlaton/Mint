@@ -115,9 +115,12 @@ namespace mint::fx
 
 			m_renderingPasses.erase(m_renderingPasses.begin());
 
-			rp->terminate();
+			if (rp->requires_termination())
+			{
+				rp->terminate();
 
-			delete rp; rp = nullptr;
+				delete rp; rp = nullptr;
+			}
 		}
 
 		UnloadRenderTexture(m_defaultRT);

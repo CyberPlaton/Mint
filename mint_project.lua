@@ -69,6 +69,8 @@
 			"Graphics/Shaders/ShaderConstructor/Common",
 			"Graphics/Shaders/ShaderConstructor",
 			"Graphics/Shaders",
+			"Graphics/ParticleSystem/Common",
+			"Graphics/ParticleSystem",
 			"Graphics",
 			"RessourceManagement/Common/RessourceLoaders",
 			"RessourceManagement/Common",

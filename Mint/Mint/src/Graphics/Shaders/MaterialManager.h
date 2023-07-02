@@ -34,6 +34,8 @@ namespace mint::fx
 
 		void remove_material_from_entity(entt::entity entity, const String& material_name);
 		
+		bool get_material_definition(const String& material_name, SMaterialDefinition& material);
+
 		mint::CMap2< CMaterial >& get_materials_for_entity(entt::entity entity);
 
 		CMaterial* get_main_material_for_entity(entt::entity entity);

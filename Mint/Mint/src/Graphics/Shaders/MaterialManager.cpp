@@ -391,4 +391,75 @@ namespace mint::fx
 	}
 
 
+	bool CMaterialManager::get_material_definition(const String& material_name, SMaterialDefinition& material)
+	{
+		auto material_handle = mint::algorithm::djb_hash(material_name);
+
+		if (!m_materialPrefabs.lookup(material_handle)) return false;
+
+		String material_file_path = m_materialPrefabs.get(material_handle).second;
+
+		maml::CDocument document;
+
+		auto root = CSerializer::load_maml_document(material_file_path, document);
+		if (!root)
+		{
+			return false;
+		}
+
+		auto node = document.find_first_match_in_document("material");
+		if (!node)
+		{
+			return false;
+		}
+
+		String mat_name;
+		String texture_name;
+		String shader_name;
+
+
+		CSerializer::import_string(mat_name, "name", node);
+		CSerializer::import_string(texture_name, "texture", node);
+		CSerializer::import_string(shader_name, "shader", node);
+
+		u64 blendmode = 0, blendingsrcfactor = 0, blendingdstfactor = 0, blendingequation = 0;
+
+		CSerializer::import_uint(&blendmode, "blendingmode", node);
+		CSerializer::import_uint(&blendingsrcfactor, "blendingsrcfactor", node);
+		CSerializer::import_uint(&blendingdstfactor, "blendingdstfactor", node);
+		CSerializer::import_uint(&blendingequation, "blendingequation", node);
+
+
+		// Set data for Material Definition.
+		material.m_materialName = mat_name;
+		material.m_textureName = texture_name;
+		material.m_shaderProgramName = shader_name;
+		material.m_blendMode = (BlendMode)blendmode;
+		material.m_srcBlendFactor = (u32)blendingsrcfactor;
+		material.m_dstBlendFactor = (u32)blendingdstfactor;
+		material.m_blendingEquation = (u32)blendingequation;
+
+
+		// Uniforms. We discern between static and dynamic.
+		auto staticuniforms = maml::CDocument::find_first_match_in_node(node, "staticuniforms");
+		auto dynamicuniforms = maml::CDocument::find_first_match_in_node(node, "dynamicuniforms");
+
+
+		if (staticuniforms)
+		{
+			auto& properties = maml::CDocument::get_all_node_properties(staticuniforms);
+
+			_load_uniforms(material.m_staticUniforms, properties);
+		}
+		if (dynamicuniforms)
+		{
+			auto& properties = maml::CDocument::get_all_node_properties(dynamicuniforms);
+
+			_load_uniforms(material.m_dynamicUniforms, properties);
+		}
+
+		return true;
+	}
+
+
 }

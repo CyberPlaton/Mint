@@ -53,6 +53,8 @@ namespace mint
 
 		static bool edit_field_rect(CRect& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None, f32 speed = 1.0f);
 
+		static bool edit_field_vec2_ranged(Vec2& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None, f32 speed = 1.0f);
+
 		static void help_marker(const String& desc);
 
 		static void help_marker_no_question_mark(const String& desc);

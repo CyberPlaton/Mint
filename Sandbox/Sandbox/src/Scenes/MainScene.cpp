@@ -174,11 +174,39 @@ bool CMainScene::on_load()
 //  #endif
 
 
+	m_particle = m_registry.create_entity();
+ 
+ 	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_particle);
+ 	auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_particle);
+ 	auto& transform = m_registry.add_component< mint::component::STransform >(m_particle);
+	auto& particles = m_registry.add_component< mint::component::SParticleEmitter >(m_particle);
+	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_particle);
+ 
+ 	identifier.m_enttId = SCAST(u64, m_particle);
+ 	identifier.m_uuid = identifier.m_enttId;
+ 	identifier.m_debugName = "ParticleEmitter";
+ 	hierarchy.m_parent = entt::null;
+ 
+	sprite.m_visible = true;
+	sprite.m_internalVisible = true;
+	sprite.m_depth = 0;
+	sprite.m_rect = { 0.0f, 0.0f, 512.0f, 512.0f };
+	sprite.m_color = { 255, 255, 255, 255 };
+	sprite.m_origin = { 256.0f, 256.0f };
 
+ 	CUCA::transform_set_scale(m_particle, { 1.0f, 1.0f });
+ 	CUCA::transform_set_rotation(m_particle, 0);
+ 	CUCA::transform_set_position(m_particle, { 0, 0 });
+
+	add_entity(m_particle);
+
+	mint::fx::CParticleSystem::Get().request_entity_registration(m_particle);
+	mint::fx::CParticleSystem::Get().set_entity_particle_emitter(m_particle, "part_testing_particle");
+	
 
 
 	mint::CRandom random;
-	for (int i = 0; i < 150; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		// Create an entity.
 		entt::entity entity = m_registry.create_entity();

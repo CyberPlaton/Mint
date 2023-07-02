@@ -342,6 +342,32 @@ namespace mint
 	}
 
 
+	bool CUI::edit_field_vec2_ranged(Vec2& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed /*= 1.0f*/)
+	{
+		f32 prev[2]; prev[0] = value.x; prev[1] = value.y;
+
+		if (ImGui::CollapsingHeader(field_text.c_str()))
+		{
+			ImGui::PushID(slider_id);
+			ImGui::PushItemWidth(2.0f * s_editDragFieldWidth /*250.0f*/);
+		
+			ImGui::DragFloatRange2("f32", &prev[0], &prev[1], speed, min, max, "Min: %.4f", "Max: %.4f", flags);
+		
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			help_marker_no_question_mark(field_desc);
+
+
+			value.x = prev[0];
+			value.y = prev[1];
+
+			return true;
+		}
+
+		return false;
+	}
+
+
 	bool CUI::edit_field_vec3(Vec3& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
 	{
 		f32 prev[3]; prev[0] = value.x; prev[1] = value.y; prev[2] = value.z;

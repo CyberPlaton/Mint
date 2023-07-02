@@ -102,13 +102,15 @@ namespace mint
 
 		CPluginSystem::Get().on_update(dt);
 
-		mint::fx::CCameraManager::Get().on_update(dt);
+		fx::CCameraManager::Get().on_update(dt);
 
 		scripting::CScriptEngine::Get().set_should_update(true);
 
 		scripting::CBehaviorEngine::Get().set_should_update(true);
 
 		animation::CAnimationSystem::Get().set_should_update(true);
+
+		fx::CParticleSystem::Get().on_update(dt);
 	}
 
 
@@ -285,6 +287,7 @@ namespace mint
 		CRessourceLoaderFactory::register_ressource_loader("Behavior", &CBehaviorLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Material", &CMaterialLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Animation", &CAnimationLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("ParticleEmitter", &CParticleEmitterLoader::create);
 
 
 
@@ -396,6 +399,8 @@ namespace mint
 		// Camera System.
 		result &= mint::fx::CCameraManager::Get().initialize();
 
+		// Particle System.
+		result &= fx::CRenderingPassStack::Get().try_push_rendering_pass(&fx::CParticleSystem::Get());
 
 		// Registry.
 		result &= MINT_SCENE_REGISTRY()->initialize();
@@ -505,6 +510,9 @@ namespace mint
 		// Spatial acceleration structure.
 		CSAS::Get().stop_sas_thread();
 		CSAS::Get().terminate();
+
+		// Particle System.
+		fx::CParticleSystem::Get().terminate();
 
 		// Renderers and Renderer Stack.
 		fx::CRenderingPassStack::Get().terminate();

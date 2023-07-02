@@ -17,9 +17,13 @@ namespace mint::fx
 	class IRenderingPass
 	{
 	public:
+		virtual void set_rendering_pass_name(const String&) = 0;
+
 		virtual bool initialize() = 0;
 
 		virtual void terminate() = 0;
+
+		virtual bool requires_termination() = 0;
 
 		virtual void reset() = 0;
 
@@ -63,13 +67,19 @@ namespace mint::fx
 		friend class CRenderingPassStack;
 
 	public:
+		CRenderingPass() = default;
 		CRenderingPass(const String& rendering_pass_name);
 
+		
 		virtual bool initialize() { return false; }
 		virtual void terminate() {}
+		virtual bool requires_termination() { return true; }
 		virtual void reset() {}
+
+
 		virtual void on_resize(ICamera* render_camera);
 
+		void set_rendering_pass_name(const String& rendering_pass_name) override final;
 
 		
 		virtual void on_frame_begin(ICamera* render_camera);
