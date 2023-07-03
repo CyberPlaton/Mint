@@ -48,12 +48,6 @@ namespace mint::editor
 			auto& def = emitter->get_particle_definition();
 
 
-			static bool v = false;
-			ImGui::ToggleButton("Test", &v);
-			ImGui::ToggleButtonEx("Test_2", &v, MINT_GREEN(), MINT_RED(), MINT_WHITE());
-			
-
-
 			ImGui::SeparatorText("Position");
 
 			CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position Start", "", slid++, scid++);

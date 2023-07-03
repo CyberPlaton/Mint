@@ -13,7 +13,7 @@
 namespace ImGui
 {
 	void ToggleButton(const char* str_id, bool* v);
-	void ToggleButtonEx(const char* str_id, bool* v, const mint::fx::CColor& bg_active = MINT_GREEN(), const mint::fx::CColor& bg_inactive = MINT_RED(), const mint::fx::CColor& fg_knob = MINT_WHITE());
+	void ToggleButtonEx(const char* str_id, bool* v, const mint::fx::CColor& bg_active = MINT_GREEN_LIGHT(), const mint::fx::CColor& bg_inactive = MINT_GREY_LIGHT(), const mint::fx::CColor& fg_knob = MINT_WHITE());
 }
 
 
