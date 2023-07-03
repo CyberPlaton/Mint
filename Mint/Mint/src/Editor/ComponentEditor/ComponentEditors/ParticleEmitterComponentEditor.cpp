@@ -47,7 +47,6 @@ namespace mint::editor
 		{
 			auto& def = emitter->get_particle_definition();
 
-
 			ImGui::SeparatorText("Position");
 
 			CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position Start", "", slid++, scid++);

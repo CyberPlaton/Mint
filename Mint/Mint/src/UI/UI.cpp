@@ -78,7 +78,6 @@ namespace mint
 			ImGui::GetStyle().ScrollbarRounding = 9;
 			ImGui::GetStyle().GrabRounding = 12;
 			ImGui::GetStyle().TabRounding = 6;
-
 		}
 
 		return result;
