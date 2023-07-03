@@ -47,6 +47,13 @@ namespace mint::editor
 		{
 			auto& def = emitter->get_particle_definition();
 
+			static f32 loading = 0.0f;
+			loading += 0.01f;
+			if (loading >= 100.0f) loading = 0.0f;
+
+			CUI::loading_bar("Loading", loading, { 250.0f, 10.0f }, MINT_GREY_DARK(), MINT_GREEN());
+			CUI::loading_circle("Loading", 10.0f, 5.0f, MINT_GREEN());
+
 			ImGui::SeparatorText("Position");
 
 			CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position Start", "", slid++, scid++);

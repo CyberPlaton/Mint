@@ -153,6 +153,22 @@ namespace mint
 	}
 
 
+	void CUI::loading_bar(const String& field_id, f32 percent_value, const Vec2& size, const fx::CColor& background/*= MINT_GREY_DARK()*/, const fx::CColor& foreground/*= MINT_GREEN()*/)
+	{
+		auto bg = background.to_normalized_color_vec4();
+		auto fg = foreground.to_normalized_color_vec4();
+		f32 v = percent_value / 100.0f;
+
+		ImGui::BufferingBar(field_id.c_str(), v, { size.x, size.y }, ImGui::GetColorU32(ImVec4(bg.r, bg.g, bg.b, bg.a)), ImGui::GetColorU32(ImVec4(fg.r, fg.g, fg.b, fg.a)));
+	}
+
+	void CUI::loading_circle(const String& field_id, f32 radius, f32 thikness, const fx::CColor& color /*= MINT_GREEN()*/)
+	{
+		auto col = color.to_normalized_color_vec4();
+
+		ImGui::Spinner(field_id.c_str(), radius, thikness, ImGui::GetColorU32(ImVec4(col.r, col.g, col.b, col.a)));
+	}
+
 	bool CUI::edit_field_sint32(s32& value, s32 min, s32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/)
 	{
 		if (ImGui::CollapsingHeader(field_text.c_str()))

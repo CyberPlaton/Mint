@@ -31,6 +31,10 @@ namespace mint
 
 		static bool image_button(const Texture* texture, const Vec2& size, const fx::CColor& bg = MINT_BLACK(), const fx::CColor& tint = MINT_WHITE(), s32 padding = -1);
 
+		static void loading_bar(const String& field_id, f32 percent_value, const Vec2& size, const fx::CColor& background = MINT_GREY_DARK(), const fx::CColor& foreground = MINT_GREEN());
+
+		static void loading_circle(const String& field_id, f32 radius, f32 thikness, const fx::CColor& color);
+
 		static bool edit_field_sint32(s32& value, s32 min, s32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
 		static bool edit_field_sint64(s64& value, s64 min, s64 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
