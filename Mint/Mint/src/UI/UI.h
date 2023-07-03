@@ -23,6 +23,8 @@ namespace mint
 
 		static ImU32 get_imgui_color(f32 r, f32 g, f32 b, f32 a);
 
+		static ImU32 get_imgui_color(const fx::CColor& color);
+
 		static bool is_style_dark();
 
 		static bool is_style_light();

@@ -26,6 +26,8 @@ namespace mint
 	{
 		rlImGuiSetup(true);
 
+		bool result = false;
+
 #if MINT_DISTR
 		return true;
 #else
@@ -60,12 +62,26 @@ namespace mint
 
 			rlImGuiReloadFonts();
 
-			return true;
+			result = true;
+		}
+		else
+		{
+			MINT_LOG_CRITICAL("[{:.4f}][CUI::initialize] Failed loading fonts at \"{}\"!", MINT_APP_TIME, fs.get_current_directory().as_string());
 		}
 
-		MINT_LOG_CRITICAL("[{:.4f}][CUI::initialize] Failed loading fonts at \"{}\"!", MINT_APP_TIME, fs.get_current_directory().as_string());
+		if (result)
+		{
+			ImGui::GetStyle().WindowRounding = 0;
+			ImGui::GetStyle().ChildRounding = 12;
+			ImGui::GetStyle().FrameRounding = 6;
+			ImGui::GetStyle().PopupRounding = 12;
+			ImGui::GetStyle().ScrollbarRounding = 9;
+			ImGui::GetStyle().GrabRounding = 12;
+			ImGui::GetStyle().TabRounding = 6;
 
-		return false;
+		}
+
+		return result;
 #endif
 	}
 
@@ -93,6 +109,12 @@ namespace mint
 		return ImGui::ColorConvertFloat4ToU32({ r, g, b, a });
 	}
 
+
+	ImU32 CUI::get_imgui_color(const fx::CColor& color)
+	{
+		auto vec = color.to_normalized_color_vec4();
+		return ImGui::ColorConvertFloat4ToU32({ vec.r, vec.g, vec.b, vec.a });
+	}
 
 	bool CUI::is_style_light()
 	{
