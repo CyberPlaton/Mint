@@ -24,6 +24,8 @@ namespace mint
 
 		Object* create();
 
+		Object* create_at_index(u64 index);
+
 		template< typename... ARGS >
 		Object* create(const ARGS&... args)
 		{
@@ -44,6 +46,9 @@ namespace mint
 
 			return object;
 		}
+
+
+		void destroy(u64 index);
 
 		void remove(u64 index);
 
@@ -88,7 +93,6 @@ namespace mint
 		u64 m_usedAlignment;
 	};
 
-
 	template< typename Object >
 	Object* mint::CObjectAllocator<Object>::reverse_advance(Object* object)
 	{
@@ -112,7 +116,7 @@ namespace mint
 		}
 
 		// Return the start of the memory location of the last object.
-		return reinterpret_cast<Object*>(m_memoryBlockStart + m_objectCount * sizeof(Object) - 1);
+		return reinterpret_cast<Object*>(reinterpret_cast<u64>( m_memoryBlockStart ) + m_objectCount * sizeof(Object) - 1);
 	}
 
 
@@ -293,6 +297,22 @@ namespace mint
 		// Get the object at index.
 		Object* object = get(index);
 
+		// Set the memory to NULL.
+		std::memset(object, NULL, sizeof(Object));
+
+		// Set the m_initializedBit at index to false and reduce object count.
+		m_initializedBit[index] = false;
+		m_objectCount--;
+	}
+
+	template< typename Object >
+	void mint::CObjectAllocator<Object>::destroy(u64 index)
+	{
+		if (!is_index_valid(index) || !can_remove_another_object()) return;
+
+		// Get the object at index.
+		Object* object = get(index);
+
 		// Call the destructor of the Object.
 		object->~Object();
 
@@ -303,7 +323,6 @@ namespace mint
 		m_initializedBit[index] = false;
 		m_objectCount--;
 	}
-
 
 	template< typename Object >
 	Object* mint::CObjectAllocator<Object>::create()
@@ -332,6 +351,24 @@ namespace mint
 		return object;
 	}
 
+	template< typename Object >
+	Object* mint::CObjectAllocator<Object>::create_at_index(u64 index)
+	{
+		if (!is_index_valid(index)) return nullptr;
+
+		if (is_object_at_index_initialized(index))
+		{
+			remove(index);
+		}
+		
+		Object* object = get_unsafe(index);
+
+		object = new (object) Object;
+
+		m_initializedBit[index] = true;
+
+		return object;
+	}
 
 	template< typename Object >
 	void mint::CObjectAllocator<Object>::terminate()

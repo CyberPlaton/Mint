@@ -69,7 +69,8 @@ namespace mint::fx
 				src = { 0.0f, 0.0f, texture_size.x,	texture_size.y };
 
 
-				// Iterate over particles to be rendered.
+				// Iterate over particles to be rendered in reverse order
+				// to avoid rendering artifacts.
 				auto& particles = emitter->get_particles();
 				auto particle = particles.begin();
 				while (particle)

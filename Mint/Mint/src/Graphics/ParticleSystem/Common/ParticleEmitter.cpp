@@ -49,18 +49,14 @@ namespace mint::fx
 			return false;
 		}
 
-		CSerializer::import_vec2(m_particleDefinition.m_velocity, "vel", node);
-		CSerializer::import_vec2(m_particleDefinition.m_velocityOffset, "velOffset", node);
-		CSerializer::import_vec2(m_particleDefinition.m_positionStart, "posStart", node);
-		CSerializer::import_vec2(m_particleDefinition.m_positionEnd, "posEnd", node);
-		CSerializer::import_vec2(m_particleDefinition.m_positionOffset, "posOffset", node);
+		CSerializer::import_vec2(m_particleDefinition.m_positionStart, "posStart", node);		
+		
 		CSerializer::import_vec2(m_particleDefinition.m_scaleStart, "scaleStart", node);
 		CSerializer::import_vec2(m_particleDefinition.m_scaleEnd, "scaleEnd", node);
 		CSerializer::import_vec2(m_particleDefinition.m_scaleOffset, "scaleOffset", node);
 		CSerializer::import_float(&m_particleDefinition.m_rotation, "rot", node);
-		CSerializer::import_float(&m_particleDefinition.m_rotationOffset, "rotOffset", node);
 		CSerializer::import_float(&m_particleDefinition.m_lifespan, "lifespan", node);
-		CSerializer::import_float(&m_particleDefinition.m_lifespanOffset, "lifespanOffset", node);
+		CSerializer::import_vec2(m_particleDefinition.m_lifespanOffset, "lifespanOffset", node);
 		
 		Vec4 color;
 		u64 color_offset;
@@ -71,7 +67,6 @@ namespace mint::fx
 		m_particleDefinition.m_colorEnd.set_color(color.r, color.g, color.b, color.a);
 
 		CSerializer::import_uint(&color_offset, "colorOffset", node);
-		m_particleDefinition.m_colorOffset = SCAST(u8, color_offset);
 
 		String material;
 		CSerializer::import_string(material, "material", node);
@@ -103,20 +98,35 @@ namespace mint::fx
 
 	void CParticleEmitter::emit(u32 particles)
 	{
-		const f32 time_per_particle = 1.0f / m_particlesPerSecond;
-		const u32 num_particles = u32(particles / time_per_particle);
+		if (particles <= 0) return;
 
-		for (u32 i = 0; i < num_particles; i++)
+		CRandom rand;
+
+		for (u32 i = 0; i < particles; i++)
 		{
 			auto particle = m_particles.get(m_currentParticleIndex);
 
+
 			// Initialize particle and set starting values.
 			particle->m_active = true;
-			particle->m_position = m_particleDefinition.m_positionStart;
-			particle->m_scale = m_particleDefinition.m_scaleStart;
-			particle->m_rotation = m_particleDefinition.m_rotation;
-			particle->m_color = m_particleDefinition.m_colorStart.as_cliteral();
-			particle->m_life = 0.0f;
+			particle->m_life = 0.0f - rand.in_range_float(m_particleDefinition.m_lifespanOffset.x, m_particleDefinition.m_lifespanOffset.y);
+
+
+			particle->m_position = m_particleDefinition.m_positionStart + rand.in_range_vector2(m_particleDefinition.m_positionStartOffset.x, m_particleDefinition.m_positionStartOffset.y);
+			
+			particle->m_lookingDirection = m_particleDefinition.m_startingDirection + rand.in_range_vector2(m_particleDefinition.m_startingDirectionOffset.x, m_particleDefinition.m_startingDirectionOffset.y);
+
+			particle->m_scale = m_particleDefinition.m_scaleStart + rand.in_range_vector2(m_particleDefinition.m_scaleOffset.x, m_particleDefinition.m_scaleOffset.y);
+			
+			particle->m_rotation = m_particleDefinition.m_rotation + rand.in_range_float(m_particleDefinition.m_rotationOffset.x, m_particleDefinition.m_rotationOffset.y);
+			
+			particle->m_angularVelocity = m_particleDefinition.m_angularVelocity + rand.in_range_float(m_particleDefinition.m_angularVelocityOffset.x, m_particleDefinition.m_angularVelocityOffset.y);
+			
+			particle->m_tangentialVelocity = m_particleDefinition.m_tangentialVelocity + rand.in_range_float(m_particleDefinition.m_tangentialVelocityOffset.x, m_particleDefinition.m_tangentialVelocityOffset.y);
+			
+			particle->m_color = (m_particleDefinition.m_colorStart + mint::fx::CColor((u8)rand.in_range_integer(m_particleDefinition.m_colorOffset.x, m_particleDefinition.m_colorOffset.y), (u8)rand.in_range_integer(m_particleDefinition.m_colorOffset.x, m_particleDefinition.m_colorOffset.y),
+																					 (u8)rand.in_range_integer(m_particleDefinition.m_colorOffset.x, m_particleDefinition.m_colorOffset.y), (u8)rand.in_range_integer(m_particleDefinition.m_colorOffset.x, m_particleDefinition.m_colorOffset.y))
+								).as_cliteral();
 
 			m_currentParticleIndex = (m_currentParticleIndex == 0) ? m_particles.size() - 1 : m_currentParticleIndex - 1;
 		}
@@ -141,7 +151,10 @@ namespace mint::fx
 	{
 		f32 ease = 0.0f;
 		CColor color = MINT_WHITE();
+		Vec2 perpendicular = { 0.0f, 0.0f };
+		Vec2 gravity = { 0.0f, 9.1f };
 
+		u32 index = 0;
 		auto particle = m_particles.begin();
 		while (particle)
 		{
@@ -149,20 +162,35 @@ namespace mint::fx
 			{
 				particle->m_life += dt * 1.0f / m_particleDefinition.m_lifespan;
 
+				// ... rotation...
+				ease = get_current_easing_t_between_zero_and_one(particle->m_life, m_rotationEase);
+
+				particle->m_rotation += m_particleDefinition.m_rotation * dt * ease;
+
 				// Interpolate position...
 				ease = get_current_easing_t_between_zero_and_one(particle->m_life, m_positionEase);
 
-				particle->m_position = glm::lerp(m_particleDefinition.m_positionStart, m_particleDefinition.m_positionEnd, ease);
+				// Update tangential and angular velocity.
+				particle->m_tangentialVelocity -= m_particleDefinition.m_tangentialVelocityFalloff * dt;
+				particle->m_angularVelocity -= m_particleDefinition.m_angularVelocityFalloff * dt;
+
+				// Get current looking direction.
+				Vec2 tangential = glm::normalize(particle->m_lookingDirection) * particle->m_tangentialVelocity;
+				Vec2 angular = mint::algorithm::vec2_compute_perpendicular_vector(glm::normalize(particle->m_lookingDirection)) * particle->m_angularVelocity;
+
+				// Compute the change in looking direction based on current one and set it as current and 
+				// add gravitational power to the looking direction.
+				Vec2 tmp = (tangential + angular + gravity) * dt;
+
+				particle->m_lookingDirection += tmp;
+
+				tmp = { particle->m_lookingDirection.x * dt, particle->m_lookingDirection.y * dt };
+				particle->m_position += tmp;
 
 				// ... scale...
 				ease = get_current_easing_t_between_zero_and_one(particle->m_life, m_scaleEase);
 
 				particle->m_scale = glm::lerp(m_particleDefinition.m_scaleStart, m_particleDefinition.m_scaleEnd, ease);
-
-				// ... rotation...
-				ease = get_current_easing_t_between_zero_and_one(particle->m_life, m_rotationEase);
-
-				particle->m_rotation += m_particleDefinition.m_rotation * dt * ease;
 
 				// ... color...
 				ease = get_current_easing_t_between_zero_and_one(particle->m_life, m_colorEase);
@@ -171,20 +199,24 @@ namespace mint::fx
 				particle->m_color = color.as_cliteral();
 
 
-				if (particle->m_life >= 1.0f) particle->m_active = false;
+				if (particle->m_life >= 1.0f)
+				{
+					// Deactivate the particle.
+					particle->m_active = false;
+				}
 			}
 
+
+			index++;
 			particle = m_particles.advance(particle);
 		}
 
-		if (m_particlesPerSecond > 0.0f && m_timer.seconds_elapsed() > 1)
-		{
-			emit(m_particlesPerSecond);
 
-			m_timer.start_timer();
-		}
+		f32 rate = 1.0f / m_particlesEmissionRate;
 
-		if (!m_timer.has_started()) m_timer.start_timer();
+		u32 emitCount = u32(m_particlesPerSecond / rate);
+
+		emit(emitCount);
 	}
 
 	glm::f32 CParticleEmitter::get_current_easing_t_between_zero_and_one(f32 particle_life, bx::Easing::Enum easing_function)
@@ -250,6 +282,16 @@ namespace mint::fx
 	mint::fx::SParticleDefinition& CParticleEmitter::get_particle_definition()
 	{
 		return m_particleDefinition;
+	}
+
+	mint::f32 CParticleEmitter::get_particles_emission_rate()
+	{
+		return m_particlesEmissionRate;
+	}
+
+	void CParticleEmitter::set_particles_emission_rate(f32 value)
+	{
+		m_particlesEmissionRate = value;
 	}
 
 }

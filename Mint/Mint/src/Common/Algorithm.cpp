@@ -188,4 +188,9 @@ namespace mint::algorithm
 		return { 0.5f * (p1.x + p2.x), 0.5f * (p1.y + p2.y) };
 	}
 
+	mint::Vec2 vec2_compute_perpendicular_vector(const Vec2& vec)
+	{
+		return { -vec.y, vec.x };
+	}
+
 }

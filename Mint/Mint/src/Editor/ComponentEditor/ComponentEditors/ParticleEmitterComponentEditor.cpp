@@ -45,33 +45,63 @@ namespace mint::editor
 		auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(entity);
 		if (emitter)
 		{
+			f32 particles_per_second = emitter->get_particles_per_second();
+			f32 particles_rate = emitter->get_particles_emission_rate();
+
+			CUI::edit_field_f32(particles_per_second, 0.0f, 100.0f, "Particles per second", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+			CUI::edit_field_f32(particles_rate, 0.0f, 100.0f, "Particles emission rate", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+
+			emitter->set_particles_per_second(particles_per_second);
+			emitter->set_particles_emission_rate(particles_rate);
+
+
 			auto& def = emitter->get_particle_definition();
 
-			static f32 loading = 0.0f;
-			loading += 0.01f;
-			if (loading >= 100.0f) loading = 0.0f;
+			ImGui::BeginTabBar("Tab");
 
-			CUI::loading_bar("Loading", loading, { 250.0f, 10.0f }, MINT_GREY_DARK(), MINT_GREEN());
-			CUI::loading_circle("Loading", 10.0f, 5.0f, MINT_GREEN());
+			if (ImGui::BeginTabItem("Transform"))
+			{
+				CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position", "", slid++, scid++);
+				CUI::edit_field_f32(def.m_rotation, -3.1452f, 3.1452f, "Rotation", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+				CUI::edit_field_vec2_ranged(def.m_positionStartOffset, -100.0f, 100.0f, "Position Offset", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_rotationOffset, -3.1452f, 3.1452f, "Rotation Offset", "", slid++, scid++);
 
-			ImGui::SeparatorText("Position");
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Movement"))
+			{
+				CUI::edit_field_f32(def.m_tangentialVelocity, -500.0f, 500.0f, "Tangential Velocity", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f);
+				CUI::edit_field_f32(def.m_angularVelocity, -500.0f, 500.0f, "Angular Velocity", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f);
+				CUI::edit_field_vec2(def.m_startingDirection, -1.0f, 1.0f, "Start Looking Direction", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+				CUI::edit_field_vec2_ranged(def.m_startingDirectionOffset, -100.0f, 100.0f, "Direction Offset", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_tangentialVelocityOffset, -100.0f, 100.0f, "Tangential Velocity Offset", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_angularVelocityOffset, -100.0f, 100.0f, "Angular Velocity Offset", "", slid++, scid++);
 
-			CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position Start", "", slid++, scid++);
-			CUI::edit_field_vec2(def.m_positionEnd, 0.0f, 1000.0f, "Position End", "", slid++, scid++);
-			CUI::edit_field_vec2_ranged(def.m_positionOffset, 0.0f, 0.0f, "Position Offset", "", slid++, scid++);
-			
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Scale"))
+			{
+				CUI::edit_field_vec2(def.m_scaleStart, 0.0f, 1000.0f, "Start", "", slid++, scid++);
+				CUI::edit_field_vec2(def.m_scaleEnd, 0.0f, 1000.0f, "End", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_scaleOffset, 0.0f, 0.0f, "Offset", "", slid++, scid++);
 
-			ImGui::SeparatorText("Velocity");
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Lifetime"))
+			{
+				CUI::edit_field_f32(def.m_lifespan, 0.0f, 100.0f, "Seconds", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_lifespanOffset, 0.0f, 0.0f, "Offset", "", slid++, scid++);
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Color"))
+			{
+				CUI::edit_field_color(def.m_colorStart, 0, 255, "Start", "", slid++, scid++);
+				CUI::edit_field_color(def.m_colorEnd, 0, 255, "End", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_colorOffset, 0.0f, 255.0f, "Offset", "", slid++, scid++);
+				ImGui::EndTabItem();
+			}
 
-			CUI::edit_field_vec2(def.m_velocity, 0.0f, 1000.0f, "Velocity Direction", "", slid++, scid++);
-			CUI::edit_field_vec2_ranged(def.m_velocityOffset, 0.0f, 0.0f, "Velocity Offset", "", slid++, scid++);
-		
-
-			ImGui::SeparatorText("Scale");
-
-			CUI::edit_field_vec2(def.m_scaleStart, 0.0f, 1000.0f, "Scale Start", "", slid++, scid++);
-			CUI::edit_field_vec2(def.m_scaleEnd, 0.0f, 1000.0f, "Scale End", "", slid++, scid++);
-			CUI::edit_field_vec2_ranged(def.m_scaleOffset, 0.0f, 0.0f, "Scale Offset", "", slid++, scid++);
+			ImGui::EndTabBar();
 		}
 	}
 

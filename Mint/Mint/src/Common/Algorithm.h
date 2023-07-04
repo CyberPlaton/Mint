@@ -13,6 +13,8 @@
 namespace mint::algorithm
 {
 
+	Vec2 vec2_compute_perpendicular_vector(const Vec2& vec);
+
 	Vec2 vec2_compute_center_between_two_vectors(const Vec2& p1, const Vec2& p2);
 
 	/* Please note the difference between our coordinate system and box2d:

@@ -8,6 +8,7 @@
 #include "Graphics/Shaders/MaterialManager.h"
 #include "Graphics/Shaders/Materials/MaterialDefinition.h"
 #include "Common/easing.h"
+#include "Common/Random.h"
 
 
 namespace mint::fx
@@ -46,7 +47,9 @@ namespace mint::fx
 
 
 		f32 get_particles_per_second();
+		f32 get_particles_emission_rate();
 		void set_particles_per_second(f32 value);
+		void set_particles_emission_rate(f32 value);
 
 		bx::Easing::Enum get_position_ease();
 		bx::Easing::Enum get_scale_ease();
@@ -63,14 +66,14 @@ namespace mint::fx
 
 	private:
 		CObjectAllocator< SParticle > m_particles;
-
-		CTimer m_timer;
 		
 		SParticleDefinition m_particleDefinition;
 
 		u32 m_currentParticleIndex;
 
-		f32 m_particlesPerSecond;
+		f32 m_particlesPerSecond = 0.0f;
+
+		f32 m_particlesEmissionRate = 0.0f;
 
 		bx::Easing::Enum m_positionEase = bx::Easing::Linear;
 		bx::Easing::Enum m_scaleEase = bx::Easing::Linear;

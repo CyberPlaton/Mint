@@ -14,26 +14,34 @@ namespace mint::fx
 		SParticleDefinition();
 		SParticleDefinition(const SParticleDefinition& rh);
 
-		Vec2 m_velocity;
-		Vec2 m_velocityOffset;
 
-		Vec2 m_positionStart;
-		Vec2 m_positionEnd;
-		Vec2 m_positionOffset;
+		f32 m_tangentialVelocity = 0.0f;
+		f32 m_tangentialVelocityFalloff = 0.0f;
+		Vec2 m_tangentialVelocityOffset = { 0.0f, 0.0f };
+
+		f32 m_angularVelocity = 0.0f;
+		f32 m_angularVelocityFalloff = 0.0f;
+		Vec2 m_angularVelocityOffset = { 0.0f, 0.0f };
+		
+		Vec2 m_startingDirection = { 0.0f, 0.0f };
+		Vec2 m_startingDirectionOffset = { 0.0f, 0.0f };
+
+		Vec2 m_positionStart = { 0.0f, 0.0f };
+		Vec2 m_positionStartOffset = { 0.0f, 0.0f };
 
 		Vec2 m_scaleStart;
 		Vec2 m_scaleEnd;
 		Vec2 m_scaleOffset;
 
 		f32 m_rotation;
-		f32 m_rotationOffset;
+		Vec2 m_rotationOffset;
 
 		CColor m_colorStart;
 		CColor m_colorEnd;
-		u8 m_colorOffset;
+		Vec2 m_colorOffset;
 
 		f32 m_lifespan;
-		f32 m_lifespanOffset;
+		Vec2 m_lifespanOffset;
 	};
 
 
@@ -43,6 +51,9 @@ namespace mint::fx
 		SParticle(const SParticle& rh);
 		SParticle& operator=(const SParticle& rh);
 
+		Vec2 m_lookingDirection = { 0.0f, 0.0f };
+		f32 m_tangentialVelocity = 0.0f;
+		f32 m_angularVelocity = 0.0f;
 		Vec2 m_position;
 		Vec2 m_scale;
 		f32 m_rotation;

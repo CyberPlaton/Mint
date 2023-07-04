@@ -130,5 +130,15 @@ namespace mint::fx
 		return r && g && b && a;
 	}
 
+	mint::fx::CColor& CColor::operator+=(const CColor& rh)
+	{
+		m_r = rh.m_r;
+		m_g = rh.m_g;
+		m_b = rh.m_b;
+		m_a = rh.m_a;
+
+		return *this;
+	}
+
 
 }

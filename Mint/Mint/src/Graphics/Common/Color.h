@@ -33,6 +33,16 @@ namespace mint::fx
 
 		bool operator==(const CColor& rh);
 
+		CColor& operator+=(const CColor& rh);
+		friend CColor operator+(const CColor& lh, const CColor& rh)
+		{
+			CColor color;
+
+			color.set_color(lh.m_r + rh.m_r, lh.m_g + rh.m_g, lh.m_b + rh.m_b, lh.m_a + rh.m_a);
+
+			return color;
+		}
+
 
 		u8 m_r;
 		u8 m_g;
