@@ -74,6 +74,8 @@ namespace mint
 
 		bool lookup(u64 identifier) const;
 
+		u64 lookup_index(u64 identifier) const;
+
 		void remove(u64 identifier);
 
 		void reset();
@@ -155,6 +157,16 @@ namespace mint
 		return false;
 	}
 
+	template< typename Object >
+	u64 mint::CMap2<Object>::lookup_index(u64 identifier) const
+	{
+		for (const auto& id : m_indices)
+		{
+			if (id.first == identifier) return id.second;
+		}
+
+		return (-1);
+	}
 
 	template< typename Object >
 	void mint::CMap2<Object>::remove(u64 identifier)

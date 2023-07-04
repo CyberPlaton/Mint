@@ -47,6 +47,8 @@ namespace mint
 
 		bool lookup(u64 identifier) const;
 
+		u64 lookup_index(u64 identifier) const;
+
 		Vector< T >& get_all();
 
 		const Vector< T >& get_all_const() const;
@@ -202,6 +204,17 @@ namespace mint
 		}
 
 		return false;
+	}
+
+	template < typename T >
+	u64 mint::CMap<T>::lookup_index(u64 identifier) const
+	{
+		for (auto i = 0; i < m_indices.size(); i++)
+		{
+			if (identifier == m_indices[i].first) return m_indices[i].second;
+		}
+
+		return (-1);
 	}
 
 	template < typename T >

@@ -31,19 +31,16 @@ namespace mint::fx
 		void on_update(f32 dt);
 
 
-		SParticle* begin();
-
-		SParticle* advance(SParticle* particle);
-
-
 		bool set_material(entt::entity entity, const String& material_name);
 
 		CMaterial* get_material(entt::entity entity);
 
-		CObjectAllocator< SParticle >& get_particles();
-		
+		const std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX >& get_particles();
+
+
 		
 		void emit(u32 particles);
+
 
 
 		f32 get_particles_per_second();
@@ -65,7 +62,9 @@ namespace mint::fx
 
 
 	private:
-		CObjectAllocator< SParticle > m_particles;
+		std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX > m_particles;
+
+		//CObjectAllocator< SParticle > m_particles;
 		
 		SParticleDefinition m_particleDefinition;
 

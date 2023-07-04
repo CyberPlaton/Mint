@@ -7,7 +7,9 @@ namespace mint::fx
 	{
 		set_rendering_pass_name("CParticleSystem");
 
-		m_emitters.initialize(MINT_ENTITY_COUNT_MAX);
+		m_emitters.initialize(MINTFX_PARTICLE_EMITTER_COUNT_MAX);
+
+		MINT_LOG_ERROR("[{:.4f}][CParticleSystem::initialize] Allocating Bytes \"{}\"!", MINT_APP_TIME, MINTFX_PARTICLE_EMITTER_COUNT_MAX * sizeof(CParticleEmitter));
 
 		return true;
 	}
@@ -71,16 +73,17 @@ namespace mint::fx
 
 				// Iterate over particles to be rendered in reverse order
 				// to avoid rendering artifacts.
-				auto& particles = emitter->get_particles();
-				auto particle = particles.begin();
-				while (particle)
+				const auto& particles = emitter->get_particles();
+				for (auto rit = particles.rbegin(); rit < particles.rend(); ++rit)
 				{
-					if (particle->m_active)
+					const auto& particle = *rit;
+
+					if (particle.m_active)
 					{
 						// Compute entity data and particle data for rendering.
-						position = particle->m_position;
-						scale = particle->m_scale;
-						rotation = particle->m_rotation;
+						position = particle.m_position;
+						scale = particle.m_scale;
+						rotation = particle.m_rotation;
 
 						px = position.x - src.width / 2.0f;
 						py = position.y - src.height / 2.0f;
@@ -88,10 +91,8 @@ namespace mint::fx
 						dst = { px + texture_size.x / 2.0f, py + texture_size.y / 2.0f, src.width * scale.x, src.height * scale.y };
 
 
-						DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { texture_size.x / 2.0f * scale.x, texture_size.y / 2.0f * scale.y }, mint::algorithm::radians_to_degree(rotation), particle->m_color);
+						DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { texture_size.x / 2.0f * scale.x, texture_size.y / 2.0f * scale.y }, mint::algorithm::radians_to_degree(rotation), particle.m_color);
 					}
-
-					particle = particles.advance(particle);
 				}
 
 

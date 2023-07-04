@@ -29,19 +29,19 @@ namespace mint::fx
 		Vec2 m_positionStart = { 0.0f, 0.0f };
 		Vec2 m_positionStartOffset = { 0.0f, 0.0f };
 
-		Vec2 m_scaleStart;
-		Vec2 m_scaleEnd;
-		Vec2 m_scaleOffset;
+		Vec2 m_scaleStart = { 0.0f, 0.0f };
+		Vec2 m_scaleEnd = { 0.0f, 0.0f };
+		Vec2 m_scaleOffset = { 0.0f, 0.0f };
 
-		f32 m_rotation;
-		Vec2 m_rotationOffset;
+		f32 m_rotation = 0.0f;
+		Vec2 m_rotationOffset = { 0.0f, 0.0f };
 
-		CColor m_colorStart;
-		CColor m_colorEnd;
-		Vec2 m_colorOffset;
+		CColor m_colorStart = { 0, 0, 0, 0 };
+		CColor m_colorEnd = { 0, 0, 0, 0 };
+		Vec2 m_colorOffset = { 0.0f, 0.0f };
 
-		f32 m_lifespan;
-		Vec2 m_lifespanOffset;
+		f32 m_lifespan = 0.0f;
+		Vec2 m_lifespanOffset = { 0.0f, 0.0f };
 	};
 
 
@@ -51,15 +51,15 @@ namespace mint::fx
 		SParticle(const SParticle& rh);
 		SParticle& operator=(const SParticle& rh);
 
-		Vec2 m_lookingDirection = { 0.0f, 0.0f };
 		f32 m_tangentialVelocity = 0.0f;
 		f32 m_angularVelocity = 0.0f;
-		Vec2 m_position;
-		Vec2 m_scale;
-		f32 m_rotation;
-		raylib::Color m_color;
-		f32 m_life;
-		bool m_active;
+		f32 m_rotation = 0.0f;
+		f32 m_life = 0.0f;
+		Vec2 m_lookingDirection = { 0.0f, 0.0f };
+		Vec2 m_position = { 0.0f, 0.0f };
+		Vec2 m_scale = { 0.0f, 0.0f };
+		raylib::Color m_color = {0, 0, 0, 0};
+		bool m_active = false;
 	};
 
 }

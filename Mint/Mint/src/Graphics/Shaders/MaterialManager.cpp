@@ -77,29 +77,39 @@ namespace mint::fx
 
 	bool CMaterialManager::set_material_for_entity_at_index(entt::entity entity, const SMaterialDefinition& material_definition, u64 index)
 	{
-		auto h = SCAST(u64, entity);
+		auto entity_hash = SCAST(u64, entity);
 
-		// Assure correct index..
-		if (index < m_materials[h].size())
+		// Assure correct index and existing entity...
+		if (m_materials.find(entity_hash) != m_materials.end() && index < m_materials[entity_hash].size())
 		{
 			// .. for replacing.
-			auto hh = mint::algorithm::djb_hash(material_definition.m_materialName);
+			auto mat_name_hash = mint::algorithm::djb_hash(material_definition.m_materialName);
+
+			auto& materials = m_materials[entity_hash];
 
 			CMaterial* material = nullptr;
 
-			// Make sure that the name is not already taken.
-			if (!m_materials[h].lookup(hh))
+			u64 material_index = materials.lookup_index(mat_name_hash);
+
+
+			if (material_index != SCAST(u64, -1) && material_index == index)
 			{
-				// Replace existing material with new one.
-				material = m_materials[h].replace(hh, index);
+				// ... replace material definition at index.	
+				material = materials.replace(mat_name_hash, material_index);
+			}
+			else if(material_index != SCAST(u64, -1) && material_index != index)
+			{
+				// ... duplicate material name found but at different location.
+				MINT_LOG_ERROR("[{:.4f}][CMaterialManager::set_material_for_entity_at_index] Duplicate material name \"{}\" for entity \"{}\"!", MINT_APP_TIME, material_definition.m_materialName, entity_hash);
+				return false;
 			}
 			else
 			{
-				// Duplicate Material name.
-				return false;
+				// ... add new material at next open index.
+				material = materials.emplace(mat_name_hash);
 			}
 
-			MINT_ASSERT(material != nullptr, "Invalid operation. Material was not found!");
+			MINT_ASSERT(material != nullptr, "Invalid operation. Material was not found or could not be created!");
 
 			if (material)
 			{
