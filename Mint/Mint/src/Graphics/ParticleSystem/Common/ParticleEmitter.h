@@ -20,8 +20,7 @@ namespace mint::fx
 		CParticleEmitter();
 		~CParticleEmitter();
 
-
-		bool initialize(u64 particle_count = MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX);
+		bool initialize();
 
 		void terminate();
 
@@ -42,18 +41,17 @@ namespace mint::fx
 		void emit(u32 particles);
 
 
-
-		f32 get_particles_per_second();
 		f32 get_particles_emission_rate();
-		void set_particles_per_second(f32 value);
 		void set_particles_emission_rate(f32 value);
 
-		bx::Easing::Enum get_position_ease();
+		bx::Easing::Enum get_tangential_velocity_ease();
+		bx::Easing::Enum get_angular_velocity_ease();
 		bx::Easing::Enum get_scale_ease();
 		bx::Easing::Enum get_rotation_ease();
 		bx::Easing::Enum get_color_ease();
 
-		void set_position_ease(bx::Easing::Enum value);
+		void set_tangential_velocity_ease(bx::Easing::Enum value);
+		void set_angular_velocity_ease(bx::Easing::Enum value);
 		void set_scale_ease(bx::Easing::Enum value);
 		void set_rotation_ease(bx::Easing::Enum value);
 		void set_color_ease(bx::Easing::Enum value);
@@ -64,17 +62,16 @@ namespace mint::fx
 	private:
 		std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX > m_particles;
 
-		//CObjectAllocator< SParticle > m_particles;
-		
 		SParticleDefinition m_particleDefinition;
 
 		u32 m_currentParticleIndex;
 
-		f32 m_particlesPerSecond = 0.0f;
-
 		f32 m_particlesEmissionRate = 0.0f;
 
-		bx::Easing::Enum m_positionEase = bx::Easing::Linear;
+		f32 m_dt = 0.0f;
+
+		bx::Easing::Enum m_tangentialVelocityEase = bx::Easing::Linear;
+		bx::Easing::Enum m_angularVelocityEase = bx::Easing::Linear;
 		bx::Easing::Enum m_scaleEase = bx::Easing::Linear;
 		bx::Easing::Enum m_rotationEase = bx::Easing::Linear;
 		bx::Easing::Enum m_colorEase = bx::Easing::Linear;

@@ -234,8 +234,8 @@ namespace mint::fx
 	{
 		// Finish rendering passes and display to Screen.
 		BeginDrawing();
-
-		DrawTextureRec(m_defaultRT.texture, { 0.0f, 0.0f, (f32)m_defaultRT.texture.width, (f32)-m_defaultRT.texture.height }, { 0.0f, 0.0f }, WHITE);
+ 		
+		DrawTextureRec(m_defaultRT.texture, { 0.0f, 0.0f, (f32)m_defaultRT.texture.width, (f32)-m_defaultRT.texture.height }, { 0.0f, 0.0f }, RAYWHITE);
 
 		EndDrawing();
 	}

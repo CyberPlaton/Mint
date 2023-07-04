@@ -9,8 +9,6 @@ namespace mint::fx
 
 		m_emitters.initialize(MINTFX_PARTICLE_EMITTER_COUNT_MAX);
 
-		MINT_LOG_ERROR("[{:.4f}][CParticleSystem::initialize] Allocating Bytes \"{}\"!", MINT_APP_TIME, MINTFX_PARTICLE_EMITTER_COUNT_MAX * sizeof(CParticleEmitter));
-
 		return true;
 	}
 
@@ -49,11 +47,6 @@ namespace mint::fx
 		{
 			if (CUCA::entity_has_component< mint::component::SParticleEmitter >(entity))
 			{
-				//position = CUCA::transform_get_position(entity);
-				//scale = CUCA::transform_get_scale(entity);
-				//rotation = CUCA::transform_get_rotation(entity);
-
-
 				auto emitter = m_emitters.get(SCAST(u64, entity));
 
 				auto material = emitter->get_material(entity);
@@ -111,7 +104,7 @@ namespace mint::fx
 		{
 			auto emitter = m_emitters.add_node(h);
 
-			if (emitter->initialize(MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX))
+			if (emitter->initialize())
 			{
 				return true;
 			}

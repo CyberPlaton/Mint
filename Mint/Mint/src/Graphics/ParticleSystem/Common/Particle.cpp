@@ -52,4 +52,17 @@ namespace mint::fx
 		return *this;
 	}
 
+	void SParticle::reset()
+	{
+		m_tangentialVelocity = 0.0f;
+		m_angularVelocity = 0.0f;
+		m_rotation = 0.0f;
+		m_life = 0.0f;
+		m_lookingDirection = { 0.0f, 0.0f };
+		m_position = { 0.0f, 0.0f };
+		m_scale = { 0.0f, 0.0f };
+		m_color = { 0, 0, 0, 0 };
+		m_active = false;
+	}
+
 }

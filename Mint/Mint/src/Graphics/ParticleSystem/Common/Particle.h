@@ -16,11 +16,11 @@ namespace mint::fx
 
 
 		f32 m_tangentialVelocity = 0.0f;
-		f32 m_tangentialVelocityFalloff = 0.0f;
+		Vec2 m_tangentialVelocityFalloff = { 0.0f, 0.0f };
 		Vec2 m_tangentialVelocityOffset = { 0.0f, 0.0f };
 
 		f32 m_angularVelocity = 0.0f;
-		f32 m_angularVelocityFalloff = 0.0f;
+		Vec2 m_angularVelocityFalloff = { 0.0f, 0.0f };
 		Vec2 m_angularVelocityOffset = { 0.0f, 0.0f };
 		
 		Vec2 m_startingDirection = { 0.0f, 0.0f };
@@ -50,6 +50,9 @@ namespace mint::fx
 		SParticle();
 		SParticle(const SParticle& rh);
 		SParticle& operator=(const SParticle& rh);
+
+		void reset();
+
 
 		f32 m_tangentialVelocity = 0.0f;
 		f32 m_angularVelocity = 0.0f;

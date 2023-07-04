@@ -45,15 +45,13 @@ namespace mint::editor
 		auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(entity);
 		if (emitter)
 		{
-			f32 particles_per_second = emitter->get_particles_per_second();
 			f32 particles_rate = emitter->get_particles_emission_rate();
 
-			CUI::edit_field_f32(particles_per_second, 0.0f, 100.0f, "Particles per second", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
 			CUI::edit_field_f32(particles_rate, 0.0f, 100.0f, "Particles emission rate", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
 
-			emitter->set_particles_per_second(particles_per_second);
 			emitter->set_particles_emission_rate(particles_rate);
 
+			ImGui::Separator();
 
 			auto& def = emitter->get_particle_definition();
 
