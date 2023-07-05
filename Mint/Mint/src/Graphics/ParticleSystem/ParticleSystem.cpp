@@ -20,6 +20,8 @@ namespace mint::fx
 
 	void CParticleSystem::on_update(f32 dt)
 	{
+		MINT_PROFILE_SCOPE("Engine::Particles", "CParticleSystem::on_update");
+
 		auto emitter = m_emitters.begin();
 		while (emitter)
 		{
@@ -31,6 +33,8 @@ namespace mint::fx
 
 	void CParticleSystem::on_frame(Vector< entt::entity >& entities)
 	{
+		MINT_PROFILE_SCOPE("Engine::Particles", "CParticleSystem::on_frame");
+
 		auto& texture_manager = CTextureManager::Get();
 
 		Vec2 position = { 0.0f, 0.0f };

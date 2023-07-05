@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <numeric>
 
 
 namespace mint::algorithm
@@ -100,11 +101,19 @@ namespace mint::algorithm
 	R vector_get_first_element_as(Vector< T >& from);
 
 	template < typename T, typename LF >
-	void vector_sort_with_lambda(std::vector< T >& vec, LF&& lambda_function)
+	void vector_sort_with_lambda(Vector< T >& vec, LF&& lambda_function)
 	{
 		std::sort(vec.begin(), vec.end(), lambda_function);
 	}
 
+	template< typename T >
+	T vector_accumulate_values(const Vector< T >& vec);
+}
+
+template< typename T >
+T mint::algorithm::vector_accumulate_values(const Vector< T >& vec)
+{
+	return std::accumulate< T >(vec.begin(), vec.end(), (T)0);
 }
 
 template< typename T >

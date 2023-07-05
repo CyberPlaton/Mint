@@ -10,6 +10,8 @@ namespace mint::fx
 
 	void CRenderingPassStack::on_frame_end()
 	{
+		MINT_PROFILE_SCOPE("Engine::Rendering", "CRenderingPassStack::on_frame_end");
+
 		EndTextureMode();
 	}
 
@@ -148,6 +150,8 @@ namespace mint::fx
 
 	void CRenderingPassStack::on_frame(ICamera* render_camera, Vector< entt::entity >& entities)
 	{
+		MINT_PROFILE_SCOPE("Engine::Rendering", "CRenderingPassStack::on_frame");
+
 		begin_default_rendering_texture();
 
 		ClearBackground(render_camera->get_clear_color().as_cliteral());
@@ -180,6 +184,8 @@ namespace mint::fx
 
 	void CRenderingPassStack::combine_rendering_texture(RenderTexture2D& render_texture, IRenderingPass* rendering_pass)
 	{
+		MINT_PROFILE_SCOPE("Engine::Rendering", "CRenderingPassStack::combine_rendering_texture");
+
 		// Render Render Texture on top of the default Render Texture.
 		BeginTextureMode(m_defaultRT);
 
@@ -232,6 +238,8 @@ namespace mint::fx
 
 	void CRenderingPassStack::on_end_drawing()
 	{
+		MINT_PROFILE_SCOPE("Engine::Rendering", "CRenderingPassStack::on_end_drawing");
+
 		// Finish rendering passes and display to Screen.
 		BeginDrawing();
  		

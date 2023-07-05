@@ -80,6 +80,8 @@ namespace mint::fx
 
 	void CParticleEmitter::emit(u32 particles)
 	{
+		MINT_PROFILE_SCOPE("Engine::Particles", "CParticleEmitter::emit");
+
 		if (particles <= 0) return;
 
 		CRandom rand;
@@ -133,16 +135,17 @@ namespace mint::fx
 
 	void CParticleEmitter::on_update(f32 dt)
 	{
+		MINT_PROFILE_SCOPE("Engine::Particles", "CParticleEmitter::on_update");
+
 		m_dt += dt;
 		f32 ease = 0.0f;
 		CColor color = MINT_WHITE();
 		Vec2 perpendicular = { 0.0f, 0.0f };
-		Vec2 gravity = { 0.0f, 9.1f };
-
+		
 		auto particle = m_particles.begin();
 		for (auto& particle : m_particles)
 		{
-			if (particle.m_active && particle.m_life < 1.0f)
+			if (particle.m_active && particle.m_life <= 1.0f)
 			{
 				particle.m_life += dt * 1.0f / m_particleDefinition.m_lifespan;
 
@@ -167,7 +170,22 @@ namespace mint::fx
 
 				// Compute the change in looking direction based on current one and set it as current and 
 				// add gravitational power to the looking direction.
-				Vec2 tmp = (tangential + angular + gravity) * dt;
+				Vec2 tmp;
+				switch (m_mode)
+				{
+				case ParticleEmitterMode_Gravity:
+				{
+					tmp = (tangential + angular + m_particleGravity) * dt;
+					break;
+				}
+				default:
+				case ParticleEmitterMode_None:
+				case ParticleEmitterMode_Free:
+				{
+					tmp = (tangential + angular) * dt;
+					break;
+				}
+				}
 
 				particle.m_lookingDirection += tmp;
 
@@ -186,7 +204,7 @@ namespace mint::fx
 				particle.m_color = color.as_cliteral();
 
 
-				if (particle.m_life >= 1.0f)
+				if (particle.m_life > 1.0f)
 				{
 					// Deactivate the particle.
 					particle.reset();

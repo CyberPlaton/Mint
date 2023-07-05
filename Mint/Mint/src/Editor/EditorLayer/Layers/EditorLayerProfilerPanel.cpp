@@ -131,6 +131,28 @@ namespace mint::editor
 		Vec4 red = { 1.0f, 0.0f, 0.0f, 1.0f };
 		Vec4 green = { 0.0f, 1.0f, 0.0f, 1.0f };
 
+
+		// Display total time used for a frame.
+		f32 accumulated_frame_time = 0.0f;
+		f32 target_frame_time = MINT_ENGINE()->get_engine_frametime();
+		
+		for (const auto& function : stats)
+		{
+			accumulated_frame_time += function.get_mean_execution_time();
+		}
+
+		// Adjust to used scale of accumulated frame time value, which is in milliseconds.
+		target_frame_time *= 1000.0f;
+
+		// Get percentage value between 0.0f and 1.0f, where 1.0f is the double of the target time.
+		f32 t = ((accumulated_frame_time * 100.0f) / (target_frame_time * 2.0f)) / 100.0f;
+
+		color = glm::lerp< Vec4 >(green, red, { t, t, t, 1.0f });
+
+		ImGui::TextColored({ color.r, color.g, color.b, color.a }, TextFormat("Total Frametime: %.4f ms / %.4f ms", accumulated_frame_time, target_frame_time));
+
+
+		// Display functions as a table.
 		if (ImGui::BeginTable("FunctionStatsTable", 4, ImGuiTableFlags_Resizable))
 		{
 			// Columns setup.

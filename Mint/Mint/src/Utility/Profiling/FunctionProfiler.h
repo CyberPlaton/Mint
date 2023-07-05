@@ -18,9 +18,9 @@ namespace mint::profiler
 		SFunction(SFunction* other);
 
 
-		f32 get_mean_execution_time() { return m_callcount > 0 ? m_accumulatedExecutionTime / m_callcount : 0.0f; }
+		f32 get_mean_execution_time() const { return m_callcount > 0 ? m_accumulatedExecutionTime / m_callcount : 0.0f; };
 
-		u64 get_callcount() { return m_callcount; }
+		u64 get_callcount() const { return m_callcount; };
 
 
 		std::thread::id m_threadId;

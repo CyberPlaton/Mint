@@ -12,7 +12,6 @@ namespace mint
 	class CAsset
 	{
 	public:
-
 		String get_asset_extension();
 		void set_asset_extension(const String& value);
 
