@@ -99,12 +99,33 @@ namespace mint::fx
 		CSerializer::import_vec4(color, "color_start", node);
 		m_particleDefinition.m_colorStart.set_color(color.r, color.g, color.b, color.a);
 
+		CSerializer::import_vec4(color, "color_half", node);
+		m_particleDefinition.m_colorHalf.set_color(color.r, color.g, color.b, color.a);
+
 		CSerializer::import_vec4(color, "color_end", node);
 		m_particleDefinition.m_colorEnd.set_color(color.r, color.g, color.b, color.a);
 
 		// Lifespan.
 		CSerializer::import_float(&m_particleDefinition.m_lifespan, "lifespan", node);
 		CSerializer::import_vec2(m_particleDefinition.m_lifespanOffset, "lifespan_offset", node);
+
+
+		// Easing.
+		u64 easing = 0;
+		CSerializer::import_uint(&easing, "tangential_velocity_ease", node, 0);
+		m_tangentialVelocityEase = (bx::Easing::Enum)easing;
+
+		CSerializer::import_uint(&easing, "angular_velocity_ease", node, 0);
+		m_angularVelocityEase = (bx::Easing::Enum)easing;
+
+		CSerializer::import_uint(&easing, "scale_ease", node, 0);
+		m_scaleEase = (bx::Easing::Enum)easing;
+
+		CSerializer::import_uint(&easing, "rotation_ease", node, 0);
+		m_rotationEase = (bx::Easing::Enum)easing;
+
+		CSerializer::import_uint(&easing, "color_ease", node, 0);
+		m_colorEase = (bx::Easing::Enum)easing;
 
 		return true;
 	}

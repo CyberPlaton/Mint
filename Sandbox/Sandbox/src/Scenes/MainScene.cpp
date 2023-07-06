@@ -7,15 +7,15 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
  	CUCA::transform_translate(m_knight, { dt, 0.0f });
 
 
-	auto mouse = mint::CInput::get_mouse_position();
-
-	auto world_mouse = mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world(mouse);
-
-	CUCA::transform_set_position(m_particle, world_mouse);
-
-	auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(m_particle);
-
-	emitter->set_emitter_position(world_mouse);
+// 	auto mouse = mint::CInput::get_mouse_position();
+// 
+// 	auto world_mouse = mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world(mouse);
+// 
+// 	CUCA::transform_set_position(m_particle, world_mouse);
+// 
+// 	auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(m_particle);
+// 
+// 	emitter->set_emitter_position(world_mouse);
 }
 
 

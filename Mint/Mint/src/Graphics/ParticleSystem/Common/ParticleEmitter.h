@@ -93,11 +93,11 @@ namespace mint::fx
 
 		f32 m_dt = 0.0f;
 
-		bx::Easing::Enum m_tangentialVelocityEase = bx::Easing::Linear;
-		bx::Easing::Enum m_angularVelocityEase = bx::Easing::Linear;
-		bx::Easing::Enum m_scaleEase = bx::Easing::Linear;
-		bx::Easing::Enum m_rotationEase = bx::Easing::Linear;
-		bx::Easing::Enum m_colorEase = bx::Easing::Linear;
+		bx::Easing::Enum m_tangentialVelocityEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_angularVelocityEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_scaleEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_rotationEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_colorEase = bx::Easing::SmoothStep;
 
 		
 	private:

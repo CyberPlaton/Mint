@@ -85,6 +85,9 @@ namespace mint::editor
 
 			static s32 selected_tangent_easing_option = (s32)emitter->get_tangential_velocity_ease();
 			static s32 selected_angular_easing_option = (s32)emitter->get_angular_velocity_ease();
+			static s32 selected_scale_easing_option = (s32)emitter->get_scale_ease();
+			static s32 selected_rotation_easing_option = (s32)emitter->get_rotation_ease();
+			static s32 selected_color_easing_option = (s32)emitter->get_color_ease();
 
 
 			ImGui::Separator();
@@ -96,9 +99,29 @@ namespace mint::editor
 			if (ImGui::BeginTabItem("Transform"))
 			{
 				CUI::edit_field_vec2(def.m_positionStart, 0.0f, 1000.0f, "Position", "", slid++, scid++);
-				CUI::edit_field_f32(def.m_rotation, GlobalData::Get().s_EditorTransformMinRotation, GlobalData::Get().s_EditorTransformMaxRotation, "Rotation", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+				
+				if (CUI::edit_field_f32(def.m_rotation, GlobalData::Get().s_EditorTransformMinRotation, GlobalData::Get().s_EditorTransformMaxRotation, "Rotation", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f))
+				{
+					if (ImGui::SmallButton(TextFormat("Rotation Easing mode: %s", s_EditorEasingOptions[selected_rotation_easing_option])))
+					{
+						ImGui::OpenPopup("Rotation_Easing_Popup");
+					}
+				}
+
 				CUI::edit_field_vec2_ranged(def.m_positionStartOffset, -100.0f, 100.0f, "Position Offset", "", slid++, scid++);
 				CUI::edit_field_vec2_ranged(def.m_rotationOffset, GlobalData::Get().s_EditorTransformMinRotation, GlobalData::Get().s_EditorTransformMaxRotation, "Rotation Offset", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
+
+				if (ImGui::BeginPopup("Rotation_Easing_Popup"))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(s_EditorEasingOptions); i++)
+					{
+						if (ImGui::Selectable(s_EditorEasingOptions[i])) { selected_rotation_easing_option = i; }
+					}
+
+					ImGui::EndPopup();
+
+					emitter->set_rotation_ease((bx::Easing::Enum)selected_rotation_easing_option);
+				}
 
 				ImGui::EndTabItem();
 			}
@@ -158,9 +181,26 @@ namespace mint::editor
 			}
 			if (ImGui::BeginTabItem("Scale"))
 			{
+				if (ImGui::SmallButton(TextFormat("Scale Easing mode: %s", s_EditorEasingOptions[selected_scale_easing_option])))
+				{
+					ImGui::OpenPopup("Scale_Easing_Popup");
+				}
+
 				CUI::edit_field_vec2(def.m_scaleStart, 0.0f, 1000.0f, "Start", "", slid++, scid++);
 				CUI::edit_field_vec2(def.m_scaleEnd, 0.0f, 1000.0f, "End", "", slid++, scid++);
 				CUI::edit_field_vec2_ranged(def.m_scaleOffset, 0.0f, 0.0f, "Offset", "", slid++, scid++);
+
+				if (ImGui::BeginPopup("Scale_Easing_Popup"))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(s_EditorEasingOptions); i++)
+					{
+						if (ImGui::Selectable(s_EditorEasingOptions[i])) { selected_scale_easing_option = i; }
+					}
+
+					ImGui::EndPopup();
+
+					emitter->set_scale_ease((bx::Easing::Enum)selected_scale_easing_option);
+				}
 
 				ImGui::EndTabItem();
 			}
@@ -172,10 +212,28 @@ namespace mint::editor
 			}
 			if (ImGui::BeginTabItem("Color"))
 			{
+				if (ImGui::SmallButton(TextFormat("Color Easing mode: %s", s_EditorEasingOptions[selected_color_easing_option])))
+				{
+					ImGui::OpenPopup("Color_Easing_Popup");
+				}
+
 				CUI::edit_field_color(def.m_colorStart, 0, 255, "Start", "", slid++, scid++);
 				CUI::edit_field_color(def.m_colorHalf, 0, 255, "Half", "", slid++, scid++);
 				CUI::edit_field_color(def.m_colorEnd, 0, 255, "End", "", slid++, scid++);
 				CUI::edit_field_vec2_ranged(def.m_colorOffset, 0.0f, 255.0f, "Offset", "", slid++, scid++);
+
+				if (ImGui::BeginPopup("Color_Easing_Popup"))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(s_EditorEasingOptions); i++)
+					{
+						if (ImGui::Selectable(s_EditorEasingOptions[i])) { selected_color_easing_option = i; }
+					}
+
+					ImGui::EndPopup();
+
+					emitter->set_color_ease((bx::Easing::Enum)selected_color_easing_option);
+				}
+
 				ImGui::EndTabItem();
 			}
 
