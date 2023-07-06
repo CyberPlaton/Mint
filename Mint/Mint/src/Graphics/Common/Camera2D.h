@@ -56,6 +56,10 @@ namespace mint::fx
 
 		void remove_all_camera_effects();
 
+		Vec2 vector_screen_to_world(const Vec2& vec) override final;
+
+		Vec2 vector_world_to_screen(const Vec2& vec) override final;
+
 
 	protected:
 		raylib::Camera2D m_camera;

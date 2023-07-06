@@ -25,7 +25,7 @@ namespace mint::fx
 
 	SParticle::SParticle() :
 		m_position({ 0.0f, 0.0f }), m_scale({ 0.0f, 0.0f }),
-		m_rotation(0.0f), m_color(MINT_WHITE().as_cliteral()), 
+		m_rotation(0.0f), m_color(MINT_WHITE()), 
 		m_life(0.0f), m_active(false)
 	{
 	}

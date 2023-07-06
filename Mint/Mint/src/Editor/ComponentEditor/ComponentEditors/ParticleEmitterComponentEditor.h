@@ -5,7 +5,7 @@
 
 
 #include "../Common/ComponentEditor.h"
-#include "Graphics/ParticleSystem/ParticleSystem.h"
+#include "Graphics/ParticleSystem.h"
 
 
 namespace mint::editor

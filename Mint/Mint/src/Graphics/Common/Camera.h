@@ -40,6 +40,11 @@ namespace mint::fx
 
 		virtual void zoom(f32 value) { m_zoom += value; }
 
+		virtual Vec2 vector_screen_to_world(const Vec2&) = 0;
+
+		virtual Vec2 vector_world_to_screen(const Vec2&) = 0;
+
+
 		f32 get_viewport_x() { return m_viewportRect.get_x(); }
 
 		f32 get_viewport_y() { return m_viewportRect.get_y(); }

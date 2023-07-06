@@ -50,6 +50,16 @@ namespace mint::fx
 		void emit(u32 particles);
 
 
+		Vec2 get_emitter_position() const;
+		void set_emitter_position(const Vec2& vec);
+
+		ParticleEmitterMode get_emitter_mode() const;
+		void set_emitter_mode(ParticleEmitterMode mode);
+
+
+		Vec2 get_emitter_gravity() const;
+		void set_emitter_gravity(const Vec2& vec);
+
 		f32 get_particles_emission_rate();
 		void set_particles_emission_rate(f32 value);
 

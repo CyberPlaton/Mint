@@ -3,7 +3,7 @@
 
 
 #include "Common/Common.h"
-#include "../Common/IRenderingPass.h"
+#include "Common/IRenderingPass.h"
 #include "Utility/PluginSystem/Plugin.h"
 #include "RessourceManagement/TextureManager.h"
 
@@ -11,7 +11,7 @@
 #include "Utility/Profiling/FunctionProfiler.h"
 #include "Utility/Logging/Logging.h"
 
-#include "Common/ParticleEmitter.h"
+#include "ParticleSystem/Common/ParticleEmitter.h"
 
 
 namespace mint::fx

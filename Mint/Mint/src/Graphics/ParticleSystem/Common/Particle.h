@@ -37,6 +37,7 @@ namespace mint::fx
 		Vec2 m_rotationOffset = { 0.0f, 0.0f };
 
 		CColor m_colorStart = { 0, 0, 0, 0 };
+		CColor m_colorHalf = { 0, 0, 0, 0 };
 		CColor m_colorEnd = { 0, 0, 0, 0 };
 		Vec2 m_colorOffset = { 0.0f, 0.0f };
 
@@ -61,7 +62,7 @@ namespace mint::fx
 		Vec2 m_lookingDirection = { 0.0f, 0.0f };
 		Vec2 m_position = { 0.0f, 0.0f };
 		Vec2 m_scale = { 0.0f, 0.0f };
-		raylib::Color m_color = {0, 0, 0, 0};
+		CColor m_color = {0, 0, 0, 0};
 		bool m_active = false;
 	};
 

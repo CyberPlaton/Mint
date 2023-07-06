@@ -398,6 +398,7 @@ namespace mint
 		mint::component::SSprite s;
 		mint::component::SAnimatedSprite as;
 		mint::component::SScript sc;
+		mint::component::SParticleEmitter pe;
 	}
 
 
@@ -431,7 +432,7 @@ namespace mint
 
 		viewport->set_is_enabled(false);
 
-		set_engine_fps(30.0f);
+		set_engine_fps(60.0f);
 
 		set_engine_window_title("Mint Engine Editor");
 

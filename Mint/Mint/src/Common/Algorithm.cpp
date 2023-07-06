@@ -134,16 +134,24 @@ namespace mint::algorithm
 
 	bool is_value_in_between(f32 value, f32 lh, f32 rh)
 	{
-		return lh >= value &&
-			   rh <= value;
+		return (
+
+			value >= lh &&
+			value <= rh
+
+			);
 	}
 
 	bool is_value_in_between(Vec2 value, Vec2 lh, Vec2 rh)
 	{
-		return lh.x >= value.x &&
-			   rh.x <= value.x &&
-			   lh.y >= value.y &&
-			   rh.y <= value.y;
+		return (
+
+			value.x >= lh.x &&
+			value.y >= lh.y &&
+			value.x <= rh.x &&
+			value.y <= rh.y
+
+			);
 	}
 
 	u64 string_to_number(const String& string)

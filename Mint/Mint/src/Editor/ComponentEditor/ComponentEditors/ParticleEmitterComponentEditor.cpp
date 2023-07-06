@@ -45,11 +45,42 @@ namespace mint::editor
 		auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(entity);
 		if (emitter)
 		{
+			// Particle emission rate.
 			f32 particles_rate = emitter->get_particles_emission_rate();
 
 			CUI::edit_field_f32(particles_rate, 0.0f, 100.0f, "Particles emission rate", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
 
 			emitter->set_particles_emission_rate(particles_rate);
+
+
+			static s32 selected_emitter_mode = (s32)emitter->get_emitter_mode();
+
+			// Particle emitter mode.
+			if (ImGui::Button("Emitter Mode"))
+			{
+				ImGui::OpenPopup("Emitter_Mode_Popup");
+			}
+
+			if (ImGui::BeginPopup("Emitter_Mode_Popup"))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(s_EditorParticleEmitterModes); i++)
+				{
+					if (ImGui::Selectable(s_EditorParticleEmitterModes[i])) { selected_emitter_mode = i; }
+				}
+
+				ImGui::EndPopup();
+
+				emitter->set_emitter_mode((fx::ParticleEmitterMode)selected_emitter_mode);
+			}
+
+			// Particle emitter gravity.
+			if (emitter->get_emitter_mode() == fx::ParticleEmitterMode_Gravity)
+			{
+				auto gravity = emitter->get_emitter_gravity();
+				CUI::edit_field_vec2(gravity, -50.0f, 50.0f, "Gravity", "", slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.1f);
+				emitter->set_emitter_gravity(gravity);
+			}
+
 
 
 			static s32 selected_tangent_easing_option = (s32)emitter->get_tangential_velocity_ease();
@@ -76,13 +107,13 @@ namespace mint::editor
 				CUI::edit_field_f32(def.m_tangentialVelocity, -500.0f, 500.0f, "Tangential Velocity", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f);
 				CUI::edit_field_f32(def.m_angularVelocity, -500.0f, 500.0f, "Angular Velocity", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f);
 				CUI::edit_field_vec2(def.m_startingDirection, -1.0f, 1.0f, "Start Looking Direction", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
-				CUI::edit_field_vec2_ranged(def.m_startingDirectionOffset, -100.0f, 100.0f, "Direction Offset", "", slid++, scid++);
+				CUI::edit_field_vec2_ranged(def.m_startingDirectionOffset, -1.0f, 1.0f, "Direction Offset", "", slid++, scid++, ImGuiSliderFlags_None, 0.01f);
 				CUI::edit_field_vec2_ranged(def.m_tangentialVelocityOffset, -100.0f, 100.0f, "Tangential Velocity Offset", "", slid++, scid++);
 				CUI::edit_field_vec2_ranged(def.m_angularVelocityOffset, -100.0f, 100.0f, "Angular Velocity Offset", "", slid++, scid++);
 				
 				if (CUI::edit_field_vec2_ranged(def.m_tangentialVelocityFalloff, -100.0f, 100.0f, "Tangential Velocity Falloff", "", slid++, scid++))
 				{
-					if (ImGui::SmallButton(TextFormat("Tang. Easing mode: %s", s_EditorEasingOptions[selected_tangent_easing_option])))
+					if (ImGui::SmallButton(TextFormat("Tangential Easing mode: %s", s_EditorEasingOptions[selected_tangent_easing_option])))
 					{
 						ImGui::OpenPopup("Tangential_Easing_Popup");
 					}
@@ -90,7 +121,7 @@ namespace mint::editor
 			
 				if (CUI::edit_field_vec2_ranged(def.m_angularVelocityFalloff, -100.0f, 100.0f, "Angular Velocity Falloff", "", slid++, scid++))
 				{
-					if (ImGui::SmallButton(TextFormat("Ang. Easing mode: %s", s_EditorEasingOptions[selected_tangent_easing_option])))
+					if (ImGui::SmallButton(TextFormat("Angular Easing mode: %s", s_EditorEasingOptions[selected_angular_easing_option])))
 					{
 						ImGui::OpenPopup("Angular_Easing_Popup");
 					}
@@ -142,6 +173,7 @@ namespace mint::editor
 			if (ImGui::BeginTabItem("Color"))
 			{
 				CUI::edit_field_color(def.m_colorStart, 0, 255, "Start", "", slid++, scid++);
+				CUI::edit_field_color(def.m_colorHalf, 0, 255, "Half", "", slid++, scid++);
 				CUI::edit_field_color(def.m_colorEnd, 0, 255, "End", "", slid++, scid++);
 				CUI::edit_field_vec2_ranged(def.m_colorOffset, 0.0f, 255.0f, "Offset", "", slid++, scid++);
 				ImGui::EndTabItem();

@@ -5,6 +5,17 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
  	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 
  	CUCA::transform_translate(m_knight, { dt, 0.0f });
+
+
+	auto mouse = mint::CInput::get_mouse_position();
+
+	auto world_mouse = mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world(mouse);
+
+	CUCA::transform_set_position(m_particle, world_mouse);
+
+	auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(m_particle);
+
+	emitter->set_emitter_position(world_mouse);
 }
 
 
@@ -181,6 +192,7 @@ bool CMainScene::on_load()
  	auto& transform = m_registry.add_component< mint::component::STransform >(m_particle);
 	auto& particles = m_registry.add_component< mint::component::SParticleEmitter >(m_particle);
 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_particle);
+	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_particle);
  
  	identifier.m_enttId = SCAST(u64, m_particle);
  	identifier.m_uuid = identifier.m_enttId;

@@ -184,6 +184,13 @@ namespace mint::editor
 			"OutInBounce",
 	};
 
+
+	static const char* s_EditorParticleEmitterModes[] = {
+		"None",
+		"Gravity",
+		"Free"
+	};
+
 }
 
 

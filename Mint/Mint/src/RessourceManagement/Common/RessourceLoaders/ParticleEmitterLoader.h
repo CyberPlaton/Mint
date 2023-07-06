@@ -4,7 +4,7 @@
 
 #include "IRessourceLoader.h"
 
-#include "Graphics/ParticleSystem/ParticleSystem.h"
+#include "Graphics/ParticleSystem.h"
 
 
 namespace mint

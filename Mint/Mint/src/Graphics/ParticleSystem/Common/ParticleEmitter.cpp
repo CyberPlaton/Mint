@@ -41,41 +41,72 @@ namespace mint::fx
 			return false;
 		}
 
-		CSerializer::import_vec2(m_particleDefinition.m_positionStart, "posStart", node);		
-		
-		CSerializer::import_vec2(m_particleDefinition.m_scaleStart, "scaleStart", node);
-		CSerializer::import_vec2(m_particleDefinition.m_scaleEnd, "scaleEnd", node);
-		CSerializer::import_vec2(m_particleDefinition.m_scaleOffset, "scaleOffset", node);
-		CSerializer::import_float(&m_particleDefinition.m_rotation, "rot", node);
-		CSerializer::import_float(&m_particleDefinition.m_lifespan, "lifespan", node);
-		CSerializer::import_vec2(m_particleDefinition.m_lifespanOffset, "lifespanOffset", node);
-		
-		Vec4 color;
-		u64 color_offset;
-		CSerializer::import_vec4(color, "colorStart", node);
-		m_particleDefinition.m_colorStart.set_color(color.r, color.g, color.b, color.a);
 
-		CSerializer::import_vec4(color, "colorEnd", node);
-		m_particleDefinition.m_colorEnd.set_color(color.r, color.g, color.b, color.a);
-
-		CSerializer::import_uint(&color_offset, "colorOffset", node);
-
+		// Material.
 		String material;
 		CSerializer::import_string(material, "material", node);
 
-
 		fx::SMaterialDefinition material_definition;
 
-		if (mint::fx::CMaterialManager::Get().set_material_for_entity(material, entity))
-		{
-			return true;
-		}
-		else
+		if (!mint::fx::CMaterialManager::Get().set_material_for_entity(material, entity))
 		{
 			MINT_LOG_ERROR("[{:.4f}][CParticleEmitter::load_particle_emitter_for_entity_from_file] Failed importing emitter at \"{}\", as the material \"{}\" could not be located!", MINT_APP_TIME, particle_emitter_file_path, material);
+			return false;
+		}
+		
+		u64 mode = 0;
+		CSerializer::import_uint(&mode, "mode", node, 0);
+
+		// Import gravity value if gravity turned on, otherwise ignore.
+		m_mode = (ParticleEmitterMode)mode;
+		if (m_mode == ParticleEmitterMode_Gravity)
+		{
+			CSerializer::import_vec2(m_particleGravity, "gravity", node);
 		}
 
-		return false;
+		// Emission rate.
+		CSerializer::import_float(&m_particlesEmissionRate, "emission_rate", node);
+
+		// Tangential velocity.
+		CSerializer::import_float(&m_particleDefinition.m_tangentialVelocity, "tangential_velocity", node);
+		CSerializer::import_vec2(m_particleDefinition.m_tangentialVelocityFalloff, "tangential_velocity_falloff", node);
+		CSerializer::import_vec2(m_particleDefinition.m_tangentialVelocityOffset, "tangential_velocity_offset", node);
+
+		// Angular velocity.
+		CSerializer::import_float(&m_particleDefinition.m_angularVelocity, "angular_velocity", node);
+		CSerializer::import_vec2(m_particleDefinition.m_angularVelocityFalloff, "angular_velocity_falloff", node);
+		CSerializer::import_vec2(m_particleDefinition.m_angularVelocityOffset, "angular_velocity_offset", node);
+
+		// Starting direction.
+		CSerializer::import_vec2(m_particleDefinition.m_startingDirection, "starting_direction", node);
+		CSerializer::import_vec2(m_particleDefinition.m_startingDirectionOffset, "starting_direction_offset", node);
+
+		// Position.
+		CSerializer::import_vec2(m_particleDefinition.m_positionStart, "position_start", node);
+		CSerializer::import_vec2(m_particleDefinition.m_positionStartOffset, "position_start_offset", node);
+
+		// Scale.
+		CSerializer::import_vec2(m_particleDefinition.m_scaleStart, "scale_start", node);
+		CSerializer::import_vec2(m_particleDefinition.m_scaleEnd, "scale_end", node);
+		CSerializer::import_vec2(m_particleDefinition.m_scaleOffset, "scale_offset", node);
+
+		// Rotation.
+		CSerializer::import_float(&m_particleDefinition.m_rotation, "rotation", node);
+		CSerializer::import_vec2(m_particleDefinition.m_rotationOffset, "rotation_offset", node);
+
+		// Color.
+		Vec4 color;
+		CSerializer::import_vec4(color, "color_start", node);
+		m_particleDefinition.m_colorStart.set_color(color.r, color.g, color.b, color.a);
+
+		CSerializer::import_vec4(color, "color_end", node);
+		m_particleDefinition.m_colorEnd.set_color(color.r, color.g, color.b, color.a);
+
+		// Lifespan.
+		CSerializer::import_float(&m_particleDefinition.m_lifespan, "lifespan", node);
+		CSerializer::import_vec2(m_particleDefinition.m_lifespanOffset, "lifespan_offset", node);
+
+		return true;
 	}
 
 	void CParticleEmitter::emit(u32 particles)
@@ -111,7 +142,7 @@ namespace mint::fx
 			
 			particle.m_tangentialVelocity = m_particleDefinition.m_tangentialVelocity + rand.in_range_float(m_particleDefinition.m_tangentialVelocityOffset.x, m_particleDefinition.m_tangentialVelocityOffset.y);
 			
-			particle.m_color = m_particleDefinition.m_colorStart.as_cliteral();
+			particle.m_color = m_particleDefinition.m_colorStart;
 
 
 			m_currentParticleIndex = (m_currentParticleIndex == 0) ? m_particles.size() - 1 : m_currentParticleIndex - 1;
@@ -200,9 +231,20 @@ namespace mint::fx
 				// ... color...
 				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_colorEase);
 
-				color = glm::lerp(m_particleDefinition.m_colorStart.as_vec4(), m_particleDefinition.m_colorEnd.as_vec4(), ease);
-				particle.m_color = color.as_cliteral();
+				if (mint::algorithm::is_value_in_between(particle.m_life, 0.0f, 0.5f))
+				{
+					f32 t = ((ease * 100.0f) / 0.5f) / 100.0f;
 
+					color = glm::lerp(m_particleDefinition.m_colorStart.as_vec4(), m_particleDefinition.m_colorHalf.as_vec4(), t);
+				}
+				else if (mint::algorithm::is_value_in_between(particle.m_life, 0.5f, 1.0f))
+				{
+					f32 t = (((ease - 0.5f) * 100.0f) / 0.5f) / 100.0f;
+
+					color = glm::lerp(m_particleDefinition.m_colorHalf.as_vec4(), m_particleDefinition.m_colorEnd.as_vec4(), t);
+ 				}
+
+				particle.m_color = color;
 
 				if (particle.m_life > 1.0f)
 				{
@@ -293,6 +335,36 @@ namespace mint::fx
 	void CParticleEmitter::set_angular_velocity_ease(bx::Easing::Enum value)
 	{
 		m_angularVelocityEase = value;
+	}
+
+	mint::Vec2 CParticleEmitter::get_emitter_gravity() const
+	{
+		return m_particleGravity;
+	}
+
+	void CParticleEmitter::set_emitter_gravity(const Vec2& vec)
+	{
+		m_particleGravity = vec;
+	}
+
+	mint::fx::ParticleEmitterMode CParticleEmitter::get_emitter_mode() const
+	{
+		return m_mode;
+	}
+
+	void CParticleEmitter::set_emitter_mode(ParticleEmitterMode mode)
+	{
+		m_mode = mode;
+	}
+
+	mint::Vec2 CParticleEmitter::get_emitter_position() const
+	{
+		return m_particleDefinition.m_positionStart;
+	}
+
+	void CParticleEmitter::set_emitter_position(const Vec2& vec)
+	{
+		m_particleDefinition.m_positionStart = vec;
 	}
 
 }

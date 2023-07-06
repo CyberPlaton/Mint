@@ -181,5 +181,17 @@ namespace mint::fx
 		remove_all_camera_effects();
 	}
 
+	mint::Vec2 CCamera2D::vector_screen_to_world(const Vec2& vec)
+	{
+		auto v = m_camera.GetScreenToWorld({ vec.x, vec.y });
+		return { v.x, v.y };
+	}
+
+	mint::Vec2 CCamera2D::vector_world_to_screen(const Vec2& vec)
+	{
+		auto v = m_camera.GetWorldToScreen({ vec.x, vec.y });
+		return { v.x, v.y };
+	}
+
 
 }

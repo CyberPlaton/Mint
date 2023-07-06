@@ -88,7 +88,7 @@ namespace mint::fx
 						dst = { px + texture_size.x / 2.0f, py + texture_size.y / 2.0f, src.width * scale.x, src.height * scale.y };
 
 
-						DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { texture_size.x / 2.0f * scale.x, texture_size.y / 2.0f * scale.y }, mint::algorithm::radians_to_degree(rotation), particle.m_color);
+						DrawTexturePro(texture_manager.get_texture(material->get_texture_handle()), src, dst, { texture_size.x / 2.0f * scale.x, texture_size.y / 2.0f * scale.y }, mint::algorithm::radians_to_degree(rotation), particle.m_color.as_cliteral());
 					}
 				}
 
