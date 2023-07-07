@@ -265,6 +265,8 @@ namespace mint::editor
 		Vec2 position = { get_window_width() / 2.0f - w, get_window_height() / 2.0f - h }, size = { w, h };
 
 		CUI::create_folder_dialog(text, "", &m_createFolderDialog, position, size, m_createDirectory.as_string());
+
+		if(!m_createFolderDialog) m_createDirectory = CPath();
 	}
 
 
@@ -277,40 +279,23 @@ namespace mint::editor
 		Vec2 position = { get_window_width() / 2.0f - w, get_window_height() / 2.0f - h }, size = { w, h };
 
 		CUI::create_file_dialog(text, "", &m_createFileDialog, position, size, s_EditorAssetPanelFileTypeExtensions, IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions), m_createDirectory.as_string());
+
+		if(!m_createFileDialog) m_createDirectory = CPath();
 	}
 
 
 
 	void CProjectAssetsPanelLayer::show_delete_folder_dialog()
 	{
-		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		String text = "Delete folder \"" + m_removeDirectory.get_stem() + "\" with all contents?";
+
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth + 125.0f;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+		Vec2 position = { get_window_width() / 2.0f - w, get_window_height() / 2.0f - h }, size = { w, h };
 
+		CUI::delete_folder_dialog(text, "", &m_removeDialog, position, size, m_removeDirectory.as_string());
 
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
-		ImGui::SetNextWindowSize({ w, h });
-
-		String text = "Delete " + m_removeDirectory.get_stem() + " with all contents?";
-
-		ImGui::Begin(text.c_str(), &m_removeDialog);
-
-		if (ImGui::SmallButton("OK"))
-		{
-			if (CFilesystem::delete_directory_or_file(m_removeDirectory))
-			{
-			}
-
-			m_removeDialog = false;
-			m_removeDirectory = CPath();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("Cancel"))
-		{
-			m_removeDialog = false;
-			m_removeDirectory = CPath();
-		}
-
-		ImGui::End();
+		if (!m_removeDialog) m_removeDirectory = CPath();
 	}
 
 

@@ -246,6 +246,39 @@ namespace mint
 		ImGui::End();
 	}
 
+	void CUI::delete_folder_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size, const String& directory, const String& ok_text /*= "OK"*/, const String& cancel_text /*= "Cancel"*/)
+	{
+		ImGui::SetNextWindowPos({ position.x, position.y }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize({ size.x, size.y }, ImGuiCond_Appearing);
+
+		ImGui::Begin(field_text.c_str(), is_open);
+
+		if (ImGui::SmallButton(ok_text.c_str()))
+		{
+			if (CFilesystem::delete_directory_or_file(directory))
+			{
+				MINT_LOG_INFO("[{:.4f}][CUI::delete_folder_dialog] Success deleting folder \"{}\"!", MINT_APP_TIME, directory);
+			}
+			else
+			{
+				MINT_LOG_ERROR("[{:.4f}][CUI::delete_folder_dialog] Failed deleting folder \"{}\"!", MINT_APP_TIME, directory);
+			}
+
+			// Reset the internal state.
+			*is_open = false;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(cancel_text.c_str()))
+		{
+			// Reset the internal state.
+			*is_open = false;
+		}
+
+		ImGui::End();
+	}
+
 	bool CUI::is_style_light()
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
