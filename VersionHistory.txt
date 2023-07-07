@@ -1,5 +1,9 @@
 Runtime Version History:
 
+2023.07.02:
+	o Refined version of Particle System.
+	o Minor fixes.
+
 2023.07.01:
 	o Initial version of Particle System.
 
@@ -75,6 +79,10 @@ Runtime Version History:
 
 
 Editor Version History:
+
+2023.07.02:
+	o ParticleEmitter component editor refined and adjusted for new version of Particle System.
+	o Minor fixes in Project Asset panel.
 
 2023.07.01:
 	o ParticleEmitter component editor added to existing editors of common components.
