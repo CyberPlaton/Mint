@@ -38,6 +38,9 @@ namespace mint::fx
 
 		void on_update(f32 dt);
 
+		bool is_active() const;
+		void set_is_active(bool value);
+
 
 		bool set_material(entt::entity entity, const String& material_name);
 
@@ -79,6 +82,8 @@ namespace mint::fx
 
 
 	private:
+		bool m_active = false;
+
 		std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX > m_particles;
 
 		ParticleEmitterMode m_mode = ParticleEmitterMode_None;

@@ -189,11 +189,15 @@ namespace mint::fx
 	{
 		MINT_PROFILE_SCOPE("Engine::Particles", "CParticleEmitter::on_update");
 
+		if (!is_active()) return;
+
+
 		m_dt += dt;
 		f32 ease = 0.0f;
 		CColor color = MINT_WHITE();
 		Vec2 perpendicular = { 0.0f, 0.0f };
-		
+
+
 		auto particle = m_particles.begin();
 		for (auto& particle : m_particles)
 		{
@@ -386,6 +390,16 @@ namespace mint::fx
 	void CParticleEmitter::set_emitter_position(const Vec2& vec)
 	{
 		m_particleDefinition.m_positionStart = vec;
+	}
+
+	bool CParticleEmitter::is_active() const
+	{
+		return m_active;
+	}
+
+	void CParticleEmitter::set_is_active(bool value)
+	{
+		m_active = value;
 	}
 
 }

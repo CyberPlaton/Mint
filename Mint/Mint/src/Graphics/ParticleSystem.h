@@ -34,6 +34,10 @@ namespace mint::fx
 		void on_frame(Vector< entt::entity >& entities) override final;
 
 
+		bool is_particle_emitter_active(entt::entity entity) const;
+
+		void set_particle_emitter_active(entt::entity entity, bool value);
+
 		bool request_entity_registration(entt::entity entity);
 
 		bool is_entity_registered(entt::entity entity);

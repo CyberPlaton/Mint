@@ -399,6 +399,7 @@ namespace mint
 		mint::component::SAnimatedSprite as;
 		mint::component::SScript sc;
 		mint::component::SParticleEmitter pe;
+		mint::component::SWorldSettings ws;
 	}
 
 

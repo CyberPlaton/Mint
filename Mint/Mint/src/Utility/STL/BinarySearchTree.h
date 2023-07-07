@@ -30,7 +30,9 @@ namespace mint
 
 		Object* get(u64 identifier);
 
-		bool lookup(u64 identifier);
+		const Object* get_const(u64 identifier) const;
+
+		bool lookup(u64 identifier) const;
 
 		void reset();
 
@@ -48,6 +50,18 @@ namespace mint
 		CBinarySearchTree& operator=(const CBinarySearchTree& rh) = delete;
 
 	};
+
+	template < typename Object >
+	const Object* mint::CBinarySearchTree<Object>::get_const(u64 identifier) const
+	{
+		MINT_PROFILE_SCOPE("Engine::STL", "CBinarySearchTree::get_const");
+
+		MINT_ASSERT(lookup(identifier) == true, "Invalid operation. Accessing not existing node is not allowed!");
+
+		const auto id = m_indices.at(identifier);
+
+		return m_objects.get_const(id);
+	}
 
 	template < typename Object >
 	Object* mint::CBinarySearchTree<Object>::replace_node(u64 identifier)
@@ -133,7 +147,7 @@ namespace mint
 	}
 
 	template < typename Object >
-	bool mint::CBinarySearchTree<Object>::lookup(u64 identifier)
+	bool mint::CBinarySearchTree<Object>::lookup(u64 identifier) const
 	{
 		MINT_PROFILE_SCOPE("Engine::STL", "CBinarySearchTree::lookup");
 

@@ -193,7 +193,13 @@ bool CMainScene::on_load()
 	auto& particles = m_registry.add_component< mint::component::SParticleEmitter >(m_particle);
 	auto& sprite = m_registry.add_component< mint::component::SSprite >(m_particle);
 	auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_particle);
+	auto& ws = m_registry.add_component< mint::component::SWorldSettings >(m_particle);
  
+	ws.m_groupId = 1;
+	ws.m_enabled = true;
+	ws.m_filterEnabled = false;
+	ws.m_queryable = false;
+
  	identifier.m_enttId = SCAST(u64, m_particle);
  	identifier.m_uuid = identifier.m_enttId;
  	identifier.m_debugName = "ParticleEmitter";

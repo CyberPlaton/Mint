@@ -181,4 +181,28 @@ namespace mint::fx
 		return nullptr;
 	}
 
+	bool CParticleSystem::is_particle_emitter_active(entt::entity entity) const
+	{
+		bool result = false;
+
+		auto h = SCAST(u64, entity);
+
+		if (m_emitters.lookup(h))
+		{
+			result = m_emitters.get_const(h)->is_active();
+		}
+
+		return result;
+	}
+
+	void CParticleSystem::set_particle_emitter_active(entt::entity entity, bool value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_emitters.lookup(h))
+		{
+			m_emitters.get(h)->set_is_active(value);
+		}
+	}
+
 }

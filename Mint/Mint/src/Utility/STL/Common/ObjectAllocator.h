@@ -63,19 +63,21 @@ namespace mint
 
 		Object* get(u64 index);
 
+		const Object* get_const(u64 index) const;
+
 		Object* get_unsafe(u64 index);
 
 		u64 size() const;
 
-		bool has_room_for_another_object();
+		bool has_room_for_another_object()  const;
 
-		bool can_remove_another_object();
+		bool can_remove_another_object() const;
 
-		bool is_index_valid(u64 index);
+		bool is_index_valid(u64 index) const;
 
-		u64 get_index_for_memory_location(u64 memory_location);
+		u64 get_index_for_memory_location(u64 memory_location) const;
 
-		bool is_object_at_index_initialized(u64 index);
+		bool is_object_at_index_initialized(u64 index) const;
 
 	private:
 		Vector< bool > m_initializedBit;
@@ -92,6 +94,7 @@ namespace mint
 
 		u64 m_usedAlignment;
 	};
+
 
 	template< typename Object >
 	Object* mint::CObjectAllocator<Object>::reverse_advance(Object* object)
@@ -121,7 +124,7 @@ namespace mint
 
 
 	template< typename Object >
-	bool mint::CObjectAllocator<Object>::is_object_at_index_initialized(u64 index)
+	bool mint::CObjectAllocator<Object>::is_object_at_index_initialized(u64 index) const
 	{
 		if (is_index_valid(index))
 		{
@@ -133,7 +136,7 @@ namespace mint
 
 
 	template< typename Object >
-	u64 mint::CObjectAllocator<Object>::get_index_for_memory_location(u64 memory_location)
+	u64 mint::CObjectAllocator<Object>::get_index_for_memory_location(u64 memory_location) const
 	{
 		u64 object_size = sizeof(Object);
 
@@ -148,21 +151,21 @@ namespace mint
 
 
 	template< typename Object >
-	bool mint::CObjectAllocator<Object>::can_remove_another_object()
+	bool mint::CObjectAllocator<Object>::can_remove_another_object() const
 	{
 		return m_objectCount > 0;
 	}
 
 
 	template< typename Object >
-	bool mint::CObjectAllocator<Object>::is_index_valid(u64 index)
+	bool mint::CObjectAllocator<Object>::is_index_valid(u64 index) const
 	{
 		return (index >= 0 &&
 			index < m_maxObjectCount);
 	}
 
 	template< typename Object >
-	bool mint::CObjectAllocator<Object>::has_room_for_another_object()
+	bool mint::CObjectAllocator<Object>::has_room_for_another_object() const
 	{
 		return m_objectCount < m_maxObjectCount;
 	}
@@ -228,7 +231,29 @@ namespace mint
 		return nullptr;
 	}
 
+	template< typename Object >
+	const Object* mint::CObjectAllocator<Object>::get_const(u64 index) const
+	{
+		if (is_index_valid(index))
+		{
+			// Verify that the object at index is initialized and the index is accessing a valid object.
+#if MINT_DISTR
+#else
+			if (!is_object_at_index_initialized(index)) return nullptr;
+#endif
 
+			// Compute the memory location of the Object.
+			u64 object_size = sizeof(Object);
+
+			auto location = reinterpret_cast<void*>(reinterpret_cast<u64>(m_memoryBlockStart) + object_size * index);
+
+			// Assume location to be correct, as the index is validated.
+			return reinterpret_cast<Object*>(location);
+
+		}
+
+		return nullptr;
+	}
 
 	template< typename Object >
 	Object* mint::CObjectAllocator<Object>::get_unsafe(u64 index)
