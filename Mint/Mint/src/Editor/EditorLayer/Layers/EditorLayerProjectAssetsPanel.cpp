@@ -245,6 +245,8 @@ namespace mint::editor
 			}
 			default: break;
 			}
+
+			selected_option_item = -1;
 		}
 	}
 
@@ -256,104 +258,25 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_create_folder_dialog()
 	{
+		String text = "New folder at \"" + m_createDirectory.get_stem() + "\"";
+
 		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+		Vec2 position = { get_window_width() / 2.0f - w, get_window_height() / 2.0f - h }, size = { w, h };
 
-
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w / 2.0f, get_window_height() / 2.0f - h / 2.0f });
-		ImGui::SetNextWindowSize({ w, h });
-
-		String text = "New folder at " + m_createDirectory.get_stem();
-		String itext = "##" + text;
-
-		ImGui::Begin(text.c_str(), &m_createFolderDialog);
-
-		ImGui::InputText(itext.c_str(), m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
-
-
-		if (ImGui::SmallButton("OK"))
-		{
-			mint::String name = mint::String(m_createDialogBuffer);
-
-			if (!name.empty())
-			{
-				// create folder
-				auto path = CFilesystem::construct_from(m_createDirectory, name);
-
-				if (CFilesystem::create_directory(path))
-				{
-				}
-			}
-
-			m_createFolderDialog = false;
-			m_createDirectory = CPath();
-			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("Cancel"))
-		{
-			m_createFolderDialog = false;
-			m_createDirectory = CPath();
-			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
-		}
-
-
-		ImGui::End();
+		CUI::create_folder_dialog(text, "", &m_createFolderDialog, position, size, m_createDirectory.as_string());
 	}
 
 
 	void CProjectAssetsPanelLayer::show_create_file_dialog()
 	{
-		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		String text = "New file at \"" + m_createDirectory.get_stem() + "\"";
+
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth + 125.0f;
 		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+		Vec2 position = { get_window_width() / 2.0f - w, get_window_height() / 2.0f - h }, size = { w, h };
 
-		ImGui::SetNextWindowPos({ get_window_width() / 2.0f - w, get_window_height() / 2.0f - h });
-		ImGui::SetNextWindowSize({ w, h });
-
-		String text = "New file at " + m_createDirectory.get_stem();
-
-		ImGui::Begin(text.c_str(), &m_createFileDialog);
-
-		ImGui::InputText("## |", m_createDialogBuffer, sizeof(m_createDialogBuffer), ImGuiInputTextFlags_None);
-
-		static int item_current = 0;
-		String extension;
-		ImGui::SameLine();
-
-		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
-		ImGui::Combo(s_EditorAssetPanelFileTypes[item_current], &item_current, s_EditorAssetPanelFileTypes, IM_ARRAYSIZE(s_EditorAssetPanelFileTypes));
-
-		ImGui::SameLine();
-		CUI::help_marker("Select the Type of the File to be created!");
-
-		if (ImGui::SmallButton("OK"))
-		{
-			mint::String name = mint::String(m_createDialogBuffer);
-
-			if (!name.empty())
-			{
-				extension = String(s_EditorAssetPanelFileTypeExtensions[item_current]);
-
-				// create file
-				if (CFilesystem::create_file(m_createDirectory, name, extension, false))
-				{
-				}
-			}
-
-			m_createFileDialog = false;
-			m_createDirectory = CPath();
-			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("Cancel"))
-		{
-			m_createFileDialog = false;
-			m_createDirectory = CPath();
-			std::memset(&m_createDialogBuffer, NULL, sizeof(m_createDialogBuffer));
-		}
-
-
-		ImGui::End();
+		CUI::create_file_dialog(text, "", &m_createFileDialog, position, size, s_EditorAssetPanelFileTypeExtensions, IM_ARRAYSIZE(s_EditorAssetPanelFileTypeExtensions), m_createDirectory.as_string());
 	}
 
 

@@ -60,6 +60,7 @@ namespace mint::editor
 		void show_file_options(CPath& path);
 
 		void show_create_file_dialog();
+
 		void show_create_folder_dialog();
 
 		void show_delete_folder_dialog();

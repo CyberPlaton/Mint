@@ -115,6 +115,137 @@ namespace mint
 		return ImGui::ColorConvertFloat4ToU32({ vec.r, vec.g, vec.b, vec.a });
 	}
 
+	void CUI::create_file_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size,
+								 const char* allowed_file_types[], u32 file_type_count, const String& directory,
+								 const String& ok_text /*= "OK"*/, const String& cancel_text /*= "Cancel"*/, ImGuiInputTextFlags flags /*= ImGuiInputTextFlags_None*/)
+	{
+		
+		static const char* selected_file_type;
+		static s32 selected_file_type_option = -1;
+		static char buffer[128];
+
+		ImGui::SetNextWindowPos({ position.x, position.y }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize({ size.x, size.y }, ImGuiCond_Appearing);
+
+		ImGui::Begin(field_text.c_str(), is_open);
+
+
+		ImGui::InputText("## File_Naming_Textinput", &buffer[0], sizeof(buffer), flags);
+
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(selected_file_type_option == -1 ? "Please select a Filetype" : selected_file_type))
+		{
+			ImGui::OpenPopup("File_Type_Selection_Popup");
+		}
+
+		CUI::help_marker_no_question_mark(field_desc);
+
+
+		if (ImGui::BeginPopup("File_Type_Selection_Popup"))
+		{
+			for (int i = 0; i < file_type_count; i++)
+			{
+				if (ImGui::Selectable(allowed_file_types[i])) { selected_file_type_option = i; }
+			}
+
+			selected_file_type = allowed_file_types[selected_file_type_option];
+
+			ImGui::EndPopup();
+		}
+
+
+
+		if (ImGui::SmallButton(ok_text.c_str()))
+		{
+			// Get the string from text input buffer.
+			String file_name = String(buffer);
+
+			// Sanity check for the file and that type was selected.
+			if (!file_name.empty() && selected_file_type_option >= 0 && selected_file_type_option < file_type_count)
+			{
+				// Ready to create file. Get the extension from allowed file types.
+				String extension = String(allowed_file_types[selected_file_type_option]);
+
+				// Try creating the file.
+				if (CFilesystem::create_file(directory, file_name, extension, false))
+				{
+					MINT_LOG_INFO("[{:.4f}][CUI::create_file_dialog] Success creating file \"{}\" at \"{}\"!", MINT_APP_TIME, String(file_name + extension), directory);
+				}
+				else
+				{
+					MINT_LOG_ERROR("[{:.4f}][CUI::create_file_dialog] Failed creating file \"{}\" at \"{}\"!", MINT_APP_TIME, String(file_name + extension), directory);
+				}
+
+				// Reset the internal state.
+				*is_open = false;
+				selected_file_type_option = -1;
+				std::memset(&buffer, NULL, sizeof(buffer));
+			}
+		}
+
+		ImGui::SameLine();
+		
+		if (ImGui::SmallButton(cancel_text.c_str()))
+		{
+			// Reset the internal state.
+			*is_open = false;
+			selected_file_type_option = -1;
+			std::memset(&buffer, NULL, sizeof(buffer));
+		}
+
+		ImGui::End();
+	}
+
+	void CUI::create_folder_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size, const String& directory, const String& ok_text /*= "OK"*/, const String& cancel_text /*= "Cancel"*/, ImGuiInputTextFlags flags /*= ImGuiInputTextFlags_None*/)
+	{
+		static char buffer[128];
+
+		ImGui::SetNextWindowPos({ position.x, position.y }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize({ size.x, size.y }, ImGuiCond_Appearing);
+
+		ImGui::Begin(field_text.c_str(), is_open);
+
+
+		ImGui::InputText("## Folder_Naming_Textinput", &buffer[0], sizeof(buffer), flags);
+
+
+		if (ImGui::SmallButton(ok_text.c_str()))
+		{
+			// Get the string from text input buffer.
+			String folder_name = String(buffer);
+
+			if (!folder_name.empty())
+			{
+				// Try creating folder with specified name at specified location.
+				if (CFilesystem::create_directory(CFilesystem::construct_from(directory, folder_name)))
+				{
+					MINT_LOG_INFO("[{:.4f}][CUI::create_folder_dialog] Success creating folder \"{}\" at \"{}\"!", MINT_APP_TIME, folder_name, directory);
+				}
+				else
+				{
+					MINT_LOG_ERROR("[{:.4f}][CUI::create_folder_dialog] Failed creating folder \"{}\" at \"{}\"!", MINT_APP_TIME, folder_name, directory);
+				}
+
+				// Reset the internal state.
+				*is_open = false;
+				std::memset(&buffer, NULL, sizeof(buffer));
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(cancel_text.c_str()))
+		{
+			// Reset the internal state.
+			*is_open = false;
+			std::memset(&buffer, NULL, sizeof(buffer));
+		}
+
+		ImGui::End();
+	}
+
 	bool CUI::is_style_light()
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();

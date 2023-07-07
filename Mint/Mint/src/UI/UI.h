@@ -25,6 +25,10 @@ namespace mint
 
 		static ImU32 get_imgui_color(const fx::CColor& color);
 
+		static void create_file_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size, const char* allowed_file_types[], u32 file_type_count, const String& directory, const String& ok_text = "OK", const String& cancel_text = "Cancel", ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
+		static void create_folder_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size, const String& directory, const String& ok_text = "OK", const String& cancel_text = "Cancel", ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
 		static bool is_style_dark();
 
 		static bool is_style_light();
