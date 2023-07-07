@@ -72,7 +72,6 @@ namespace mint
 		void set_should_update(bool value);
 
 
-
 		void submit_scene_dynamic_entities(Vector< entt::entity >& entities);
 
 		void submit_scene_static_entities(Vector< entt::entity >& entities);
@@ -80,6 +79,9 @@ namespace mint
 		
 
 		Vector< entt::entity > retrieve_visible_entities();
+
+		bool is_entity_visible(entt::entity entity);
+
 
 
 	private:

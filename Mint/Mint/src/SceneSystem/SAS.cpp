@@ -293,6 +293,44 @@ namespace mint
 	}
 
 
+	bool CSAS::is_entity_visible(entt::entity entity)
+	{
+		Vector< detail::SQuadTreeNode > result;
+
+		CRect visible_area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
+
+		f32 viewmin[2] = { 0 };
+		f32 viewmax[2] = { 0 };
+
+		viewmin[0] = visible_area.get_x();
+		viewmin[1] = visible_area.get_y();
+		viewmax[0] = visible_area.get_width();
+		viewmax[1] = visible_area.get_height();
+
+		spatial::BoundingBox< f32, 2 > bbox(viewmin, viewmax);
+	
+
+		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
+
+			if (CUCA::entity_has_component< mint::component::SDynamicGameobject >(entity))
+			{
+				m_dqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
+			}
+			else
+			{
+				m_sqtree.m_qtree.query(spatial::intersects<2>(bbox.min, bbox.max), std::back_inserter(result));
+			}
+
+		);
+
+
+		for (auto& bb : result)
+		{
+			if (bb.m_entity == entity) return true;
+		}
+		return false;
+	}
+
 	void CSAS::_run()
 	{
 		std::thread thread(&CSAS::_internal_run, this);
