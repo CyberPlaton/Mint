@@ -80,6 +80,10 @@ Runtime Version History:
 
 Editor Version History:
 
+2023.07.03:
+	o Project Asset panel updated with new UI create file/folder and delete folder dialogues.
+
+
 2023.07.02:
 	o ParticleEmitter component editor refined and adjusted for new version of Particle System.
 	o Minor fixes in Project Asset panel.
