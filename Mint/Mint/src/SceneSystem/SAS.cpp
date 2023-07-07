@@ -125,7 +125,7 @@ namespace mint
 		view_max[0] = 0;
 		view_max[1] = 0;
 
-		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
+		auto area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area_for_sas();
 		view_min[0] = area.get_x();
 		view_min[1] = area.get_y();
 		view_max[0] = area.get_width();
@@ -332,7 +332,7 @@ namespace mint
 		f32 viewmin[2] = { 0 };
 		f32 viewmax[2] = { 0 };
 
-		CRect visible_area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
+		CRect visible_area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area_for_sas();
 
 		viewmin[0] = visible_area.get_x();
 		viewmin[1] = visible_area.get_y();
@@ -349,6 +349,7 @@ namespace mint
 			std::swap(viewmin[1], viewmax[1]);
 		}
 
+
 		spatial::BoundingBox< f32, 2 > bbox(viewmin, viewmax);
 		Vector< detail::SQuadTreeNode > result;
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
@@ -362,7 +363,7 @@ namespace mint
 
 			if (!result.empty())
 			{
-				// Presort the entities in a painters algorithm manner. In that way we can
+				// Pre-sort the entities in a painters algorithm manner. In that way we can
 				// avoid sorting in the renderer and iterate through the vector of entities directly.
 				for (auto& node : result)
 				{

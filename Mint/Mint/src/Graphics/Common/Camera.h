@@ -19,6 +19,8 @@ namespace mint::fx
 
 		virtual CRect get_world_visible_area() { CRect rect; return rect; }
 
+		virtual CRect get_world_visible_area_for_sas() { CRect rect; return rect; }
+
 		virtual void use_camera() { MINT_ASSERT(false, "Invalid operation using the camera interface!"); }
 
 		virtual void end_camera() { MINT_ASSERT(false, "Invalid operation using the camera interface!"); }

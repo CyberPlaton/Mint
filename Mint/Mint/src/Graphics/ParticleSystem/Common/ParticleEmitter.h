@@ -82,7 +82,7 @@ namespace mint::fx
 
 
 	private:
-		bool m_active = false;
+		bool m_active = true;
 
 		std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX > m_particles;
 

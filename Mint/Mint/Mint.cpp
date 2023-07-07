@@ -161,9 +161,9 @@ namespace mint
 		CEventSystem::Get().update();
 
 
-		// Populate spatial acceleration structure with current dynamic entities
-		// and let it update the Quad Tree.
+		// Populate spatial acceleration structure with current dynamic entities and let it update the Quad Tree.
 		MINT_ACTIVE_SCENE()->submit_dynamic_entities();
+
 		CSAS::Get().set_should_update(true);
 
 

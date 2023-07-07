@@ -193,5 +193,15 @@ namespace mint::fx
 		return { v.x, v.y };
 	}
 
+	mint::CRect CCamera2D::get_world_visible_area_for_sas()
+	{
+		// By default we can see half the camera width and height further offbounds.
+		// This is done to prevent visible poping in and out and for particles to be still somewhat visible even if emitter is off-screen.
+		auto tl = m_camera.GetScreenToWorld({ -get_viewport_width() / 2.0f, -get_viewport_height() / 2.0f });
+		auto br = m_camera.GetScreenToWorld({ get_viewport_width() + get_viewport_width() / 2.0f, get_viewport_height() + get_viewport_height() / 2.0f });
+
+		return { tl.x, tl.y, br.x, br.y };
+	}
+
 
 }

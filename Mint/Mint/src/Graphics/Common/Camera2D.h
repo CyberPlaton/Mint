@@ -19,6 +19,8 @@ namespace mint::fx
 
 		CRect get_world_visible_area() override final;
 
+		virtual CRect get_world_visible_area_for_sas() override;
+
 		void use_camera() override final;
 
 		void end_camera() override final;
