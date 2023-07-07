@@ -105,6 +105,8 @@ namespace mint
 
 	void CSAS::submit_scene_dynamic_entities(Vector< entt::entity >& entities)
 	{
+		MINT_PROFILE_SCOPE("Engine::SAS", "CSAS::submit_scene_dynamic_entities");
+
 		Vector< detail::SQuadTreeNode > bboxes;
 
 		// Find minimal and maximal position for all entities, this will be the minimum / maximum of the Quad Tree.
@@ -197,6 +199,8 @@ namespace mint
 
 	void CSAS::submit_scene_static_entities(Vector< entt::entity >& entities)
 	{
+		MINT_PROFILE_SCOPE("Engine::SAS", "CSAS::submit_scene_static_entities");
+	
 		Vector< detail::SQuadTreeNode > bboxes;
 
 		// Find minimal and maximal position for all entities, this will be the minimum / maximum of the Quad Tree.
@@ -283,6 +287,8 @@ namespace mint
 
 	mint::Vector< entt::entity > CSAS::retrieve_visible_entities()
 	{
+		MINT_PROFILE_SCOPE("Engine::SAS", "CSAS::retrieve_visible_entities");
+
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
 			auto out = m_outQueue[m_currentOut];
@@ -295,6 +301,8 @@ namespace mint
 
 	bool CSAS::is_entity_visible(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::SAS", "CSAS::is_entity_visible");
+
 		Vector< detail::SQuadTreeNode > result;
 
 		CRect visible_area = fx::CCameraManager::Get().get_active_camera()->get_world_visible_area();
@@ -365,6 +373,8 @@ namespace mint
 
 	void CSAS::_internal_computation()
 	{
+		MINT_PROFILE_SCOPE("Engine::SAS", "CSAS::_internal_computation");
+
 		set_should_update(false);
 
 		f32 viewmin[2] = { 0 };

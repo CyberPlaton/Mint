@@ -8,6 +8,7 @@
 #include "Components/CUCA.h"
 #include "Common/IScene.h"
 #include "Graphics/CameraSystem.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 #include <limits>
 

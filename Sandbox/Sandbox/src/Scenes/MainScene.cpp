@@ -6,6 +6,14 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 
  	CUCA::transform_translate(m_knight, { dt, 0.0f });
 
+	if (mint::CSAS::Get().is_entity_visible(m_particle))
+	{
+		mint::fx::CParticleSystem::Get().set_particle_emitter_active(m_particle, true);
+	}
+	else
+	{
+		mint::fx::CParticleSystem::Get().set_particle_emitter_active(m_particle, false);
+	}
 
 // 	auto mouse = mint::CInput::get_mouse_position();
 // 

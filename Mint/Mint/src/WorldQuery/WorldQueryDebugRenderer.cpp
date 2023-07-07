@@ -38,9 +38,13 @@ namespace mint
 			}
 			else
 			{
-				auto proxy = world::CWorldQuery::Get().get_entity_proxy(m_entityFilter);
+				// Make sure filtered entity is actually registered.
+				if (world::CWorldQuery::Get().is_entity_registered(m_entityFilter))
+				{
+					auto proxy = world::CWorldQuery::Get().get_entity_proxy(m_entityFilter);
 
-				fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
+					fx::CPrimitiveRenderer::render_aabb_filled(proxy->m_aabb, m_aabbColor, m_renderFullInformation);
+				}
 			}
 		}
 	}
