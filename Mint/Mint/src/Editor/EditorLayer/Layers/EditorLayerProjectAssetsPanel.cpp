@@ -83,15 +83,7 @@ namespace mint::editor
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu(u8"Project Assets"))
-			{
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu(u8"Project Assets"))
-			{
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu(u8"Project Assets"))
+			if (ImGui::BeginMenu("Project Assets"))
 			{
 				ImGui::EndMenu();
 			}
@@ -135,9 +127,16 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_contents(CPath& path)
 	{
-		String text = ICON_FA_FOLDER_TREE + path.get_stem();
+		String content_name = path.get_stem();
 
-		if (ImGui::TreeNode(text.c_str()))
+		const bool open = ImGui::TreeNode(content_name.c_str());
+
+		ImGui::SameLine();
+
+		if (open) ImGui::Text(ICON_FA_FOLDER_OPEN);
+		else ImGui::Text(ICON_FA_FOLDER);
+
+		if (open)
 		{
 			show_folder_options(path);
 
@@ -201,15 +200,30 @@ namespace mint::editor
 
 	void CProjectAssetsPanelLayer::show_folder_options(CPath& path)
 	{
-		String text = "##" + path.as_string();
-
-		static int item_current = 0;
+		static s32 selected_option_item = -1;
 		ImGui::SameLine();
 
-		ImGui::SetNextItemWidth(GlobalData::Get().s_DefaultComboWidth);
-		if (ImGui::Combo(text.c_str(), &item_current, s_EditorAssetPanelFolderOptions, IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions)))
+		ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ChildBg]);
+		if (ImGui::SmallButton(ICON_FA_GEAR))
 		{
-			switch (item_current)
+			ImGui::OpenPopup("Folder_Options_Popup");
+		}
+		ImGui::PopStyleColor();
+
+
+		if (ImGui::BeginPopup("Folder_Options_Popup"))
+		{
+			for (int i = 0; i < IM_ARRAYSIZE(s_EditorAssetPanelFolderOptions); i++)
+			{
+				if (ImGui::Selectable(s_EditorAssetPanelFolderOptions[i])) { selected_option_item = i; }
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (selected_option_item >= 0)
+		{
+			switch ((FolderOptions)selected_option_item)
 			{
 			case FolderOptions_NewFolder:
 			{
