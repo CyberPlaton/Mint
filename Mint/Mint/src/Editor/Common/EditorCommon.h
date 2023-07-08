@@ -8,15 +8,25 @@
 #include "UI/UI.h"
 #include "../../Editor/ComponentEditor/ApplicationComponentsDatabase.h"
 #include "Common/Math.h"
+#include "Utility/FileSystem/FileIO.h"
+
 
 
 namespace mint::editor
 {
+	
 	struct GlobalData
 	{
 		STATIC_GET(GlobalData, s_GlobalData);
 
-		static GlobalData* s_GlobalData;
+		static bool create_asset_file(const String& directory, const String& asset_file_name, const String& asset_file_type,
+					const String& asset_name, const String& asset_source_name, const String& asset_source_type,
+					const String& author, u32 version, const String& description);
+
+
+
+
+
 		
 		static bool s_EditorDebugRenderAll;
 		static bool s_EditorDebugRenderSelected;

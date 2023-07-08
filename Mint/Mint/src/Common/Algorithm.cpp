@@ -99,6 +99,10 @@ namespace mint::algorithm
 		return string.find(substring);
 	}
 
+	bool string_does_substr_exist(const String& string, const String& substring)
+	{
+		return string.find(substring) != std::string::npos;
+	}
 
 	mint::u64 string_get_length(const String& string)
 	{

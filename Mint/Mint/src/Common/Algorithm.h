@@ -72,6 +72,8 @@ namespace mint::algorithm
 
 	u64 string_find_substr(const String& string, const String& substring);
 
+	bool string_does_substr_exist(const String& string, const String& substring);
+
 	f32 radians_to_degree(f32 radians);
 	f32 degree_to_radians(f32 degrees);
 

@@ -118,7 +118,7 @@ namespace mint
 	}
 
 
-	bool CFilesystem::create_file(CPath directory_path, String& file_name, String& file_extension, bool add_dot_before_extension)
+	bool CFilesystem::create_file(CPath directory_path, const String& file_name, const String& file_extension, bool add_dot_before_extension)
 	{
 		if(directory_path.does_exist())
 		{
@@ -176,11 +176,9 @@ namespace mint
 		{
 			CPath searched(query_directory);
 
-			searched.append(file_stem);
-			searched.append(file_extension);
+			searched.append(file_stem + file_extension);
 
-
-			for (auto& entry : std::filesystem::directory_iterator{ searched.as_path() })
+			for (auto& entry : std::filesystem::directory_iterator{ query_directory.as_path() })
 			{
 				CPath path(entry);
 

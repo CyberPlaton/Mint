@@ -5,7 +5,6 @@
 
 namespace mint::editor
 {
-	mint::editor::GlobalData* GlobalData::s_GlobalData = nullptr;
 	const mint::String GlobalData::s_EditorIconsPath = "EditorRessources/Icons";
 	mint::String GlobalData::s_EditorDefaultSceneRessourcesPath = "assets";
 	const mint::u32 GlobalData::s_DefaultIconSize = 20;
@@ -52,6 +51,57 @@ namespace mint::editor
 	bool GlobalData::s_EditorDebugRenderDestinationRect = false;
 	bool GlobalData::s_EditorDebugRenderSelected = false;
 	bool GlobalData::s_EditorDebugRenderAll = false;
+
+
+	bool GlobalData::create_asset_file(const String& directory, const String& asset_file_name, const String& asset_file_type, const String& asset_name, const String& asset_source_name, const String& asset_source_type, const String& author, u32 version, const String& description)
+	{
+		CFilesystem fs(directory);
+
+		if (fs.get_current_directory().does_exist() && fs.get_current_directory().is_directory())
+		{
+			bool dot_required = !mint::algorithm::string_does_substr_exist(asset_file_type, ".");
+			bool file_present = true;
+
+			// Check whether have to create file first or can just open it.
+			if (!CFilesystem::find_file(directory, asset_file_name, String(dot_required == true ? "." + asset_file_type : asset_file_type)))
+			{
+				// Try creating not-existent file.
+				file_present = CFilesystem::create_file(directory, asset_file_name, asset_file_type, dot_required);
+			}
+
+
+			// Move "cursor" to newly created file in order to write to it.
+			if (file_present && fs.forward(dot_required == true ? String(asset_file_name + "." + asset_file_type) : asset_file_name + asset_file_type))
+			{
+				String data;
+				data += "asset:\n";
+				data += "\t" + String("name=\"") + asset_name + "\"\n";
+
+				data += "\t" + String("type=\"") + (dot_required == true ? String("." + asset_file_type) : asset_file_type) + "\"\n";
+
+
+				// Check whether source requires adding a dot.
+				dot_required = !mint::algorithm::string_does_substr_exist(asset_source_type, ".");
+
+				data += "\t" + String("source=\"") + asset_source_name + (dot_required == true ? String("." + asset_source_type) : asset_source_type) + "\"\n";
+
+
+				data += "\t" + String("author=\"") + author + "\"\n";
+
+				data += "\t" + String("version=") + std::to_string(version) + "\n";
+
+				data += "\t" + String("description=\"") + description + "\"\n";
+				data += "end\n";
+				data += "\0";
+
+
+				// Write text data to file.
+				return CFileReaderWriter::write_to_file_at_path(fs.get_current_directory().as_string(), (void*)data.c_str(), data.size());
+			}
+		}
+
+		return false;
+	}
 
 }
 #endif
