@@ -121,6 +121,15 @@ namespace mint
 
 		void print_engine_registered_importers_and_exporters() override final;
 
+
+		bool is_context_windows() override final;
+		bool is_context_linux() override final;
+
+		bool is_build_debug() override final;
+		bool is_build_release() override final;
+		bool is_build_distr() override final;
+
+
 	private:
 		bool m_running;
 

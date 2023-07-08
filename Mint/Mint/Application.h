@@ -137,6 +137,9 @@ int main(int argc, char* argv[]) \
 		editor.run(); \
 	} \
 	editor.terminate_editor(); \
+	if(editor.is_context_windows() && editor.is_build_debug()) \
+	{ \
+	} \
 	return 0; \
 } 
 #endif

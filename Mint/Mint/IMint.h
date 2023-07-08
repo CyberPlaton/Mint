@@ -84,6 +84,15 @@ namespace mint
 
 		virtual void print_engine_registered_importers_and_exporters() = 0;
 
+
+		virtual bool is_context_windows() = 0;
+		virtual bool is_context_linux() = 0;
+
+		virtual bool is_build_debug() = 0;
+		virtual bool is_build_release() = 0;
+		virtual bool is_build_distr() = 0;
+
+
 	protected:
 		static IMintEngine* s_engine;
 

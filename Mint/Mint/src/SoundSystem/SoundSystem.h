@@ -13,12 +13,13 @@ namespace mint::sound
 	public:
 		STATIC_GET(CSoundEngine, s_CSoundEngine);
 
-		void register_sound_system_implementation(ISoundSystem* system) { m_soundSystem = system; }
+		void register_sound_system_implementation(CSoundSystem* system);
+
 
 
 
 	private:
-		ISoundSystem* m_soundSystem = nullptr;
+		CSoundSystem* m_soundSystem = nullptr;
 
 	};
 }

@@ -5,7 +5,6 @@
 #include "BuiltinPlugins/FMODSoundSystem/FMODSoundSystemPlugin.h"
 
 
-
 /// @brief Required function to setup scenes used in the game.
 void register_scenes()
 {

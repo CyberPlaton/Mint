@@ -254,6 +254,52 @@ namespace mint
 		MINT_LOG_SEPARATOR();
 	}
 
+	bool CMintEngine::is_context_windows()
+	{
+#if MINT_PLATFORM_WINDOWS
+		return true;
+#endif
+
+		return false;
+	}
+
+	bool CMintEngine::is_context_linux()
+	{
+#if MINT_PLATFORM_LINUX
+		return true;
+#endif
+
+		return false;
+	}
+
+	bool CMintEngine::is_build_debug()
+	{
+#if MINT_DEBUG
+		return true;
+#endif
+
+		return false;
+	}
+
+	
+	bool CMintEngine::is_build_release()
+	{
+#if MINT_RELEASE
+		return true;
+#endif
+
+		return false;
+	}
+
+	bool CMintEngine::is_build_distr()
+	{
+#if MINT_DISTR
+		return true;
+#endif
+
+		return false;
+	}
+
 	bool CMintEngine::_prepare_for_init()
 	{
 		IMintEngine::initialize_cuca_critical_sections();
