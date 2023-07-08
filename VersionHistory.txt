@@ -80,6 +80,9 @@ Runtime Version History:
 
 Editor Version History:
 
+2023.07.04:
+	o UI Notifications added.
+
 2023.07.03:
 	o Project Asset panel updated with new UI create file/folder and delete folder dialogues.
 
