@@ -64,7 +64,7 @@ namespace mint
 
 		static ImU32 get_imgui_color(const fx::CColor& color);
 
-		static void create_notification(const String& label, const String& message, NotificationType type, const Vec2& size = { 250.0f, 150.0f });
+		static void create_notification(const String& label, const String& message, NotificationType type, const Vec2& size = { 400.0f, 100.0f });
 
 		static void create_notification(const String& label, const String& message, NotificationType type, u32 lifetime_seconds, const Vec2& size);
 

@@ -95,9 +95,6 @@ namespace mint
 
 				label += " " + notify.m_label;
 
-				label += String(TextFormat(" %.3f", notify.m_lifetime));
-
-
 				// Set window position and style data.
 				ImGui::SetNextWindowPos({ notify.m_position.x, notify.m_position.y - height_modifier }, ImGuiCond_Always);
 				ImGui::SetNextWindowSize({ notify.m_size.x, notify.m_size.y }, ImGuiCond_Always);
@@ -372,11 +369,11 @@ namespace mint
 				// Try creating the file.
 				if (CFilesystem::create_file(directory, file_name, extension, false))
 				{
-					MINT_LOG_INFO("[{:.4f}][CUI::create_file_dialog] Success creating file \"{}\" at \"{}\"!", MINT_APP_TIME, String(file_name + extension), directory);
+					CUI::create_notification("Success", TextFormat("Success creating file \"%s\" at \"%s\"!", String(file_name + extension).c_str(), directory.c_str()), NotificationType_Success);
 				}
 				else
 				{
-					MINT_LOG_ERROR("[{:.4f}][CUI::create_file_dialog] Failed creating file \"{}\" at \"{}\"!", MINT_APP_TIME, String(file_name + extension), directory);
+					CUI::create_notification("Failure", TextFormat("Failed creating file \"%s\" at \"%s\"!", String(file_name + extension).c_str(), directory.c_str()), NotificationType_Error);
 				}
 
 				// Reset the internal state.
@@ -422,11 +419,11 @@ namespace mint
 				// Try creating folder with specified name at specified location.
 				if (CFilesystem::create_directory(CFilesystem::construct_from(directory, folder_name)))
 				{
-					MINT_LOG_INFO("[{:.4f}][CUI::create_folder_dialog] Success creating folder \"{}\" at \"{}\"!", MINT_APP_TIME, folder_name, directory);
+					CUI::create_notification("Success", TextFormat("Success creating folder \"%s\" at \"%s\"!", folder_name.c_str(), directory.c_str()), NotificationType_Success);
 				}
 				else
 				{
-					MINT_LOG_ERROR("[{:.4f}][CUI::create_folder_dialog] Failed creating folder \"{}\" at \"{}\"!", MINT_APP_TIME, folder_name, directory);
+					CUI::create_notification("Failure", TextFormat("Failed creating folder \"%s\" at \"%s\"!", folder_name.c_str(), directory.c_str()), NotificationType_Error);
 				}
 
 				// Reset the internal state.
@@ -458,11 +455,11 @@ namespace mint
 		{
 			if (CFilesystem::delete_directory_or_file(directory))
 			{
-				MINT_LOG_INFO("[{:.4f}][CUI::delete_folder_dialog] Success deleting folder \"{}\"!", MINT_APP_TIME, directory);
+				CUI::create_notification("Success", TextFormat("Success deleting folder \"%s\"!", directory.c_str()), NotificationType_Success);
 			}
 			else
 			{
-				MINT_LOG_ERROR("[{:.4f}][CUI::delete_folder_dialog] Failed deleting folder \"{}\"!", MINT_APP_TIME, directory);
+				CUI::create_notification("Failure", TextFormat("Failed deleting folder \"%s\"!", directory.c_str()), NotificationType_Error);
 			}
 
 			// Reset the internal state.
