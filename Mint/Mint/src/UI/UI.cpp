@@ -3,11 +3,23 @@
 
 namespace mint
 {
-
-	CUI* CUI::s_CUI = nullptr;
 	f32 CUI::s_editDragFieldWidth = 150.0f;
 	f32 CUI::s_editScalarFieldWidth = 100.0f;
-	
+	mint::Vector< mint::SNotification > CUI::s_notifications;
+	mint::Vec2 CUI::s_windowSize = { 0.0f, 0.0f };
+
+	mint::u32 SNotification::s_SuccessLifetime = 12;
+	mint::u32 SNotification::s_InfoLifetime = 12;
+	mint::u32 SNotification::s_WarnLifetime = 16;
+	mint::u32 SNotification::s_ErrorLifetime = 20;
+	mint::u32 SNotification::s_CriticalLifetime = 25;
+
+	ImVec4 SNotification::s_SuccessColor = { 0.25f, 1.0f, 0.49f, 1.0f };
+	ImVec4 SNotification::s_InfoColor = { 0.25f, 0.76f, 1.0f, 1.0f };
+	ImVec4 SNotification::s_WarnColor = { 1.0f, 0.68f, 0.26f, 1.0f };
+	ImVec4 SNotification::s_ErrorColor = { 1.0f, 0.31f, 0.26f, 1.0f };
+	ImVec4 SNotification::s_CriticalColor = { 0.96f, 0.07f, 0.0f, 1.0f };
+
 
 	bool CUI::InputTextEx(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
 	{
@@ -19,6 +31,145 @@ namespace mint
 		cb_user_data.ChainCallback = callback;
 		cb_user_data.ChainCallbackUserData = user_data;
 		return ImGui::InputText(label, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
+	}
+
+
+	void CUI::show_notifications()
+	{
+		if (!s_notifications.empty())
+		{
+			Vector< u32 > to_be_removed;
+			u32 max_index = 0;
+			f32 height_modifier = 0.0f;
+			u32 index = 0;
+			String window_name;
+
+
+			// Compute max number of notifications we can display on the window.
+			max_index = glm::min(u32(s_windowSize.y / s_notifications[0].m_size.y), (u32)s_notifications.size());
+
+			for (auto i = 0; i < max_index; i++)
+			{
+				auto& notify = s_notifications[i];
+
+				window_name = "Notification_Window_Name_" + std::to_string(i);
+
+				// Construct the label for the Notification.
+				String label;
+				ImVec4 color;
+				switch (notify.m_type)
+				{
+				case NotificationType_Warn:
+				{
+					label = ICON_FA_CIRCLE_INFO;
+					color = SNotification::s_WarnColor;
+					break;
+				}
+				case NotificationType_Error:
+				{
+					label = ICON_FA_CIRCLE_EXCLAMATION;
+					color = SNotification::s_ErrorColor;
+					break;
+				}
+				case NotificationType_Critical:
+				{
+					label = ICON_FA_TRIANGLE_EXCLAMATION;
+					color = SNotification::s_CriticalColor;
+					break;
+				}
+				case NotificationType_Success:
+				{
+					label = ICON_FA_CIRCLE_CHECK;
+					color = SNotification::s_SuccessColor;
+					break;
+				}
+				default:
+				case NotificationType_None:
+				case NotificationType_Info:
+				{
+					label = ICON_FA_CIRCLE_INFO;
+					color = SNotification::s_InfoColor;
+					break;
+				}
+				}
+
+				label += " " + notify.m_label;
+
+				label += String(TextFormat(" %.3f", notify.m_lifetime));
+
+
+				// Set window position and style data.
+				ImGui::SetNextWindowPos({ notify.m_position.x, notify.m_position.y - height_modifier }, ImGuiCond_Always);
+				ImGui::SetNextWindowSize({ notify.m_size.x, notify.m_size.y }, ImGuiCond_Always);
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12);
+
+				// Begin notification logic.
+				bool clicked = false;
+
+				
+				if (ImGui::Begin(window_name.c_str(), (bool*)nullptr, ImGuiWindowFlags_NoDecoration))
+				{
+					ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
+
+					if (ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+					{
+						clicked = true;
+					}
+
+
+					// Draw the Notification label.
+					ImGui::PushStyleColor(ImGuiCol_Text, color);
+
+					ImGui::Text(label.c_str());
+
+					ImGui::PopStyleColor();
+
+
+					ImGui::Separator();
+
+
+					// Set wrapping for Text message, and draw it.
+					ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + notify.m_size.x - 10.0f);
+
+					ImGui::Text(notify.m_message.c_str());
+				
+					ImGui::PopTextWrapPos();
+				}
+
+				ImGui::End();
+
+				ImGui::PopStyleVar();
+
+				
+				if (clicked)
+				{
+					// Notification acknowledged. Remove.
+					to_be_removed.push_back(i); clicked = false;
+				}
+				else if(i == 0)
+				{
+					// Decrease lifetime in order.
+					notify.m_lifetime -= notify.m_lifetimeFalloff;
+
+					if (notify.m_lifetime <= 0.0f)
+					{
+						to_be_removed.push_back(i);
+					}
+				}
+				
+
+				height_modifier += notify.m_size.y + 2.5f;
+			}
+
+
+			// Remove notifications we dont need anymore.
+			for (auto index : to_be_removed)
+			{
+				mint::algorithm::vector_erase_at(s_notifications, index);
+			}
+
+		}
+
 	}
 
 
@@ -91,6 +242,11 @@ namespace mint
 	}
 
 
+	void CUI::set_window_dimension(const Vec2& size)
+	{
+		s_windowSize = size;
+	}
+
 	void CUI::begin()
 	{
 		rlImGuiBegin();
@@ -99,6 +255,8 @@ namespace mint
 
 	void CUI::end()
 	{
+		show_notifications();
+
 		rlImGuiEnd();
 	}
 
@@ -113,6 +271,49 @@ namespace mint
 	{
 		auto vec = color.to_normalized_color_vec4();
 		return ImGui::ColorConvertFloat4ToU32({ vec.r, vec.g, vec.b, vec.a });
+	}
+
+	
+	void CUI::create_notification(const String& label, const String& message, NotificationType type, u32 lifetime_seconds, const Vec2& size)
+	{
+		s_notifications.emplace_back(SNotification{ type, label, message, { s_windowSize.x - size.x - 10.0f, s_windowSize.y - size.y - 10.0f }, size, 1.0f / (SCAST(f32, lifetime_seconds) * 100.0f), 1.0f });
+	}
+
+	void CUI::create_notification(const String& label, const String& message, NotificationType type, const Vec2& size /*= { 250.0f, 150.0f }*/)
+	{
+		u32 seconds = 0;
+		switch (type)
+		{
+		case NotificationType_Warn:
+		{
+			seconds = SNotification::s_WarnLifetime;
+			break;
+		}
+		case NotificationType_Error:
+		{
+			seconds = SNotification::s_ErrorLifetime;
+			break;
+		}
+		case NotificationType_Critical:
+		{
+			seconds = SNotification::s_CriticalLifetime;
+			break;
+		}
+		case NotificationType_Success:
+		{
+			seconds = SNotification::s_SuccessLifetime;
+			break;
+		}
+		default:
+		case NotificationType_None:
+		case NotificationType_Info:
+		{
+			seconds = SNotification::s_InfoLifetime;
+			break;
+		}
+		}
+
+		create_notification(label, message, type, seconds, size);
 	}
 
 	void CUI::create_file_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size,
@@ -949,6 +1150,5 @@ namespace mint
 		}
 		return 0;
 	}
-
 
 }

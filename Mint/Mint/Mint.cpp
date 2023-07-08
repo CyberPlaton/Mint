@@ -23,7 +23,6 @@ namespace mint
 		CGlobalGraphicsSettings::Get().print_graphics_context();
 
 
-
 		if(!_init()) return false;
 
 		if(!_post_init(initial_scene)) return false;
@@ -380,6 +379,12 @@ namespace mint
 
 		// UI.
 		result &= CUI::Get().initialize();
+
+		if (result)
+		{
+			const auto& window = get_main_window_const();
+			CUI::Get().set_window_dimension({ window.get_w(), window.get_h() });
+		}
 
 		// Embedded shaders.
 		result &= fx::CEmbeddedShaders::Get().initialize();

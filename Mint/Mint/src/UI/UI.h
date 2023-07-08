@@ -4,9 +4,46 @@
 #include "Common/UICommon.h"
 #include "Utility/FileSystem/Filesystem.h"
 #include "Utility/Logging/Logging.h"
+#include "Common/Algorithm.h"
+
 
 namespace mint
 {
+	enum NotificationType
+	{
+		NotificationType_None = 0,
+		NotificationType_Success,
+		NotificationType_Info,
+		NotificationType_Warn,
+		NotificationType_Error,
+		NotificationType_Critical,
+	};
+
+
+	struct SNotification
+	{
+		static u32 s_SuccessLifetime;
+		static u32 s_InfoLifetime;
+		static u32 s_WarnLifetime;
+		static u32 s_ErrorLifetime;
+		static u32 s_CriticalLifetime;
+
+		static ImVec4 s_SuccessColor;
+		static ImVec4 s_InfoColor;
+		static ImVec4 s_WarnColor;
+		static ImVec4 s_ErrorColor;
+		static ImVec4 s_CriticalColor;
+
+
+		NotificationType m_type;
+		String m_label;
+		String m_message;
+		Vec2 m_position;
+		Vec2 m_size;
+		f32 m_lifetimeFalloff;
+		f32 m_lifetime;
+	};
+
 
 	class CUI
 	{
@@ -17,6 +54,8 @@ namespace mint
 
 		void terminate();
 
+		void set_window_dimension(const Vec2& size);
+
 		void begin();
 
 		void end();
@@ -24,6 +63,10 @@ namespace mint
 		static ImU32 get_imgui_color(f32 r, f32 g, f32 b, f32 a);
 
 		static ImU32 get_imgui_color(const fx::CColor& color);
+
+		static void create_notification(const String& label, const String& message, NotificationType type, const Vec2& size = { 250.0f, 150.0f });
+
+		static void create_notification(const String& label, const String& message, NotificationType type, u32 lifetime_seconds, const Vec2& size);
 
 		static void create_file_dialog(const String& field_text, const String& field_desc, bool* is_open, const Vec2& position, const Vec2& size, const char* allowed_file_types[], u32 file_type_count, const String& directory, const String& ok_text = "OK", const String& cancel_text = "Cancel", ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
@@ -79,14 +122,18 @@ namespace mint
 
 
 	private:
-		static CUI* s_CUI;
-
 		static f32 s_editDragFieldWidth;
 		static f32 s_editScalarFieldWidth;
 
+		static Vector< SNotification > s_notifications;
+		static Vec2 s_windowSize;
+
 
 	private:
+		/// @brief Reference  
 		static bool InputTextEx(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data);
+
+		static void show_notifications();
 	};
 
 
