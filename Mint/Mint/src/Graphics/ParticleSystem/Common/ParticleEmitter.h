@@ -7,7 +7,6 @@
 #include "Utility/STL/Common/ObjectAllocator.h"
 #include "Graphics/Shaders/MaterialManager.h"
 #include "Graphics/Shaders/Materials/MaterialDefinition.h"
-#include "Common/easing.h"
 #include "Common/Random.h"
 #include "Utility/Profiling/FunctionProfiler.h"
 
@@ -15,14 +14,6 @@
 namespace mint::fx
 {
 	
-	enum ParticleEmitterMode
-	{
-		ParticleEmitterMode_None = 0,
-		ParticleEmitterMode_Gravity,
-		ParticleEmitterMode_Free,
-	};
-
-
 	class CParticleEmitter
 	{
 	public:
@@ -86,23 +77,11 @@ namespace mint::fx
 
 		std::array< SParticle, MINTFX_PARTICLE_COUNT_PER_EMITTER_MAX > m_particles;
 
-		ParticleEmitterMode m_mode = ParticleEmitterMode_None;
-
-		Vec2 m_particleGravity = { 0.0f, 9.1f };
-
 		SParticleDefinition m_particleDefinition;
 
 		u32 m_currentParticleIndex;
 
-		f32 m_particlesEmissionRate = 0.0f;
-
 		f32 m_dt = 0.0f;
-
-		bx::Easing::Enum m_tangentialVelocityEase = bx::Easing::SmoothStep;
-		bx::Easing::Enum m_angularVelocityEase = bx::Easing::SmoothStep;
-		bx::Easing::Enum m_scaleEase = bx::Easing::SmoothStep;
-		bx::Easing::Enum m_rotationEase = bx::Easing::SmoothStep;
-		bx::Easing::Enum m_colorEase = bx::Easing::SmoothStep;
 
 		
 	private:

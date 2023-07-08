@@ -32,6 +32,9 @@ namespace mint::editor
 		show_members();
 
 		ImGui::End();
+
+
+		if (m_exportingEmitter) show_dialog_export_emitter();
 	}
 
 
@@ -238,7 +241,17 @@ namespace mint::editor
 			}
 
 			ImGui::EndTabBar();
+		
+			ImGui::Separator();
+
+			if (ImGui::SmallButton("Export"))
+			{
+				m_exportingEmitter = true;
+				m_emitter.copy_from(emitter->get_particle_definition());
+			}
+
 		}
+
 	}
 
 
@@ -246,6 +259,133 @@ namespace mint::editor
 	{
 		set_ready(true);
 		set_active(true);
+	}
+
+	void CParticleEmitterComponentEditor::show_dialog_export_emitter()
+	{
+		static String path;
+		static String name;
+
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+		const auto& window = MINT_ENGINE()->get_main_window_const();
+
+
+		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
+		ImGui::SetNextWindowPos({ window.get_w() / 2.0f - w / 2.0f,  window.get_h() / 2.0f - h / 2.0f }, ImGuiCond_Once);
+
+
+		ImGui::Begin(ICON_FA_CODE " Particle Emitter Export", &m_exportingEmitter);
+
+		CUI::edit_field_string(path, "Path", "", 10000, 20000);
+		CUI::edit_field_string(name, "Filename", "", 10001, 20001);
+
+		if (ImGui::SmallButton(ICON_FA_CHECK))
+		{
+			auto scene_path = MINT_ACTIVE_SCENE()->get_scene_full_path();
+			
+			CFilesystem fs(scene_path);
+
+			if (fs.forward("assets") && fs.forward(path))
+			{
+				if (CFilesystem::create_file(fs.get_current_directory().as_string(), name, String("emit")))
+				{
+					CFilesystem assetfs(fs);
+
+					fs.forward(name + ".emit");
+
+					maml::CDocument document;
+
+					auto emitter = document.create_node("emitter");
+
+					CSerializer::export_string(m_emitter.m_material, "material", emitter);
+					CSerializer::export_uint(m_emitter.m_mode, "mode", emitter);
+					CSerializer::export_vec2(m_emitter.m_gravity, "gravity", emitter);
+					CSerializer::export_float(m_emitter.m_emissionRate, "emission_rate", emitter);
+
+					CSerializer::export_float(m_emitter.m_tangentialVelocity, "tangential_velocity", emitter);
+					CSerializer::export_vec2(m_emitter.m_tangentialVelocityFalloff, "tangential_velocity_falloff", emitter);
+					CSerializer::export_vec2(m_emitter.m_tangentialVelocityOffset, "tangential_velocity_offset", emitter);
+
+					CSerializer::export_float(m_emitter.m_angularVelocity, "angular_velocity", emitter);
+					CSerializer::export_vec2(m_emitter.m_angularVelocityFalloff, "angular_velocity_falloff", emitter);
+					CSerializer::export_vec2(m_emitter.m_angularVelocityOffset, "angular_velocity_offset", emitter);
+
+					CSerializer::export_vec2(m_emitter.m_positionStart, "position_start", emitter);
+					CSerializer::export_vec2(m_emitter.m_positionStartOffset, "position_start_offset", emitter);
+
+					CSerializer::export_vec2(m_emitter.m_scaleStart, "scale_start", emitter);
+					CSerializer::export_vec2(m_emitter.m_scaleEnd, "scale_end", emitter);
+					CSerializer::export_vec2(m_emitter.m_scaleOffset, "scale_offset", emitter);
+
+					CSerializer::export_float(m_emitter.m_rotation, "rotation", emitter);
+					CSerializer::export_vec2(m_emitter.m_rotationOffset, "rotation_offset", emitter);
+
+					Vec4 color = m_emitter.m_colorStart.as_vec4();
+					CSerializer::export_vec4(color, "color_start", emitter);
+
+					color = m_emitter.m_colorHalf.as_vec4();
+					CSerializer::export_vec4(color, "color_half", emitter);
+
+					color = m_emitter.m_colorEnd.as_vec4();
+					CSerializer::export_vec4(color, "color_end", emitter);
+
+					CSerializer::export_vec2(m_emitter.m_colorOffset, "color_offset", emitter);
+
+					CSerializer::export_float(m_emitter.m_lifespan, "lifespan", emitter);
+					CSerializer::export_vec2(m_emitter.m_lifespanOffset, "lifespan_offset", emitter);
+
+					CSerializer::export_uint((u64)m_emitter.m_tangentialVelocityEase, "tangential_velocity_ease", emitter);
+					CSerializer::export_uint((u64)m_emitter.m_angularVelocityEase, "angular_velocity_ease", emitter);
+					CSerializer::export_uint((u64)m_emitter.m_scaleEase, "scale_ease", emitter);
+					CSerializer::export_uint((u64)m_emitter.m_rotationEase, "rotation_ease", emitter);
+					CSerializer::export_uint((u64)m_emitter.m_colorEase, "color_ease", emitter);
+
+
+					if (document.save_document(fs.get_current_directory().as_string()))
+					{
+						// Create emitter asset file.
+						if (CFilesystem::create_file(assetfs.get_current_directory(), name, String("emitter")) && 
+							assetfs.forward(name + ".emitter"))
+						{
+							String data;
+							data += "asset:\n";
+							data += "\t" + String("name=\"") + name + "\"\n";
+							data += "\t" + String("type=\"") + ".emitter" + "\"\n";
+							data += "\t" + String("source=\"") + name + ".emit" + "\"\n";
+							data += "\t" + String("author=\"") + "\"\n";
+							data += "\t" + String("version=") + std::to_string(1) + "\n";
+							data += "\t" + String("description=\"") + "\"\n";
+							data += "end\n";
+							data += "\0";
+
+							CFileReaderWriter::write_to_file_at_path(assetfs.get_current_directory().as_string(), (void*)data.c_str(), data.size());
+
+							CUI::create_notification("Success", TextFormat("Success creating particle emitter \"%s\" at \"%s\"!", name.c_str(), assetfs.get_current_directory().as_string().c_str()), NotificationType_Success);
+
+							path.clear();
+							name.clear();
+							m_exportingEmitter = false;
+						}
+						else
+						{
+							CUI::create_notification("Failure", TextFormat("Failed creating particle emitter \"%s\" at \"%s\"!", name.c_str(), assetfs.get_current_directory().as_string().c_str()), NotificationType_Error);
+						}
+					}
+				}
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_XMARK))
+		{
+			path.clear();
+			name.clear();
+			m_exportingEmitter = false;
+		}
+
+		ImGui::End();
 	}
 
 

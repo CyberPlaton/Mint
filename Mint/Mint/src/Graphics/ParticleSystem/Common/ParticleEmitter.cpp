@@ -43,14 +43,13 @@ namespace mint::fx
 
 
 		// Material.
-		String material;
-		CSerializer::import_string(material, "material", node);
+		CSerializer::import_string(m_particleDefinition.m_material, "material", node);
 
 		fx::SMaterialDefinition material_definition;
 
-		if (!mint::fx::CMaterialManager::Get().set_material_for_entity(material, entity))
+		if (!mint::fx::CMaterialManager::Get().set_material_for_entity(m_particleDefinition.m_material, entity))
 		{
-			MINT_LOG_ERROR("[{:.4f}][CParticleEmitter::load_particle_emitter_for_entity_from_file] Failed importing emitter at \"{}\", as the material \"{}\" could not be located!", MINT_APP_TIME, particle_emitter_file_path, material);
+			MINT_LOG_ERROR("[{:.4f}][CParticleEmitter::load_particle_emitter_for_entity_from_file] Failed importing emitter at \"{}\", as the material \"{}\" could not be located!", MINT_APP_TIME, particle_emitter_file_path, m_particleDefinition.m_material);
 			return false;
 		}
 		
@@ -58,14 +57,14 @@ namespace mint::fx
 		CSerializer::import_uint(&mode, "mode", node, 0);
 
 		// Import gravity value if gravity turned on, otherwise ignore.
-		m_mode = (ParticleEmitterMode)mode;
-		if (m_mode == ParticleEmitterMode_Gravity)
+		m_particleDefinition.m_mode = (ParticleEmitterMode)mode;
+		if (m_particleDefinition.m_mode == ParticleEmitterMode_Gravity)
 		{
-			CSerializer::import_vec2(m_particleGravity, "gravity", node);
+			CSerializer::import_vec2(m_particleDefinition.m_gravity, "gravity", node);
 		}
 
 		// Emission rate.
-		CSerializer::import_float(&m_particlesEmissionRate, "emission_rate", node);
+		CSerializer::import_float(&m_particleDefinition.m_emissionRate, "emission_rate", node);
 
 		// Tangential velocity.
 		CSerializer::import_float(&m_particleDefinition.m_tangentialVelocity, "tangential_velocity", node);
@@ -113,19 +112,19 @@ namespace mint::fx
 		// Easing.
 		u64 easing = 0;
 		CSerializer::import_uint(&easing, "tangential_velocity_ease", node, 0);
-		m_tangentialVelocityEase = (bx::Easing::Enum)easing;
+		m_particleDefinition.m_tangentialVelocityEase = (bx::Easing::Enum)easing;
 
 		CSerializer::import_uint(&easing, "angular_velocity_ease", node, 0);
-		m_angularVelocityEase = (bx::Easing::Enum)easing;
+		m_particleDefinition.m_angularVelocityEase = (bx::Easing::Enum)easing;
 
 		CSerializer::import_uint(&easing, "scale_ease", node, 0);
-		m_scaleEase = (bx::Easing::Enum)easing;
+		m_particleDefinition.m_scaleEase = (bx::Easing::Enum)easing;
 
 		CSerializer::import_uint(&easing, "rotation_ease", node, 0);
-		m_rotationEase = (bx::Easing::Enum)easing;
+		m_particleDefinition.m_rotationEase = (bx::Easing::Enum)easing;
 
 		CSerializer::import_uint(&easing, "color_ease", node, 0);
-		m_colorEase = (bx::Easing::Enum)easing;
+		m_particleDefinition.m_colorEase = (bx::Easing::Enum)easing;
 
 		return true;
 	}
@@ -206,17 +205,17 @@ namespace mint::fx
 				particle.m_life += dt * 1.0f / m_particleDefinition.m_lifespan;
 
 				// ... rotation...
-				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_rotationEase);
+				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_particleDefinition.m_rotationEase);
 
 				particle.m_rotation += m_particleDefinition.m_rotation * dt * ease;
 
 				// Interpolate position...
 				
 				// Update tangential and angular velocity.
-				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_tangentialVelocityEase);
+				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_particleDefinition.m_tangentialVelocityEase);
 				particle.m_tangentialVelocity -= glm::lerp(m_particleDefinition.m_tangentialVelocityFalloff.x, m_particleDefinition.m_tangentialVelocityFalloff.y, ease) * dt;
 
-				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_angularVelocityEase);
+				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_particleDefinition.m_angularVelocityEase);
 				particle.m_angularVelocity -= glm::lerp(m_particleDefinition.m_angularVelocityFalloff.x, m_particleDefinition.m_angularVelocityFalloff.y, ease) * dt;
 				
 
@@ -227,11 +226,11 @@ namespace mint::fx
 				// Compute the change in looking direction based on current one and set it as current and 
 				// add gravitational power to the looking direction.
 				Vec2 tmp;
-				switch (m_mode)
+				switch (m_particleDefinition.m_mode)
 				{
 				case ParticleEmitterMode_Gravity:
 				{
-					tmp = (tangential + angular + m_particleGravity) * dt;
+					tmp = (tangential + angular + m_particleDefinition.m_gravity) * dt;
 					break;
 				}
 				default:
@@ -249,12 +248,12 @@ namespace mint::fx
 				particle.m_position += tmp;
 
 				// ... scale...
-				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_scaleEase);
+				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_particleDefinition.m_scaleEase);
 
 				particle.m_scale = glm::lerp(m_particleDefinition.m_scaleStart, m_particleDefinition.m_scaleEnd, ease);
 
 				// ... color...
-				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_colorEase);
+				ease = get_current_easing_t_between_zero_and_one(particle.m_life, m_particleDefinition.m_colorEase);
 
 				if (mint::algorithm::is_value_in_between(particle.m_life, 0.0f, 0.5f))
 				{
@@ -279,7 +278,7 @@ namespace mint::fx
 			}
 		}
 
-		if (m_dt > 1.0f / m_particlesEmissionRate)
+		if (m_dt > 1.0f / m_particleDefinition.m_emissionRate)
 		{
 			emit(1);
 
@@ -299,32 +298,32 @@ namespace mint::fx
 
 	bx::Easing::Enum CParticleEmitter::get_scale_ease()
 	{
-		return m_scaleEase;
+		return m_particleDefinition.m_scaleEase;
 	}
 
 	bx::Easing::Enum CParticleEmitter::get_rotation_ease()
 	{
-		return m_rotationEase;
+		return m_particleDefinition.m_rotationEase;
 	}
 
 	bx::Easing::Enum CParticleEmitter::get_color_ease()
 	{
-		return m_colorEase;
+		return m_particleDefinition.m_colorEase;
 	}
 
 	void CParticleEmitter::set_scale_ease(bx::Easing::Enum value)
 	{
-		m_scaleEase = value;
+		m_particleDefinition.m_scaleEase = value;
 	}
 
 	void CParticleEmitter::set_rotation_ease(bx::Easing::Enum value)
 	{
-		m_rotationEase = value;
+		m_particleDefinition.m_rotationEase = value;
 	}
 
 	void CParticleEmitter::set_color_ease(bx::Easing::Enum value)
 	{
-		m_colorEase = value;
+		m_particleDefinition.m_colorEase = value;
 	}
 
 	mint::fx::SParticleDefinition& CParticleEmitter::get_particle_definition()
@@ -334,52 +333,52 @@ namespace mint::fx
 
 	mint::f32 CParticleEmitter::get_particles_emission_rate()
 	{
-		return m_particlesEmissionRate;
+		return m_particleDefinition.m_emissionRate;
 	}
 
 	void CParticleEmitter::set_particles_emission_rate(f32 value)
 	{
-		m_particlesEmissionRate = value;
+		m_particleDefinition.m_emissionRate = value;
 	}
 
 	bx::Easing::Enum CParticleEmitter::get_tangential_velocity_ease()
 	{
-		return m_tangentialVelocityEase;
+		return m_particleDefinition.m_tangentialVelocityEase;
 	}
 
 	bx::Easing::Enum CParticleEmitter::get_angular_velocity_ease()
 	{
-		return m_angularVelocityEase;
+		return m_particleDefinition.m_angularVelocityEase;
 	}
 
 	void CParticleEmitter::set_tangential_velocity_ease(bx::Easing::Enum value)
 	{
-		m_tangentialVelocityEase = value;
+		m_particleDefinition.m_tangentialVelocityEase = value;
 	}
 
 	void CParticleEmitter::set_angular_velocity_ease(bx::Easing::Enum value)
 	{
-		m_angularVelocityEase = value;
+		m_particleDefinition.m_angularVelocityEase = value;
 	}
 
 	mint::Vec2 CParticleEmitter::get_emitter_gravity() const
 	{
-		return m_particleGravity;
+		return m_particleDefinition.m_gravity;
 	}
 
 	void CParticleEmitter::set_emitter_gravity(const Vec2& vec)
 	{
-		m_particleGravity = vec;
+		m_particleDefinition.m_gravity = vec;
 	}
 
 	mint::fx::ParticleEmitterMode CParticleEmitter::get_emitter_mode() const
 	{
-		return m_mode;
+		return m_particleDefinition.m_mode;
 	}
 
 	void CParticleEmitter::set_emitter_mode(ParticleEmitterMode mode)
 	{
-		m_mode = mode;
+		m_particleDefinition.m_mode = mode;
 	}
 
 	mint::Vec2 CParticleEmitter::get_emitter_position() const

@@ -4,15 +4,26 @@
 
 #include "Common/Common.h"
 #include "Graphics/Common/Color.h"
+#include "Common/easing.h"
 
 
 namespace mint::fx
 {
 
+	enum ParticleEmitterMode
+	{
+		ParticleEmitterMode_None = 0,
+		ParticleEmitterMode_Gravity,
+		ParticleEmitterMode_Free,
+	};
+
+
 	struct SParticleDefinition
 	{
 		SParticleDefinition();
 		SParticleDefinition(const SParticleDefinition& rh);
+
+		void copy_from(const SParticleDefinition& rh);
 
 
 		f32 m_tangentialVelocity = 0.0f;
@@ -43,6 +54,19 @@ namespace mint::fx
 
 		f32 m_lifespan = 0.0f;
 		Vec2 m_lifespanOffset = { 0.0f, 0.0f };
+
+
+		String m_material;
+		f32 m_emissionRate = 0.0f;
+
+		ParticleEmitterMode m_mode = ParticleEmitterMode_None;
+		Vec2 m_gravity = { 0.0f, 0.0f };
+
+		bx::Easing::Enum m_tangentialVelocityEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_angularVelocityEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_scaleEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_rotationEase = bx::Easing::SmoothStep;
+		bx::Easing::Enum m_colorEase = bx::Easing::SmoothStep;
 	};
 
 

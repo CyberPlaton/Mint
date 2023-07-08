@@ -557,6 +557,15 @@ namespace mint::editor
 		static String path;
 		static String name;
 
+		auto w = GlobalData::Get().s_DefaultEditorDialogWidth;
+		auto h = GlobalData::Get().s_DefaultEditorDialogHeight;
+		const auto& window = MINT_ENGINE()->get_main_window_const();
+
+
+		ImGui::SetNextWindowSize({ w, h }, ImGuiCond_Once);
+		ImGui::SetNextWindowPos({ window.get_w() / 2.0f - w / 2.0f,  window.get_h() / 2.0f - h / 2.0f }, ImGuiCond_Once);
+
+
 		ImGui::Begin(ICON_FA_CODE " Material Export", &m_exportingMaterial);
 
 		CUI::edit_field_string(path, "Path", "", 10000, 20000);
