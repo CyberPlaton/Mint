@@ -29,6 +29,10 @@
 
 		scenes_and_plugins_path = os.getcwd() .. "/Sandbox/Sandbox"
 		scenes_and_plugins = {
+			-- If using any Plugins we have to define their path here.
+			"src/BuiltinPlugins/FMODSoundSystem/Common",
+			"src/BuiltinPlugins/FMODSoundSystem",
+
 			"src/BuiltinPlugins",
 			"src/CustomPlugins",
 			"src/Scenes",
@@ -73,6 +77,7 @@
 			"%{prj.location}/common/include",
 			"%{prj.location}/common/include/spdlog",
 			"%{prj.location}/common/include/raylib",
+			"%{prj.location}/common/include/FMOD",
 		}
 		print("Include third party files...")
 

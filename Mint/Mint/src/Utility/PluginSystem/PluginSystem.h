@@ -3,7 +3,7 @@
 
 
 #include "Common/Common.h"
-
+#include "Utility/Logging/Logging.h"
 #include "Plugin.h"
 
 
@@ -24,6 +24,12 @@ namespace mint
 
 		void register_plugin(IPlugin* plugin);
 
+		template< class T >
+		T* get_plugin_as(const String& plugin_name);
+
+		void print_registered_plugins();
+
+		void print_active_and_failed_plugins();
 
 		void on_reset();
 
@@ -64,6 +70,20 @@ namespace mint
 
 		void _finalize_initialization();
 	};
+
+
+	template< class T >
+	T* mint::CPluginSystem::get_plugin_as(const String& plugin_name)
+	{
+		auto h = mint::algorithm::djb_hash(plugin_name);
+
+		for (auto plugin : m_activePlugins)
+		{
+			if (plugin->get_plugin_identifier() == h) return reinterpret_cast<T*>(plugin);
+		}
+
+		return nullptr;
+	}
 
 
 }

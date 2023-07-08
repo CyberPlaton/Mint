@@ -106,7 +106,8 @@
 			"WorldQuery/Common",
 			"WorldQuery/Database",
 			"WorldQuery",
-			
+			"SoundSystem/Common",
+			"SoundSystem",
 
 			
 			"Editor/EditorLayer/Common",

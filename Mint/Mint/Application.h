@@ -116,6 +116,7 @@ namespace mint
 int main(int argc, char* argv[]) \
 { \
 	register_scenes(); \
+	register_plugins(); \
 	mint::CApplication app; \
 	if (app.initialize_application("Manifest.manifest")) \
 	{ \
@@ -129,6 +130,7 @@ int main(int argc, char* argv[]) \
 int main(int argc, char* argv[]) \
 { \
 	register_scenes(); \
+	register_plugins(); \
 	mint::CEditor editor; \
 	if (editor.initialize_editor("Manifest.manifest")) \
 	{ \

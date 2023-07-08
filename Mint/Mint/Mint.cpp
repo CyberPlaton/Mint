@@ -27,7 +27,19 @@ namespace mint
 
 		if(!_post_init(initial_scene)) return false;
 
+		// Finalize Plugin initialization.
+		CPluginSystem::Get().finalize_initialize();
+
+		// Show plugins that were initialized and are now active and those that failed initialization.
+		CPluginSystem::Get().print_active_and_failed_plugins();
+
+
+		// Register sound system after it was initialized.
+		sound::CSoundEngine::Get().register_sound_system_implementation(CPluginSystem::Get().get_plugin_as< sound::CSoundSystem >("CSoundSystem"));
+
+
 		CSceneManager::Get().set_initial_scene(initial_scene);
+
 
 		// Create the anti-aliasing Post-Processing renderer.
 		fx::CRenderingPassStack::Get().try_push_rendering_pass(new fx::CFXAA());
@@ -304,6 +316,12 @@ namespace mint
 		CGlobalOSSettings::Get().print_os_context();
 		CGlobalCPUSettings::Get().print_cpu_context();
 
+		// Initialize Plugin system and show registered plugins.
+		result &= CPluginSystem::Get().initialize();
+
+		CPluginSystem::Get().print_registered_plugins();
+
+
 		return result;
 	}
 
@@ -494,8 +512,7 @@ namespace mint
 			CSAS::Get().run_sas_thread();
 		}
 
-		CPluginSystem::Get().finalize_initialize();
-
+		CPluginSystem::Get().on_post_initialization();
 
 		return result;
 	}

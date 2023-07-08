@@ -37,6 +37,50 @@ namespace mint
 	}
 
 
+	void CPluginSystem::print_registered_plugins()
+	{
+		MINT_LOG_INFO("Dumping registered plugins information:");
+
+		MINT_LOG_INFO("\ton pre init:");
+		for (auto plugin : m_preInitPlugins)
+		{
+			MINT_LOG_INFO("\t\tPlugin: {}", plugin->get_plugin_name());
+		}
+		MINT_LOG_INFO("\ton init:");
+		for (auto plugin : m_onInitPlugins)
+		{
+			MINT_LOG_INFO("\t\tPlugin: {}", plugin->get_plugin_name());
+		}
+		MINT_LOG_INFO("\ton post init:");
+		for (auto plugin : m_postInitPlugins)
+		{
+			MINT_LOG_INFO("\t\tPlugin: {}", plugin->get_plugin_name());
+		}
+
+		MINT_LOG_SEPARATOR();
+	}
+
+
+	void CPluginSystem::print_active_and_failed_plugins()
+	{
+		MINT_LOG_INFO("Dumping active plugins information:");
+
+		for (auto plugin : m_activePlugins)
+		{
+			MINT_LOG_INFO("\tPlugin Name: {}", plugin->get_plugin_name());
+		}
+
+
+		MINT_LOG_WARN("Dumping failed plugins information:");
+
+		for (auto plugin : m_failedPlugins)
+		{
+			MINT_LOG_INFO("\tPlugin Name: {}", plugin->get_plugin_name());
+		}
+
+		MINT_LOG_SEPARATOR();
+	}
+
 	void CPluginSystem::on_reset()
 	{
 		for(auto& plugin: m_activePlugins)

@@ -50,6 +50,7 @@
 #include "WorldQuery/WorldQuery.h"
 #include "WorldQuery/WorldQueryDebugRenderer.h"
 #include "Utility/STL/BinarySearchTree.h"
+#include "SoundSystem/SoundSystem.h"
 
 
 #if MINT_DISTR

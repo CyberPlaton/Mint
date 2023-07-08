@@ -2,6 +2,10 @@
 #define _MINT_PLUGIN_H_
 
 
+#include "Common/Common.h"
+#include "Common/Algorithm.h"
+
+
 namespace mint
 {
 	class IPlugin
@@ -38,6 +42,10 @@ namespace mint
 		virtual void on_update(f32) = 0;
 
 		virtual void on_after_update(f32) = 0;
+
+		virtual u64 get_plugin_identifier() = 0;
+
+		virtual String get_plugin_name() = 0;
 	};
 
 
@@ -46,6 +54,9 @@ namespace mint
 	class CPlugin : public IPlugin
 	{
 	public:
+		CPlugin(const String& plugin_name);
+
+
 		virtual bool initialize() override { return false; }
 
 		virtual void terminate() override {}
@@ -57,6 +68,16 @@ namespace mint
 		virtual void on_update(f32 dt) override {}
 
 		virtual void on_after_update(f32 dt) override {}
+
+		u64 get_plugin_identifier() override final;
+
+		String get_plugin_name() override final;
+
+
+	private:
+		u64 m_identifier = 0;
+
+		String m_name;
 	};
 
 
