@@ -16,12 +16,17 @@ namespace mint
 
 		SEvent(const String& event_type);
 
+		SEvent(u64 event_type);
+
 		SEvent(const String& event_type, Vector< CAny >& data);
 
 		SEvent(const SEvent& other) = delete;
 		SEvent& operator=(const SEvent& other) = delete;
 
 		~SEvent();
+
+
+		void copy_from(SEvent* event);
 
 		u64 get_time_stamp() { return m_eventTimestamp; }
 

@@ -19,14 +19,11 @@ public:
 
 	void on_reset() override final;
 
-	void on_before_update() override final;
-
 	void on_update(mint::f32 dt) override final;
 
-	void on_after_update(mint::f32 dt) override final;
 
 private:
-	FMOD::System* m_system = nullptr;
+	FMOD::System* m_system;
 
 };
 

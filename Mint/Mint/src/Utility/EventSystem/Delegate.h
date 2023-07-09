@@ -15,11 +15,19 @@ namespace mint
 
 	struct SDelegate : public IDelegate
 	{
+		typedef void (*DelegateExecuteFunction)(SEvent*);
+
+
 		SDelegate(const String& listen_to_event_type, const String& delegate_name, bool persistent = false);
 
 		virtual ~SDelegate() {}
 
-		virtual void execute(SEvent*) override {};
+		virtual void execute(SEvent* event) override;
+
+
+		bool has_execute_function_set() const;
+
+		void set_execute_function(DelegateExecuteFunction function);
 
 
 		DelegateHandle get_unique_identifier() { return m_identifier; }
@@ -28,11 +36,14 @@ namespace mint
 
 		bool get_is_persistent() { return m_persistent; }
 
+
 		u64 m_identifier;
 
 		u64 m_eventType;
 
 		bool m_persistent;
+
+		DelegateExecuteFunction m_executeFunction = nullptr;
 	};
 
 

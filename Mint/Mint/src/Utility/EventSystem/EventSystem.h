@@ -36,6 +36,8 @@ namespace mint
 
 		void remove_listener(const String& listened_event_type, DelegateHandle delegate_identifier);
 
+		void remove_listener(u64 listened_event_type, DelegateHandle delegate_identifier);
+
 		void queue_event(SEvent* event);
 
 	private:
@@ -72,6 +74,10 @@ struct class_name : public mint::SDelegate \
 	void execute(mint::SEvent* event) override final \
 	execute_function_impl \
 }
+
+
+#define MINT_QUEUE_EVENT(event_name, ...) \
+mint::CEventSystem::Get().queue_event(new SEvent(event_name, __VA_ARGS__))
 
 
 #define MINT_REGISTER_EVENT_LISTENER(class_name) \

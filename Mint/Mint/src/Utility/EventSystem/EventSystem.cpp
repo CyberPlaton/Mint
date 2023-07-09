@@ -115,14 +115,18 @@ namespace mint
 	{
 		auto h = mint::algorithm::djb_hash(listened_event_type);
 		
-		if (!m_listeners.lookup(h)) return;
+		remove_listener(h, delegate_identifier);
+	}
 
 
-		auto& map = m_listeners.get_ref(h);
+	void CEventSystem::remove_listener(u64 listened_event_type, DelegateHandle delegate_identifier)
+	{
+		if (!m_listeners.lookup(listened_event_type)) return;
+
+		auto& map = m_listeners.get_ref(listened_event_type);
 
 		map.remove(delegate_identifier);
 	}
-
 
 	void CEventSystem::queue_event(SEvent* event)
 	{

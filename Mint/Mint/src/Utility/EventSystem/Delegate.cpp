@@ -8,4 +8,29 @@ namespace mint
 		m_persistent(persistent)
 	{
 	}
+
+	void SDelegate::execute(SEvent* event)
+	{
+		if (has_execute_function_set())
+		{
+			m_executeFunction(event);
+
+			return;
+		}
+
+		MINT_ASSERT(false, "Invalid operation. Virtual delegate must either be overriden or having a execute function set!");
+	}
+
+
+	bool SDelegate::has_execute_function_set() const
+	{
+		return m_executeFunction != nullptr;
+	}
+
+
+	void SDelegate::set_execute_function(DelegateExecuteFunction function)
+	{
+		m_executeFunction = function;
+	}
+
 }
