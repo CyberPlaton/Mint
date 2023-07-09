@@ -35,7 +35,7 @@ namespace mint
 
 
 		// Register sound system after it was initialized.
-		sound::CSoundEngine::Get().register_sound_system_implementation(CPluginSystem::Get().get_plugin_as< sound::CSoundSystem >("CSoundSystem"));
+		sound::CSoundEngine::Get().register_sound_system_implementation(CPluginSystem::Get().get_plugin_as< sound::CSoundSystemInterface >("CSoundSystemInterface"));
 
 
 		CSceneManager::Get().set_initial_scene(initial_scene);

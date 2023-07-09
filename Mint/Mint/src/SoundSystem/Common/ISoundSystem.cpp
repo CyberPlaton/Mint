@@ -4,22 +4,22 @@
 namespace mint::sound
 {
 
-	mint::IPlugin::InitializationPoint CSoundSystem::get_initialization_point()
+	mint::IPlugin::InitializationPoint CSoundSystemInterface::get_initialization_point()
 	{
 		return InitializationPoint_Init;
 	}
 
-	mint::IPlugin::TerminationPoint CSoundSystem::get_termination_point()
+	mint::IPlugin::TerminationPoint CSoundSystemInterface::get_termination_point()
 	{
 		return TerminationPoint_Shutdown;
 	}
 
-	CSoundSystem::CSoundSystem() : CPlugin("CSoundSystem"),
+	CSoundSystemInterface::CSoundSystemInterface() : CPlugin("CSoundSystemInterface"),
 		m_currentEventCursor(0)
 	{
 	}
 
-	void CSoundSystem::receive_incoming_event(SEvent* event)
+	void CSoundSystemInterface::receive_incoming_event(SEvent* event)
 	{
 		m_currentEventCursor = (m_currentEventCursor + 1) % MINTSOUND_INCOMING_EVENT_COUNT_MAX;
 
@@ -29,22 +29,22 @@ namespace mint::sound
 		copy.copy_from(event);
 	}
 
-	void CSoundSystem::on_before_update()
+	void CSoundSystemInterface::on_before_update()
 	{
 	}
 
-	void CSoundSystem::on_after_update(f32 dt)
+	void CSoundSystemInterface::on_after_update(f32 dt)
 	{
 	}
 
-	bool CSoundSystem::initialize()
+	bool CSoundSystemInterface::initialize()
 	{
 		m_incomingEvents.resize(MINTSOUND_INCOMING_EVENT_COUNT_MAX);
 
 		return true;
 	}
 
-	void CSoundSystem::terminate()
+	void CSoundSystemInterface::terminate()
 	{
 		m_incomingEvents.clear();
 	}

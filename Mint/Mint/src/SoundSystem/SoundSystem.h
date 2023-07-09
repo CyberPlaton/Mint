@@ -16,7 +16,7 @@ namespace mint::sound
 		STATIC_GET(CSoundEngine, s_CSoundEngine);
 
 
-		void register_sound_system_implementation(CSoundSystem* system);
+		void register_sound_system_implementation(CSoundSystemInterface* system);
 
 		void reset();
 
@@ -31,7 +31,7 @@ namespace mint::sound
 
 
 	private:
-		CSoundSystem* m_soundSystem = nullptr;
+		CSoundSystemInterface* m_soundSystem = nullptr;
 
 		CMap< SDelegate* > m_delegates;
 

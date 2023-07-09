@@ -6,7 +6,7 @@
 #include "FMOD/fmod.hpp"
 
 
-class CFMODSoundSystemPlugin : public mint::sound::CSoundSystem
+class CFMODSoundSystemPlugin : public mint::sound::CSoundSystemInterface
 {
 public:
 	CFMODSoundSystemPlugin();

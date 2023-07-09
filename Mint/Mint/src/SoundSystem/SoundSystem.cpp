@@ -3,7 +3,7 @@
 
 namespace mint::sound
 {
-	void CSoundEngine::register_sound_system_implementation(CSoundSystem* system)
+	void CSoundEngine::register_sound_system_implementation(CSoundSystemInterface* system)
 	{
 		m_soundSystem = system;
 	}

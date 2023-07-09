@@ -11,7 +11,7 @@ CFMODSoundSystemPlugin::~CFMODSoundSystemPlugin()
 
 bool CFMODSoundSystemPlugin::initialize()
 {
-	if (CSoundSystem::initialize() && FMOD::System_Create(&m_system) == FMOD_OK)
+	if (CSoundSystemInterface::initialize() && FMOD::System_Create(&m_system) == FMOD_OK)
 	{
 		return true;
 	}
@@ -21,7 +21,7 @@ bool CFMODSoundSystemPlugin::initialize()
 
 void CFMODSoundSystemPlugin::terminate()
 {
-	CSoundSystem::terminate();
+	CSoundSystemInterface::terminate();
 
 	m_system->close();
 	m_system->release();

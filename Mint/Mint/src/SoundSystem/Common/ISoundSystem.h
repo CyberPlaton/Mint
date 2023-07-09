@@ -18,10 +18,10 @@ namespace mint::sound
 	};
 
 
-	class CSoundSystem : public ISoundSystem, public CPlugin
+	class CSoundSystemInterface : public ISoundSystem, public CPlugin
 	{
 	public:
-		CSoundSystem();
+		CSoundSystemInterface();
 
 		////////////////////////////////////////////////////////////////////
 		// CSoundSystem interface.
