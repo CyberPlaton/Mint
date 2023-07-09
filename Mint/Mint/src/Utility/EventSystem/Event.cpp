@@ -34,4 +34,10 @@ namespace mint
 		m_eventTimestamp = CTimer::get_time();
 	}
 
+
+	SEvent::SEvent() : 
+		m_eventType(0), m_eventTimestamp(0)
+	{
+	}
+
 }

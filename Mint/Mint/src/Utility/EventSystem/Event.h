@@ -11,17 +11,16 @@ namespace mint
 {
 	struct SEvent
 	{
+		SEvent();
 		template< typename... ARGS >
 		SEvent(const String& event_type, ARGS&&... args);
-
 		SEvent(const String& event_type);
-
 		SEvent(u64 event_type);
-
 		SEvent(const String& event_type, Vector< CAny >& data);
 
-		SEvent(const SEvent& other) = delete;
+
 		SEvent& operator=(const SEvent& other) = delete;
+
 
 		~SEvent();
 
