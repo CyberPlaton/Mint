@@ -3,11 +3,6 @@
 
 namespace mint::sound
 {
-	void CSoundEngine::register_sound_system_implementation(CSoundSystemInterface* system)
-	{
-		m_soundSystem = system;
-	}
-
 	bool CSoundEngine::add_event_listener(const String& event_name)
 	{
 		auto h = mint::algorithm::djb_hash(event_name);
@@ -30,7 +25,13 @@ namespace mint::sound
 
 	void CSoundEngine::propagate_received_event(SEvent* event)
 	{
-		m_soundSystem->receive_incoming_event(event);
+		// Receive incoming event.
+		m_currentEventCursor = (m_currentEventCursor + 1) % MINTSOUND_INCOMING_EVENT_COUNT_MAX;
+
+		// Create a copy of the event for later processing.
+		auto& copy = m_incomingEvents[m_currentEventCursor];
+
+		copy.copy_from(event);
 	}
 
 	void CSoundEngine::remove_event_listener(const String& event_name)
@@ -66,6 +67,24 @@ namespace mint::sound
 
 			delegates.erase(delegates.begin());
 		}
+	}
+
+	bool CSoundEngine::initialize()
+	{
+		if (FMOD::System_Create(&m_system) == FMOD_OK)
+		{
+			m_incomingEvents.resize(MINTSOUND_INCOMING_EVENT_COUNT_MAX);
+			return true;
+		}
+
+		return false;
+	}
+
+	void CSoundEngine::terminate()
+	{
+		m_incomingEvents.clear();
+		m_system->close();
+		m_system->release();
 	}
 
 	namespace detail

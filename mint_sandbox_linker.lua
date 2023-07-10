@@ -9,7 +9,6 @@ function windows_linking()
 			"fmtd",
 			"spdlogd",
 			"Lua52",
-			"fmod_vc",
 	
 			"opengl32",
 			"gdi32", 

@@ -168,6 +168,7 @@
 			"%{prj.location}/common/include",
 			"%{prj.location}/common/include/spdlog",
 			"%{prj.location}/common/include/raylib",
+			"%{prj.location}/common/include/FMOD",
 			"%{prj.location}/src/Physics/Common",
 		}
 		print("Include third party files...")

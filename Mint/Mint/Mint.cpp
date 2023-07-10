@@ -34,10 +34,6 @@ namespace mint
 		CPluginSystem::Get().print_active_and_failed_plugins();
 
 
-		// Register sound system after it was initialized.
-		sound::CSoundEngine::Get().register_sound_system_implementation(CPluginSystem::Get().get_plugin_as< sound::CSoundSystemInterface >("CSoundSystemInterface"));
-
-
 		CSceneManager::Get().set_initial_scene(initial_scene);
 
 
@@ -478,6 +474,8 @@ namespace mint
 		result &= scripting::CBehaviorEngine::Get().initialize();
 		result &= scripting::CScriptEngine::Get().initialize();
 
+		// Sound engine.
+		result &= sound::CSoundEngine::Get().initialize();
 
 		if(result)
 		{
@@ -601,6 +599,9 @@ namespace mint
 
 		// Camera System.
 		mint::fx::CCameraManager::Get().terminate();
+
+		// Sound engine.
+		sound::CSoundEngine::Get().terminate();
 
 		// Scripting engine.
 		scripting::CBehaviorEngine::Get().stop_behavior_engine_thread();

@@ -2,9 +2,14 @@
 #define _MINT_SOUND_SYSTEM_H_
 
 
-#include "Common/ISoundSystem.h"
+#include "Common/Common.h"
+#include "Common/Algorithm.h"
 #include "Utility/STL/Map.h"
 #include "Utility/EventSystem/EventSystem.h"
+
+#include "Common/SoundSourceGroup.h"
+#include "Common/SoundSourceSettings.h"
+#include "Common/SoundSource.h"
 
 
 namespace mint::sound
@@ -15,8 +20,9 @@ namespace mint::sound
 	public:
 		STATIC_GET(CSoundEngine, s_CSoundEngine);
 
+		bool initialize();
 
-		void register_sound_system_implementation(CSoundSystemInterface* system);
+		void terminate();
 
 		void reset();
 
@@ -31,9 +37,14 @@ namespace mint::sound
 
 
 	private:
-		CSoundSystemInterface* m_soundSystem = nullptr;
+		FMOD::System* m_system = nullptr;
+
 
 		CMap< SDelegate* > m_delegates;
+
+		Vector< SEvent > m_incomingEvents;
+		
+		u32 m_currentEventCursor;
 
 
 	private:

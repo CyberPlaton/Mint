@@ -10,6 +10,7 @@ function windows_linking()
 			"fmtd",
 			"spdlogd",
 			"Lua52",
+			"fmod_vc",
 	
 			"opengl32",
 			"gdi32", 
@@ -25,6 +26,7 @@ function windows_linking()
 			"fmt",
 			"spdlog",
 			"Lua52",
+			"fmod_vc",
 	
 			"opengl32",
 			"gdi32", 
@@ -40,6 +42,7 @@ function windows_linking()
 			"fmt",
 			"spdlog",
 			"Lua52",
+			"fmod_vc",
 	
 			"opengl32",
 			"gdi32", 
