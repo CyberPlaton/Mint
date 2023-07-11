@@ -110,7 +110,8 @@ namespace mint
 
 #include "entt/entt.hpp"
 #include "Physics/Common/box2d/box2d.h"
-
+#include "FMOD/fmod.hpp"
+#include "FMOD/fmod_errors.h"
 
 
 // Common globals
@@ -118,6 +119,7 @@ namespace mint
 // Common defines
 namespace mint
 {
+	using SoundHandle = u64;
 	using EntityHandle = u64;
 	using ShaderHandle = u64;
 	using TextureHandle = u64;

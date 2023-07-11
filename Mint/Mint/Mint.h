@@ -34,6 +34,7 @@
 #include "RessourceManagement/Common/RessourceLoaders/MaterialLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/AnimationLoader.h"
 #include "RessourceManagement/Common/RessourceLoaders/ParticleEmitterLoader.h"
+#include "RessourceManagement/Common/RessourceLoaders/SoundLoader.h"
 #include "Scripting/BehaviorEngine.h"
 #include "Scripting/ScriptEngine.h"
 #include "Graphics/SceneCameras/DebugCamera/DebugCamera.h"

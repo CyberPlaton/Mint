@@ -2,13 +2,14 @@
 #define _MINTSOUND_SOUND_SOURCE_H_
 
 
-#include "Common/Common.h"
-#include "SoundCommon.h"
+#include "SoundSourceSettings.h"
+#include "SoundSourceGroup.h"
+#include "Utility/Logging/Logging.h"
 
 
 namespace mint::sound
 {
-	class CSoundSourceGroup;
+	class CSoundEngine;
 
 
 	/// @brief Representation of a sound in the game. Does play some audio file and has
@@ -18,44 +19,71 @@ namespace mint::sound
 	/// @reference FMOD::Channel.
 	class CSoundSource
 	{
+		friend class CSoundEngine;
 	public:
 		CSoundSource();
 		virtual ~CSoundSource();
 
-		virtual bool initialize() { MINT_ASSERT(false, "Invalid operation. Using interface class is not allowed!"); return false; };
+		bool initialize(FMOD::System* system, FMOD::Sound* sound);
 
-		virtual void terminate() {};
+		void terminate();
 
 
-		virtual bool set_audio_source_file(const String& full_file_path) { return false; };
+		void set_audio_source_file(SoundHandle handle);
 
-		virtual String get_audio_source_file() const { return ""; };
+		SoundHandle get_audio_source_file() const;
+
+		
+		void play_sound_source(FMOD::System* system, FMOD::Sound* sound);
+
+		bool is_playing() const;
+
+		void pause_sound_source();
+
+		void stop_sound_source();
+
+
+
+		u32 get_sound_position_minutes() const;
+
+		u32 get_sound_position_seconds() const;
+
+		u32 get_sound_position_milliseconds() const;
+
+
+
+		FMOD::Channel* get_channel() const;
 
 		CSoundSourceGroup* get_sound_source_group() const;
 
 		void set_sound_source_group(CSoundSourceGroup* group);
 
 
-
-		f32 get_volume() const;
-
+		void set_mode(FMOD_MODE mode);
+		void set_sound_handle(SoundHandle handle);
+		void set_pitch(f32 value);
+		void set_pan(f32 value);
 		void set_volume(f32 value);
-
-		Vec2 get_velocity() const;
-
 		void set_velocity(const Vec2& vec);
-
-		Vec2 get_position() const;
-
 		void set_position(const Vec2& vec);
+		void set_cone_orientation(const Vec3& vec);
+		void set_cone_settings(f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
+
 
 
 	protected:
-		f32 m_volume;
-		Vec2 m_position;
-		Vec2 m_velocity;
+		FMOD::Channel* m_channel;
+
+		SSoundSourceSettings m_settings;
+
+		SoundHandle m_sound;
 
 		CSoundSourceGroup* m_group;
+
+
+	protected:
+		void play_sound_source_start_paused(FMOD::System* system, FMOD::Sound* sound);
+
 
 	};
 }

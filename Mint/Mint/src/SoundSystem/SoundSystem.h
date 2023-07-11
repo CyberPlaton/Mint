@@ -6,6 +6,8 @@
 #include "Common/Algorithm.h"
 #include "Utility/STL/Map.h"
 #include "Utility/EventSystem/EventSystem.h"
+#include "Utility/Logging/Logging.h"
+#include "Utility/Profiling/FunctionProfiler.h"
 
 #include "Common/SoundSourceGroup.h"
 #include "Common/SoundSourceSettings.h"
@@ -27,6 +29,41 @@ namespace mint::sound
 		void reset();
 
 
+		void on_update(f32 dt);
+
+		void set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up);
+
+		Vec3 get_listener_position() const;
+		Vec3 get_listener_velocity() const;
+		Vec3 get_listener_forward() const;
+		Vec3 get_listener_up() const;
+
+
+		bool create_sound_source_group(const String& group_name, const String& parent_group = "Master");
+
+		void set_sound_source_group_settings(const String& group_name, const SSoundSourceGroupSettings& settings);
+
+
+		void play_sound_source(entt::entity entity);
+
+		void create_sound_source(entt::entity entity, const String& sound_name);
+
+		void remove_sound_source(entt::entity entity);
+
+
+		u32 get_sound_length_minutes(const String& sound_name);
+
+		u32 get_sound_length_seconds(const String& sound_name);
+
+		u32 get_sound_length_milliseconds(const String& sound_name);
+
+		u32 get_sound_length_minutes(entt::entity entity);
+
+		u32 get_sound_length_seconds(entt::entity entity);
+
+		u32 get_sound_length_milliseconds(entt::entity entity);
+
+
 
 		bool add_event_listener(const String& event_name);
 
@@ -35,9 +72,29 @@ namespace mint::sound
 		void propagate_received_event(SEvent* event);
 
 
+		void set_sound_source_paused(entt::entity entity, bool value);
+		void set_sound_source_sound_handle(entt::entity entity, SoundHandle handle);
+		void set_sound_source_mode(entt::entity entity, FMOD_MODE mode);
+		void set_sound_source_pitch(entt::entity entity, f32 value);
+		void set_sound_source_pan(entt::entity entity, f32 value);
+		void set_sound_source_volume(entt::entity entity, f32 value);
+		void set_sound_source_velocity(entt::entity entity, const Vec2& vec);
+		void set_sound_source_position(entt::entity entity, const Vec2& vec);
+		void set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
+		void set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
+
+
+		void create_sound_prefab(const String& sound_name, const String& sound_file_path);
+
 
 	private:
 		FMOD::System* m_system = nullptr;
+
+		Vec3 m_listenerPosition;
+		Vec3 m_listenerVelocity;
+		Vec3 m_listenerForward;
+		Vec3 m_listenerUp;
+
 
 
 		CMap< SDelegate* > m_delegates;
@@ -47,8 +104,27 @@ namespace mint::sound
 		u32 m_currentEventCursor;
 
 
-	private:
 
+		CSoundSourceGroup m_root;
+
+		CMap< CSoundSourceGroup > m_channelGroups;
+
+
+
+		std::unordered_map< u64, CSoundSource > m_soundSources;
+
+		CMap< FMOD::Sound* > m_sounds;
+		CMap< std::pair< String, String > > m_soundPrefabs;
+
+
+	private:
+		bool _load_sound(const String& sound_name);
+		bool _load_sound(SoundHandle handle);
+
+		FMOD::Sound* _get_sound(const String& sound_name);
+		FMOD::Sound* _get_sound(SoundHandle handle);
+	
+		void _check_fmod_error(FMOD_RESULT result);
 	};
 
 

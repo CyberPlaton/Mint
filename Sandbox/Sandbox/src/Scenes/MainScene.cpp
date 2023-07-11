@@ -24,6 +24,17 @@ void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 // 	auto emitter = mint::fx::CParticleSystem::Get().get_particle_emitter_for_entity(m_particle);
 // 
 // 	emitter->set_emitter_position(world_mouse);
+
+	if (mint::CInput::Get().is_key_pressed_enum(KEY_SPACE))
+	{
+		auto min = mint::sound::CSoundEngine::Get().get_sound_length_minutes(m_sound);
+		auto sec = mint::sound::CSoundEngine::Get().get_sound_length_seconds(m_sound);
+		auto ms = mint::sound::CSoundEngine::Get().get_sound_length_milliseconds(m_sound);
+
+		MINT_LOG_INFO("[{:.4f}] Playing sound: {}min:{}sec:{}ms", MINT_APP_TIME, min, sec, ms);
+
+ 		mint::sound::CSoundEngine::Get().play_sound_source(m_sound);
+	}
 }
 
 
@@ -193,6 +204,53 @@ bool CMainScene::on_load()
 //  #endif
 
 
+
+	/*
+	* TESTING SOUND ENGINE
+	*/
+	mint::sound::CSoundEngine::Get().set_listener_data({ 0.0f, 0.0f, 10.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 1.0f });
+	m_sound = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_sound);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_sound);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_sound);
+		auto& sound = m_registry.add_component< mint::component::SSoundSource >(m_sound);
+
+		identifier.m_enttId = SCAST(u64, m_sound);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "SoundSource";
+		hierarchy.m_parent = entt::null;
+
+
+		mint::sound::CSoundEngine::Get().create_sound_source(m_sound, "762x39_Single");
+
+		// Transform data has to be set after creating the sound source in the sound engine.
+		CUCA::transform_set_scale(m_sound, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_sound, 0);
+		CUCA::transform_set_position(m_sound, { 0, 0 });
+
+
+		sound.m_minDistance = 0.0f;
+		sound.m_maxDistance = 1000.0f;
+
+		CUCA::soundsource_set_sound_source_mode(m_sound, FMOD_3D);
+		CUCA::soundsource_set_sound_source_volume(m_sound, 1.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_sound, 1.0f);
+		CUCA::soundsource_set_sound_source_pan(m_sound, 1.0f);
+		CUCA::soundsource_set_sound_source_position(m_sound, { 0.0f, 0.0f });
+		CUCA::soundsource_set_sound_source_velocity(m_sound, { 0.0f, 0.0f });
+		CUCA::soundsource_set_sound_source_cone_orientation(m_sound, { 0.0f, 0.0f, 1.0f });
+		CUCA::soundsource_set_sound_source_cone_settings(m_sound, 360.0f, 360.0f, 1.0f);
+
+		add_entity(m_sound);
+	}
+
+
+
+
+	/*
+	* TESTING PARTICLE SYSTEM
+	*/
 	m_particle = m_registry.create_entity();
  
  	auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_particle);

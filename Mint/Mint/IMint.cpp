@@ -24,6 +24,7 @@ namespace mint
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 		INITIALIZE_CRITICAL_SECTION(CUCA::m_worldSettingsCriticalSection);
+		INITIALIZE_CRITICAL_SECTION(CUCA::m_soundSourceCriticalSection);
 	}
 
 
@@ -39,6 +40,7 @@ namespace mint
 		DELETE_CRITICAL_SECTION(CUCA::m_scriptCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_dynamicGameobjectCriticalSection);
 		DELETE_CRITICAL_SECTION(CUCA::m_worldSettingsCriticalSection);
+		DELETE_CRITICAL_SECTION(CUCA::m_soundSourceCriticalSection);
 	}
 
 

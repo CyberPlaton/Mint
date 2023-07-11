@@ -102,6 +102,7 @@ namespace mint
 	{
 		MINT_ACTIVE_SCENE()->on_update(dt);
 
+		sound::CSoundEngine::Get().on_update(dt);
 
 		CPhysicsSystem::Get().update(dt);
 
@@ -341,6 +342,7 @@ namespace mint
 		CRessourceLoaderFactory::register_ressource_loader("Material", &CMaterialLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("Animation", &CAnimationLoader::create);
 		CRessourceLoaderFactory::register_ressource_loader("ParticleEmitter", &CParticleEmitterLoader::create);
+		CRessourceLoaderFactory::register_ressource_loader("Sound", &CSoundLoader::create);
 
 
 

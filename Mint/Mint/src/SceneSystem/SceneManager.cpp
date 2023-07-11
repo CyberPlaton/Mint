@@ -16,7 +16,7 @@ namespace mint
 		auto scene_definition_path = fs.get_full_path_of_first_file_by_extension(".scene");
 
 
-		maml::CDocument document;
+		maml::CDocument document(MAML_DOCUMENT_SIZE_SMALL);
 
 		auto root = CSerializer::load_maml_document(scene_definition_path.as_string(), document);
 

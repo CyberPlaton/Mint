@@ -71,20 +71,607 @@ namespace mint::sound
 
 	bool CSoundEngine::initialize()
 	{
-		if (FMOD::System_Create(&m_system) == FMOD_OK)
+		FMOD_RESULT result;
+
+		if (result = FMOD::System_Create(&m_system); result == FMOD_OK)
 		{
-			m_incomingEvents.resize(MINTSOUND_INCOMING_EVENT_COUNT_MAX);
-			return true;
+			if (result = m_system->init(100, FMOD_INIT_NORMAL, 0); result == FMOD_OK)
+			{
+				m_system->set3DSettings(1.0f, 1.0f, 1.0f);
+
+				m_incomingEvents.resize(MINTSOUND_INCOMING_EVENT_COUNT_MAX);
+
+				FMOD::ChannelGroup* root = nullptr;
+
+				m_system->getMasterChannelGroup(&root);
+				m_root.set_channel_group(root);
+				m_root.set_group_name("Master");
+
+				// Set initial settings for Master.
+				SSoundSourceGroupSettings settings;
+				settings.m_volume = 1.0f;
+				settings.m_pitch = 0.0f;
+				settings.m_pan = 0.0f;
+				settings.m_mode = FMOD_3D | FMOD_LOOP_OFF;
+
+				m_root.set_sound_group_settings(settings);
+				m_root.apply_sound_group_settings();
+
+				return true;
+			}
 		}
+		
+		auto error = FMOD_ErrorString(result);
+
+		MINT_LOG_ERROR("[{:.4f}][CSoundEngine::initialize] Failed to initialize FMOD: \"{}\"!", MINT_APP_TIME, error);
 
 		return false;
 	}
 
 	void CSoundEngine::terminate()
 	{
+		for (auto sound : m_sounds.get_all())
+		{
+			sound->release();
+		}
+
 		m_incomingEvents.clear();
 		m_system->close();
 		m_system->release();
+	}
+
+	FMOD::Sound* CSoundEngine::_get_sound(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		return _get_sound(h);
+	}
+
+	FMOD::Sound* CSoundEngine::_get_sound(SoundHandle handle)
+	{
+		if (m_sounds.lookup(handle))
+		{
+			return m_sounds.get(handle);
+		}
+
+		MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_get_sound] Failed locating sound \"{}\"!", MINT_APP_TIME, handle);
+
+		return nullptr;
+	}
+
+	bool CSoundEngine::_load_sound(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		return _load_sound(h);
+	}
+
+	bool CSoundEngine::_load_sound(SoundHandle handle)
+	{
+		if (m_soundPrefabs.lookup(handle))
+		{
+			auto& pair = m_soundPrefabs.get_ref(handle);
+
+			FMOD::Sound* sound = nullptr;
+			
+			auto result = m_system->createSound(pair.second.c_str(), FMOD_DEFAULT, 0, &sound);
+
+			if (result != FMOD_OK)
+			{
+				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_load_sound] Failed loading sound \"{}\" at \"{}\"!", MINT_APP_TIME, pair.first, pair.second);
+				return false;
+			}
+
+
+			sound->set3DMinMaxDistance(0.5f, 5000.0f);
+			sound->setMode(FMOD_LOOP_NORMAL);
+
+
+			m_sounds.add(handle, sound);
+
+			return true;
+		}
+
+		MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_load_sound] Failed locating sound prefab \"{}\"!", MINT_APP_TIME, handle);
+
+		return false;
+	}
+
+	void CSoundEngine::create_sound_prefab(const String& sound_name, const String& sound_file_path)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		m_soundPrefabs.add(h, std::make_pair(sound_name, sound_file_path));
+	}
+
+
+	void CSoundEngine::play_sound_source(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		MINT_ASSERT(m_soundSources.find(h) != m_soundSources.end(), "Invalid operation. Sound source could not be located!");
+
+		auto& source = m_soundSources[h];
+
+		source.play_sound_source(m_system, _get_sound(source.get_audio_source_file()));
+	}
+
+	void CSoundEngine::remove_sound_source(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			m_soundSources.erase(h);
+		}
+	}
+
+	void CSoundEngine::create_sound_source(entt::entity entity, const String& sound_name)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) == m_soundSources.end())
+		{
+			auto sh = mint::algorithm::djb_hash(sound_name);
+
+			if (!m_sounds.lookup(sh) && !_load_sound(sh))
+			{
+				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::create_sound_source] Sound \"{}\" could not be loaded for entity \"{}\"!", MINT_APP_TIME, sound_name, h);
+				MINT_ASSERT(false, "Invalid operation. Failed to load sound source!");
+				return;
+			}
+
+			auto& source = m_soundSources[h];
+
+			source.set_audio_source_file(sh);
+			source.set_sound_source_group(&m_root);
+
+			if (!source.initialize(m_system, m_sounds.get(sh)))
+			{
+				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::create_sound_source] Sound \"{}\" could not be initialized for entity \"{}\"!", MINT_APP_TIME, sound_name, h);
+				MINT_ASSERT(false, "Invalid operation. Failed to initialize sound source!");
+			}
+
+			// Get a channel assigned.
+			source.play_sound_source_start_paused(m_system, _get_sound(source.get_audio_source_file()));
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::create_sound_source] Sound source does already exist for entity \"{}\" with sound name \"{}\"!", MINT_APP_TIME, h, sound_name);
+	}
+
+	void CSoundEngine::on_update(f32 dt)
+	{
+		m_system->update();
+	}
+
+	bool CSoundEngine::create_sound_source_group(const String& group_name, const String& parent_group /*= "Master"*/)
+	{
+		auto h = mint::algorithm::djb_hash(group_name);
+		auto ph = mint::algorithm::djb_hash(parent_group);
+
+		if (!m_channelGroups.lookup(h))
+		{
+			CSoundSourceGroup ssgroup(group_name);
+
+			// Try creating the channel group.
+			FMOD::ChannelGroup* channel_group = nullptr;
+
+			if (m_system->createChannelGroup(group_name.c_str(), &channel_group) == FMOD_OK)
+			{
+				ssgroup.set_channel_group(channel_group);
+			}
+			else
+			{
+				return false;
+			}
+
+
+			if (ph == m_root.get_group_identifier())
+			{
+				ssgroup.set_parent(ph);
+				m_root.add_child_group(h, channel_group);
+			}
+			else if (m_channelGroups.lookup(ph))
+			{
+				auto& pgroup = m_channelGroups.get_ref(ph);
+
+				pgroup.add_child_group(h, channel_group);
+			}
+			else
+			{
+				// Set Master as parent forcefully.
+				MINT_LOG_WARN("[{:.4f}][CSoundEngine::create_sound_source_group] Sound source group \"{}\" could not be found, setting \"Master\" as parent for \"{}\" forcefully!", MINT_APP_TIME, parent_group, group_name);
+				ssgroup.set_parent(ph);
+				m_root.add_child_group(h, channel_group);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	void CSoundEngine::set_sound_source_group_settings(const String& group_name, const SSoundSourceGroupSettings& settings)
+	{
+		auto h = mint::algorithm::djb_hash(group_name);
+
+		if (h == m_root.get_group_identifier())
+		{
+			m_root.set_sound_group_settings(settings);
+			m_root.apply_sound_group_settings();
+		}
+		else if (m_channelGroups.lookup(h))
+		{
+			auto& group = m_channelGroups.get_ref(h);
+
+			group.set_sound_group_settings(settings);
+			group.apply_sound_group_settings();
+		}
+		else
+		{
+			MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_group_settings] Sound source group \"{}\" could not be found!", MINT_APP_TIME, group_name);
+			MINT_ASSERT(false, "Invalid operation. Sound source group does not exist!");
+		}
+	}
+
+	void CSoundEngine::set_sound_source_mode(entt::entity entity, FMOD_MODE mode)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_mode(mode);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_mode] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_pitch(entt::entity entity, f32 value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_pitch(value);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_pitch] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_pan(entt::entity entity, f32 value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_pan(value);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_pan] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_volume(entt::entity entity, f32 value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_volume(value);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_volume] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_velocity(entt::entity entity, const Vec2& vec)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_velocity(vec);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_velocity] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_position(entt::entity entity, const Vec2& vec)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_position(vec);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_position] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_cone_orientation(vec);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_cone_orientation] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_cone_settings(inner_cone_angle, outer_cone_angle, cone_outside_volume);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_cone_settings] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_paused(entt::entity entity, bool value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (value) source.play_sound_source(m_system, _get_sound(source.get_audio_source_file()));
+			else source.pause_sound_source();
+			
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_paused] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_sound_handle(entt::entity entity, SoundHandle handle)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_sound_handle(handle);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_sound_handle] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up)
+	{
+		m_listenerPosition = position;
+		m_listenerVelocity = velocity;
+		m_listenerForward = forward;
+		m_listenerUp = up;
+
+		FMOD_VECTOR p, v, f, u;
+
+		p.x = position.x;
+		p.x = position.x;
+		p.z = position.z;
+
+		v.x = velocity.x;
+		v.x = velocity.x;
+		v.z = velocity.z;
+
+		f.x = forward.x;
+		f.x = forward.x;
+		f.z = forward.z;
+
+		u.x = up.x;
+		u.x = up.x;
+		u.z = up.z;
+
+		m_system->set3DListenerAttributes(0, &p, &v, &f, &u);
+	}
+
+	mint::Vec3 CSoundEngine::get_listener_position() const
+	{
+		return m_listenerPosition;
+	}
+
+	mint::Vec3 CSoundEngine::get_listener_velocity() const
+	{
+		return m_listenerVelocity;
+	}
+
+	mint::Vec3 CSoundEngine::get_listener_forward() const
+	{
+		return m_listenerForward;
+	}
+
+	mint::Vec3 CSoundEngine::get_listener_up() const
+	{
+		return m_listenerUp;
+	}
+
+	void CSoundEngine::_check_fmod_error(FMOD_RESULT result)
+	{
+		if (result != FMOD_OK)
+		{
+			auto error = FMOD_ErrorString(result);
+			MINT_LOG_WARN("[{:.4f}][CSoundEngine::_check_fmod_error] FMOD error encountered: \"{}\"!", MINT_APP_TIME, error);
+			MINT_ASSERT(false, "Invalid operation. FMOD error!");
+		}
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_minutes(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		u32 result = 0;
+
+		if (m_sounds.lookup(h))
+		{
+			auto sound = m_sounds.get(h);
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 1000 / 60;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_minutes] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_seconds(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		u32 result = 0;
+
+		if (m_sounds.lookup(h))
+		{
+			auto sound = m_sounds.get(h);
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 1000 % 60;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_seconds] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_milliseconds(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		u32 result = 0;
+
+		if (m_sounds.lookup(h))
+		{
+			auto sound = m_sounds.get(h);
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 10 % 100;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_minutes(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		u32 result = 0;
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			auto sound = _get_sound(source.get_audio_source_file());
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 1000 / 60;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_minutes] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_seconds(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		u32 result = 0;
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			auto sound = _get_sound(source.get_audio_source_file());
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 1000 % 60;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_seconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
+	}
+
+	glm::u32 CSoundEngine::get_sound_length_milliseconds(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		u32 result = 0;
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			auto sound = _get_sound(source.get_audio_source_file());
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result / 10 % 100;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
 	}
 
 	namespace detail
