@@ -38,7 +38,11 @@ namespace mint::sound
 
 		void play_sound_source();
 
+		void resume_playing_sound_source();
+
 		bool is_playing() const;
+
+		bool is_paused() const;
 
 		bool is_virtual() const;
 

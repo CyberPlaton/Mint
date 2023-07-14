@@ -55,6 +55,7 @@ namespace mint
 		IScene::register_component_importer< mint::component::SScript >(&mint::component::SScript::import_component);
 		IScene::register_component_importer< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::import_component);
 		IScene::register_component_importer< mint::component::SWorldSettings >(&mint::component::SWorldSettings::import_component);
+		IScene::register_component_importer< mint::component::SSoundSource >(&mint::component::SSoundSource::import_component);
 	}
 
 
@@ -69,6 +70,7 @@ namespace mint
 		IScene::register_component_exporter< mint::component::SScript >(&mint::component::SScript::export_component);
 		IScene::register_component_exporter< mint::component::SDynamicGameobject >(&mint::component::SDynamicGameobject::export_component);
 		IScene::register_component_exporter< mint::component::SWorldSettings >(&mint::component::SWorldSettings::export_component);
+		IScene::register_component_exporter< mint::component::SSoundSource >(&mint::component::SSoundSource::export_component);
 	}
 
 

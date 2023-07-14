@@ -139,13 +139,12 @@ namespace mint::sound
 	bool CSoundSource::is_playing() const
 	{
 		bool result;
-		FMOD_RESULT fresult;
-		
+
 		if (m_channel != nullptr)
 		{
 			_check_fmod_error(m_channel->isPlaying(&result));
 
-			return true;
+			return result;
 		}
 
 		return false;
@@ -154,13 +153,12 @@ namespace mint::sound
 	bool CSoundSource::is_virtual() const
 	{
 		bool result;
-		FMOD_RESULT fresult;
-
+		
 		if (m_channel != nullptr)
 		{
 			_check_fmod_error(m_channel->isVirtual(&result));
 
-			return true;
+			return result;
 		}
 
 		return false;
@@ -212,12 +210,35 @@ namespace mint::sound
 
 	void CSoundSource::_check_fmod_error(FMOD_RESULT result) const
 	{
-		if (result != FMOD_OK)
+		if (!(result == FMOD_OK || result == FMOD_ERR_CHANNEL_STOLEN ||
+			  result == FMOD_ERR_INVALID_HANDLE))
 		{
 			auto error = FMOD_ErrorString(result);
 			MINT_LOG_WARN("[{:.4f}][CSoundSource::_check_fmod_error] FMOD error encountered: \"{}\"!", MINT_APP_TIME, error);
 			MINT_ASSERT(false, "Invalid operation. FMOD error!");
 		}
+	}
+
+	void CSoundSource::resume_playing_sound_source()
+	{
+		if (is_paused())
+		{
+			_check_fmod_error(m_channel->setPaused(false));
+		}
+	}
+
+	bool CSoundSource::is_paused() const
+	{
+		bool result;
+
+		if (m_channel != nullptr)
+		{
+			_check_fmod_error(m_channel->getPaused(&result));
+
+			return result;
+		}
+
+		return false;
 	}
 
 }

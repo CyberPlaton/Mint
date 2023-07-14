@@ -42,6 +42,8 @@ namespace mint
 
 		fx::CRenderingPassStack::Get().try_push_rendering_pass(new CWorldQueryDebugRender());
 
+		fx::CRenderingPassStack::Get().try_push_rendering_pass(new CSoundSystemDebugRender());
+
 
 		// Rendering Stack can be reported after context was initialized and the renderers created.
 		// Please note that it is possible for renderers to be dependent on the Scene being initialized.

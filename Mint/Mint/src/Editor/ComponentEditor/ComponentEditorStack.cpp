@@ -54,6 +54,10 @@ namespace mint::editor
 		{
 			editor = new CParticleEmitterComponentEditor(metaclass);
 		}
+		else if (metaclass_name == "SSoundSource")
+		{
+			editor = new CSoundSourceComponentEditor(metaclass);
+		}
 		else
 		{
 			editor = new CGeneralComponentEditor(metaclass);

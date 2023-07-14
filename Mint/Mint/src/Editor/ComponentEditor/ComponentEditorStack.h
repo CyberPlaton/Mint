@@ -14,6 +14,7 @@
 #include "ComponentEditors/TransformComponentEditor.h"
 #include "ComponentEditors/DynamicGameobjectComponentEditor.h"
 #include "ComponentEditors/ParticleEmitterComponentEditor.h"
+#include "ComponentEditors/SoundSourceComponentEditor.h"
 
 
 namespace mint::editor

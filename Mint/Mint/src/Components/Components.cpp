@@ -3,6 +3,36 @@
 
 namespace mint::component
 {
+
+	bool SSoundSource::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SSoundSource >().hash() != hash) return true;
+
+		const auto& ss = registry.get< SSoundSource >(entity);
+
+		return true;
+	}
+
+
+	bool SSoundSource::import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node)
+	{
+		if (entt::type_id< mint::component::SSoundSource >().hash() != hash ||
+			registry.all_of< mint::component::SSoundSource >(entity)) return true;
+
+		auto& ss = registry.emplace< SSoundSource >(entity);
+
+#if MINT_DISTR
+#else
+		auto metaclass = mint::reflection::SBase::get_metaclass(&ss);
+		metaclass->set_metaclass_entity(entity);
+
+		mint::reflection::CEntityMetaclassDatabase::Get().add_entity_metaclass(SCAST(u64, entity), metaclass);
+#endif
+
+		return true;
+	}
+
+
 	bool SParticleEmitter::export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node)
 	{
 		if (entt::type_id< mint::component::SParticleEmitter >().hash() != hash) return true;

@@ -48,6 +48,8 @@ namespace mint::sound
 
 		void play_sound(entt::entity entity);
 
+		void toggle_pause_sound(entt::entity entity);
+
 		void stop_sound(entt::entity entity);
 
 

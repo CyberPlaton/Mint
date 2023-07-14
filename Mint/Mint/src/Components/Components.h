@@ -8,6 +8,7 @@
 #include "Utility/Serialization/Serializer.h"
 #include "Utility/Logging/Logging.h"
 #include "Utility/Reflection/Reflection.h"
+#include "SoundSystem/Common/SoundSourceSettings.h"
 
 #if MINT_DISTR
 #else
@@ -41,9 +42,6 @@ namespace mint::component
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry & registry, maml::SNode * node);
 		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry & registry, maml::SNode * node);
 
-		bool m_dirty = false;
-
-		bool m_playing = false;
 
 		SoundHandle m_soundHandle = 0;
 
@@ -60,9 +58,9 @@ namespace mint::component
 
 		f32 m_pan = 0.0f;
 
-		u64 m_mode = FMOD_3D | FMOD_LOOP_OFF;
+		sound::SoundSourceChannelMode m_mode = sound::SoundSourceChannelMode::SoundSourceChannelMode_Default;
 
-		Vec3 m_position = { 0.0f, 0.0f, 0.0f };
+		f32 m_height = 0.0f;
 
 		Vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 

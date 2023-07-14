@@ -34,8 +34,8 @@ namespace mint::editor
 
 	void CGeneralComponentEditor::show_members()
 	{
-		auto slid = GlobalData::Get().s_EditorEditFieldSliderIdStart;
-		auto scid = GlobalData::Get().s_EditorEditFieldScalarIdStart;
+		auto slid = 10000;
+		auto scid = 20000;
 
 		for (auto& variant : m_metaclass->get_all_members())
 		{
@@ -47,7 +47,7 @@ namespace mint::editor
 
 				u32 __v = *value;
 
-				CUI::edit_field_uint32(__v, 0, 100, variant.get_name(), "", slid, scid, ImGuiSliderFlags_Logarithmic);
+				CUI::edit_field_uint32(__v, 0, 100, variant.get_name(), "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 				*value = __v;
 
@@ -59,7 +59,7 @@ namespace mint::editor
 
 				u64 __v = *value;
 
-				CUI::edit_field_uint64(__v, 0, 100, variant.get_name(), "", slid + 1, scid + 1, ImGuiSliderFlags_Logarithmic);
+				CUI::edit_field_uint64(__v, 0, 100, variant.get_name(), "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 				*value = __v;
 

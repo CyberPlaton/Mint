@@ -70,9 +70,6 @@ namespace mint::component
 
 		// Update world query proxy.
 		_world_query_update_entity_proxy(entity, { previous.x - value.x, previous.y - value.y });
-
-		// Update sound source position.
-		_soundsource_update_sound_position(entity, value);
 	}
 
 
@@ -961,7 +958,7 @@ namespace mint::component
 		return query;
 	}
 
-	void CUCA::soundsource_set_sound_source_mode(entt::entity entity, FMOD_MODE mode)
+	void CUCA::soundsource_set_sound_source_mode(entt::entity entity, sound::SoundSourceChannelMode mode)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -970,8 +967,6 @@ namespace mint::component
 			ss.m_mode = mode;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_pitch(entt::entity entity, f32 value)
@@ -983,8 +978,6 @@ namespace mint::component
 			ss.m_pitch = value;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_pan(entt::entity entity, f32 value)
@@ -996,8 +989,6 @@ namespace mint::component
 			ss.m_pan = value;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_volume(entt::entity entity, f32 value)
@@ -1009,8 +1000,6 @@ namespace mint::component
 			ss.m_volume = value;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_velocity(entt::entity entity, const Vec3& vec)
@@ -1022,25 +1011,8 @@ namespace mint::component
 			ss.m_velocity = vec;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
-	void CUCA::soundsource_set_sound_source_position(entt::entity entity, const Vec3& vec)
-	{
-		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			ss.m_position = vec;
-
-		);
-
-
-		transform_set_position(entity, vec);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
-	}
 
 	void CUCA::soundsource_set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec)
 	{
@@ -1051,8 +1023,6 @@ namespace mint::component
 			ss.m_coneOrientation = vec;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
@@ -1064,11 +1034,9 @@ namespace mint::component
 			ss.m_coneSettings = Vec3( inner_cone_angle, outer_cone_angle, cone_outside_volume );
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
-	FMOD_MODE CUCA::soundsource_get_sound_source_mode(entt::entity entity)
+	sound::SoundSourceChannelMode CUCA::soundsource_get_sound_source_mode(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1133,18 +1101,6 @@ namespace mint::component
 		return value;
 	}
 
-	mint::Vec3 CUCA::soundsource_get_sound_source_position(entt::entity entity)
-	{
-		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			auto value = ss.m_position;
-
-		);
-
-		return value;
-	}
 
 	mint::Vec3 CUCA::soundsource_get_sound_source_cone_orientation(entt::entity entity)
 	{
@@ -1172,32 +1128,6 @@ namespace mint::component
 		return value;
 	}
 
-	void CUCA::soundsource_set_sound_source_playing(entt::entity entity, bool value)
-	{
-		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			ss.m_playing = value;
-
-		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
-	}
-
-	bool CUCA::soundsource_get_sound_source_playing(entt::entity entity)
-	{
-		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			auto value = ss.m_playing;
-
-		);
-
-		return value;
-	}
-
 	void CUCA::soundsource_set_sound_source_sound_handle(entt::entity entity, SoundHandle value)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
@@ -1207,8 +1137,6 @@ namespace mint::component
 			ss.m_soundHandle = value;
 
 		);
-
-		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	mint::SoundHandle CUCA::soundsource_get_sound_source_sound_handle(entt::entity entity)
@@ -1224,46 +1152,6 @@ namespace mint::component
 		return value;
 	}
 
-	void CUCA::_soundsource_update_sound_position(entt::entity entity, const Vec2& vec)
-	{
-		if (CUCA::entity_has_component< mint::component::SSoundSource >(entity))
-		{
-			auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-			MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-				ss.m_position.x = vec.x;
-				ss.m_position.y = vec.y;
-
-			);
-
-			CUCA::soundsource_set_sound_source_dirty(entity, true);
-		}
-	}
-
-	void CUCA::soundsource_set_sound_source_dirty(entt::entity entity, bool value)
-	{
-		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			ss.m_dirty = value;
-
-		);
-	}
-
-	bool CUCA::soundsource_get_sound_source_dirty(entt::entity entity)
-	{
-		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			auto value = ss.m_dirty;
-
-		);
-
-		return value;
-	}
 
 	void CUCA::soundsource_set_sound_source_loopmode(entt::entity entity, s8 value)
 	{
@@ -1283,6 +1171,30 @@ namespace mint::component
 		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_loopmode;
+
+		);
+
+		return value;
+	}
+
+	void CUCA::soundsource_set_sound_source_height(entt::entity entity, f32 value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_height = value;
+
+		);
+	}
+
+	glm::f32 CUCA::soundsource_get_sound_source_height(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_height;
 
 		);
 

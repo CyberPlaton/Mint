@@ -22,8 +22,6 @@ namespace mint::editor
 	entt::entity GlobalData::s_EditorInspectedEntity = entt::null;
 	entt::entity GlobalData::s_EditorOptionSelectedEntity = entt::null;
 	entt::entity GlobalData::s_EditorOptionEntityToBeDeleted = entt::null;
-	ImGuiID GlobalData::s_EditorEditFieldSliderIdStart = 10000;
-	ImGuiID GlobalData::s_EditorEditFieldScalarIdStart = 50000;
 
 
 	u64 GlobalData::s_EditorTransformMinPosition = -100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
@@ -44,6 +42,7 @@ namespace mint::editor
 
 
 	mint::Vec4 GlobalData::s_EditorWorldQueryAABBColor = {150, 0, 0, 30};
+	mint::Vec4 GlobalData::s_EditorSoundSourceCircleColor = { 173, 216, 230 , 30 };
 
 	bool GlobalData::s_EditorDebugRenderAABBFullInformation = false;
 	bool GlobalData::s_EditorDebugRenderAABBs = false;
@@ -51,6 +50,9 @@ namespace mint::editor
 	bool GlobalData::s_EditorDebugRenderDestinationRect = false;
 	bool GlobalData::s_EditorDebugRenderSelected = false;
 	bool GlobalData::s_EditorDebugRenderAll = false;
+	bool GlobalData::s_EditorDebugRenderSoundSourceCone = false;
+	bool GlobalData::s_EditorDebugRenderSoundSourcePosition = false;
+
 
 
 	bool GlobalData::create_asset_file(const String& directory, const String& asset_file_name, const String& asset_file_type, const String& asset_name, const String& asset_source_name, const String& asset_source_type, const String& author, u32 version, const String& description)

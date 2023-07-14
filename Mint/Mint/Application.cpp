@@ -400,6 +400,7 @@ namespace mint
 		mint::component::SScript sc;
 		mint::component::SParticleEmitter pe;
 		mint::component::SWorldSettings ws;
+		mint::component::SSoundSource ss;
 	}
 
 

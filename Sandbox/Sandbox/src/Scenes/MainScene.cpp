@@ -2,9 +2,9 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
- 	CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+	//CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
 
- 	CUCA::transform_translate(m_knight, { dt, 0.0f });
+ 	//CUCA::transform_translate(m_knight, { dt, 0.0f });
 
 	if (mint::CSAS::Get().is_entity_visible(m_particle))
 	{
@@ -114,64 +114,6 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 	fx::CPrimitiveRenderer::render_line(ray_start, ray_end, MINT_RED(), 2.0f);
 
  	fx::CCameraManager::Get().get_active_camera()->end_camera();
-
-
-
-	static Vec3 velocity = {0.0f, 0.0f, 0.0f}, forward = { 0.0f, 0.0f, 1.0f }, up = { 0.0f, 1.0f, 0.0f }, position = { 0.0f, 0.0f, 0.0f };
-
-	ImGui::Begin("Sound Engine");
-
-	if (ImGui::CollapsingHeader("Engine"))
-	{
-		CUI::edit_field_vec3(velocity, -100.0f, 100.0f, "Velocity", "", 10000, 20000);
-		CUI::edit_field_vec3(position, -5000.0f, 5000.0f, "Position", "", 10003, 20003);
-		CUI::edit_field_vec3(forward, 0.0f, 1.0f, "Forward", "", 10001, 20001);
-		CUI::edit_field_vec3(up, 0.0f, 1.0f, "Up", "", 10002, 20002);
-	}
-	if (ImGui::CollapsingHeader("Sound Source"))
-	{
-		Vec3 cone_orient = CUCA::soundsource_get_sound_source_cone_orientation(m_sound);
-		Vec3 cone_settings = CUCA::soundsource_get_sound_source_cone_settings(m_sound);
-		Vec3 velocity = CUCA::soundsource_get_sound_source_velocity(m_sound);
-		Vec3 position = CUCA::soundsource_get_sound_source_position(m_sound);
-
-	
-		CUI::edit_field_vec3(cone_orient, -100.0f, 100.0f, "Cone Orientation", "", 40000, 50000);
-
-		Vec2 cone_angles = { cone_settings.x, cone_settings.y };
-		f32 cone_outer_vol = cone_settings.z;
-		CUI::edit_field_vec2_ranged(cone_angles, -360.0f, 360.0f, "Cone Angles", "", 40003, 50003);
-		CUI::edit_field_f32(cone_outer_vol, 0.0f, 1.0f, "Cone Outer Volume", "", 40004, 50004);
-		
-		CUI::edit_field_vec3(velocity, -300.0f, 300.0f, "Velocity", "", 40001, 50001, ImGuiSliderFlags_Logarithmic, 0.1f);
-		CUI::edit_field_vec3(position, -300.0f, 300.0f, "Position", "", 40002, 50002, ImGuiSliderFlags_Logarithmic, 0.1f);
-
-		CUCA::soundsource_set_sound_source_cone_orientation(m_sound, cone_orient);
-		CUCA::soundsource_set_sound_source_cone_settings(m_sound, cone_angles.x, cone_angles.y, cone_outer_vol);
-		CUCA::soundsource_set_sound_source_velocity(m_sound, velocity);
-		CUCA::soundsource_set_sound_source_position(m_sound, position);
-	}
-	
-	ImGui::End();
-
-	if (mint::CInput::Get().is_key_pressed_enum(KEY_SPACE))
-	{
-		auto min = mint::sound::CSoundEngine::Get().get_sound_length_minutes(m_sound);
-		auto sec = mint::sound::CSoundEngine::Get().get_sound_length_seconds(m_sound);
-		auto ms = mint::sound::CSoundEngine::Get().get_sound_length_milliseconds(m_sound);
-
-		MINT_LOG_INFO("[{:.4f}] Playing sound: {}min:{}sec:{}ms", MINT_APP_TIME, min, sec, ms);
-
-
-		mint::sound::CSoundEngine::Get().play_sound(m_sound);
-	}
-	if (mint::CInput::Get().is_key_pressed_enum(KEY_S))
-	{
-		mint::sound::CSoundEngine::Get().stop_sound(m_sound);
-	}
-
-	//auto position = mint::fx::CCameraManager::Get().get_active_camera()->get_position();
-	mint::sound::CSoundEngine::Get().set_listener_data(position, velocity, forward, up);
 }
 
 
@@ -262,6 +204,12 @@ bool CMainScene::on_load()
 		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_sound);
 		auto& transform = m_registry.add_component< mint::component::STransform >(m_sound);
 		auto& sound = m_registry.add_component< mint::component::SSoundSource >(m_sound);
+		auto& ws = m_registry.add_component< mint::component::SWorldSettings >(m_sound);
+
+		ws.m_groupId = 2;
+		ws.m_enabled = true;
+		ws.m_filterEnabled = false;
+		ws.m_queryable = false;
 
 		identifier.m_enttId = SCAST(u64, m_sound);
 		identifier.m_uuid = identifier.m_enttId;
@@ -269,22 +217,22 @@ bool CMainScene::on_load()
 		hierarchy.m_parent = entt::null;
 
 
-		mint::sound::CSoundEngine::Get().create_sound_source(m_sound, "762x39_Single");
+		mint::sound::CSoundEngine::Get().create_sound_source(m_sound, "main_theme_battle");
 
 		// Transform data has to be set after creating the sound source in the sound engine.
 		CUCA::transform_set_scale(m_sound, { 1.0f, 1.0f });
 		CUCA::transform_set_rotation(m_sound, 0);
-		CUCA::transform_set_position(m_sound, { 0, 0 });
+		CUCA::transform_set_position(m_sound, { 1, 1 });
 
 
 		sound.m_minDistance = 0.5f;
 		sound.m_maxDistance = 5000.0f;
 
-		CUCA::soundsource_set_sound_source_mode(m_sound, FMOD_3D);
+		CUCA::soundsource_set_sound_source_mode(m_sound, sound::SoundSourceChannelMode::SoundSourceChannelMode_Default);
 		CUCA::soundsource_set_sound_source_volume(m_sound, 1.0f);
 		CUCA::soundsource_set_sound_source_pitch(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_pan(m_sound, 0.0f);
-		CUCA::soundsource_set_sound_source_position(m_sound, { 1.0f, 1.0f, 0.0f });
+		CUCA::soundsource_set_sound_source_height(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_sound, { 1.0f, 1.0f, 0.0f });
 		CUCA::soundsource_set_sound_source_cone_orientation(m_sound, { 0.0f, 0.0f, -1.0f });
 		CUCA::soundsource_set_sound_source_cone_settings(m_sound, 90.0f, 180.0f, 1.0f);

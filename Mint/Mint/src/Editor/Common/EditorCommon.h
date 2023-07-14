@@ -30,10 +30,15 @@ namespace mint::editor
 		
 		static bool s_EditorDebugRenderAll;
 		static bool s_EditorDebugRenderSelected;
+		
 		static bool s_EditorDebugRenderDestinationRect;
 		static bool s_EditorDebugRenderOriginPoint;
+
 		static bool s_EditorDebugRenderAABBs;
 		static bool s_EditorDebugRenderAABBFullInformation;
+
+		static bool s_EditorDebugRenderSoundSourcePosition;
+		static bool s_EditorDebugRenderSoundSourceCone;
 
 
 		static bool s_EditorProfilerEnabled;
@@ -61,11 +66,6 @@ namespace mint::editor
 		static entt::entity s_EditorOptionEntityToBeDeleted;
 
 
-
-		static ImGuiID s_EditorEditFieldSliderIdStart;
-		static ImGuiID s_EditorEditFieldScalarIdStart;
-
-
 		static u64 s_EditorTransformMinPosition;
 		static u64 s_EditorTransformMaxPosition;
 		static f32 s_EditorTransformMinScale;
@@ -74,6 +74,7 @@ namespace mint::editor
 		static f32 s_EditorTransformMaxRotation;
 
 		static Vec4 s_EditorWorldQueryAABBColor;
+		static Vec4 s_EditorSoundSourceCircleColor;
 
 		static CApplicationComponentsDatabase s_ComponentDatabase;
 	};
@@ -200,6 +201,20 @@ namespace mint::editor
 		"Gravity",
 		"Free"
 	};
+
+	static const char* SEditorSoundSourceChannelModes[] = {
+		"Default",
+		"LoopOff",
+		"LoopNormal",
+		"LoopBidi",
+		"3D_HeadRelative",
+		"3D_WorldRelative",
+		"3D_InverseRolloff",
+		"3D_LinearRolloff",
+		"3D_LinearSquareRolloff",
+		"3D_InverseTaperedRolloff",
+	};
+
 
 }
 

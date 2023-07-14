@@ -120,8 +120,8 @@ namespace mint::component
 		static Vec2 transform_get_scale(entt::entity entity);
 
 
-		static void soundsource_set_sound_source_mode(entt::entity entity, FMOD_MODE mode);
-		static FMOD_MODE soundsource_get_sound_source_mode(entt::entity entity);
+		static void soundsource_set_sound_source_mode(entt::entity entity, sound::SoundSourceChannelMode mode);
+		static sound::SoundSourceChannelMode soundsource_get_sound_source_mode(entt::entity entity);
 		static void soundsource_set_sound_source_pitch(entt::entity entity, f32 value);
 		static f32 soundsource_get_sound_source_pitch(entt::entity entity);
 		static void soundsource_set_sound_source_pan(entt::entity entity, f32 value);
@@ -130,21 +130,16 @@ namespace mint::component
 		static f32 soundsource_get_sound_source_volume(entt::entity entity);
 		static void soundsource_set_sound_source_velocity(entt::entity entity, const Vec3& vec);
 		static Vec3 soundsource_get_sound_source_velocity(entt::entity entity);
-		static void soundsource_set_sound_source_position(entt::entity entity, const Vec3& vec);
-		static Vec3 soundsource_get_sound_source_position(entt::entity entity);
 		static void soundsource_set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
 		static Vec3 soundsource_get_sound_source_cone_orientation(entt::entity entity);
 		static void soundsource_set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
 		static Vec3 soundsource_get_sound_source_cone_settings(entt::entity entity);
-		static void soundsource_set_sound_source_playing(entt::entity entity, bool value);
-		static bool soundsource_get_sound_source_playing(entt::entity entity);
 		static void soundsource_set_sound_source_sound_handle(entt::entity entity, SoundHandle value);
 		static SoundHandle soundsource_get_sound_source_sound_handle(entt::entity entity);
-		static void soundsource_set_sound_source_dirty(entt::entity entity, bool value);
-		static bool soundsource_get_sound_source_dirty(entt::entity entity);
 		static void soundsource_set_sound_source_loopmode(entt::entity entity, s8 value);
 		static s8 soundsource_get_sound_source_loopmode(entt::entity entity);
-
+		static void soundsource_set_sound_source_height(entt::entity entity, f32 value);
+		static f32 soundsource_get_sound_source_height(entt::entity entity);
 
 		static void behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle);
 
@@ -178,8 +173,6 @@ namespace mint::component
 		static void _rigid_body_update_scale(entt::entity entity, Vec2 value);
 
 		static void _world_query_update_entity_proxy(entt::entity entity, const Vec2& displacement);
-
-		static void _soundsource_update_sound_position(entt::entity entity, const Vec2& vec);
 	};
 
 

@@ -385,7 +385,10 @@ namespace mint::sound
 		{
 			auto& source = m_soundSources[h];
 
-			source.set_velocity_and_position(vec, CUCA::soundsource_get_sound_source_position(entity));
+			auto pos = CUCA::transform_get_position(entity);
+			auto height = CUCA::soundsource_get_sound_source_height(entity);
+
+			source.set_velocity_and_position(vec, { pos.x, pos.y, height});
 
 			return;
 		}
@@ -671,52 +674,53 @@ namespace mint::sound
 
 	void CSoundEngine::play_sound(entt::entity entity)
 	{
-		auto h = SCAST(u64, entity);
-		auto sh = CUCA::soundsource_get_sound_source_sound_handle(entity);
-
-		if (m_soundSources.find(h) != m_soundSources.end() && m_sounds.lookup(sh))
+		// Play only if the sound source is enabled.
+		if (CUCA::world_get_entity_enabled(entity))
 		{
-			auto& source = m_soundSources[h];
-			auto sound = m_sounds.get(sh);
+			auto h = SCAST(u64, entity);
+			auto sh = CUCA::soundsource_get_sound_source_sound_handle(entity);
 
-			m_system->playSound(sound, 0, true, &source.m_channel);
+			if (m_soundSources.find(h) != m_soundSources.end() && m_sounds.lookup(sh))
+			{
+				auto& source = m_soundSources[h];
+				auto sound = m_sounds.get(sh);
 
-			// Set updated data for the channel.
-			source.m_channel->setMode(FMOD_3D);
+				m_system->playSound(sound, 0, true, &source.m_channel);
 
-			source.m_channel->setPriority(1);
-			//source.set_mode(CUCA::soundsource_get_sound_source_mode(entity));
-			//source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
-			//source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
-			//source.set_volume(CUCA::soundsource_get_sound_source_volume(entity));
-			source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), CUCA::soundsource_get_sound_source_position(entity));
-			//source.set_cone_orientation(CUCA::soundsource_get_sound_source_cone_orientation(entity));
-			//source.set_loop_mode(CUCA::soundsource_get_sound_source_loopmode(entity));
-			//
-			//Vec3 cone_settings = CUCA::soundsource_get_sound_source_cone_settings(entity);
-			//source.set_cone_settings(cone_settings.x, cone_settings.y, cone_settings.z);
-			//
-			//source.m_channel->set3DMinMaxDistance(0.5f, 5000.0f);
-			//source.m_channel->setLoopCount(0);
+				// Set updated data for the channel.
+				source.m_channel->setMode(FMOD_3D);
 
-			source.m_channel->setPaused(false);
+				source.m_channel->setPriority(1);
+				//source.set_mode(CUCA::soundsource_get_sound_source_mode(entity));
+				//source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
+				//source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
+				//source.set_volume(CUCA::soundsource_get_sound_source_volume(entity));
+
+				auto pos = CUCA::transform_get_position(entity);
+				auto height = CUCA::soundsource_get_sound_source_height(entity);
+
+				source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), { pos.x, pos.y, height });
+				
+				//source.set_cone_orientation(CUCA::soundsource_get_sound_source_cone_orientation(entity));
+				//source.set_loop_mode(CUCA::soundsource_get_sound_source_loopmode(entity));
+				//
+				//Vec3 cone_settings = CUCA::soundsource_get_sound_source_cone_settings(entity);
+				//source.set_cone_settings(cone_settings.x, cone_settings.y, cone_settings.z);
+				//
+				//source.m_channel->set3DMinMaxDistance(0.5f, 5000.0f);
+				//source.m_channel->setLoopCount(0);
+
+				source.m_channel->setPaused(false);
 
 
-			//if (source.is_virtual())
-			//{
-				//source.stop_sound_source();
-			//}
+				//if (source.is_virtual())
+				//{
+					//source.stop_sound_source();
+				//}
 
-			//MINT_ASSERT(source.is_playing() == true, "Invalid operation. Failed to play sound source!");
-			//MINT_ASSERT(source.is_virtual() == false, "Invalid operation. Sound source was virtualized and is not outputting sound!");
-
-			FMOD_VECTOR pos, vel;
-			source.m_channel->get3DAttributes(&pos, &vel);
-
-			MINT_LOG_WARN("[{:.4f}] Sound position: {}:{}:{}, velocity: {}:{}:{}!", MINT_APP_TIME, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
-			MINT_LOG_WARN("[{:.4f}] Listener position: {}:{}:{}, velocity: {}:{}:{}!", MINT_APP_TIME, m_listenerPosition.x, m_listenerPosition.y, m_listenerPosition.z, 
-				m_listenerVelocity.x, m_listenerVelocity.y, m_listenerVelocity.z);
-
+				//MINT_ASSERT(source.is_playing() == true, "Invalid operation. Failed to play sound source!");
+				//MINT_ASSERT(source.is_virtual() == false, "Invalid operation. Sound source was virtualized and is not outputting sound!");
+			}
 		}
 	}
 
@@ -732,6 +736,23 @@ namespace mint::sound
 			{
 				source.get_channel()->stop();
 			}
+		}
+	}
+
+	void CSoundEngine::toggle_pause_sound(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (source.is_paused() == false)
+			{
+				source.pause_sound_source();
+			}
+			else source.resume_playing_sound_source();
+			
 		}
 	}
 

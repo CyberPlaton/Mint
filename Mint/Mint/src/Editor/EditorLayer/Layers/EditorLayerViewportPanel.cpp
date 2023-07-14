@@ -79,6 +79,22 @@ namespace mint::editor
 		{
 			auto dr = fx::CRenderingPassStack::Get().get_rendering_pass_as< fx::CDebugRenderer >("CDebugRenderer");
 			auto wqr = fx::CRenderingPassStack::Get().get_rendering_pass_as< CWorldQueryDebugRender >("CWorldQueryDebugRender");
+			auto sedr = fx::CRenderingPassStack::Get().get_rendering_pass_as< CSoundSystemDebugRender >("CSoundSystemDebugRender");
+
+			// Sound Engine debug rendering.
+			if (GlobalData::Get().s_EditorDebugRenderSoundSourcePosition)
+			{
+				sedr->set_render_position(true);
+				sedr->set_circle_color(GlobalData::Get().s_EditorSoundSourceCircleColor);
+			}
+			else sedr->set_render_position(false);
+
+			if (GlobalData::Get().s_EditorDebugRenderSoundSourceCone)
+			{
+				sedr->set_render_cone(true);
+			}
+			else sedr->set_render_cone(false);
+
 
 
 			// World Query debug rendering.
@@ -100,7 +116,8 @@ namespace mint::editor
 
 			if (GlobalData::Get().s_EditorDebugRenderOriginPoint) dr->set_render_sprite_origin(true);
 			else dr->set_render_sprite_origin(false);
-			
+
+
  			if(GlobalData::Get().s_EditorDebugRenderAll)
  			{
 				dr->set_render_all_entities(true);
@@ -108,16 +125,21 @@ namespace mint::editor
 
 				wqr->set_render_all_entities(true);
 				wqr->clear_entity_filter();
+
+				sedr->set_render_all_entities(true);
+				sedr->clear_entity_filter();
  			}
  			else
  			{
 				dr->set_render_all_entities(false);
 				wqr->set_render_all_entities(false);
+				sedr->set_render_all_entities(false);
 
  				if(GlobalData::Get().s_EditorInspectedEntity != entt::null)
  				{
 					dr->add_entity_to_filter(GlobalData::Get().s_EditorInspectedEntity);
 					wqr->add_entity_to_filter(GlobalData::Get().s_EditorInspectedEntity);
+					sedr->add_entity_to_filter(GlobalData::Get().s_EditorInspectedEntity);
  				}
  			} 
 		}
@@ -228,20 +250,39 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Debug Render Settings");
 
-			ImGui::Checkbox("Render All", &GlobalData::Get().s_EditorDebugRenderAll);
-			GlobalData::Get().s_EditorDebugRenderSelected = !GlobalData::Get().s_EditorDebugRenderAll;
+			if (ImGui::TreeNode("General"))
+			{
+				ImGui::Checkbox("Render All", &GlobalData::Get().s_EditorDebugRenderAll);
+				GlobalData::Get().s_EditorDebugRenderSelected = !GlobalData::Get().s_EditorDebugRenderAll;
 
-			ImGui::SameLine();
+				ImGui::SameLine();
 
-			CUI::help_marker("Change whether to draw debug information for all game objects or for the inspected one only!");
+				CUI::help_marker("Change whether to draw debug information for all game objects or for the inspected one only!");
 
-			ImGui::Checkbox("Destination Rectangle", &GlobalData::Get().s_EditorDebugRenderDestinationRect);
-			ImGui::Checkbox("Origin Point", &GlobalData::Get().s_EditorDebugRenderOriginPoint);
+				ImGui::Checkbox("Destination Rectangle", &GlobalData::Get().s_EditorDebugRenderDestinationRect);
+				ImGui::Checkbox("Origin Point", &GlobalData::Get().s_EditorDebugRenderOriginPoint);
 
-			ImGui::Checkbox("World Query AABB", &GlobalData::Get().s_EditorDebugRenderAABBs);
-			ImGui::Checkbox("World Query Full Information", &GlobalData::Get().s_EditorDebugRenderAABBFullInformation);
 
-			CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000);
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("World Query"))
+			{
+				ImGui::Checkbox("World Query AABB", &GlobalData::Get().s_EditorDebugRenderAABBs);
+				ImGui::Checkbox("World Query Full Information", &GlobalData::Get().s_EditorDebugRenderAABBFullInformation);
+
+				CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000);
+
+
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Sound Engine"))
+			{
+				ImGui::Checkbox("Sound Source Position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
+				ImGui::Checkbox("Sound Source Cone", &GlobalData::Get().s_EditorDebugRenderSoundSourceCone);
+
+				ImGui::TreePop();
+			}
+
 
 			ImGui::EndPopup();
 		}
