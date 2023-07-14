@@ -13,6 +13,8 @@
 #include "Common/SoundSourceSettings.h"
 #include "Common/SoundSource.h"
 
+#include "Components/CUCA.h"
+
 
 namespace mint::sound
 {
@@ -44,7 +46,10 @@ namespace mint::sound
 		void set_sound_source_group_settings(const String& group_name, const SSoundSourceGroupSettings& settings);
 
 
-		void play_sound_source(entt::entity entity);
+		void play_sound(entt::entity entity);
+
+		void stop_sound(entt::entity entity);
+
 
 		void create_sound_source(entt::entity entity, const String& sound_name);
 
@@ -72,14 +77,14 @@ namespace mint::sound
 		void propagate_received_event(SEvent* event);
 
 
-		void set_sound_source_paused(entt::entity entity, bool value);
 		void set_sound_source_sound_handle(entt::entity entity, SoundHandle handle);
 		void set_sound_source_mode(entt::entity entity, FMOD_MODE mode);
 		void set_sound_source_pitch(entt::entity entity, f32 value);
 		void set_sound_source_pan(entt::entity entity, f32 value);
 		void set_sound_source_volume(entt::entity entity, f32 value);
-		void set_sound_source_velocity(entt::entity entity, const Vec2& vec);
-		void set_sound_source_position(entt::entity entity, const Vec2& vec);
+		void set_sound_source_velocity(entt::entity entity, const Vec3& vec);
+		void set_sound_source_position(entt::entity entity, const Vec3& vec);
+		void set_sound_source_position_and_velocity(entt::entity entity, const Vec3& position, const Vec3& velocity);
 		void set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
 		void set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
 

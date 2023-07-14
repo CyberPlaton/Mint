@@ -41,10 +41,14 @@ namespace mint::component
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry & registry, maml::SNode * node);
 		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry & registry, maml::SNode * node);
 
+		bool m_dirty = false;
 
-		bool m_paused = true;
+		bool m_playing = false;
 
 		SoundHandle m_soundHandle = 0;
+
+		/// @brief -1 means loop forever, 0 means play once and 1..n means play n+1 times, i.e. 2 would play the sound 3 times.
+		s8 m_loopmode = 0;
 
 		f32 m_volume = 0.0f;
 
@@ -58,9 +62,9 @@ namespace mint::component
 
 		u64 m_mode = FMOD_3D | FMOD_LOOP_OFF;
 
-		Vec2 m_position = { 0.0f, 0.0f };
+		Vec3 m_position = { 0.0f, 0.0f, 0.0f };
 
-		Vec2 m_velocity = { 0.0f, 0.0f };
+		Vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 
 		/// @brief In which direction the sound cone is facing in 3D.
 		Vec3 m_coneOrientation = { 0.0f, 0.0f, 0.0f };

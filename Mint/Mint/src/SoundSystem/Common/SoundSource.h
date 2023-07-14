@@ -34,9 +34,13 @@ namespace mint::sound
 		SoundHandle get_audio_source_file() const;
 
 		
-		void play_sound_source(FMOD::System* system, FMOD::Sound* sound);
+		void start_sound_source_paused(FMOD::System* system, FMOD::Sound* sound);
+
+		void play_sound_source();
 
 		bool is_playing() const;
+
+		bool is_virtual() const;
 
 		void pause_sound_source();
 
@@ -58,14 +62,13 @@ namespace mint::sound
 
 		void set_sound_source_group(CSoundSourceGroup* group);
 
-
+		void set_loop_mode(s8 mode);
 		void set_mode(FMOD_MODE mode);
 		void set_sound_handle(SoundHandle handle);
 		void set_pitch(f32 value);
 		void set_pan(f32 value);
 		void set_volume(f32 value);
-		void set_velocity(const Vec2& vec);
-		void set_position(const Vec2& vec);
+		void set_velocity_and_position(const Vec3& velocity, const Vec3& position);
 		void set_cone_orientation(const Vec3& vec);
 		void set_cone_settings(f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
 
@@ -73,8 +76,6 @@ namespace mint::sound
 
 	protected:
 		FMOD::Channel* m_channel;
-
-		SSoundSourceSettings m_settings;
 
 		SoundHandle m_sound;
 
@@ -84,7 +85,8 @@ namespace mint::sound
 	protected:
 		void play_sound_source_start_paused(FMOD::System* system, FMOD::Sound* sound);
 
-
+	private:
+		void _check_fmod_error(FMOD_RESULT result) const;
 	};
 }
 

@@ -971,7 +971,7 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_mode(entity, mode);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_pitch(entt::entity entity, f32 value)
@@ -984,7 +984,7 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_pitch(entity, value);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_pan(entt::entity entity, f32 value)
@@ -997,7 +997,7 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_pan(entity, value);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_volume(entt::entity entity, f32 value)
@@ -1010,10 +1010,10 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_volume(entity, value);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
-	void CUCA::soundsource_set_sound_source_velocity(entt::entity entity, const Vec2& vec)
+	void CUCA::soundsource_set_sound_source_velocity(entt::entity entity, const Vec3& vec)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1023,10 +1023,10 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_velocity(entity, vec);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
-	void CUCA::soundsource_set_sound_source_position(entt::entity entity, const Vec2& vec)
+	void CUCA::soundsource_set_sound_source_position(entt::entity entity, const Vec3& vec)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1039,7 +1039,7 @@ namespace mint::component
 
 		transform_set_position(entity, vec);
 
-		sound::CSoundEngine::Get().set_sound_source_position(entity, vec);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec)
@@ -1052,7 +1052,7 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_cone_orientation(entity, vec);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	void CUCA::soundsource_set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
@@ -1065,14 +1065,14 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_cone_settings(entity, inner_cone_angle, outer_cone_angle, cone_outside_volume);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	FMOD_MODE CUCA::soundsource_get_sound_source_mode(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_mode;
 
@@ -1085,7 +1085,7 @@ namespace mint::component
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_pitch;
 
@@ -1098,7 +1098,7 @@ namespace mint::component
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_pan;
 
@@ -1111,7 +1111,7 @@ namespace mint::component
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_volume;
 
@@ -1120,11 +1120,11 @@ namespace mint::component
 		return value;
 	}
 
-	mint::Vec2 CUCA::soundsource_get_sound_source_velocity(entt::entity entity)
+	mint::Vec3 CUCA::soundsource_get_sound_source_velocity(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_velocity;
 
@@ -1133,11 +1133,11 @@ namespace mint::component
 		return value;
 	}
 
-	mint::Vec2 CUCA::soundsource_get_sound_source_position(entt::entity entity)
+	mint::Vec3 CUCA::soundsource_get_sound_source_position(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_position;
 
@@ -1150,7 +1150,7 @@ namespace mint::component
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_coneOrientation;
 
@@ -1163,7 +1163,7 @@ namespace mint::component
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_coneSettings;
 
@@ -1172,26 +1172,26 @@ namespace mint::component
 		return value;
 	}
 
-	void CUCA::soundsource_set_sound_source_paused(entt::entity entity, bool value)
+	void CUCA::soundsource_set_sound_source_playing(entt::entity entity, bool value)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
 		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
-			ss.m_paused = value;
+			ss.m_playing = value;
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_paused(entity, value);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
-	bool CUCA::soundsource_get_sound_source_paused(entt::entity entity)
+	bool CUCA::soundsource_get_sound_source_playing(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
-			auto value = ss.m_paused;
+			auto value = ss.m_playing;
 
 		);
 
@@ -1208,14 +1208,14 @@ namespace mint::component
 
 		);
 
-		sound::CSoundEngine::Get().set_sound_source_sound_handle(entity, value);
+		CUCA::soundsource_set_sound_source_dirty(entity, true);
 	}
 
 	mint::SoundHandle CUCA::soundsource_get_sound_source_sound_handle(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
-		MINT_BEGIN_CRITICAL_SECTION(m_worldSettingsCriticalSection,
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_soundHandle;
 
@@ -1232,12 +1232,61 @@ namespace mint::component
 
 			MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
-				ss.m_position = vec;
+				ss.m_position.x = vec.x;
+				ss.m_position.y = vec.y;
 
 			);
 
-			sound::CSoundEngine::Get().set_sound_source_position(entity, vec);
+			CUCA::soundsource_set_sound_source_dirty(entity, true);
 		}
+	}
+
+	void CUCA::soundsource_set_sound_source_dirty(entt::entity entity, bool value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_dirty = value;
+
+		);
+	}
+
+	bool CUCA::soundsource_get_sound_source_dirty(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_dirty;
+
+		);
+
+		return value;
+	}
+
+	void CUCA::soundsource_set_sound_source_loopmode(entt::entity entity, s8 value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_loopmode = value;
+
+		);
+	}
+
+	mint::s8 CUCA::soundsource_get_sound_source_loopmode(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_loopmode;
+
+		);
+
+		return value;
 	}
 
 }
