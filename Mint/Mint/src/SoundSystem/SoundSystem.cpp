@@ -77,7 +77,7 @@ namespace mint::sound
 
 		if (result = FMOD::System_Create(&m_system); result == FMOD_OK)
 		{
-			if (result = m_system->init(32, FMOD_INIT_3D_RIGHTHANDED, nullptr); result == FMOD_OK)
+			if (result = m_system->init(32, /*FMOD_INIT_3D_RIGHTHANDED*/ FMOD_INIT_NORMAL, nullptr); result == FMOD_OK)
 			{
 				m_system->set3DSettings(1.0f, 1.0f, 1.0f);
 
@@ -88,17 +88,7 @@ namespace mint::sound
 				m_system->getMasterChannelGroup(&root);
 				m_root.set_channel_group(root);
 				m_root.set_group_name("Master");
-
-				// Set initial settings for Master.
-// 				SSoundSourceGroupSettings settings;
-// 				settings.m_volume = 100.0f;
-// 				settings.m_pitch = 0.0f;
-// 				settings.m_pan = 0.0f;
-// 				settings.m_mode = FMOD_3D | FMOD_LOOP_OFF;
-// 
-// 				m_root.set_sound_group_settings(settings);
-// 				m_root.apply_sound_group_settings();
-
+				
 				return true;
 			}
 		}
@@ -164,11 +154,8 @@ namespace mint::sound
 				return false;
 			}
 
-			//sound->set3DMinMaxDistance(0.5f, 2000.0f);
-			sound->setMode(FMOD_DEFAULT | FMOD_3D | FMOD_3D_WORLDRELATIVE | FMOD_VIRTUAL_PLAYFROMSTART);
-			sound->set3DConeSettings(360.0f, 360.0f, 1.0f);
-			sound->setLoopCount(0);
-
+			sound->setMode(FMOD_3D);
+			
 			m_sounds.add(handle, sound);
 
 			return true;
@@ -234,7 +221,7 @@ namespace mint::sound
 	{
 		MINT_PROFILE_SCOPE("Engine::Sound", "CSoundEngine::on_update");
 
-		set_listener_data(m_listenerPosition, m_listenerVelocity, m_listenerForward, m_listenerUp);
+		_set_listener_data(m_listenerPosition, m_listenerVelocity, m_listenerForward, m_listenerUp);
 
 		m_system->update();
 	}
@@ -340,6 +327,23 @@ namespace mint::sound
 		}
 
 		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_pitch] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	void CSoundEngine::set_sound_source_min_and_max_distance(entt::entity entity, f32 min, f32 max)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_min_and_max_distance(min, max);
+
+			return;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_min_and_max_distance] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
 		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
 	}
 
@@ -484,7 +488,8 @@ namespace mint::sound
 		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
 	}
 
-	void CSoundEngine::set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up)
+
+	void CSoundEngine::_set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up)
 	{
 		m_listenerPosition = position;
 		m_listenerVelocity = velocity;
@@ -672,6 +677,69 @@ namespace mint::sound
 		return result;
 	}
 
+	glm::u32 CSoundEngine::get_sound_position_minutes(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (source.is_playing())
+			{
+				return source.get_sound_position_minutes();
+			}
+			else return 0;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return 0;
+	}
+
+	glm::u32 CSoundEngine::get_sound_position_seconds(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (source.is_playing())
+			{
+				return source.get_sound_position_seconds();
+			}
+			else return 0;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return 0;
+	}
+
+	glm::u32 CSoundEngine::get_sound_position_milliseconds(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (source.is_playing())
+			{
+				return source.get_sound_position_milliseconds();
+			}
+			else return 0;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return 0;
+	}
+
 	void CSoundEngine::play_sound(entt::entity entity)
 	{
 		// Play only if the sound source is enabled.
@@ -688,10 +756,14 @@ namespace mint::sound
 				m_system->playSound(sound, 0, true, &source.m_channel);
 
 				// Set updated data for the channel.
-				source.m_channel->setMode(FMOD_3D);
+				//source.m_channel->setMode(FMOD_3D);
 
+				FMOD_MODE mode = CUCA::soundsource_get_sound_source_mode(entity);
+
+				source.set_mode(FMOD_3D);
+				
 				source.m_channel->setPriority(1);
-				//source.set_mode(CUCA::soundsource_get_sound_source_mode(entity));
+
 				//source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
 				//source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
 				//source.set_volume(CUCA::soundsource_get_sound_source_volume(entity));
@@ -724,6 +796,20 @@ namespace mint::sound
 		}
 	}
 
+	bool CSoundEngine::is_sound_source_virtual(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			return source.is_virtual();
+		}
+
+		return false;
+	}
+
 	void CSoundEngine::stop_sound(entt::entity entity)
 	{
 		auto h = SCAST(u64, entity);
@@ -754,6 +840,26 @@ namespace mint::sound
 			else source.resume_playing_sound_source();
 			
 		}
+	}
+
+	void CSoundEngine::set_listener_position(const Vec3& vec)
+	{
+		m_listenerPosition = vec;
+	}
+
+	void CSoundEngine::set_listener_velocity(const Vec3& vec)
+	{
+		m_listenerVelocity = vec;
+	}
+
+	void CSoundEngine::set_listener_forward(const Vec3& vec)
+	{
+		m_listenerForward = vec;
+	}
+
+	void CSoundEngine::set_listener_up(const Vec3& vec)
+	{
+		m_listenerUp = vec;
 	}
 
 	namespace detail

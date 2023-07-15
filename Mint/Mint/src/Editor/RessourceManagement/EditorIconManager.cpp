@@ -59,9 +59,9 @@ namespace mint::editor
 		mint::CFilesystem fs(mint::CFilesystem::get_working_directory());
 
 		if (fs.forward(icon_ressources_path) &&
-			fs.forward_pretend("Icons.maml"))
+			fs.forward_pretend("icons.maml"))
 		{
-			mint::CFilesystem document_fs(fs.get_current_directory()); document_fs.append_path("Icons.maml");
+			mint::CFilesystem document_fs(fs.get_current_directory()); document_fs.append_path("icons.maml");
 
 			maml::CDocument document(MAML_DOCUMENT_SIZE_BIG);
 			maml::SNode* root = nullptr;

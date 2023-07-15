@@ -13,6 +13,7 @@
 #include "Graphics/RenderingPassStack.h"
 #include "Graphics/RenderingPasses/AntiAliasing/FXAA.h"
 #include "Utility/Profiling/FunctionProfiler.h"
+#include "SoundSystem/SoundSystem.h"
 
 
 namespace mint::editor
@@ -45,6 +46,8 @@ namespace mint::editor
 		void grid_options();
 
 		void debug_render_options();
+
+		void sound_engine_options();
 	};
 
 }

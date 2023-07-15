@@ -958,7 +958,7 @@ namespace mint::component
 		return query;
 	}
 
-	void CUCA::soundsource_set_sound_source_mode(entt::entity entity, sound::SoundSourceChannelMode mode)
+	void CUCA::soundsource_set_sound_source_mode(entt::entity entity, FMOD_MODE mode)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1036,7 +1036,7 @@ namespace mint::component
 		);
 	}
 
-	sound::SoundSourceChannelMode CUCA::soundsource_get_sound_source_mode(entt::entity entity)
+	FMOD_MODE CUCA::soundsource_get_sound_source_mode(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1195,6 +1195,54 @@ namespace mint::component
 		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_height;
+
+		);
+
+		return value;
+	}
+
+	void CUCA::soundsource_set_sound_source_min_distance(entt::entity entity, f32 value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_minDistance = value;
+
+		);
+	}
+
+	glm::f32 CUCA::soundsource_get_sound_source_min_distance(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_minDistance;
+
+		);
+
+		return value;
+	}
+
+	void CUCA::soundsource_set_sound_source_max_distance(entt::entity entity, f32 value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_maxDistance = value;
+
+		);
+	}
+
+	glm::f32 CUCA::soundsource_get_sound_source_max_distance(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_maxDistance;
 
 		);
 

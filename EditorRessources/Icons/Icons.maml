@@ -1,12 +1,2 @@
 icons:
-	plus="button_circle_round_add.png"
-	plus_full="button_circle_round_add_full.png"
-	minus="button_circle_round_remove.png"
-	minus_full="button_circle_round_remove_full.png"
-	save="floppy_disc_storage.png"
-	pause="media_player_ui_button_pause.png"
-	play="media_player_ui_button_play.png"
-	script_add="script_code_snippet_add.png"
-	script_remove="script_code_snippet_remove.png"
-	scene_script="education_scroll_graduation_script_degree.png"
 end

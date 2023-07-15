@@ -37,7 +37,9 @@ namespace mint::editor
 		static bool s_EditorDebugRenderAABBs;
 		static bool s_EditorDebugRenderAABBFullInformation;
 
+		static bool s_EditorDebugRenderListenerPosition;
 		static bool s_EditorDebugRenderSoundSourcePosition;
+		static bool s_EditorDebugRenderSoundSourceMinMaxDistance;
 		static bool s_EditorDebugRenderSoundSourceCone;
 
 
@@ -75,8 +77,23 @@ namespace mint::editor
 
 		static Vec4 s_EditorWorldQueryAABBColor;
 		static Vec4 s_EditorSoundSourceCircleColor;
+		static Vec4 s_EditorSoundSourceMinMaxColor;
 
 		static CApplicationComponentsDatabase s_ComponentDatabase;
+
+
+		static Vec3 s_EditorSoundEngineListenerPosition;
+
+
+		static inline constexpr const char* s_SoundSourceDescPosition = "";
+		static inline constexpr const char* s_SoundSourceDescHeight = "";
+		static inline constexpr const char* s_SoundSourceDescVelocity = "";
+		static inline constexpr const char* s_SoundSourceDescConeOrient = "";
+		static inline constexpr const char* s_SoundSourceDescConeSettings = "";
+		static inline constexpr const char* s_SoundSourceDescOuterConeVolume = "";
+		static inline constexpr const char* s_SoundSourceDescMinMaxDistance = "The \"min distance\" of a spatializer effect represents the distance from the listener at which the event instance is not attenuated,"
+																			  "and the \"max distance\" represents the distance at which the event instance is attenuated to the point of being silent."
+																			  "Between these extremes, the volume is ramped such that the closer the listener gets to the event instance, the louder it sounds";
 	};
 
 
@@ -201,20 +218,6 @@ namespace mint::editor
 		"Gravity",
 		"Free"
 	};
-
-	static const char* SEditorSoundSourceChannelModes[] = {
-		"Default",
-		"LoopOff",
-		"LoopNormal",
-		"LoopBidi",
-		"3D_HeadRelative",
-		"3D_WorldRelative",
-		"3D_InverseRolloff",
-		"3D_LinearRolloff",
-		"3D_LinearSquareRolloff",
-		"3D_InverseTaperedRolloff",
-	};
-
 
 }
 

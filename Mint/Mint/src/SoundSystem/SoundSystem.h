@@ -33,7 +33,11 @@ namespace mint::sound
 
 		void on_update(f32 dt);
 
-		void set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up);
+
+		void set_listener_position(const Vec3& vec);
+		void set_listener_velocity(const Vec3& vec);
+		void set_listener_forward(const Vec3& vec);
+		void set_listener_up(const Vec3& vec);
 
 		Vec3 get_listener_position() const;
 		Vec3 get_listener_velocity() const;
@@ -70,6 +74,12 @@ namespace mint::sound
 
 		u32 get_sound_length_milliseconds(entt::entity entity);
 
+		u32 get_sound_position_minutes(entt::entity entity);
+		
+		u32 get_sound_position_seconds(entt::entity entity);
+		
+		u32 get_sound_position_milliseconds(entt::entity entity);
+
 
 
 		bool add_event_listener(const String& event_name);
@@ -82,6 +92,7 @@ namespace mint::sound
 		void set_sound_source_sound_handle(entt::entity entity, SoundHandle handle);
 		void set_sound_source_mode(entt::entity entity, FMOD_MODE mode);
 		void set_sound_source_pitch(entt::entity entity, f32 value);
+		void set_sound_source_min_and_max_distance(entt::entity entity, f32 min, f32 max);
 		void set_sound_source_pan(entt::entity entity, f32 value);
 		void set_sound_source_volume(entt::entity entity, f32 value);
 		void set_sound_source_velocity(entt::entity entity, const Vec3& vec);
@@ -89,6 +100,8 @@ namespace mint::sound
 		void set_sound_source_position_and_velocity(entt::entity entity, const Vec3& position, const Vec3& velocity);
 		void set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
 		void set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
+
+		bool is_sound_source_virtual(entt::entity entity);
 
 
 		void create_sound_prefab(const String& sound_name, const String& sound_file_path);
@@ -125,6 +138,8 @@ namespace mint::sound
 
 
 	private:
+		void _set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up);
+
 		bool _load_sound(const String& sound_name);
 		bool _load_sound(SoundHandle handle);
 

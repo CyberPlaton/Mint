@@ -241,4 +241,9 @@ namespace mint::sound
 		return false;
 	}
 
+	void CSoundSource::set_min_and_max_distance(f32 min, f32 max)
+	{
+		_check_fmod_error(m_channel->set3DMinMaxDistance(min, max));
+	}
+
 }

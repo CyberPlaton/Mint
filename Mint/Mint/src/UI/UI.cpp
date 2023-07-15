@@ -1097,7 +1097,7 @@ namespace mint
 	void CUI::help_marker(const String& desc)
 	{
 		ImGui::TextDisabled("(?)");
-		if (ImGui::IsItemHovered())
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort))
 		{
 			ImGui::BeginTooltip();
 			ImGui::PushTextWrapPos(ImGui::GetFontSize() * desc.size());
@@ -1110,7 +1110,7 @@ namespace mint
 
 	void CUI::help_marker_no_question_mark(const String& desc)
 	{
-		if (ImGui::IsItemHovered())
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
 		{
 			ImGui::BeginTooltip();
 			ImGui::PushTextWrapPos(ImGui::GetFontSize() * desc.size());
@@ -1120,6 +1120,27 @@ namespace mint
 		}
 	}
 
+
+	void CUI::help_marker_no_question_mark(const String& desc, TooltipHoveringDelay delay)
+	{
+		ImGuiHoveredFlags flag;
+		switch (delay)
+		{
+		case TooltipHoveringDelay_None: flag = ImGuiHoveredFlags_DelayNone;  break;
+		case TooltipHoveringDelay_Short: flag = ImGuiHoveredFlags_DelayShort; break;
+		case TooltipHoveringDelay_Normal: flag = ImGuiHoveredFlags_DelayNormal; break;
+		case TooltipHoveringDelay_Long: flag = ImGuiHoveredFlags_DelayNormal; break;
+		}
+
+		if (ImGui::IsItemHovered(flag))
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * desc.size());
+			ImGui::TextUnformatted(desc.c_str());
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+	}
 
 	bool CUI::ui_has_focus()
 	{

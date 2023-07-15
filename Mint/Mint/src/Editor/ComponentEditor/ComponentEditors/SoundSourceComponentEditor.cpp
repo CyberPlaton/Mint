@@ -48,8 +48,9 @@ namespace mint::editor
 		selected_fmod_sound_source_mode = CUCA::soundsource_get_sound_source_mode(entity);
 		auto loopmode = CUCA::soundsource_get_sound_source_loopmode(entity);
 		auto volume = CUCA::soundsource_get_sound_source_volume(entity) * 100.0f; // Volume is from 0.0f to 1.0f.
-		auto min_dist = soundsource.m_minDistance;
-		auto max_dist = soundsource.m_maxDistance;
+		auto min_dist = CUCA::soundsource_get_sound_source_min_distance(entity);
+		auto max_dist = CUCA::soundsource_get_sound_source_max_distance(entity);
+		Vec2 distance = { min_dist, max_dist };
 		auto pitch = CUCA::soundsource_get_sound_source_pitch(entity);
 		auto pan = CUCA::soundsource_get_sound_source_pan(entity);
 		auto position = CUCA::transform_get_position(entity);
@@ -61,6 +62,17 @@ namespace mint::editor
 
 
 		CUI::toggle_button("Enabled", &enabled);
+
+		ImGui::SameLine();
+
+		if (sound::CSoundEngine::Get().is_sound_source_virtual(entity))
+		{
+			ImGui::Text(ICON_FA_EAR_DEAF " Virtual");
+		}
+		else
+		{
+			ImGui::Text(ICON_FA_EAR_LISTEN " Not virtual");
+		}
 
 		if (ImGui::Button(ICON_FA_PLAY " Play"))
 		{
@@ -77,6 +89,15 @@ namespace mint::editor
 			sound::CSoundEngine::Get().stop_sound(entity);
 		}
 
+		auto length_minutes = sound::CSoundEngine::Get().get_sound_length_minutes(entity);
+		auto length_seconds = sound::CSoundEngine::Get().get_sound_length_seconds(entity);
+		auto length_ms = sound::CSoundEngine::Get().get_sound_length_milliseconds(entity);
+
+		auto position_minutes = sound::CSoundEngine::Get().get_sound_position_minutes(entity);
+		auto position_seconds = sound::CSoundEngine::Get().get_sound_position_seconds(entity);
+		auto position_ms = sound::CSoundEngine::Get().get_sound_position_milliseconds(entity);
+		
+		ImGui::Text(TextFormat("%d:%d:%d/%d:%d:%d", position_minutes, position_seconds, position_ms, length_minutes, length_seconds, length_ms));
 
 
 		ImGui::Separator();
@@ -93,38 +114,44 @@ namespace mint::editor
 
 		ImGui::Separator();
 
-		CUI::edit_field_vec2(position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Position", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
-		CUI::edit_field_f32(height, -100.0f, 100.0f, "Height", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
-		CUI::edit_field_vec3(velocity, -1000.0f, 1000.0f, "Velocity", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
+		CUI::edit_field_vec2(position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Position", GlobalData::Get().s_SoundSourceDescPosition, slid++, scid++, ImGuiSliderFlags_Logarithmic);
+		CUI::edit_field_f32(height, -100.0f, 100.0f, "Height", GlobalData::Get().s_SoundSourceDescHeight, slid++, scid++, ImGuiSliderFlags_Logarithmic);
+		CUI::edit_field_vec3(velocity, -1000.0f, 1000.0f, "Velocity", GlobalData::Get().s_SoundSourceDescVelocity, slid++, scid++, ImGuiSliderFlags_Logarithmic);
 		
-		CUI::edit_field_vec3(cone_orient, -1.0f, 1.0f, "Cone orientation", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
+		CUI::edit_field_vec3(cone_orient, -1.0f, 1.0f, "Cone orientation", GlobalData::Get().s_SoundSourceDescConeOrient, slid++, scid++, ImGuiSliderFlags_Logarithmic);
 
 		Vec2 cone_sett = { cone_settings.x, cone_settings.y };
 		f32 cone_outer = cone_settings.z;
-		CUI::edit_field_vec2_ranged(cone_sett, 0.0f, 360.0f, "Cone settings", "", slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.5f);
-		CUI::edit_field_f32(cone_outer, 0.0f, 1.0f, "Outer cone volume", "", slid++, scid++, 0, 0.05f);
+		CUI::edit_field_vec2_ranged(cone_sett, 0.0f, 360.0f, "Cone settings", GlobalData::Get().s_SoundSourceDescConeSettings, slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.5f);
+		CUI::edit_field_f32(cone_outer, 0.0f, 1.0f, "Outer cone volume", GlobalData::Get().s_SoundSourceDescOuterConeVolume, slid++, scid++, 0, 0.05f);
 
 		ImGui::Separator();
 
-		Vec2 distance = { min_dist, max_dist };
-		CUI::edit_field_vec2_ranged(distance, 0.0f, 10000.0f, "Distance", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
+		CUI::edit_field_vec2_ranged(distance, 0.0f, 5000.0f, "Distance", GlobalData::Get().s_SoundSourceDescMinMaxDistance, slid++, scid++, ImGuiSliderFlags_Logarithmic, 2.0f);
 
-		if (ImGui::Button("FMOD Sound source mode"))
-		{
-			ImGui::OpenPopup("FMOD_Mode_Popup");
-		}
 
-		if (ImGui::BeginPopup("FMOD_Mode_Popup"))
-		{
-			for (int i = 0; i < IM_ARRAYSIZE(SEditorSoundSourceChannelModes); i++)
-			{
-				if (ImGui::Selectable(SEditorSoundSourceChannelModes[i])) { selected_fmod_sound_source_mode = i; }
-			}
+		ImGui::Text("FMOD Mode: " STRING(CUCA::soundsource_get_sound_source_mode(entity)));
 
-			ImGui::EndPopup();
 
-			CUCA::soundsource_set_sound_source_mode(entity, (sound::SoundSourceChannelMode)selected_fmod_sound_source_mode);
-		}
+// 		String text = "FMOD Mode: " + String(SEditorSoundSourceChannelModes[selected_fmod_sound_source_mode]);
+// 
+// 		if (ImGui::Button(text.c_str()))
+// 		{
+// 			ImGui::OpenPopup("FMOD_Mode_Popup");
+// 		}
+// 
+// 		if (ImGui::BeginPopup("FMOD_Mode_Popup"))
+// 		{
+// 			for (int i = 0; i < IM_ARRAYSIZE(SEditorSoundSourceChannelModes); i++)
+// 			{
+// 				if (ImGui::Selectable(SEditorSoundSourceChannelModes[i])) { selected_fmod_sound_source_mode = i; }
+// 			}
+// 
+// 			ImGui::EndPopup();
+// 
+// 			CUCA::soundsource_set_sound_source_mode(entity, (sound::SoundSourceChannelMode)selected_fmod_sound_source_mode);
+// 			sound::CSoundEngine::Get().set_sound_source_mode(entity, (sound::SoundSourceChannelMode)selected_fmod_sound_source_mode);
+// 		}
 
 
 		CUCA::soundsource_set_sound_source_pan(entity, pan);
@@ -136,6 +163,16 @@ namespace mint::editor
 		CUCA::soundsource_set_sound_source_cone_settings(entity, cone_sett.x, cone_sett.y, cone_outer);
 		CUCA::soundsource_set_sound_source_height(entity, height);
 		CUCA::transform_set_position(entity, position);
+		CUCA::soundsource_set_sound_source_min_distance(entity, distance.x);
+		CUCA::soundsource_set_sound_source_max_distance(entity, distance.y);
+
+		//sound::CSoundEngine::Get().set_sound_source_pan(entity, pan);
+		//sound::CSoundEngine::Get().set_sound_source_pitch(entity, pitch);
+		//sound::CSoundEngine::Get().set_sound_source_volume(entity, volume);
+		//sound::CSoundEngine::Get().set_sound_source_position_and_velocity(entity, { position.x, position.y, height }, velocity);
+		//sound::CSoundEngine::Get().set_sound_source_cone_orientation(entity, cone_orient);
+		//sound::CSoundEngine::Get().set_sound_source_cone_settings(entity, cone_sett.x, cone_sett.y, cone_outer);
+		sound::CSoundEngine::Get().set_sound_source_min_and_max_distance(entity, distance.x, distance.y);
 	}
 
 

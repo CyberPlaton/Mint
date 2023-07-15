@@ -19,6 +19,15 @@ namespace mint
 		NotificationType_Critical,
 	};
 
+	enum TooltipHoveringDelay
+	{
+		TooltipHoveringDelay_None = 0,
+		TooltipHoveringDelay_Short,
+		TooltipHoveringDelay_Normal,
+		TooltipHoveringDelay_Long,
+	};
+
+
 
 	struct SNotification
 	{
@@ -117,6 +126,8 @@ namespace mint
 		static void help_marker(const String& desc);
 
 		static void help_marker_no_question_mark(const String& desc);
+
+		static void help_marker_no_question_mark(const String& desc, TooltipHoveringDelay delay);
 
 		static bool ui_has_focus();
 

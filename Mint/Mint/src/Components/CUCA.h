@@ -120,8 +120,8 @@ namespace mint::component
 		static Vec2 transform_get_scale(entt::entity entity);
 
 
-		static void soundsource_set_sound_source_mode(entt::entity entity, sound::SoundSourceChannelMode mode);
-		static sound::SoundSourceChannelMode soundsource_get_sound_source_mode(entt::entity entity);
+		static void soundsource_set_sound_source_mode(entt::entity entity, FMOD_MODE mode);
+		static FMOD_MODE soundsource_get_sound_source_mode(entt::entity entity);
 		static void soundsource_set_sound_source_pitch(entt::entity entity, f32 value);
 		static f32 soundsource_get_sound_source_pitch(entt::entity entity);
 		static void soundsource_set_sound_source_pan(entt::entity entity, f32 value);
@@ -140,6 +140,10 @@ namespace mint::component
 		static s8 soundsource_get_sound_source_loopmode(entt::entity entity);
 		static void soundsource_set_sound_source_height(entt::entity entity, f32 value);
 		static f32 soundsource_get_sound_source_height(entt::entity entity);
+		static void soundsource_set_sound_source_min_distance(entt::entity entity, f32 value);
+		static f32 soundsource_get_sound_source_min_distance(entt::entity entity);
+		static void soundsource_set_sound_source_max_distance(entt::entity entity, f32 value);
+		static f32 soundsource_get_sound_source_max_distance(entt::entity entity);
 
 		static void behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle);
 

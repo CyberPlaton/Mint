@@ -31,31 +31,39 @@ namespace mint::editor
 
 		ImGui::SameLine();
 
-		if(ImGui::SmallButton(ICON_FA_DISPLAY)) { ImGui::OpenPopup("Viewport Window Options Popup"); }
+		if(ImGui::SmallButton(ICON_FA_DISPLAY)) { ImGui::OpenPopup("Window_Popup"); }
 		CUI::help_marker_no_question_mark("Edit window settings");
 
 		window_options();
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton(ICON_FA_VIDEO)) { ImGui::OpenPopup("Viewport Camera Options Popup"); }
+		if (ImGui::SmallButton(ICON_FA_VIDEO)) { ImGui::OpenPopup("Camera_Popup"); }
 		CUI::help_marker_no_question_mark("Edit camera settings");
 
 		camera_options();
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton(ICON_FA_TABLE_CELLS)) { ImGui::OpenPopup("Viewport Grid Options Popup"); }
+		if (ImGui::SmallButton(ICON_FA_TABLE_CELLS)) { ImGui::OpenPopup("Grid_Popup"); }
 		CUI::help_marker_no_question_mark("Edit grid settings");
 
 		grid_options();
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton(ICON_FA_BUG)) { ImGui::OpenPopup("Viewport Debug Render Options Popup"); }
+		if (ImGui::SmallButton(ICON_FA_BUG)) { ImGui::OpenPopup("Debug_Render_Popup"); }
 		CUI::help_marker_no_question_mark("Edit debug rendering settings");
 
 		debug_render_options();
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton(ICON_FA_MUSIC)) { ImGui::OpenPopup("Sound_Engine_Popup"); }
+		CUI::help_marker_no_question_mark("Edit debug rendering settings");
+
+		sound_engine_options();
+
 
 		ImGui::PopStyleColor(2);
 
@@ -94,6 +102,21 @@ namespace mint::editor
 				sedr->set_render_cone(true);
 			}
 			else sedr->set_render_cone(false);
+
+			if (GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance)
+			{
+				sedr->set_render_min_max_distance(true);
+				sedr->set_min_max_distance_color(GlobalData::Get().s_EditorSoundSourceMinMaxColor);
+			}
+			else sedr->set_render_min_max_distance(false);
+
+			if (GlobalData::Get().s_EditorDebugRenderListenerPosition)
+			{
+				sedr->set_render_line_to_listener(true);
+				sedr->set_listener_position(GlobalData::Get().s_EditorSoundEngineListenerPosition);
+			}
+			else sedr->set_render_line_to_listener(false);
+			
 
 
 
@@ -172,7 +195,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::window_options()
 	{
-		if (ImGui::BeginPopup("Viewport Window Options Popup"))
+		if (ImGui::BeginPopup("Window_Popup"))
 		{
 			ImGui::SeparatorText("Window Settings");
 			
@@ -220,7 +243,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::camera_options()
 	{
-		if (ImGui::BeginPopup("Viewport Camera Options Popup"))
+		if (ImGui::BeginPopup("Camera_Popup"))
 		{
 			ImGui::SeparatorText("Editor Camera Settings");
 
@@ -233,7 +256,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::grid_options()
 	{
-		if (ImGui::BeginPopup("Viewport Grid Options Popup"))
+		if (ImGui::BeginPopup("Grid_Popup"))
 		{
 			ImGui::SeparatorText("Grid Settings");
 
@@ -246,7 +269,7 @@ namespace mint::editor
 
 	void CViewportPanelLayer::debug_render_options()
 	{
-		if (ImGui::BeginPopup("Viewport Debug Render Options Popup"))
+		if (ImGui::BeginPopup("Debug_Render_Popup"))
 		{
 			ImGui::SeparatorText("Debug Render Settings");
 
@@ -279,6 +302,10 @@ namespace mint::editor
 			{
 				ImGui::Checkbox("Sound Source Position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
 				ImGui::Checkbox("Sound Source Cone", &GlobalData::Get().s_EditorDebugRenderSoundSourceCone);
+				CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
+
+				ImGui::Checkbox("Sound Source Min-Max Distance", &GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance);
+				CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002);
 
 				ImGui::TreePop();
 			}
@@ -287,6 +314,27 @@ namespace mint::editor
 			ImGui::EndPopup();
 		}
 
+	}
+
+	void CViewportPanelLayer::sound_engine_options()
+	{
+		if (ImGui::BeginPopup("Sound_Engine_Popup"))
+		{
+			ImGui::SeparatorText("Sound Engine Settings");
+
+			ImGui::Checkbox("Listener Position", &GlobalData::Get().s_EditorDebugRenderListenerPosition);
+
+			Vec3 listener_position = sound::CSoundEngine::Get().get_listener_position();
+
+			CUI::edit_field_vec3(listener_position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Listener Position", "", 10002, 20002);
+
+
+			sound::CSoundEngine::Get().set_listener_position(listener_position);
+			
+			GlobalData::Get().s_EditorSoundEngineListenerPosition = listener_position;
+			
+			ImGui::EndPopup();
+		}
 	}
 
 

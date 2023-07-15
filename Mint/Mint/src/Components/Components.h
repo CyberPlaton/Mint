@@ -58,7 +58,7 @@ namespace mint::component
 
 		f32 m_pan = 0.0f;
 
-		sound::SoundSourceChannelMode m_mode = sound::SoundSourceChannelMode::SoundSourceChannelMode_Default;
+		FMOD_MODE m_mode = FMOD_3D;
 
 		f32 m_height = 0.0f;
 

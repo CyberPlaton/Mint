@@ -80,4 +80,6 @@ public:
 	entt::entity m_knight;
 	entt::entity m_particle;
 	entt::entity m_sound;
+	entt::entity m_forest;
+	entt::entity m_shot;
 };

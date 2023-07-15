@@ -197,7 +197,12 @@ bool CMainScene::on_load()
 	/*
 	* TESTING SOUND ENGINE
 	*/
-	mint::sound::CSoundEngine::Get().set_listener_data({ 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f });
+
+	mint::sound::CSoundEngine::Get().set_listener_position({ 0, 0, -1 });
+	mint::sound::CSoundEngine::Get().set_listener_forward({ 0, 0, 1 });
+	mint::sound::CSoundEngine::Get().set_listener_velocity({ 0, 0, 0 });
+	mint::sound::CSoundEngine::Get().set_listener_up({ 0, 1, 0 });
+
 	m_sound = m_registry.create_entity();
 	{
 		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_sound);
@@ -213,7 +218,7 @@ bool CMainScene::on_load()
 
 		identifier.m_enttId = SCAST(u64, m_sound);
 		identifier.m_uuid = identifier.m_enttId;
-		identifier.m_debugName = "SoundSource";
+		identifier.m_debugName = "SoundSource_MainTheme";
 		hierarchy.m_parent = entt::null;
 
 
@@ -228,7 +233,7 @@ bool CMainScene::on_load()
 		sound.m_minDistance = 0.5f;
 		sound.m_maxDistance = 5000.0f;
 
-		CUCA::soundsource_set_sound_source_mode(m_sound, sound::SoundSourceChannelMode::SoundSourceChannelMode_Default);
+		CUCA::soundsource_set_sound_source_mode(m_sound, FMOD_3D);
 		CUCA::soundsource_set_sound_source_volume(m_sound, 1.0f);
 		CUCA::soundsource_set_sound_source_pitch(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_pan(m_sound, 0.0f);
@@ -239,6 +244,93 @@ bool CMainScene::on_load()
 		CUCA::soundsource_set_sound_source_loopmode(m_sound, 1);
 
 		add_entity(m_sound);
+	}
+
+	m_forest = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_forest);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_forest);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_forest);
+		auto& sound = m_registry.add_component< mint::component::SSoundSource >(m_forest);
+		auto& ws = m_registry.add_component< mint::component::SWorldSettings >(m_forest);
+
+		ws.m_groupId = 2;
+		ws.m_enabled = true;
+		ws.m_filterEnabled = false;
+		ws.m_queryable = false;
+
+		identifier.m_enttId = SCAST(u64, m_forest);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "SoundSource_Forest";
+		hierarchy.m_parent = entt::null;
+
+
+		mint::sound::CSoundEngine::Get().create_sound_source(m_forest, "main_theme_forest");
+
+		// Transform data has to be set after creating the sound source in the sound engine.
+		CUCA::transform_set_scale(m_forest, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_forest, 0);
+		CUCA::transform_set_position(m_forest, { 10, 15 });
+
+
+		sound.m_minDistance = 10.0f;
+		sound.m_maxDistance = 5000.0f;
+
+		CUCA::soundsource_set_sound_source_mode(m_forest, FMOD_3D);
+		CUCA::soundsource_set_sound_source_volume(m_forest, 1.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_forest, 0.0f);
+		CUCA::soundsource_set_sound_source_pan(m_forest, 0.0f);
+		CUCA::soundsource_set_sound_source_height(m_forest, 0.0f);
+		CUCA::soundsource_set_sound_source_velocity(m_forest, { 1.0f, 1.0f, 0.0f });
+		CUCA::soundsource_set_sound_source_cone_orientation(m_forest, { 0.0f, 0.0f, -1.0f });
+		CUCA::soundsource_set_sound_source_cone_settings(m_forest, 90.0f, 180.0f, 1.0f);
+		CUCA::soundsource_set_sound_source_loopmode(m_forest, 1);
+
+		add_entity(m_forest);
+	}
+
+
+	m_shot = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_shot);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_shot);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_shot);
+		auto& sound = m_registry.add_component< mint::component::SSoundSource >(m_shot);
+		auto& ws = m_registry.add_component< mint::component::SWorldSettings >(m_shot);
+
+		ws.m_groupId = 2;
+		ws.m_enabled = true;
+		ws.m_filterEnabled = false;
+		ws.m_queryable = false;
+
+		identifier.m_enttId = SCAST(u64, m_shot);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "SoundSource_GunShot";
+		hierarchy.m_parent = entt::null;
+
+
+		mint::sound::CSoundEngine::Get().create_sound_source(m_shot, "9mm_Spray");
+
+		// Transform data has to be set after creating the sound source in the sound engine.
+		CUCA::transform_set_scale(m_shot, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_shot, 0);
+		CUCA::transform_set_position(m_shot, { 10, 1 });
+
+
+		sound.m_minDistance = 1.0f;
+		sound.m_maxDistance = 5000.0f;
+
+		CUCA::soundsource_set_sound_source_mode(m_shot, FMOD_3D);
+		CUCA::soundsource_set_sound_source_volume(m_shot, 1.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_shot, 0.0f);
+		CUCA::soundsource_set_sound_source_pan(m_shot, 0.0f);
+		CUCA::soundsource_set_sound_source_height(m_shot, 0.0f);
+		CUCA::soundsource_set_sound_source_velocity(m_shot, { 1.0f, 1.0f, 0.0f });
+		CUCA::soundsource_set_sound_source_cone_orientation(m_shot, { 0.0f, 0.0f, -1.0f });
+		CUCA::soundsource_set_sound_source_cone_settings(m_shot, 360.0f, 360.0f, 1.0f);
+		CUCA::soundsource_set_sound_source_loopmode(m_shot, 1);
+
+		add_entity(m_shot);
 	}
 
 
