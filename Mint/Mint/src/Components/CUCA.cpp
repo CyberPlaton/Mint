@@ -1199,4 +1199,28 @@ namespace mint::component
 		return value;
 	}
 
+	void CUCA::soundsource_set_sound_source_3d_to_2d_morphing_enabled(entt::entity entity, bool value)
+	{
+		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			ss.m_3dTo2dMorphing = value;
+
+		);
+	}
+
+	bool CUCA::soundsource_get_sound_source_3d_to_2d_morphing_enabled(entt::entity entity)
+	{
+		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
+
+			auto value = ss.m_3dTo2dMorphing;
+
+		);
+
+		return value;
+	}
+
 }

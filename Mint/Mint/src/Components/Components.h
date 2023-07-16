@@ -45,6 +45,8 @@ namespace mint::component
 
 		SoundHandle m_soundHandle = 0;
 
+		bool m_3dTo2dMorphing = true;
+
 		/// @brief -1 means loop forever, 0 means play once and 1..n means play n+1 times, i.e. 2 would play the sound 3 times.
 		s8 m_loopmode = 0;
 

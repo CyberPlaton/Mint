@@ -57,20 +57,25 @@ namespace mint::editor
 		auto pan = CUCA::soundsource_get_sound_source_pan(entity);
 		auto height = CUCA::soundsource_get_sound_source_height(entity);
 		auto velocity = CUCA::soundsource_get_sound_source_velocity(entity);
+		auto morphing = CUCA::soundsource_get_sound_source_3d_to_2d_morphing_enabled(entity);
 
 
 
-		CUI::toggle_button("Enabled", &enabled);
+		CUI::toggle_button("Enabled", &enabled); ImGui::SameLine(); CUI::help_marker_no_question_mark("Disable or enabled the sound source. Disabled sound sources will not be played. Enabled by default!");
+
+		ImGui::SameLine();
+
+		CUI::toggle_button("Morphing", &morphing); ImGui::SameLine(); CUI::help_marker_no_question_mark("Disable or enable dynamic 3D to 2D sound morphing. Below a certain threshold the sound will progressively become 2D. Enabled by default!");
 
 		ImGui::SameLine();
 
 		if (sound::CSoundEngine::Get().is_sound_source_virtual(entity))
 		{
-			ImGui::SmallButton(ICON_FA_EAR_DEAF " Virtual");
+			ImGui::SmallButton(ICON_FA_EAR_DEAF " Virtual"); ImGui::SameLine(); CUI::help_marker_no_question_mark("Sound volume is below hearable threshold!");
 		}
 		else
 		{
-			ImGui::SmallButton(ICON_FA_EAR_LISTEN " Not virtual");
+			ImGui::SmallButton(ICON_FA_EAR_LISTEN " Not virtual"); ImGui::SameLine(); CUI::help_marker_no_question_mark("Sound volume is above hearable threshold!");
 		}
 
 		ImGui::SameLine();
@@ -159,6 +164,7 @@ namespace mint::editor
 		CUCA::soundsource_set_sound_source_height(entity, height);
 		CUCA::soundsource_set_sound_source_min_distance(entity, distance.x);
 		CUCA::soundsource_set_sound_source_max_distance(entity, distance.y);
+		CUCA::soundsource_set_sound_source_3d_to_2d_morphing_enabled(entity, morphing);
 
 		sound::CSoundEngine::Get().set_sound_source_pan(entity, pan);
 		sound::CSoundEngine::Get().set_sound_source_pitch(entity, pitch);

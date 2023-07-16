@@ -113,6 +113,9 @@ namespace mint::sound
 
 		bool get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size);
 
+		void set_3d_to_2d_morphing_threshold(f32 value);
+
+		f32 get_3d_to_2d_morphing_threshold() const;
 
 
 	private:
@@ -123,6 +126,7 @@ namespace mint::sound
 		Vec3 m_listenerForward;
 		Vec3 m_listenerUp;
 
+		f32 m_morphingThreshold = 150.0f;
 
 
 		CMap< SDelegate* > m_delegates;

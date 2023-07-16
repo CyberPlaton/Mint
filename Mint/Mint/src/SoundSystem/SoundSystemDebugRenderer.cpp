@@ -31,6 +31,12 @@ namespace mint
 			fx::CPrimitiveRenderer::render_circle_outlined_lines({ m_listenerPosition.x, m_listenerPosition.y }, 10.0f, m_circleColor);
 		}
 
+		// Always render sound engine morph threshold if desired.
+		if (m_renderSoundEngineMorphThreshold)
+		{
+			fx::CPrimitiveRenderer::render_circle_outlined_lines({ m_listenerPosition.x, m_listenerPosition.y }, m_soundEngineMorphThreshold, m_morphThresholdColor);
+		}
+
 
 
 		Vector< entt::entity > to_render_entities;

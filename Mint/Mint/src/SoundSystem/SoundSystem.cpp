@@ -223,6 +223,33 @@ namespace mint::sound
 
 		_set_listener_data(m_listenerPosition, m_listenerVelocity, m_listenerForward, m_listenerUp);
 
+		auto& view = MINT_SCENE_REGISTRY()->get_registry_view< mint::component::SSoundSource >();
+
+		for (auto& entity : view)
+		{
+			if (CUCA::soundsource_get_sound_source_3d_to_2d_morphing_enabled(entity))
+			{
+				auto& source = m_soundSources[SCAST(u64, entity)];
+
+				auto position = CUCA::transform_get_position(entity);
+
+				auto dist = mint::algorithm::vec2_compute_distance_between_two_vectors(m_listenerPosition, position);
+
+				if (dist < m_morphingThreshold)
+				{
+					auto p = mint::algorithm::compute_percent_value(m_morphingThreshold, dist);
+
+					// Value is always between 0.0f(2D) and 1.0f(3D).
+					source.get_channel()->set3DLevel(p / 100.0f);
+				}
+				else
+				{
+					source.get_channel()->set3DLevel(1.0f);
+				}
+			}
+		}
+
+
 		m_system->update();
 	}
 
@@ -919,7 +946,16 @@ namespace mint::sound
 		m_listenerUp = vec;
 	}
 
-	
+	void CSoundEngine::set_3d_to_2d_morphing_threshold(f32 value)
+	{
+		m_morphingThreshold = value;
+	}
+
+	mint::f32 CSoundEngine::get_3d_to_2d_morphing_threshold() const
+	{
+		return m_morphingThreshold;
+	}
+
 
 	namespace detail
 	{

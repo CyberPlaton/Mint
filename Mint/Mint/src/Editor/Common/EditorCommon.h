@@ -38,6 +38,7 @@ namespace mint::editor
 		static bool s_EditorDebugRenderListenerPosition;
 		static bool s_EditorDebugRenderSoundSourcePosition;
 		static bool s_EditorDebugRenderSoundSourceMinMaxDistance;
+		static bool s_EditorRenderSoundEngine3DTo2DMorphingThreshold;
 
 		static bool s_EditorProfilerEnabled;
 		static bool s_EditorBehaviorScriptsEnabled;
@@ -74,6 +75,10 @@ namespace mint::editor
 		static Vec4 s_EditorWorldQueryAABBColor;
 		static Vec4 s_EditorSoundSourceCircleColor;
 		static Vec4 s_EditorSoundSourceMinMaxColor;
+
+		static f32 s_EditorSoundEngine3DTo2DMorphingThreshold;
+		static Vec4 s_EditorSoundEngine3DTo2DMorphingThresholdColor;
+
 
 		static CApplicationComponentsDatabase s_ComponentDatabase;
 

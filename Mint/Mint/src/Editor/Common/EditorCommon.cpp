@@ -44,6 +44,9 @@ namespace mint::editor
 	mint::Vec4 GlobalData::s_EditorWorldQueryAABBColor = {150, 0, 0, 30};
 	mint::Vec4 GlobalData::s_EditorSoundSourceCircleColor = { 0, 150, 230 , 30 };
 	mint::Vec4 GlobalData::s_EditorSoundSourceMinMaxColor = { 0, 0, 150, 30 };
+	mint::Vec4 GlobalData::s_EditorSoundEngine3DTo2DMorphingThresholdColor = { 0, 255, 230 , 30 };
+	mint::f32 GlobalData::s_EditorSoundEngine3DTo2DMorphingThreshold = 0.0f;
+
 
 	bool GlobalData::s_EditorDebugRenderAABBFullInformation = false;
 	bool GlobalData::s_EditorDebugRenderAABBs = false;
@@ -54,7 +57,8 @@ namespace mint::editor
 	bool GlobalData::s_EditorDebugRenderSoundSourcePosition = false;
 	bool GlobalData::s_EditorDebugRenderSoundSourceMinMaxDistance = false;
 	bool GlobalData::s_EditorDebugRenderListenerPosition = false;
-	
+	bool GlobalData::s_EditorRenderSoundEngine3DTo2DMorphingThreshold = false;
+
 	mint::Vec3 GlobalData::s_EditorSoundEngineListenerPosition = { 0.0f, 0.0f, 0.0f };
 
 
@@ -145,6 +149,7 @@ namespace mint::editor
 		default: return 0;
 		}
 	}
+
 
 }
 #endif

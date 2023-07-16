@@ -21,6 +21,11 @@ namespace mint::algorithm
 
 	Vec2 vec2_compute_center_between_two_vectors(const Vec2& p1, const Vec2& p2);
 
+	f32 vec2_compute_distance_between_two_vectors(const Vec2& p1, const Vec2& p2);
+
+	f32 vec3_compute_distance_between_two_vectors(const Vec3& p1, const Vec3& p2);
+
+
 	/* Please note the difference between our coordinate system and box2d:
 	*
 	* Box2D:

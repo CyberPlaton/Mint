@@ -111,6 +111,13 @@ namespace mint::editor
 			}
 			else sedr->set_render_line_to_listener(false);
 			
+			if (GlobalData::Get().s_EditorRenderSoundEngine3DTo2DMorphingThreshold)
+			{
+				sedr->set_render_sound_engine_3d_to_2d_morph_threshold(true);
+				sedr->set_sound_engine_3d_to_2d_morph_threshold(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold);
+				sedr->set_morph_threshold_color(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThresholdColor);
+			}
+			else sedr->set_render_sound_engine_3d_to_2d_morph_threshold(false);
 
 
 
@@ -304,6 +311,7 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Sound Engine Settings");
 
+			// Sound Source
 			ImGui::Checkbox("Render sound source position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
 			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
 
@@ -311,17 +319,29 @@ namespace mint::editor
 			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002);
 
 
+			// Listener position
 			ImGui::Checkbox("Render listener position", &GlobalData::Get().s_EditorDebugRenderListenerPosition);
 
 			Vec3 listener_position = sound::CSoundEngine::Get().get_listener_position();
 
-			CUI::edit_field_vec3(listener_position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Listener Position", "", 10002, 20002);
-
+			CUI::edit_field_vec3(listener_position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Listener Position", "", 10003, 20003);
 
 			sound::CSoundEngine::Get().set_listener_position(listener_position);
 			
 			GlobalData::Get().s_EditorSoundEngineListenerPosition = listener_position;
 			
+
+			// Morphing Threshold.
+			ImGui::Checkbox("Render 3D to 2D morhping threshold", &GlobalData::Get().s_EditorRenderSoundEngine3DTo2DMorphingThreshold);
+
+			GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold = sound::CSoundEngine::Get().get_3d_to_2d_morphing_threshold();
+
+			CUI::edit_field_f32(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold, 0.0f, 5000.0f, "3D to 2D morphing threshold", "", 10004, 20004, ImGuiSliderFlags_Logarithmic);
+
+			sound::CSoundEngine::Get().set_3d_to_2d_morphing_threshold(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold);
+
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThresholdColor, 0.0f, 255.0f, "Morphing threshold color", "", 10005, 20005);
+
 			ImGui::EndPopup();
 		}
 	}

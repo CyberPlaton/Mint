@@ -140,6 +140,8 @@ namespace mint::component
 		static f32 soundsource_get_sound_source_min_distance(entt::entity entity);
 		static void soundsource_set_sound_source_max_distance(entt::entity entity, f32 value);
 		static f32 soundsource_get_sound_source_max_distance(entt::entity entity);
+		static void soundsource_set_sound_source_3d_to_2d_morphing_enabled(entt::entity entity, bool value);
+		static bool soundsource_get_sound_source_3d_to_2d_morphing_enabled(entt::entity entity);
 
 		static void behavior_set_script_handle_for_entity(entt::entity entity, ScriptHandle handle);
 

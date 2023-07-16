@@ -218,4 +218,22 @@ namespace mint::algorithm
 		return total_value * (SCAST(f32, percent) / 100.0f);
 	}
 
+	mint::f32 vec2_compute_distance_between_two_vectors(const Vec2& p1, const Vec2& p2)
+	{
+		f32 dx = (p1.x - p2.x) * (p1.x - p2.x);
+		f32 dy = (p1.y - p2.y) * (p1.y - p2.y);
+		
+		return glm::sqrt(dx + dy);
+	}
+
+	mint::f32 vec3_compute_distance_between_two_vectors(const Vec3& p1, const Vec3& p2)
+	{
+		f32 dx = (p1.x - p2.x) * (p1.x - p2.x);
+		f32 dy = (p1.y - p2.y) * (p1.y - p2.y);
+		f32 dz = (p1.z - p2.z) * (p1.z - p2.z);
+
+
+		return glm::sqrt(dx + dy + dz);
+	}
+
 }
