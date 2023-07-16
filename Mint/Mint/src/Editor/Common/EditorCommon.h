@@ -23,9 +23,7 @@ namespace mint::editor
 					const String& asset_name, const String& asset_source_name, const String& asset_source_type,
 					const String& author, u32 version, const String& description);
 
-
-
-
+		static u32 get_initial_sound_source_channel_mode_index(FMOD_MODE mode);
 
 		
 		static bool s_EditorDebugRenderAll;
@@ -215,6 +213,34 @@ namespace mint::editor
 		"None",
 		"Gravity",
 		"Free"
+	};
+
+	static const char* s_EditorSoundSourceChannelModes[] = {
+		"Default",
+		"3D",
+		"LoopOff",
+		"LoopNormal",
+		"LoopBidi",
+		"3D_Headrelative",
+		"3D_Worldrelative",
+		"3D_InverseRolloff",
+		"3D_LinearRolloff",
+		"3D_LinearSquareRolloff",
+		"3D_InverseTaperedRolloff",
+	};
+
+	static u32 s_EditorSoundSourceChannelModesEnum[] = {
+		FMOD_DEFAULT,
+		FMOD_3D,
+		FMOD_LOOP_OFF,
+		FMOD_LOOP_NORMAL,
+		FMOD_LOOP_BIDI,
+		FMOD_3D_HEADRELATIVE,
+		FMOD_3D_WORLDRELATIVE,
+		FMOD_3D_INVERSEROLLOFF,
+		FMOD_3D_LINEARROLLOFF,
+		FMOD_3D_LINEARSQUAREROLLOFF,
+		FMOD_3D_INVERSETAPEREDROLLOFF
 	};
 
 }

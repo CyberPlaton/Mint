@@ -109,6 +109,42 @@ namespace mint::editor
 		return false;
 	}
 
+	mint::u32 GlobalData::get_initial_sound_source_channel_mode_index(FMOD_MODE mode)
+	{
+		switch (mode)
+		{
+		case FMOD_DEFAULT: return 0;
+		case FMOD_LOOP_OFF: return 2;
+		case FMOD_LOOP_NORMAL: return 3;
+		case FMOD_LOOP_BIDI: return 4;
+		case FMOD_2D: return 0;
+		case FMOD_3D: return 1;
+		case FMOD_CREATESTREAM: return 0;
+		case FMOD_CREATESAMPLE: return 0;
+		case FMOD_CREATECOMPRESSEDSAMPLE: return 0;
+		case FMOD_OPENUSER: return 0;
+		case FMOD_OPENMEMORY: return 0;
+		case FMOD_OPENMEMORY_POINT: return 0;
+		case FMOD_OPENRAW: return 0;
+		case FMOD_OPENONLY: return 0;
+		case FMOD_ACCURATETIME: return 0;
+		case FMOD_MPEGSEARCH: return 0;
+		case FMOD_NONBLOCKING: return 0;
+		case FMOD_UNIQUE: return 0;
+		case FMOD_3D_HEADRELATIVE: return 5;
+		case FMOD_3D_WORLDRELATIVE: return 6;
+		case FMOD_3D_INVERSEROLLOFF: return 7;
+		case FMOD_3D_LINEARROLLOFF: return 8;
+		case FMOD_3D_LINEARSQUAREROLLOFF: return 9;
+		case FMOD_3D_INVERSETAPEREDROLLOFF: return 10;
+		case FMOD_3D_CUSTOMROLLOFF: return 0;
+		case FMOD_3D_IGNOREGEOMETRY: return 0;
+		case FMOD_IGNORETAGS: return 0;
+		case FMOD_LOWMEM: return 0;
+		case FMOD_VIRTUAL_PLAYFROMSTART: return 0;
+		default: return 0;
+		}
+	}
 
 }
 #endif

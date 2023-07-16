@@ -54,7 +54,8 @@ namespace mint::component
 
 		f32 m_maxDistance = 0.0f;
 
-		f32 m_pitch = 0.0f;
+		/// @brief Between 0 and 256.
+		f32 m_pitch = 1.0f;
 
 		f32 m_pan = 0.0f;
 

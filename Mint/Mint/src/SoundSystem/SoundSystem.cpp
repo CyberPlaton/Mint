@@ -786,30 +786,22 @@ namespace mint::sound
 				// Set updated data for the channel.
 				//source.m_channel->setMode(FMOD_3D);
 
+				auto pos = CUCA::transform_get_position(entity);
 				FMOD_MODE mode = CUCA::soundsource_get_sound_source_mode(entity);
 
 				source.set_mode(FMOD_3D);
-				
-				source.m_channel->setPriority(1);
+				source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), { pos.x, pos.y, CUCA::soundsource_get_sound_source_height(entity) });
 
-				//source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
-				//source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
-				//source.set_volume(CUCA::soundsource_get_sound_source_volume(entity));
+				//source.m_channel->setPriority(1);
 
-				auto pos = CUCA::transform_get_position(entity);
-				auto height = CUCA::soundsource_get_sound_source_height(entity);
+				source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
+				source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
+				source.set_volume(CUCA::soundsource_get_sound_source_volume(entity));
+				source.set_loop_mode(CUCA::soundsource_get_sound_source_loopmode(entity));
+				source.set_min_and_max_distance(CUCA::soundsource_get_sound_source_min_distance(entity), CUCA::soundsource_get_sound_source_max_distance(entity));
 
-				source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), { pos.x, pos.y, height });
-				
-				//source.set_loop_mode(CUCA::soundsource_get_sound_source_loopmode(entity));
-				//
 
-				//
-				//source.m_channel->set3DMinMaxDistance(0.5f, 5000.0f);
-				//source.m_channel->setLoopCount(0);
-
-				source.m_channel->setPaused(false);
-
+				source.play_sound_source();
 
 				//if (source.is_virtual())
 				//{

@@ -235,7 +235,7 @@ bool CMainScene::on_load()
 
 		CUCA::soundsource_set_sound_source_mode(m_sound, FMOD_3D);
 		CUCA::soundsource_set_sound_source_volume(m_sound, 1.0f);
-		CUCA::soundsource_set_sound_source_pitch(m_sound, 0.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_sound, 1.0f);
 		CUCA::soundsource_set_sound_source_pan(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_sound, { 1.0f, 1.0f, 0.0f });
@@ -276,7 +276,7 @@ bool CMainScene::on_load()
 
 		CUCA::soundsource_set_sound_source_mode(m_forest, FMOD_3D);
 		CUCA::soundsource_set_sound_source_volume(m_forest, 1.0f);
-		CUCA::soundsource_set_sound_source_pitch(m_forest, 0.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_forest, 1.0f);
 		CUCA::soundsource_set_sound_source_pan(m_forest, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_forest, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_forest, { 1.0f, 1.0f, 0.0f });
@@ -316,9 +316,9 @@ bool CMainScene::on_load()
 		sound.m_minDistance = 1.0f;
 		sound.m_maxDistance = 5000.0f;
 
-		CUCA::soundsource_set_sound_source_mode(m_shot, FMOD_3D);
+		CUCA::soundsource_set_sound_source_mode(m_shot, FMOD_3D_HEADRELATIVE);
 		CUCA::soundsource_set_sound_source_volume(m_shot, 1.0f);
-		CUCA::soundsource_set_sound_source_pitch(m_shot, 0.0f);
+		CUCA::soundsource_set_sound_source_pitch(m_shot, 1.0f);
 		CUCA::soundsource_set_sound_source_pan(m_shot, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_shot, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_shot, { 1.0f, 1.0f, 0.0f });

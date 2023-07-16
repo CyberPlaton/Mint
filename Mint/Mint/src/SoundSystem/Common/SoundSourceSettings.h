@@ -7,7 +7,7 @@
 
 namespace mint::sound
 {
-	
+
 	/// @brief Attributes and effects of a sound source, i.e. DSP effects such as 
 	/// distortion, delay, echo etc.	
 	struct SSoundSourceGroupSettings
