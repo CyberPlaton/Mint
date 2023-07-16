@@ -163,6 +163,7 @@ namespace mint
 		ui_frame_begin();
 
 		ImGui::ShowDemoWindow();
+		ImPlot::ShowDemoWindow();
 	}
 
 

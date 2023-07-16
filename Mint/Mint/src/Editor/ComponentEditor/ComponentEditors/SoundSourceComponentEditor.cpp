@@ -67,19 +67,26 @@ namespace mint::editor
 
 		if (sound::CSoundEngine::Get().is_sound_source_virtual(entity))
 		{
-			ImGui::Text(ICON_FA_EAR_DEAF " Virtual");
+			ImGui::SmallButton(ICON_FA_EAR_DEAF " Virtual");
 		}
 		else
 		{
-			ImGui::Text(ICON_FA_EAR_LISTEN " Not virtual");
+			ImGui::SmallButton(ICON_FA_EAR_LISTEN " Not virtual");
 		}
+
+		ImGui::SameLine();
+
+		ImGui::SmallButton(TextFormat("Size: %dKB", sound::CSoundEngine::Get().get_sound_source_size_in_bytes(handle) / 1000));
+
+
+
 
 		if (ImGui::Button(ICON_FA_PLAY " Play"))
 		{
 			sound::CSoundEngine::Get().play_sound(entity);
 		}
 		ImGui::SameLine();
-		if (ImGui::Button(ICON_FA_PAUSE " Toggle paused"))
+		if (ImGui::Button(ICON_FA_PAUSE " Pause"))
 		{
 			sound::CSoundEngine::Get().toggle_pause_sound(entity);
 		}
@@ -92,13 +99,14 @@ namespace mint::editor
 		auto length_minutes = sound::CSoundEngine::Get().get_sound_length_minutes(entity);
 		auto length_seconds = sound::CSoundEngine::Get().get_sound_length_seconds(entity);
 		auto length_ms = sound::CSoundEngine::Get().get_sound_length_milliseconds(entity);
+		auto full_length = sound::CSoundEngine::Get().get_sound_length(entity);
 
 		auto position_minutes = sound::CSoundEngine::Get().get_sound_position_minutes(entity);
 		auto position_seconds = sound::CSoundEngine::Get().get_sound_position_seconds(entity);
 		auto position_ms = sound::CSoundEngine::Get().get_sound_position_milliseconds(entity);
-		
-		ImGui::Text(TextFormat("%d:%d:%d/%d:%d:%d", position_minutes, position_seconds, position_ms, length_minutes, length_seconds, length_ms));
+		auto full_position = sound::CSoundEngine::Get().get_sound_position(entity);
 
+		ImGui::Text(TextFormat("%d:%d:%d/%d:%d:%d", position_minutes, position_seconds, position_ms, length_minutes, length_seconds, length_ms));
 
 		ImGui::Separator();
 

@@ -174,6 +174,8 @@ namespace mint
 	{
 		rlImGuiSetup(true);
 
+		ImPlot::CreateContext();
+
 		bool result = false;
 
 #if MINT_DISTR
@@ -235,6 +237,8 @@ namespace mint
 
 	void CUI::terminate()
 	{
+		ImPlot::DestroyContext();
+
 		rlImGuiShutdown();
 	}
 

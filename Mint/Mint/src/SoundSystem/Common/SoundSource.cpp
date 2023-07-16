@@ -203,6 +203,19 @@ namespace mint::sound
 		return result;
 	}
 
+	mint::u32 CSoundSource::get_sound_position() const
+	{
+		u32 result = 0;
+		if (is_playing())
+		{
+			_check_fmod_error(m_channel->getPosition(&result, FMOD_TIMEUNIT_MS));
+
+			return result;
+		}
+
+		return result;
+	}
+
 	void CSoundSource::set_loop_mode(s8 mode)
 	{
 		_check_fmod_error(m_channel->setLoopCount(mode));
@@ -245,5 +258,7 @@ namespace mint::sound
 	{
 		_check_fmod_error(m_channel->set3DMinMaxDistance(min, max));
 	}
+
+
 
 }

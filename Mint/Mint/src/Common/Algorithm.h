@@ -13,6 +13,9 @@
 
 namespace mint::algorithm
 {
+	u32 compute_percent_value(f32 total_value, f32 part_value);
+
+	f32 compute_value_from_percent(f32 total_value, u32 percent);
 
 	Vec2 vec2_compute_perpendicular_vector(const Vec2& vec);
 

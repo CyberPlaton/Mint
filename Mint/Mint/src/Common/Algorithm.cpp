@@ -205,4 +205,17 @@ namespace mint::algorithm
 		return { -vec.y, vec.x };
 	}
 
+	mint::u32 compute_percent_value(f32 total_value, f32 part_value)
+	{
+		return (part_value / total_value) * 100;
+	}
+
+	mint::f32 compute_value_from_percent(f32 total_value, u32 percent)
+	{
+		if (percent < 1) percent = 1;
+		if (percent > 100) percent = 100;
+
+		return total_value * (SCAST(f32, percent) / 100.0f);
+	}
+
 }

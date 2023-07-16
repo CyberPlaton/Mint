@@ -61,6 +61,11 @@ namespace mint::sound
 
 		void remove_sound_source(entt::entity entity);
 
+		u32 get_sound_length(const String& sound_name);
+
+		u32 get_sound_length(entt::entity entity);
+
+		u32 get_sound_position(entt::entity entity);
 
 		u32 get_sound_length_minutes(const String& sound_name);
 
@@ -103,8 +108,13 @@ namespace mint::sound
 
 		bool is_sound_source_virtual(entt::entity entity);
 
-
 		void create_sound_prefab(const String& sound_name, const String& sound_file_path);
+
+		
+		u32 get_sound_source_size_in_bytes(SoundHandle handle);
+
+		bool get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size);
+
 
 
 	private:

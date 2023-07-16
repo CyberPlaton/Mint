@@ -146,7 +146,7 @@ namespace mint::sound
 
 			FMOD::Sound* sound = nullptr;
 			
-			auto result = m_system->createSound(pair.second.c_str(), FMOD_3D, 0, &sound);
+			auto result = m_system->createSound(pair.second.c_str(), FMOD_3D | FMOD_CREATESAMPLE, 0, &sound);
 
 			if (result != FMOD_OK)
 			{
@@ -547,6 +547,69 @@ namespace mint::sound
 		}
 	}
 
+	mint::u32 CSoundEngine::get_sound_length(const String& sound_name)
+	{
+		auto h = mint::algorithm::djb_hash(sound_name);
+
+		u32 result = 0;
+
+		if (m_sounds.lookup(h))
+		{
+			auto sound = m_sounds.get(h);
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return result;
+	}
+
+	mint::u32 CSoundEngine::get_sound_length(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		u32 result = 0;
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			auto sound = _get_sound(source.get_audio_source_file());
+
+			sound->getLength(&result, FMOD_TIMEUNIT_MS);
+
+			return result;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+	}
+
+	mint::u32 CSoundEngine::get_sound_position(entt::entity entity)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			if (source.is_playing())
+			{
+				return source.get_sound_position();
+			}
+			else return 0;
+		}
+
+		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_position] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+
+		return 0;
+	}
+
 	glm::u32 CSoundEngine::get_sound_length_minutes(const String& sound_name)
 	{
 		auto h = mint::algorithm::djb_hash(sound_name);
@@ -810,6 +873,45 @@ namespace mint::sound
 		return false;
 	}
 
+	mint::u32 CSoundEngine::get_sound_source_size_in_bytes(SoundHandle handle)
+	{
+		if (m_sounds.lookup(handle))
+		{
+			auto sound = m_sounds.get(handle);
+			
+			u32 result = 0;
+
+			_check_fmod_error(sound->getLength(&result, FMOD_TIMEUNIT_RAWBYTES));
+
+			return result;
+		}
+
+		return 0;
+	}
+
+	bool CSoundEngine::get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size)
+	{
+		if (m_sounds.lookup(handle))
+		{
+			// Load sound for reading data and close afterwards. Easier than to synchronize with FMOD and engine.
+			auto& pair = m_soundPrefabs.get_ref(handle);
+
+			FMOD::Sound* sound = nullptr;
+
+			_check_fmod_error(m_system->createSound(pair.second.c_str(), FMOD_DEFAULT | FMOD_OPENONLY, 0, &sound));
+
+			u32 length = 0;
+
+			sound->getLength(&length, FMOD_TIMEUNIT_RAWBYTES);
+
+			_check_fmod_error(sound->readData(buffer, length, buffer_size));
+
+			return true;
+		}
+
+		return false;
+	}
+
 	void CSoundEngine::stop_sound(entt::entity entity)
 	{
 		auto h = SCAST(u64, entity);
@@ -861,6 +963,8 @@ namespace mint::sound
 	{
 		m_listenerUp = vec;
 	}
+
+	
 
 	namespace detail
 	{
