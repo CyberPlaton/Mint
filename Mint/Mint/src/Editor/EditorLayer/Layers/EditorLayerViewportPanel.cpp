@@ -97,12 +97,6 @@ namespace mint::editor
 			}
 			else sedr->set_render_position(false);
 
-			if (GlobalData::Get().s_EditorDebugRenderSoundSourceCone)
-			{
-				sedr->set_render_cone(true);
-			}
-			else sedr->set_render_cone(false);
-
 			if (GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance)
 			{
 				sedr->set_render_min_max_distance(true);
@@ -298,18 +292,6 @@ namespace mint::editor
 
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Sound Engine"))
-			{
-				ImGui::Checkbox("Sound Source Position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
-				ImGui::Checkbox("Sound Source Cone", &GlobalData::Get().s_EditorDebugRenderSoundSourceCone);
-				CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
-
-				ImGui::Checkbox("Sound Source Min-Max Distance", &GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance);
-				CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002);
-
-				ImGui::TreePop();
-			}
-
 
 			ImGui::EndPopup();
 		}
@@ -322,7 +304,14 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Sound Engine Settings");
 
-			ImGui::Checkbox("Listener Position", &GlobalData::Get().s_EditorDebugRenderListenerPosition);
+			ImGui::Checkbox("Render sound source position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
+
+			ImGui::Checkbox("Render sound source min-max distance", &GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance);
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002);
+
+
+			ImGui::Checkbox("Render listener position", &GlobalData::Get().s_EditorDebugRenderListenerPosition);
 
 			Vec3 listener_position = sound::CSoundEngine::Get().get_listener_position();
 

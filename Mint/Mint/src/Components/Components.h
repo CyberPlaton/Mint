@@ -63,14 +63,6 @@ namespace mint::component
 		f32 m_height = 0.0f;
 
 		Vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
-
-		/// @brief In which direction the sound cone is facing in 3D.
-		Vec3 m_coneOrientation = { 0.0f, 0.0f, 0.0f };
-
-		/// @brief Inner angle of the cone. From 0.0 to 360.0. Must be smaller than the outside cone angle.
-		/// Outside angle of the cone. From 0.0 to 360.0.
-		/// Volume outside of the cone. From 0.0 to 1.0.
-		Vec3 m_coneSettings = { 360.0f, 360.0f, 1.0f };
 	};
 
 

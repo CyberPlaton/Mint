@@ -130,10 +130,6 @@ namespace mint::component
 		static f32 soundsource_get_sound_source_volume(entt::entity entity);
 		static void soundsource_set_sound_source_velocity(entt::entity entity, const Vec3& vec);
 		static Vec3 soundsource_get_sound_source_velocity(entt::entity entity);
-		static void soundsource_set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
-		static Vec3 soundsource_get_sound_source_cone_orientation(entt::entity entity);
-		static void soundsource_set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
-		static Vec3 soundsource_get_sound_source_cone_settings(entt::entity entity);
 		static void soundsource_set_sound_source_sound_handle(entt::entity entity, SoundHandle value);
 		static SoundHandle soundsource_get_sound_source_sound_handle(entt::entity entity);
 		static void soundsource_set_sound_source_loopmode(entt::entity entity, s8 value);

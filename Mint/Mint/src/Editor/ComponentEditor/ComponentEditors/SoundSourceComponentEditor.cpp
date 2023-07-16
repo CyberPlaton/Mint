@@ -53,11 +53,8 @@ namespace mint::editor
 		Vec2 distance = { min_dist, max_dist };
 		auto pitch = CUCA::soundsource_get_sound_source_pitch(entity);
 		auto pan = CUCA::soundsource_get_sound_source_pan(entity);
-		auto position = CUCA::transform_get_position(entity);
 		auto height = CUCA::soundsource_get_sound_source_height(entity);
 		auto velocity = CUCA::soundsource_get_sound_source_velocity(entity);
-		auto cone_orient = CUCA::soundsource_get_sound_source_cone_orientation(entity);
-		auto cone_settings = CUCA::soundsource_get_sound_source_cone_settings(entity);
 
 
 
@@ -122,17 +119,9 @@ namespace mint::editor
 
 		ImGui::Separator();
 
-		CUI::edit_field_vec2(position, GlobalData::Get().s_EditorTransformMinPosition, GlobalData::Get().s_EditorTransformMaxPosition, "Position", GlobalData::Get().s_SoundSourceDescPosition, slid++, scid++, ImGuiSliderFlags_Logarithmic);
 		CUI::edit_field_f32(height, -100.0f, 100.0f, "Height", GlobalData::Get().s_SoundSourceDescHeight, slid++, scid++, ImGuiSliderFlags_Logarithmic);
 		CUI::edit_field_vec3(velocity, -1000.0f, 1000.0f, "Velocity", GlobalData::Get().s_SoundSourceDescVelocity, slid++, scid++, ImGuiSliderFlags_Logarithmic);
 		
-		CUI::edit_field_vec3(cone_orient, -1.0f, 1.0f, "Cone orientation", GlobalData::Get().s_SoundSourceDescConeOrient, slid++, scid++, ImGuiSliderFlags_Logarithmic);
-
-		Vec2 cone_sett = { cone_settings.x, cone_settings.y };
-		f32 cone_outer = cone_settings.z;
-		CUI::edit_field_vec2_ranged(cone_sett, 0.0f, 360.0f, "Cone settings", GlobalData::Get().s_SoundSourceDescConeSettings, slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.5f);
-		CUI::edit_field_f32(cone_outer, 0.0f, 1.0f, "Outer cone volume", GlobalData::Get().s_SoundSourceDescOuterConeVolume, slid++, scid++, 0, 0.05f);
-
 		ImGui::Separator();
 
 		CUI::edit_field_vec2_ranged(distance, 0.0f, 5000.0f, "Distance", GlobalData::Get().s_SoundSourceDescMinMaxDistance, slid++, scid++, ImGuiSliderFlags_Logarithmic, 2.0f);
@@ -167,10 +156,7 @@ namespace mint::editor
 		CUCA::soundsource_set_sound_source_pitch(entity, pitch);
 		CUCA::world_set_entity_enabled(entity, enabled);
 		CUCA::soundsource_set_sound_source_velocity(entity, velocity);
-		CUCA::soundsource_set_sound_source_cone_orientation(entity, cone_orient);
-		CUCA::soundsource_set_sound_source_cone_settings(entity, cone_sett.x, cone_sett.y, cone_outer);
 		CUCA::soundsource_set_sound_source_height(entity, height);
-		CUCA::transform_set_position(entity, position);
 		CUCA::soundsource_set_sound_source_min_distance(entity, distance.x);
 		CUCA::soundsource_set_sound_source_max_distance(entity, distance.y);
 

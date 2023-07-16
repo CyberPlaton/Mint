@@ -436,41 +436,6 @@ namespace mint::sound
 		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
 	}
 
-
-	void CSoundEngine::set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec)
-	{
-		auto h = SCAST(u64, entity);
-
-		if (m_soundSources.find(h) != m_soundSources.end())
-		{
-			auto& source = m_soundSources[h];
-
-			source.set_cone_orientation(vec);
-
-			return;
-		}
-
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_cone_orientation] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
-	}
-
-	void CSoundEngine::set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
-	{
-		auto h = SCAST(u64, entity);
-
-		if (m_soundSources.find(h) != m_soundSources.end())
-		{
-			auto& source = m_soundSources[h];
-
-			source.set_cone_settings(inner_cone_angle, outer_cone_angle, cone_outside_volume);
-
-			return;
-		}
-
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_cone_settings] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
-	}
-
 	void CSoundEngine::set_sound_source_sound_handle(entt::entity entity, SoundHandle handle)
 	{
 		auto h = SCAST(u64, entity);
@@ -836,11 +801,9 @@ namespace mint::sound
 
 				source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), { pos.x, pos.y, height });
 				
-				//source.set_cone_orientation(CUCA::soundsource_get_sound_source_cone_orientation(entity));
 				//source.set_loop_mode(CUCA::soundsource_get_sound_source_loopmode(entity));
 				//
-				//Vec3 cone_settings = CUCA::soundsource_get_sound_source_cone_settings(entity);
-				//source.set_cone_settings(cone_settings.x, cone_settings.y, cone_settings.z);
+
 				//
 				//source.m_channel->set3DMinMaxDistance(0.5f, 5000.0f);
 				//source.m_channel->setLoopCount(0);

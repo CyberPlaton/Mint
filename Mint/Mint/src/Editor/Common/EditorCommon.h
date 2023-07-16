@@ -40,8 +40,6 @@ namespace mint::editor
 		static bool s_EditorDebugRenderListenerPosition;
 		static bool s_EditorDebugRenderSoundSourcePosition;
 		static bool s_EditorDebugRenderSoundSourceMinMaxDistance;
-		static bool s_EditorDebugRenderSoundSourceCone;
-
 
 		static bool s_EditorProfilerEnabled;
 		static bool s_EditorBehaviorScriptsEnabled;

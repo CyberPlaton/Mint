@@ -239,8 +239,6 @@ bool CMainScene::on_load()
 		CUCA::soundsource_set_sound_source_pan(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_sound, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_sound, { 1.0f, 1.0f, 0.0f });
-		CUCA::soundsource_set_sound_source_cone_orientation(m_sound, { 0.0f, 0.0f, -1.0f });
-		CUCA::soundsource_set_sound_source_cone_settings(m_sound, 90.0f, 180.0f, 1.0f);
 		CUCA::soundsource_set_sound_source_loopmode(m_sound, 1);
 
 		add_entity(m_sound);
@@ -282,8 +280,6 @@ bool CMainScene::on_load()
 		CUCA::soundsource_set_sound_source_pan(m_forest, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_forest, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_forest, { 1.0f, 1.0f, 0.0f });
-		CUCA::soundsource_set_sound_source_cone_orientation(m_forest, { 0.0f, 0.0f, -1.0f });
-		CUCA::soundsource_set_sound_source_cone_settings(m_forest, 90.0f, 180.0f, 1.0f);
 		CUCA::soundsource_set_sound_source_loopmode(m_forest, 1);
 
 		add_entity(m_forest);
@@ -326,8 +322,6 @@ bool CMainScene::on_load()
 		CUCA::soundsource_set_sound_source_pan(m_shot, 0.0f);
 		CUCA::soundsource_set_sound_source_height(m_shot, 0.0f);
 		CUCA::soundsource_set_sound_source_velocity(m_shot, { 1.0f, 1.0f, 0.0f });
-		CUCA::soundsource_set_sound_source_cone_orientation(m_shot, { 0.0f, 0.0f, -1.0f });
-		CUCA::soundsource_set_sound_source_cone_settings(m_shot, 360.0f, 360.0f, 1.0f);
 		CUCA::soundsource_set_sound_source_loopmode(m_shot, 1);
 
 		add_entity(m_shot);

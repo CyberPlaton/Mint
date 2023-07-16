@@ -1013,29 +1013,6 @@ namespace mint::component
 		);
 	}
 
-
-	void CUCA::soundsource_set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec)
-	{
-		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			ss.m_coneOrientation = vec;
-
-		);
-	}
-
-	void CUCA::soundsource_set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
-	{
-		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			ss.m_coneSettings = Vec3( inner_cone_angle, outer_cone_angle, cone_outside_volume );
-
-		);
-	}
-
 	FMOD_MODE CUCA::soundsource_get_sound_source_mode(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
@@ -1095,33 +1072,6 @@ namespace mint::component
 		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
 
 			auto value = ss.m_velocity;
-
-		);
-
-		return value;
-	}
-
-
-	mint::Vec3 CUCA::soundsource_get_sound_source_cone_orientation(entt::entity entity)
-	{
-		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			auto value = ss.m_coneOrientation;
-
-		);
-
-		return value;
-	}
-
-	mint::Vec3 CUCA::soundsource_get_sound_source_cone_settings(entt::entity entity)
-	{
-		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
-
-		MINT_BEGIN_CRITICAL_SECTION(m_soundSourceCriticalSection,
-
-			auto value = ss.m_coneSettings;
 
 		);
 

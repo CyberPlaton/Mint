@@ -51,7 +51,6 @@ namespace mint::editor
 	bool GlobalData::s_EditorDebugRenderDestinationRect = false;
 	bool GlobalData::s_EditorDebugRenderSelected = false;
 	bool GlobalData::s_EditorDebugRenderAll = false;
-	bool GlobalData::s_EditorDebugRenderSoundSourceCone = false;
 	bool GlobalData::s_EditorDebugRenderSoundSourcePosition = false;
 	bool GlobalData::s_EditorDebugRenderSoundSourceMinMaxDistance = false;
 	bool GlobalData::s_EditorDebugRenderListenerPosition = false;

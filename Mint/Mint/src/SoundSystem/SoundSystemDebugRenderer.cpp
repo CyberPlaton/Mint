@@ -58,12 +58,6 @@ namespace mint
 			{
 				fx::CPrimitiveRenderer::render_circle_outlined_lines(position, 10.0f, m_circleColor);
 			}
-			if (m_renderCone)
-			{
-				auto orient = CUCA::soundsource_get_sound_source_cone_orientation(entity);
-				auto sett = CUCA::soundsource_get_sound_source_cone_settings(entity);
-				_render_sound_source_cone(entity, position, orient, sett);
-			}
 			if (m_renderMinMaxDistance)
 			{
 				auto min = CUCA::soundsource_get_sound_source_min_distance(entity);
@@ -89,11 +83,6 @@ namespace mint
 	void CSoundSystemDebugRender::clear_entity_filter()
 	{
 		m_entityFilter = entt::null;
-	}
-
-	void CSoundSystemDebugRender::_render_sound_source_cone(entt::entity entity, const Vec2& position, const Vec3& orientation, const Vec3& settings)
-	{
-
 	}
 
 	void CSoundSystemDebugRender::_render_sound_source_min_max_distance(entt::entity entity, const Vec2& position, f32 min, f32 max)

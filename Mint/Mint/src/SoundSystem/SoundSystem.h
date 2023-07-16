@@ -103,14 +103,12 @@ namespace mint::sound
 		void set_sound_source_velocity(entt::entity entity, const Vec3& vec);
 		void set_sound_source_position(entt::entity entity, const Vec3& vec);
 		void set_sound_source_position_and_velocity(entt::entity entity, const Vec3& position, const Vec3& velocity);
-		void set_sound_source_cone_orientation(entt::entity entity, const Vec3& vec);
-		void set_sound_source_cone_settings(entt::entity entity, f32 inner_cone_angle = 360.0f, f32 outer_cone_angle = 360.0f, f32 cone_outside_volume = 1.0f);
-
-		bool is_sound_source_virtual(entt::entity entity);
+		
 
 		void create_sound_prefab(const String& sound_name, const String& sound_file_path);
 
-		
+		bool is_sound_source_virtual(entt::entity entity);
+
 		u32 get_sound_source_size_in_bytes(SoundHandle handle);
 
 		bool get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size);

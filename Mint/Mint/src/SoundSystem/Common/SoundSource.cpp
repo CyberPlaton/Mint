@@ -88,21 +88,6 @@ namespace mint::sound
 		_check_fmod_error(m_channel->setVolume(value));
 	}
 
-	void CSoundSource::set_cone_orientation(const Vec3& vec)
-	{
-		FMOD_VECTOR forient;
-
-		forient.x = vec.x;
-		forient.y = vec.y;
-		forient.z = vec.z;
-
-		_check_fmod_error(m_channel->set3DConeOrientation(&forient));
-	}
-
-	void CSoundSource::set_cone_settings(f32 inner_cone_angle /*= 360.0f*/, f32 outer_cone_angle /*= 360.0f*/, f32 cone_outside_volume /*= 1.0f*/)
-	{
-		_check_fmod_error(m_channel->set3DConeSettings(inner_cone_angle, outer_cone_angle, cone_outside_volume));
-	}
 
 	void CSoundSource::set_sound_handle(SoundHandle handle)
 	{
