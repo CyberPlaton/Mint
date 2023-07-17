@@ -139,7 +139,7 @@ namespace mint
 	}
 
 
-	bool CSerializer::export_vec2(Vec2& value, const String& name, maml::SNode* node)
+	bool CSerializer::export_vec2(const Vec2& value, const String& name, maml::SNode* node)
 	{
 		maml::CDocument::add_property_to_node(node, name, value);
 
@@ -147,7 +147,7 @@ namespace mint
 	}
 
 
-	bool CSerializer::export_vec3(Vec3& value, const String& name, maml::SNode* node)
+	bool CSerializer::export_vec3(const Vec3& value, const String& name, maml::SNode* node)
 	{
 		maml::CDocument::add_property_to_node(node, name, value);
 
@@ -155,7 +155,7 @@ namespace mint
 	}
 
 
-	bool CSerializer::export_vec4(Vec4& value, const String& name, maml::SNode* node)
+	bool CSerializer::export_vec4(const Vec4& value, const String& name, maml::SNode* node)
 	{
 		maml::CDocument::add_property_to_node(node, name, value);
 
@@ -163,7 +163,7 @@ namespace mint
 	}
 
 
-	bool CSerializer::export_rect(CRect& value, const String& name, maml::SNode* node)
+	bool CSerializer::export_rect(const CRect& value, const String& name, maml::SNode* node)
 	{
 		Vec4& _value = value.get_as_vec4();
 
@@ -173,7 +173,7 @@ namespace mint
 	}
 
 
-	bool CSerializer::export_array(std::vector< CAny >& value, const String& name, maml::SNode* node)
+	bool CSerializer::export_array(const std::vector< CAny >& value, const String& name, maml::SNode* node)
 	{
 		maml::CDocument::add_property_to_node(node, name, value);
 

@@ -47,15 +47,15 @@ namespace mint
 
 		static bool export_string(const String& value, const String& name, maml::SNode* node);
 
-		static bool export_vec2(Vec2& value, const String& name, maml::SNode* node);
+		static bool export_vec2(const Vec2& value, const String& name, maml::SNode* node);
 
-		static bool export_vec3(Vec3& value, const String& name, maml::SNode* node);
+		static bool export_vec3(const Vec3& value, const String& name, maml::SNode* node);
 
-		static bool export_vec4(Vec4& value, const String& name, maml::SNode* node);
+		static bool export_vec4(const Vec4& value, const String& name, maml::SNode* node);
 
-		static bool export_rect(CRect& value, const String& name, maml::SNode* node);
+		static bool export_rect(const CRect& value, const String& name, maml::SNode* node);
 
-		static bool export_array(std::vector< CAny >& value, const String& name, maml::SNode* node);
+		static bool export_array(const std::vector< CAny >& value, const String& name, maml::SNode* node);
 
 
 	};

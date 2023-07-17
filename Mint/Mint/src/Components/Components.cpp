@@ -10,6 +10,18 @@ namespace mint::component
 
 		const auto& ss = registry.get< SSoundSource >(entity);
 
+		CSerializer::export_uint(ss.m_soundHandle, "soundhandle", node);
+		CSerializer::export_bool(ss.m_3dTo2dMorphing, "morphing", node);
+		CSerializer::export_bool(ss.m_loopmode, "loopmode", node);
+		CSerializer::export_float(ss.m_volume, "volume", node);
+		CSerializer::export_float(ss.m_minDistance, "mindistance", node);
+		CSerializer::export_float(ss.m_maxDistance, "maxdistance", node);
+		CSerializer::export_float(ss.m_pitch, "pitch", node);
+		CSerializer::export_float(ss.m_pan, "pan", node);
+		CSerializer::export_float(ss.m_height, "height", node);
+		CSerializer::export_uint(SCAST(u64, ss.m_mode), "mode", node);
+		CSerializer::export_vec3(ss.m_velocity, "velocity", node);
+
 		return true;
 	}
 
@@ -20,6 +32,23 @@ namespace mint::component
 			registry.all_of< mint::component::SSoundSource >(entity)) return true;
 
 		auto& ss = registry.emplace< SSoundSource >(entity);
+
+		CSerializer::import_uint(&ss.m_soundHandle, "soundhandle", node);
+		CSerializer::import_bool(&ss.m_3dTo2dMorphing, "morphing", node, true);
+		CSerializer::import_bool(&ss.m_loopmode, "loopmode", node, false);
+		CSerializer::import_float(&ss.m_volume, "volume", node, 1.0f);
+		CSerializer::import_float(&ss.m_minDistance, "mindistance", node, 1.0f);
+		CSerializer::import_float(&ss.m_maxDistance, "maxdistance", node, 1.0f);
+		CSerializer::import_float(&ss.m_pitch, "pitch", node, 1.0f);
+		CSerializer::import_float(&ss.m_pan, "pan", node, 1.0f);
+		CSerializer::import_float(&ss.m_height, "height", node, 1.0f);
+		CSerializer::import_vec3(ss.m_velocity, "velocity", node);
+
+		u64 mode = 0;
+		CSerializer::import_uint(&mode, "mode", node);
+
+		ss.m_mode = SCAST(FMOD_MODE, mode);
+
 
 #if MINT_DISTR
 #else
