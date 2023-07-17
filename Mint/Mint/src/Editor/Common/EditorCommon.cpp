@@ -24,6 +24,9 @@ namespace mint::editor
 	entt::entity GlobalData::s_EditorOptionEntityToBeDeleted = entt::null;
 
 
+	glm::f32 GlobalData::s_EditorMainMenubarHeight = 0.0f;
+
+
 	u64 GlobalData::s_EditorTransformMinPosition = -100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
 	u64 GlobalData::s_EditorTransformMaxPosition = 100000 * SCAST(u64, GlobalData::s_DefaultGridcellSize);
 	f32 GlobalData::s_EditorTransformMinScale = 0.01f;
@@ -150,7 +153,6 @@ namespace mint::editor
 		default: return 0;
 		}
 	}
-
 
 
 }

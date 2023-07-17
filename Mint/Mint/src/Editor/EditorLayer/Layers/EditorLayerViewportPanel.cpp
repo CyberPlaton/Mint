@@ -22,7 +22,7 @@ namespace mint::editor
 		MINT_PROFILE_SCOPE("Editor::Layer", "CViewportPanelLayer::on_ui_frame");
 
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 50), percent(get_window_height(), 5.5f) }, ImGuiCond_Once);
-		ImGui::SetNextWindowPos({ percent(get_window_width(), 25), percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowPos({ percent(get_window_width(), 25), GlobalData::Get().s_EditorMainMenubarHeight }, ImGuiCond_Appearing);
 		ImGui::Begin("Viewport Panel", &m_enabled, get_flags());
 
 

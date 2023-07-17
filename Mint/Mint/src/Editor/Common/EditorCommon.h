@@ -25,7 +25,8 @@ namespace mint::editor
 
 		static u32 get_initial_sound_source_channel_mode_index(FMOD_MODE mode);
 
-		
+		static f32 s_EditorMainMenubarHeight;
+
 		static bool s_EditorDebugRenderAll;
 		static bool s_EditorDebugRenderSelected;
 		

@@ -31,7 +31,7 @@ namespace mint::editor
 		MINT_PROFILE_SCOPE("Editor::Layer", "CRightmostPanelLayer::on_ui_frame");
 
 		ImGui::SetNextWindowSize({ percent(get_window_width(), 25), percent(get_window_height(), 98) }, ImGuiCond_Once);
-		ImGui::SetNextWindowPos({ get_window_width() - percent(get_window_width(), 25), percent(get_window_height(), 2.0f) }, ImGuiCond_Appearing);
+		ImGui::SetNextWindowPos({ get_window_width() - percent(get_window_width(), 25), GlobalData::Get().s_EditorMainMenubarHeight }, ImGuiCond_Appearing);
 		ImGui::Begin("Rightmost Panel", &m_enabled, get_flags());
 
 		CLayer::on_ui_frame();

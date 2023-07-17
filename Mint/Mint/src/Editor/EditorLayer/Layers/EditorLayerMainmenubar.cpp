@@ -24,6 +24,8 @@ namespace mint::editor
 
 		if (ImGui::BeginMainMenuBar())
 		{
+			GlobalData::Get().s_EditorMainMenubarHeight = ImGui::GetWindowSize().y;
+
 			if (ImGui::BeginMenu("Menu"))
 			{
 				if (ImGui::BeginMenu("Language"))
