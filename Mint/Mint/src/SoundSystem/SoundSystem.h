@@ -14,10 +14,20 @@
 #include "Common/SoundSource.h"
 
 #include "Components/CUCA.h"
+#include "Graphics/CameraSystem.h"
 
 
 namespace mint::sound
 {
+	enum SoundEngineListenerMode
+	{
+		SoundEngineListenerMode_Fixed = 0,	// Listener position is fixed on a point in space.
+		SoundEngineListenerMode_Manual,		// Listener position is update programatically by You.
+		SoundEngineListenerMode_Entity,		// Listener position is attached to an entity and is updated to be at its position.
+		SoundEngineListenerMode_Camera,		// Listener position is attached to the active camera and is updated to be at its position.
+	};
+
+
 
 	class CSoundEngine
 	{
@@ -32,6 +42,16 @@ namespace mint::sound
 
 
 		void on_update(f32 dt);
+
+
+		void set_listener_mode(SoundEngineListenerMode mode);
+		SoundEngineListenerMode get_listener_mode() const;
+
+		bool listener_attach_to_entity(entt::entity entity);
+		void listener_detach_from_entity();
+		void listener_set_rotate_with_entity(bool value);
+		bool listener_is_rotating_with_entity() const;
+		entt::entity listener_get_attached_entity() const;
 
 
 		void set_listener_position(const Vec3& vec);
@@ -121,6 +141,10 @@ namespace mint::sound
 	private:
 		FMOD::System* m_system = nullptr;
 
+		SoundEngineListenerMode m_listenerMode = SoundEngineListenerMode_Camera;
+		entt::entity m_attachedEntity = entt::null;
+		bool m_rotateWithEntity = false;
+
 		Vec3 m_listenerPosition;
 		Vec3 m_listenerVelocity;
 		Vec3 m_listenerForward;
@@ -151,6 +175,8 @@ namespace mint::sound
 
 	private:
 		void _set_listener_data(const Vec3& position, const Vec3& velocity, const Vec3& forward, const Vec3& up);
+
+		void _update_listener_based_on_mode();
 
 		bool _load_sound(const String& sound_name);
 		bool _load_sound(SoundHandle handle);

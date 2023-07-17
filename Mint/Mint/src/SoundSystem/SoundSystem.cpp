@@ -221,6 +221,9 @@ namespace mint::sound
 	{
 		MINT_PROFILE_SCOPE("Engine::Sound", "CSoundEngine::on_update");
 
+		// Update listener data based on mode.
+		_update_listener_based_on_mode();
+
 		_set_listener_data(m_listenerPosition, m_listenerVelocity, m_listenerForward, m_listenerUp);
 
 		auto& view = MINT_SCENE_REGISTRY()->get_registry_view< mint::component::SSoundSource >();
@@ -956,6 +959,90 @@ namespace mint::sound
 		return m_morphingThreshold;
 	}
 
+	void CSoundEngine::set_listener_mode(SoundEngineListenerMode mode)
+	{
+		m_listenerMode = mode;
+	}
+
+	mint::sound::SoundEngineListenerMode CSoundEngine::get_listener_mode() const
+	{
+		return m_listenerMode;
+	}
+
+	bool CSoundEngine::listener_attach_to_entity(entt::entity entity)
+	{
+		if (is_handle_valid(SCAST(u64, entity)) && CUCA::entity_has_component< mint::component::STransform >(entity))
+		{
+			m_attachedEntity = entity;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	void CSoundEngine::listener_set_rotate_with_entity(bool value)
+	{
+		m_rotateWithEntity = value;
+	}
+
+	bool CSoundEngine::listener_is_rotating_with_entity() const
+	{
+		return m_rotateWithEntity;
+	}
+
+	entt::entity CSoundEngine::listener_get_attached_entity() const
+	{
+		return m_attachedEntity;
+	}
+
+	void CSoundEngine::listener_detach_from_entity()
+	{
+		m_attachedEntity = entt::null;
+	}
+
+
+	void CSoundEngine::_update_listener_based_on_mode()
+	{
+		switch (m_listenerMode)
+		{
+		default:
+		case SoundEngineListenerMode_Manual:
+		case SoundEngineListenerMode_Fixed:
+		{
+			// Nothing to do. Listener position stays at the set listener position.
+			break;
+		}
+		case SoundEngineListenerMode_Entity:
+		{
+			MINT_ASSERT(m_attachedEntity != entt::null, "Invalid operation. Not attached to a valid entity!");
+			MINT_ASSERT(CUCA::entity_has_component< mint::component::STransform >(m_attachedEntity) == true, "Invalid operation. Attached entity must have a Transform component!");
+
+			auto position = CUCA::transform_get_position(m_attachedEntity);
+
+			m_listenerPosition.x = position.x;
+			m_listenerPosition.y = position.y;
+
+			if (m_rotateWithEntity)
+			{
+				// Compute new forward and up vectors based on entity rotation.
+			}
+
+			break;
+		}
+		case SoundEngineListenerMode_Camera:
+		{
+			auto camera = fx::CCameraManager::Get().get_active_camera();
+
+			auto position = camera->get_position();
+
+			m_listenerPosition.x = position.x;
+			m_listenerPosition.y = position.y;
+
+			break;
+		}
+		}
+	}
 
 	namespace detail
 	{
