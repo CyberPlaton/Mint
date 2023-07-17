@@ -1103,7 +1103,7 @@ namespace mint::component
 	}
 
 
-	void CUCA::soundsource_set_sound_source_loopmode(entt::entity entity, s8 value)
+	void CUCA::soundsource_set_sound_source_loopmode(entt::entity entity, bool value)
 	{
 		auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 
@@ -1114,7 +1114,7 @@ namespace mint::component
 		);
 	}
 
-	mint::s8 CUCA::soundsource_get_sound_source_loopmode(entt::entity entity)
+	bool CUCA::soundsource_get_sound_source_loopmode(entt::entity entity)
 	{
 		const auto& ss = MINT_SCENE_REGISTRY()->get_component< SSoundSource >(entity);
 

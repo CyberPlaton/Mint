@@ -201,9 +201,9 @@ namespace mint::sound
 		return result;
 	}
 
-	void CSoundSource::set_loop_mode(s8 mode)
+	void CSoundSource::set_loop_mode(bool mode)
 	{
-		_check_fmod_error(m_channel->setLoopCount(mode));
+		_check_fmod_error(m_channel->setLoopCount(mode == true ? -1 : 0));
 	}
 
 	void CSoundSource::_check_fmod_error(FMOD_RESULT result) const

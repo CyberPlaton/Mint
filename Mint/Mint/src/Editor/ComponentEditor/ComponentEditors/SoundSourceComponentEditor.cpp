@@ -143,6 +143,7 @@ namespace mint::editor
 		
 		ImGui::Separator();
 
+		ImGui::Checkbox("Loop", &loopmode);
 		CUI::edit_field_vec2_ranged(distance, 0.0f, 5000.0f, "Distance", GlobalData::Get().s_SoundSourceDescMinMaxDistance, slid++, scid++, ImGuiSliderFlags_Logarithmic, 2.0f);
 
 
@@ -170,6 +171,7 @@ namespace mint::editor
 		CUCA::soundsource_set_sound_source_volume(entity, volume / 100.0f);
 		CUCA::soundsource_set_sound_source_pitch(entity, pitch);
 		CUCA::world_set_entity_enabled(entity, enabled);
+		CUCA::soundsource_set_sound_source_loopmode(entity, loopmode);
 		CUCA::soundsource_set_sound_source_velocity(entity, velocity);
 		CUCA::soundsource_set_sound_source_height(entity, height);
 		CUCA::soundsource_set_sound_source_min_distance(entity, distance.x);
@@ -179,6 +181,7 @@ namespace mint::editor
 		sound::CSoundEngine::Get().set_sound_source_pan(entity, pan);
 		sound::CSoundEngine::Get().set_sound_source_pitch(entity, pitch);
 		sound::CSoundEngine::Get().set_sound_source_volume(entity, volume / 100.0f);
+		sound::CSoundEngine::Get().set_sound_source_loopmode(entity, loopmode);
 
 		auto position = CUCA::transform_get_position(entity);
 

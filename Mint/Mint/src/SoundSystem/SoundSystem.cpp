@@ -126,7 +126,7 @@ namespace mint::sound
 			return m_sounds.get(handle);
 		}
 
-		MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_get_sound] Failed locating sound \"{}\"!", MINT_APP_TIME, handle);
+		_assert_sound_engine_error("_get_sound", TextFormat("Failed locating sound \"%zu\"", handle), entt::null);
 
 		return nullptr;
 	}
@@ -150,7 +150,7 @@ namespace mint::sound
 
 			if (result != FMOD_OK)
 			{
-				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_load_sound] Failed loading sound \"{}\" at \"{}\"!", MINT_APP_TIME, pair.first, pair.second);
+				_assert_sound_engine_error("_load_sound", TextFormat("Failed loading sound \"%s\" at \"%s\"", pair.first.c_str(), pair.second.c_str()), entt::null);
 				return false;
 			}
 
@@ -161,8 +161,7 @@ namespace mint::sound
 			return true;
 		}
 
-		MINT_LOG_ERROR("[{:.4f}][CSoundEngine::_load_sound] Failed locating sound prefab \"{}\"!", MINT_APP_TIME, handle);
-
+		_assert_sound_engine_error("_load_sound", TextFormat("Failed locating sound prefab \"%zu\"", handle), entt::null);
 		return false;
 	}
 
@@ -193,8 +192,7 @@ namespace mint::sound
 
 			if (!m_sounds.lookup(sh) && !_load_sound(sh))
 			{
-				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::create_sound_source] Sound \"{}\" could not be loaded for entity \"{}\"!", MINT_APP_TIME, sound_name, h);
-				MINT_ASSERT(false, "Invalid operation. Failed to load sound source!");
+				_assert_sound_engine_error("create_sound_source", TextFormat("Sound \"%s\" could not be loaded for entity \"%zu\"", sound_name.c_str(), entity_get_handle(entity)), entt::null);
 				return;
 			}
 
@@ -205,8 +203,7 @@ namespace mint::sound
 
 			if (!source.initialize(m_system, m_sounds.get(sh)))
 			{
-				MINT_LOG_ERROR("[{:.4f}][CSoundEngine::create_sound_source] Sound \"{}\" could not be initialized for entity \"{}\"!", MINT_APP_TIME, sound_name, h);
-				MINT_ASSERT(false, "Invalid operation. Failed to initialize sound source!");
+				_assert_sound_engine_error("create_sound_source", TextFormat("Sound \"%s\" could not be initialized for entity \"%zu\"", sound_name.c_str(), entity_get_handle(entity)), entt::null);
 			}
 
 			CUCA::soundsource_set_sound_source_sound_handle(entity, sh);
@@ -321,8 +318,7 @@ namespace mint::sound
 		}
 		else
 		{
-			MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_group_settings] Sound source group \"{}\" could not be found!", MINT_APP_TIME, group_name);
-			MINT_ASSERT(false, "Invalid operation. Sound source group does not exist!");
+			_assert_sound_engine_error("set_sound_source_group_settings", TextFormat("Sound source group \"%s\" could not be found", group_name.c_str()), entt::null);
 		}
 	}
 
@@ -339,8 +335,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_mode] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_mode", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_pitch(entt::entity entity, f32 value)
@@ -356,8 +351,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_pitch] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_pitch", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_min_and_max_distance(entt::entity entity, f32 min, f32 max)
@@ -373,8 +367,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_min_and_max_distance] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_min_and_max_distance", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_pan(entt::entity entity, f32 value)
@@ -390,8 +383,23 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_pan] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_pan", "Entity Sound source is not registered", entity);
+	}
+
+	void CSoundEngine::set_sound_source_loopmode(entt::entity entity, bool value)
+	{
+		auto h = SCAST(u64, entity);
+
+		if (m_soundSources.find(h) != m_soundSources.end())
+		{
+			auto& source = m_soundSources[h];
+
+			source.set_loop_mode(value);
+
+			return;
+		}
+
+		_assert_sound_engine_error("set_sound_source_loopmode", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_volume(entt::entity entity, f32 value)
@@ -407,8 +415,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_volume] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_volume", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_velocity(entt::entity entity, const Vec3& vec)
@@ -427,8 +434,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_velocity] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_velocity", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_position(entt::entity entity, const Vec3& vec)
@@ -444,8 +450,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_position] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_position", "Entity Sound source is not registered", entity);
 	}
 
 
@@ -462,8 +467,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_position_and_velocity] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_position_and_velocity", "Entity Sound source is not registered", entity);
 	}
 
 	void CSoundEngine::set_sound_source_sound_handle(entt::entity entity, SoundHandle handle)
@@ -479,8 +483,7 @@ namespace mint::sound
 			return;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::set_sound_source_sound_handle] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("set_sound_source_sound_handle", "Entity Sound source is not registered", entity);
 	}
 
 
@@ -557,8 +560,7 @@ namespace mint::sound
 			return result;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length", "Sound file could not be found", entt::null);
 
 		return result;
 	}
@@ -580,8 +582,9 @@ namespace mint::sound
 			return result;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length", "Entity sound source not registered", entity);
+
+		return result;
 	}
 
 	mint::u32 CSoundEngine::get_sound_position(entt::entity entity)
@@ -599,8 +602,7 @@ namespace mint::sound
 			else return 0;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_position] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_position", "Entity sound source not registered", entity);
 
 		return 0;
 	}
@@ -620,8 +622,7 @@ namespace mint::sound
 			return result / 1000 / 60;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_minutes] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_minutes", "Sound file could not be found", entt::null);
 
 		return result;
 	}
@@ -641,8 +642,7 @@ namespace mint::sound
 			return result / 1000 % 60;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_seconds] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_seconds", "Sound file could not be found", entt::null);
 
 		return result;
 	}
@@ -662,8 +662,7 @@ namespace mint::sound
 			return result / 10 % 100;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source with name \"{}\" could not be located!", MINT_APP_TIME, sound_name);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_milliseconds", "Sound file could not be found", entt::null);
 
 		return result;
 	}
@@ -685,8 +684,9 @@ namespace mint::sound
 			return result / 1000 / 60;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_minutes] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_minutes", "Entity sound source not registered", entity);
+
+		return result;
 	}
 
 	glm::u32 CSoundEngine::get_sound_length_seconds(entt::entity entity)
@@ -706,8 +706,7 @@ namespace mint::sound
 			return result / 1000 % 60;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_seconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_seconds", "Entity sound source not registered", entity);
 
 		return result;
 	}
@@ -729,8 +728,7 @@ namespace mint::sound
 			return result / 10 % 100;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_length_milliseconds", "Entity sound source not registered", entity);
 
 		return result;
 	}
@@ -750,8 +748,7 @@ namespace mint::sound
 			else return 0;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_position_minutes", "Entity sound source not registered", entity);
 
 		return 0;
 	}
@@ -771,8 +768,7 @@ namespace mint::sound
 			else return 0;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
+		_assert_sound_engine_error("get_sound_position_seconds", "Entity sound source not registered", entity);
 
 		return 0;
 	}
@@ -792,9 +788,8 @@ namespace mint::sound
 			else return 0;
 		}
 
-		MINT_LOG_WARN("[{:.4f}][CSoundEngine::get_sound_length_milliseconds] Sound source for entity \"{}\" could not be located!", MINT_APP_TIME, h);
-		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
-
+		_assert_sound_engine_error("get_sound_position_milliseconds", "Entity sound source not registered", entity);
+		
 		return 0;
 	}
 
@@ -814,15 +809,17 @@ namespace mint::sound
 				m_system->playSound(sound, 0, true, &source.m_channel);
 
 				// Set updated data for the channel.
-				//source.m_channel->setMode(FMOD_3D);
+				FMOD_MODE mode = FMOD_3D;
+				
+				mode |= CUCA::soundsource_get_sound_source_mode(entity);
+
+				if (CUCA::soundsource_get_sound_source_loopmode(entity)) mode |= FMOD_LOOP_NORMAL;
+				else mode |= FMOD_LOOP_OFF;
+				
+				source.set_mode(mode);
 
 				auto pos = CUCA::transform_get_position(entity);
-				FMOD_MODE mode = CUCA::soundsource_get_sound_source_mode(entity);
-
-				source.set_mode(FMOD_3D);
 				source.set_velocity_and_position(CUCA::soundsource_get_sound_source_velocity(entity), { pos.x, pos.y, CUCA::soundsource_get_sound_source_height(entity) });
-
-				//source.m_channel->setPriority(1);
 
 				source.set_pitch(CUCA::soundsource_get_sound_source_pitch(entity));
 				source.set_pan(CUCA::soundsource_get_sound_source_pan(entity));
@@ -832,14 +829,6 @@ namespace mint::sound
 
 
 				source.play_sound_source();
-
-				//if (source.is_virtual())
-				//{
-					//source.stop_sound_source();
-				//}
-
-				//MINT_ASSERT(source.is_playing() == true, "Invalid operation. Failed to play sound source!");
-				//MINT_ASSERT(source.is_virtual() == false, "Invalid operation. Sound source was virtualized and is not outputting sound!");
 			}
 		}
 	}
@@ -1103,6 +1092,26 @@ namespace mint::sound
 	mint::f32 CSoundEngine::get_minimal_camera_zoom_out_value() const
 	{
 		return m_cameraZoomMinimalValue;
+	}
+
+	void CSoundEngine::_assert_sound_engine_error(const String& function, const String& message, entt::entity entity)
+	{
+		if (entity != entt::null && is_sound_source_registered(entity))
+		{
+			auto& pair = m_soundPrefabs.get_ref(m_soundSources[entity_get_handle(entity)].get_audio_source_file());
+
+			auto text = TextFormat("[%.4f][CSoundEngine::%s] Error: \"%s\". Sound: \"%s\".", MINT_APP_TIME, function.c_str(), message.c_str(), pair.second.c_str());
+
+			MINT_LOG_ERROR(text);
+		}
+		else
+		{
+			auto text = TextFormat("[%.4f][CSoundEngine::%s] Error: \"%s\"", MINT_APP_TIME, function.c_str(), message.c_str());
+
+			MINT_LOG_ERROR(text);
+		}
+
+		MINT_ASSERT(false, "Invalid operation. Sound source could not be located!");
 	}
 
 	namespace detail

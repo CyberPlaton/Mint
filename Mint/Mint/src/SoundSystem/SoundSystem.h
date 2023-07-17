@@ -123,6 +123,7 @@ namespace mint::sound
 		void set_sound_source_pitch(entt::entity entity, f32 value);
 		void set_sound_source_min_and_max_distance(entt::entity entity, f32 min, f32 max);
 		void set_sound_source_pan(entt::entity entity, f32 value);
+		void set_sound_source_loopmode(entt::entity entity, bool value);
 		void set_sound_source_volume(entt::entity entity, f32 value);
 		void set_sound_source_velocity(entt::entity entity, const Vec3& vec);
 		void set_sound_source_position(entt::entity entity, const Vec3& vec);
@@ -198,6 +199,8 @@ namespace mint::sound
 		FMOD::Sound* _get_sound(SoundHandle handle);
 	
 		void _check_fmod_error(FMOD_RESULT result);
+
+		void _assert_sound_engine_error(const String& function, const String& message, entt::entity entity);
 	};
 
 

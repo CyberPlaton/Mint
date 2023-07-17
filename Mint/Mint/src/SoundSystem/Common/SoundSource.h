@@ -67,7 +67,7 @@ namespace mint::sound
 
 		void set_sound_source_group(CSoundSourceGroup* group);
 
-		void set_loop_mode(s8 mode);
+		void set_loop_mode(bool mode);
 		void set_mode(FMOD_MODE mode);
 		void set_min_and_max_distance(f32 min, f32 max);
 		void set_sound_handle(SoundHandle handle);
