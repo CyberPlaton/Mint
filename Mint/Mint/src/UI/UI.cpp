@@ -274,7 +274,6 @@ namespace mint
 		return ImGui::ColorConvertFloat4ToU32({ vec.r, vec.g, vec.b, vec.a });
 	}
 
-	
 	void CUI::create_notification(const String& label, const String& message, NotificationType type, u32 lifetime_seconds, const Vec2& size)
 	{
 		s_notifications.emplace_back(SNotification{ type, label, message, { s_windowSize.x - size.x - 10.0f, s_windowSize.y - size.y - 10.0f }, size, 1.0f / (SCAST(f32, lifetime_seconds) * 100.0f), 1.0f });
@@ -893,7 +892,7 @@ namespace mint
 	}
 
 
-	bool CUI::edit_field_vec4(Vec4& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed)
+	bool CUI::edit_field_vec4(Vec4& value, f32 min, f32 max, const String& field_text, const String& field_desc, ImGuiID slider_id, ImGuiID scalar_id, ImGuiSliderFlags flags /*= ImGuiSliderFlags_None*/, f32 speed, bool color_wheel /*= false*/)
 	{
 		f32 prev[4]; prev[0] = value.x; prev[1] = value.y; prev[2] = value.z; prev[3] = value.w;
 
@@ -905,6 +904,24 @@ namespace mint
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 			help_marker_no_question_mark(field_desc);
+
+			if (color_wheel)
+			{
+				ImGui::SameLine();
+
+				f32 color[4] = { value.r / 255.0f, value.g / 255.0f, value.b / 255.0f, value.a / 255.0f };
+
+				if (ImGui::ColorEdit4(TextFormat("##%s_Color_Picker", field_text.c_str()), (f32*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaBar))
+				{
+					prev[0] = color[0] * 255;
+					prev[1] = color[1] * 255;
+					prev[2] = color[2] * 255;
+					prev[3] = color[3] * 255;
+
+				}
+			}
+
+
 
 
 			ImGui::PushID(scalar_id);

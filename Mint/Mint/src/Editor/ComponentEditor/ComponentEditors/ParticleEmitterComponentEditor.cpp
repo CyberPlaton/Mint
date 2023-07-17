@@ -220,9 +220,18 @@ namespace mint::editor
 					ImGui::OpenPopup("Color_Easing_Popup");
 				}
 
-				CUI::edit_field_color(def.m_colorStart, 0, 255, "Start", "", slid++, scid++);
-				CUI::edit_field_color(def.m_colorHalf, 0, 255, "Half", "", slid++, scid++);
-				CUI::edit_field_color(def.m_colorEnd, 0, 255, "End", "", slid++, scid++);
+				auto color_start = def.m_colorStart.as_vec4();
+				auto color_half = def.m_colorHalf.as_vec4();
+				auto color_end = def.m_colorEnd.as_vec4();
+
+				CUI::edit_field_vec4(color_start, 0.0f, 255.0f, "Start", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f, true);
+				CUI::edit_field_vec4(color_half, 0.0f, 255.0f, "Half", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f, true);
+				CUI::edit_field_vec4(color_end, 0.0f, 255.0f, "End", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f, true);
+
+				def.m_colorStart = color_start;
+				def.m_colorHalf = color_half;
+				def.m_colorEnd = color_end;
+
 				CUI::edit_field_vec2_ranged(def.m_colorOffset, 0.0f, 255.0f, "Offset", "", slid++, scid++);
 
 				if (ImGui::BeginPopup("Color_Easing_Popup"))

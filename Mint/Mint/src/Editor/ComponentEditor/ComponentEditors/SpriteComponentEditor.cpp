@@ -88,7 +88,13 @@ namespace mint::editor
 		CUI::edit_field_uint64(depth, 0, MINT_SAS_RENDERING_LAYERS_MAX, "Layer", "", slid++, scid++);
 		CUI::edit_field_vec2(origin, -1000.0f, 1000.0f, "Sprite Origin", "", slid++, scid++);
 		CUI::edit_field_rect(rect, 0.0f, 8192.0f, "Source Rectangle", "", slid++, scid++, ImGuiSliderFlags_Logarithmic, 0.01f);
-		CUI::edit_field_color(color, 0, 255, "Sprite Tint", "", slid++, scid++, ImGuiSliderFlags_Logarithmic);
+	
+
+		auto vcolor = color.as_vec4();
+		
+		CUI::edit_field_vec4(vcolor, 0.0f, 255.0f, "Sprite Tint", "", slid++, scid++, ImGuiSliderFlags_None, 1.0f, true);
+
+		color = vcolor;
 
 
 		CUCA::sprite_set_is_visible(entity, visible);

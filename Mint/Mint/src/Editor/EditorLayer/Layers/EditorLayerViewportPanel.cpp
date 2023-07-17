@@ -294,7 +294,7 @@ namespace mint::editor
 				ImGui::Checkbox("World Query AABB", &GlobalData::Get().s_EditorDebugRenderAABBs);
 				ImGui::Checkbox("World Query Full Information", &GlobalData::Get().s_EditorDebugRenderAABBFullInformation);
 
-				CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000);
+				CUI::edit_field_vec4(GlobalData::Get().s_EditorWorldQueryAABBColor, 0.0f, 255.0f, "AABB Color", "", 10000, 20000, ImGuiSliderFlags_None, 1.0f, true);
 
 
 				ImGui::TreePop();
@@ -343,10 +343,10 @@ namespace mint::editor
 
 			// Sound Source
 			ImGui::Checkbox("Render sound source position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
-			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001, ImGuiSliderFlags_None, 1.0f, true);
 
 			ImGui::Checkbox("Render sound source min-max distance", &GlobalData::Get().s_EditorDebugRenderSoundSourceMinMaxDistance);
-			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002);
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceMinMaxColor, 0.0f, 255.0f, "Min-Max Distance Color", "", 10002, 20002, ImGuiSliderFlags_None, 1.0f, true);
 
 
 			// Listener position
@@ -370,8 +370,8 @@ namespace mint::editor
 
 			sound::CSoundEngine::Get().set_3d_to_2d_morphing_threshold(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold);
 
-			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThresholdColor, 0.0f, 255.0f, "Morphing threshold color", "", 10005, 20005);
-
+			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThresholdColor, 0.0f, 255.0f, "Morphing threshold color", "", 10005, 20005, ImGuiSliderFlags_None, 1.0f, true);
+			
 
 			// Minimal camera zoom out value.
 			GlobalData::Get().s_EditorSoundEngineMinimalZoomOutValue = sound::CSoundEngine::Get().get_minimal_camera_zoom_out_value();
