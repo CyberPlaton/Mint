@@ -41,6 +41,16 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 
 	CUI::edit_field_f32(engine_dt, 1.0f, 240.0f, "Edit engine FPS", "", 1000, 1001);
 
+	// Camera data.
+	auto camera = fx::CCameraManager::Get().get_active_camera();
+
+	auto position = camera->get_position();
+	auto zoom = camera->get_zoom();
+
+	ImGui::Text(TextFormat("Position: {%.2f, %.2f}", position.x, position.y));
+	ImGui::Text(TextFormat("Zoom: %.3f", zoom));
+
+
 	if (ImGui::Button("Quit"))
 	{
 		MINT_ENGINE()->exit();

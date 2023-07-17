@@ -311,6 +311,36 @@ namespace mint::editor
 		{
 			ImGui::SeparatorText("Sound Engine Settings");
 
+			// Listener mode.
+			static s32 selected_listener_mode_option = sound::CSoundEngine::Get().get_listener_mode();
+			if (ImGui::SmallButton(TextFormat("Listener mode: %s", s_EditorSoundEngineListenerModes[selected_listener_mode_option])))
+			{
+				ImGui::OpenPopup("Listener_Mode_Popup");
+			}
+
+			if (ImGui::BeginPopup("Listener_Mode_Popup"))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(s_EditorSoundEngineListenerModes); i++)
+				{
+					if (ImGui::Selectable(s_EditorSoundEngineListenerModes[i])) 
+					{ 
+						selected_listener_mode_option = i;
+
+						if (selected_listener_mode_option == sound::SoundEngineListenerMode_Entity)
+						{
+							// Entity listener mode has to be set from the Sound Source component editor panel.
+							selected_listener_mode_option = sound::CSoundEngine::Get().get_listener_mode();
+
+							CUI::create_notification("Sound Engine listener mode", "Listener mode has to be set from an entities Sound Source component editor panel!", NotificationType_Warn);
+						}
+					}
+				}
+				ImGui::EndPopup();
+
+				sound::CSoundEngine::Get().set_listener_mode((sound::SoundEngineListenerMode)selected_listener_mode_option);
+			}
+
+
 			// Sound Source
 			ImGui::Checkbox("Render sound source position", &GlobalData::Get().s_EditorDebugRenderSoundSourcePosition);
 			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundSourceCircleColor, 0.0f, 255.0f, "Position Color", "", 10001, 20001);
@@ -341,6 +371,16 @@ namespace mint::editor
 			sound::CSoundEngine::Get().set_3d_to_2d_morphing_threshold(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThreshold);
 
 			CUI::edit_field_vec4(GlobalData::Get().s_EditorSoundEngine3DTo2DMorphingThresholdColor, 0.0f, 255.0f, "Morphing threshold color", "", 10005, 20005);
+
+
+			// Minimal camera zoom out value.
+			GlobalData::Get().s_EditorSoundEngineMinimalZoomOutValue = sound::CSoundEngine::Get().get_minimal_camera_zoom_out_value();
+
+			CUI::edit_field_f32(GlobalData::Get().s_EditorSoundEngineMinimalZoomOutValue, 0.0f, 5000.0f, "Minimal camera zoom out", "", 10006, 20006, ImGuiSliderFlags_Logarithmic);
+
+			CUI::help_marker_no_question_mark("Represents the amount we have zoomed out (LH coordinate system) in terms of FMOD if the current game camera zoom is at zero.");
+
+			sound::CSoundEngine::Get().set_minimal_camera_zoom_out_value(GlobalData::Get().s_EditorSoundEngineMinimalZoomOutValue);
 
 			ImGui::EndPopup();
 		}

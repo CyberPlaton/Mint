@@ -236,7 +236,7 @@ namespace mint::sound
 
 				auto position = CUCA::transform_get_position(entity);
 
-				auto dist = mint::algorithm::vec2_compute_distance_between_two_vectors(m_listenerPosition, position);
+				auto dist = mint::algorithm::vec3_compute_distance_between_two_vectors(m_listenerPosition, { position.x, position.y, 0.0f});
 
 				if (dist < m_morphingThreshold)
 				{
@@ -874,6 +874,42 @@ namespace mint::sound
 		return 0;
 	}
 
+	mint::String CSoundEngine::get_sound_source_sound_file_name(entt::entity entity)
+	{
+		if (is_sound_source_registered(entity))
+		{
+			auto& source = m_soundSources[entity_get_handle(entity)];
+
+			auto sound_handle = source.get_audio_source_file();
+
+			return m_soundPrefabs.get_ref(sound_handle).first;
+		}
+
+		return "";
+	}
+
+	mint::String CSoundEngine::get_sound_source_sound_file_path(entt::entity entity)
+	{
+		if (is_sound_source_registered(entity))
+		{
+			auto& source = m_soundSources[entity_get_handle(entity)];
+
+			auto sound_handle = source.get_audio_source_file();
+
+			return m_soundPrefabs.get_ref(sound_handle).second;
+		}
+
+		return "";
+	}
+
+
+	bool CSoundEngine::is_sound_source_registered(entt::entity entity) const
+	{
+		auto h = entity_get_handle(entity);
+
+		return m_soundSources.find(h) != m_soundSources.end();
+	}
+
 	bool CSoundEngine::get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size)
 	{
 		if (m_sounds.lookup(handle))
@@ -928,6 +964,7 @@ namespace mint::sound
 			
 		}
 	}
+
 
 	void CSoundEngine::set_listener_position(const Vec3& vec)
 	{
@@ -1035,13 +1072,37 @@ namespace mint::sound
 			auto camera = fx::CCameraManager::Get().get_active_camera();
 
 			auto position = camera->get_position();
+			auto zoom = camera->get_zoom();
 
 			m_listenerPosition.x = position.x;
 			m_listenerPosition.y = position.y;
+			
+			f32 zoom_fmod = 0.0f;
+
+			if (zoom <= 1.0f)
+			{
+				zoom_fmod = -glm::lerp(m_cameraZoomMinimalValue, m_cameraZoomNormalValue, zoom);
+			}
+			else
+			{
+				zoom_fmod = zoom - 1.0f; // Compensate for the difference that raylib starts from 1.0f and FMOD from 0.0f.
+			}
+
+			m_listenerPosition.z = zoom_fmod;
 
 			break;
 		}
 		}
+	}
+
+	void CSoundEngine::set_minimal_camera_zoom_out_value(f32 value)
+	{
+		m_cameraZoomMinimalValue = value;
+	}
+
+	mint::f32 CSoundEngine::get_minimal_camera_zoom_out_value() const
+	{
+		return m_cameraZoomMinimalValue;
 	}
 
 	namespace detail

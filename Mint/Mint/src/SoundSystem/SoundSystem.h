@@ -81,6 +81,10 @@ namespace mint::sound
 
 		void remove_sound_source(entt::entity entity);
 
+		String get_sound_source_sound_file_name(entt::entity entity);
+
+		String get_sound_source_sound_file_path(entt::entity entity);
+
 		u32 get_sound_length(const String& sound_name);
 
 		u32 get_sound_length(entt::entity entity);
@@ -129,6 +133,8 @@ namespace mint::sound
 
 		bool is_sound_source_virtual(entt::entity entity);
 
+		bool is_sound_source_registered(entt::entity entity) const;
+
 		u32 get_sound_source_size_in_bytes(SoundHandle handle);
 
 		bool get_sound_source_data(SoundHandle handle, void* buffer, u32* buffer_size);
@@ -137,6 +143,10 @@ namespace mint::sound
 
 		f32 get_3d_to_2d_morphing_threshold() const;
 
+		void set_minimal_camera_zoom_out_value(f32 value);
+
+		f32 get_minimal_camera_zoom_out_value() const;
+
 
 	private:
 		FMOD::System* m_system = nullptr;
@@ -144,6 +154,9 @@ namespace mint::sound
 		SoundEngineListenerMode m_listenerMode = SoundEngineListenerMode_Camera;
 		entt::entity m_attachedEntity = entt::null;
 		bool m_rotateWithEntity = false;
+		f32 m_cameraZoomNormalValue = 0.0f;
+		f32 m_cameraZoomMinimalValue = 100.0f;
+		
 
 		Vec3 m_listenerPosition;
 		Vec3 m_listenerVelocity;

@@ -59,6 +59,18 @@ namespace mint::editor
 		auto velocity = CUCA::soundsource_get_sound_source_velocity(entity);
 		auto morphing = CUCA::soundsource_get_sound_source_3d_to_2d_morphing_enabled(entity);
 
+		auto sound_name = sound::CSoundEngine::Get().get_sound_source_sound_file_name(entity);
+		auto sound_path = sound::CSoundEngine::Get().get_sound_source_sound_file_path(entity);
+
+		if (ImGui::SmallButton(TextFormat("Name: %s", sound_name.c_str())))
+		{
+			// Option to select another sound file.
+		}
+		
+		ImGui::SameLine();
+		
+		CUI::help_marker(TextFormat("File path: %s", sound_path.c_str()));
+
 
 
 		CUI::toggle_button("Enabled", &enabled); ImGui::SameLine(); CUI::help_marker_no_question_mark("Disable or enabled the sound source. Disabled sound sources will not be played. Enabled by default!");
@@ -133,8 +145,6 @@ namespace mint::editor
 
 		CUI::edit_field_vec2_ranged(distance, 0.0f, 5000.0f, "Distance", GlobalData::Get().s_SoundSourceDescMinMaxDistance, slid++, scid++, ImGuiSliderFlags_Logarithmic, 2.0f);
 
-
-		//ImGui::Text(TextFormat("FMOD mode: %d", CUCA::soundsource_get_sound_source_mode(entity)));
 
 
 		if (ImGui::Button(TextFormat("FMOD mode: %s", s_EditorSoundSourceChannelModes[selected_fmod_sound_source_mode])))

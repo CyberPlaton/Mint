@@ -78,6 +78,7 @@ namespace mint::editor
 
 		static f32 s_EditorSoundEngine3DTo2DMorphingThreshold;
 		static Vec4 s_EditorSoundEngine3DTo2DMorphingThresholdColor;
+		static f32 s_EditorSoundEngineMinimalZoomOutValue;
 
 
 		static CApplicationComponentsDatabase s_ComponentDatabase;
@@ -246,6 +247,13 @@ namespace mint::editor
 		FMOD_3D_LINEARROLLOFF,
 		FMOD_3D_LINEARSQUAREROLLOFF,
 		FMOD_3D_INVERSETAPEREDROLLOFF
+	};
+
+	static const char* s_EditorSoundEngineListenerModes[] = {
+		"Fixed",
+		"Manual",
+		"Entity",
+		"Camera"
 	};
 
 }

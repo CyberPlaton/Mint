@@ -46,6 +46,7 @@ namespace mint::editor
 	mint::Vec4 GlobalData::s_EditorSoundSourceMinMaxColor = { 0, 0, 150, 30 };
 	mint::Vec4 GlobalData::s_EditorSoundEngine3DTo2DMorphingThresholdColor = { 0, 255, 230 , 30 };
 	mint::f32 GlobalData::s_EditorSoundEngine3DTo2DMorphingThreshold = 0.0f;
+	mint::f32 GlobalData::s_EditorSoundEngineMinimalZoomOutValue = 0.0f;
 
 
 	bool GlobalData::s_EditorDebugRenderAABBFullInformation = false;
@@ -149,6 +150,7 @@ namespace mint::editor
 		default: return 0;
 		}
 	}
+
 
 
 }
