@@ -64,7 +64,7 @@ namespace mint::fx
 
 
 	protected:
-		raylib::Camera2D m_camera;
+		Camera2D m_camera;
 
 		CMap< ICameraEffect* > m_effects;
 	};

@@ -100,7 +100,6 @@ namespace mint
 		void print_window_configurations() const;
 
 	private:
-		Window m_window;
 		Texture m_windowIcon;
 		SDescription m_description;
 

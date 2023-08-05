@@ -71,7 +71,7 @@ namespace mint::fx
 
 		Vec2 m_textureSize;
 		
-		mint::Shader m_shader;
+		Shader m_shader;
 		String m_shaderProgramName;
 
 		BlendMode m_blendMode = BLEND_ALPHA;

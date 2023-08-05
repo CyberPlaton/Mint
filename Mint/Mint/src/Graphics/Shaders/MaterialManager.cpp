@@ -391,7 +391,7 @@ namespace mint::fx
 				// Sampler. Retrieve the Texture identifier and set for uniform.
 				const Texture& tex = CTextureManager::Get().get_texture(mint::algorithm::djb_hash(value));
 
-				auto id = tex.GetId();
+				auto id = tex.id;
 
 				uniform.set(p.get_property_name(), (void*)&id, SHADER_UNIFORM_SAMPLER2D);
 			}

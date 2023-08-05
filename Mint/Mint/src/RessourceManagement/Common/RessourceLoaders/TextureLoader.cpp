@@ -19,17 +19,11 @@ namespace mint
 		CFilesystem fs(CFilesystem::get_working_directory());
 		if(fs.forward(asset.get_asset_path()) && fs.forward(source))
 		{
-			try 
-			{
-				Texture texture(fs.get_current_directory().as_string());
+			Texture tex = LoadTexture(fs.get_current_directory().as_string().c_str());
 
-				CTextureManager::Get().add_texture(name, texture);
+			CTextureManager::Get().add_texture(name, tex);
 
-				return true;
-			}
-			catch(const raylib::RaylibException& e)
-			{
-			}
+			return true;
 		}
 
 		return false;

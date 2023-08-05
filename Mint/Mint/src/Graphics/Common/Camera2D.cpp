@@ -16,8 +16,8 @@ namespace mint::fx
 
 	mint::CRect CCamera2D::get_world_visible_area()
 	{
-		auto tl = m_camera.GetScreenToWorld({ 0.0f, 0.0f });
-		auto br = m_camera.GetScreenToWorld({ get_viewport_width(), get_viewport_height() });
+		auto tl = GetScreenToWorld2D({ 0.0f, 0.0f }, m_camera);
+		auto br = GetScreenToWorld2D({ get_viewport_width(), get_viewport_height() }, m_camera);
 
 		return { tl.x, tl.y, br.x, br.y };
 	}
@@ -39,7 +39,7 @@ namespace mint::fx
 	{
 		ICamera::set_translation(value);
 
-		m_camera.SetTarget({ value.x, value.y });
+		m_camera.target = { value.x, value.y };
 	}
 
 
@@ -47,7 +47,7 @@ namespace mint::fx
 	{
 		ICamera::set_translation_offset(value);
 
-		m_camera.SetOffset({ value.x, value.y });
+		m_camera.offset = { value.x, value.y };
 	}
 
 
@@ -55,7 +55,7 @@ namespace mint::fx
 	{
 		ICamera::set_rotation(value);
 
-		m_camera.SetRotation(value);
+		m_camera.rotation = value;
 	}
 
 
@@ -63,7 +63,7 @@ namespace mint::fx
 	{
 		ICamera::set_zoom(value);
 
-		m_camera.SetZoom(value);
+		m_camera.zoom = value;
 	}
 
 
@@ -71,9 +71,7 @@ namespace mint::fx
 	{
 		ICamera::translate(value);
 
-		auto vec = m_camera.GetTarget();
-
-		m_camera.SetTarget({ value.x + vec.x, value.y + vec.y });
+		m_camera.target = { value.x + m_camera.target.x, value.y + m_camera.target.y };
 	}
 
 
@@ -81,9 +79,7 @@ namespace mint::fx
 	{
 		ICamera::rotate(value);
 
-		auto r = m_camera.GetRotation();
-
-		m_camera.SetRotation(r + value);
+		m_camera.rotation += value;
 	}
 
 
@@ -91,11 +87,11 @@ namespace mint::fx
 	{
 		ICamera::zoom(value);
 
-		auto z = m_camera.GetZoom();
+		auto z = m_camera.zoom;
 
 		auto _zoom = (z + value <= 0.1f) ? 0.1f : z + value;
 
-		m_camera.SetZoom(_zoom);
+		m_camera.zoom = _zoom;
 	}
 
 
@@ -103,37 +99,31 @@ namespace mint::fx
 	{
 		ICamera::translate_offset(value);
 
-		auto vec = m_camera.GetOffset();
-
-		m_camera.SetOffset({ vec.x + value.x, vec.y + value.y });
+		m_camera.offset = { m_camera.offset.x + value.x, m_camera.offset.y + value.y };
 	}
 
 
 	mint::Vec2 CCamera2D::get_position()
 	{
-		auto target = m_camera.GetTarget();
-
-		return {target.x, target.y};
+		return { m_camera.target.x, m_camera.target.y };
 	}
 
 
 	mint::Vec2 CCamera2D::get_position_offset()
 	{
-		auto offset = m_camera.GetOffset();
-
-		return { offset.x, offset.y };
+		return { m_camera.offset.x, m_camera.offset.y };
 	}
 
 
 	mint::f32 CCamera2D::get_rotation()
 	{
-		return m_camera.GetRotation();
+		return m_camera.rotation;
 	}
 
 
 	mint::f32 CCamera2D::get_zoom()
 	{
-		return m_camera.GetZoom();
+		return m_camera.zoom;
 	}
 
 	void CCamera2D::on_update(f32 dt)
@@ -183,13 +173,13 @@ namespace mint::fx
 
 	mint::Vec2 CCamera2D::vector_screen_to_world(const Vec2& vec)
 	{
-		auto v = m_camera.GetScreenToWorld({ vec.x, vec.y });
+		auto v = GetScreenToWorld2D({ vec.x, vec.y }, m_camera);
 		return { v.x, v.y };
 	}
 
 	mint::Vec2 CCamera2D::vector_world_to_screen(const Vec2& vec)
 	{
-		auto v = m_camera.GetWorldToScreen({ vec.x, vec.y });
+		auto v = GetWorldToScreen2D({ vec.x, vec.y }, m_camera);
 		return { v.x, v.y };
 	}
 
@@ -197,8 +187,8 @@ namespace mint::fx
 	{
 		// By default we can see half the camera width and height further offbounds.
 		// This is done to prevent visible poping in and out and for particles to be still somewhat visible even if emitter is off-screen.
-		auto tl = m_camera.GetScreenToWorld({ -get_viewport_width() / 2.0f, -get_viewport_height() / 2.0f });
-		auto br = m_camera.GetScreenToWorld({ get_viewport_width() + get_viewport_width() / 2.0f, get_viewport_height() + get_viewport_height() / 2.0f });
+		auto tl = GetScreenToWorld2D({ -get_viewport_width() / 2.0f, -get_viewport_height() / 2.0f }, m_camera);
+		auto br = GetScreenToWorld2D({ get_viewport_width() + get_viewport_width() / 2.0f, get_viewport_height() + get_viewport_height() / 2.0f }, m_camera);
 
 		return { tl.x, tl.y, br.x, br.y };
 	}

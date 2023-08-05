@@ -56,7 +56,7 @@ namespace mint
 
 		);
 
-		return { texture.GetWidth(), texture.GetHeight() };
+		return { texture.width, texture.height };
 	}
 
 
@@ -68,7 +68,7 @@ namespace mint
 
 		);
 
-		return { texture.GetWidth(), texture.GetHeight() };
+		return { texture.width, texture.height };
 	}
 
 

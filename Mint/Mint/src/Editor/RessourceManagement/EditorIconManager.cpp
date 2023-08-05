@@ -10,7 +10,7 @@ namespace mint::editor
 
 
 
-	const mint::Texture& CEditorIconManager::get_texture(const String& texture_name)
+	const Texture& CEditorIconManager::get_texture(const String& texture_name)
 	{
 		auto h = mint::algorithm::djb_hash(texture_name);
 
@@ -18,7 +18,7 @@ namespace mint::editor
 	}
 
 
-	const mint::Texture& CEditorIconManager::get_texture(TextureHandle texture_handle)
+	const Texture& CEditorIconManager::get_texture(TextureHandle texture_handle)
 	{
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
@@ -46,7 +46,7 @@ namespace mint::editor
 
 		);
 
-		return { texture.GetWidth(), texture.GetHeight() };
+		return { texture.width, texture.height };
 	}
 
 
@@ -80,25 +80,19 @@ namespace mint::editor
 					auto icon_editor_name = property.get_property_name();
 					auto icon_name = property.cast< mint::String >();
 
-					try
+					mint::CFilesystem icon_file_path(fs.get_current_directory());
+
+					if (icon_file_path.forward(icon_name))
 					{
-						mint::CFilesystem icon_file_path(fs.get_current_directory());
+						Texture texture = LoadTexture(icon_file_path.get_current_directory().as_string().c_str());
 
-						if (icon_file_path.forward(icon_name))
-						{
-							mint::Texture texture(icon_file_path.get_current_directory().as_string());
+						auto h = mint::algorithm::djb_hash(icon_editor_name);
 
-							auto h = mint::algorithm::djb_hash(icon_editor_name);
-
-							m_textures.add(h, texture);
-						}
-						else
-						{
-							MINT_LOG_ERROR("[{:.4f}][CEditorIconManager::initialize] Failed loading editor icon  \"{}\" at \"{}\"!", MINT_APP_TIME, icon_name, icon_file_path.get_current_directory().as_string());
-						}
+						m_textures.add(h, texture);
 					}
-					catch (const raylib::RaylibException& e)
+					else
 					{
+						MINT_LOG_ERROR("[{:.4f}][CEditorIconManager::initialize] Failed loading editor icon  \"{}\" at \"{}\"!", MINT_APP_TIME, icon_name, icon_file_path.get_current_directory().as_string());
 					}
 				}
 			}

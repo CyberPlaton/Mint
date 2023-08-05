@@ -2,6 +2,8 @@
 #define _MINT_COMMON_H_
 #pragma once
 
+#pragma warning(disable : 4005) // Disable "macro-redefinition" warning.
+#pragma warning(disable : 4002) // Disable "too many args for function-like macro" warning.
 
 // Common primitive data types
 namespace mint
@@ -97,8 +99,7 @@ namespace mint
 #include <string>
 #include <fstream>
 
-
-#include "raylib/raylib-cpp.hpp"
+#include "raylib/raylib.h"
 #include "raylib/rlgl.h"
 
 #include "glm/glm.hpp"
@@ -127,10 +128,7 @@ namespace mint
 	using ScriptHandle = u64;
 	using DelegateHandle = u64;
 	using String = std::string;
-	using Window = raylib::Window;
-	using Texture = raylib::Texture;
-	using Shader = Shader;
-
+	
 	static inline bool is_handle_valid(u64 handle) { return handle != static_cast< u64 >(-1); }
 	static inline EntityHandle entity_get_handle(entt::entity entity) { return static_cast<u64>(entity); }
 	static inline u64 invalid_handle() { return static_cast<u64>(-1); }

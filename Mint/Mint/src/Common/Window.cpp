@@ -15,23 +15,23 @@ namespace mint
 	{
 		_setWindowState(FLAG_VSYNC_HINT, desc.m_vsync);
 
-		m_window.Init(desc.m_width, desc.m_height, desc.m_title);
-		
+		InitWindow(desc.m_width, desc.m_height, desc.m_title.c_str());
+
 		hide();
 
-		m_windowIcon.Load(desc.m_window_icon_path);
 
-		m_window.SetIcon(m_windowIcon);
+		auto icon_texture = LoadImage(desc.m_window_icon_path.c_str());
+		SetWindowIcon(icon_texture);
 
+		
 		auto monitor_refresh_rate = GetMonitorRefreshRate(GetCurrentMonitor());
-
 		if(desc.m_targetFPS > monitor_refresh_rate)
 		{
 			desc.m_targetFPS = monitor_refresh_rate;
 		}
 
-		m_window.SetTargetFPS(desc.m_targetFPS);
-
+		SetTargetFPS(desc.m_targetFPS);
+		
 		_setWindowState(FLAG_WINDOW_UNDECORATED, !desc.m_decorated);
 		_setWindowState(FLAG_WINDOW_MINIMIZED, desc.m_minimized);
 		_setWindowState(FLAG_WINDOW_RESIZABLE, desc.m_resizable);
@@ -65,7 +65,7 @@ namespace mint
 
 	void CWindow::terminate()
 	{
-
+		CloseWindow();
 	}
 
 
@@ -86,8 +86,7 @@ namespace mint
 
 	mint::Vec2 CWindow::get_size()
 	{
-		auto size = m_window.GetSize();
-		return { size.x, size.y };
+		return { GetScreenWidth(), GetScreenHeight() };
 	}
 
 
@@ -103,59 +102,63 @@ namespace mint
 
 	void CWindow::set_size(const Vec2& v)
 	{
-		m_window.SetPosition({ 0.0f, 0.0f });
-		m_window.SetSize({ v.x, v.y });
+		SetWindowPosition(0, 0);
+		SetWindowSize((u32)v.x, (u32)v.y);
 	}
 
 
 	void CWindow::toggle_fullscreen()
 	{
-		bool v = !m_window.IsFullscreen();
-
-		m_window.SetFullscreen(v);
+		ToggleFullscreen();
 	}
 
 
 	bool CWindow::is_fullscreen() const
 	{
-		return m_window.IsFullscreen();
+		return IsWindowFullscreen();
 	}
 
 
 	void CWindow::set_is_fullscreen(bool value)
 	{
-		m_window.SetFullscreen(value);
+		if (value)
+		{
+			if (!is_fullscreen()) toggle_fullscreen();
+		}
+		else
+		{
+			if(is_fullscreen()) toggle_fullscreen();
+		}
 	}
 
 
 	void CWindow::set_title(const String& title)
 	{
-		m_description.m_title = title;
-		m_window.SetTitle(title);
+		SetWindowTitle(title.c_str());
 	}
 
 
 	mint::f32 CWindow::get_x() const
 	{
-		return m_window.GetPosition().x;
+		return GetWindowPosition().x;
 	}
 
 
 	mint::f32 CWindow::get_y() const
 	{
-		return m_window.GetPosition().y;
+		return GetWindowPosition().y;
 	}
 
 
 	mint::f32 CWindow::get_w() const
 	{
-		return m_window.GetSize().x;
+		return GetScreenWidth();
 	}
 
 
 	mint::f32 CWindow::get_h() const
 	{
-		return m_window.GetSize().y;
+		return GetScreenHeight();
 	}
 
 
@@ -165,12 +168,12 @@ namespace mint
 
 		auto monitor = GetCurrentMonitor();
 		auto refresh_rate = GetMonitorRefreshRate(monitor);
-		auto width = m_window.GetWidth();
-		auto height = m_window.GetHeight();
+		auto width = GetScreenWidth();
+		auto height = GetScreenHeight();
 		auto monitor_width = GetMonitorWidth(monitor);
 		auto monitor_height = GetMonitorHeight(monitor);
-		auto render_width = m_window.GetRenderWidth();
-		auto render_height = m_window.GetRenderHeight();
+		auto render_width = GetRenderWidth();
+		auto render_height = GetRenderHeight();
 
 		MINT_LOG_INFO("\t Monitor ID: {}", monitor);
 		MINT_LOG_INFO("\t Monitor Width: {}", monitor_width);

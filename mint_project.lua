@@ -107,6 +107,7 @@
 			"WorldQuery/Database",
 			"WorldQuery",
 			"SoundSystem/Common",
+			"SoundSystem/LuaBinding",
 			"SoundSystem",
 
 			

@@ -26,9 +26,9 @@ namespace mint::editor
 		void terminate();
 
 
-		const mint::Texture& get_texture(const String& texture_name);
+		const Texture& get_texture(const String& texture_name);
 
-		const mint::Texture& get_texture(TextureHandle texture_handle);
+		const Texture& get_texture(TextureHandle texture_handle);
 
 		const Texture* get_texture_imgui(const String& texture_name);
 
@@ -42,7 +42,7 @@ namespace mint::editor
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		mint::CMap< mint::Texture > m_textures;
+		mint::CMap< Texture > m_textures;
 
 	};
 }
