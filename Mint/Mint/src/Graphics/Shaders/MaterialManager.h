@@ -50,7 +50,7 @@ namespace mint::fx
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		std::map< EntityHandle, CBinarySearchTree2< CMaterial > > m_materials;
+		std::unordered_map< EntityHandle, CBinarySearchTree2< CMaterial > > m_materials;
 
 		CMap< std::pair< String, String > > m_materialPrefabs;
 
