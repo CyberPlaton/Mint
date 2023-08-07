@@ -22,7 +22,7 @@ namespace mint
 
 	f32 CRandom::normalized_float()
 	{
-		return (f32)s_distribution(s_randomEngine) / std::numeric_limits<int32_t>::max();
+		return (f32)s_distribution(s_randomEngine) / std::numeric_limits<u64>::max();
 	}
 
 
@@ -31,15 +31,17 @@ namespace mint
 		return min + normalized_float() * max;
 	}
 
-	u32 CRandom::integer()
+	u64 CRandom::integer()
 	{
-		return (u32)s_distribution(s_randomEngine);
+		return s_distribution(s_randomEngine);
 	}
 
 
-	mint::u32 CRandom::in_range_integer(u32 min, u32 max)
+	mint::u64 CRandom::in_range_integer(u64 min, u64 max)
 	{
-		return min + u32(normalized_float() * max);
+		std::uniform_int_distribution<std::mt19937_64::result_type> dist(min, max);
+
+		return dist(s_randomEngine);
 	}
 
 	mint::Vec2 CRandom::vector2()

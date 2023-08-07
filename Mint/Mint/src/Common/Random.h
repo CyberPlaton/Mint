@@ -10,9 +10,7 @@
 #undef min
 #endif
 
-
 #include <random>
-
 
 namespace mint
 {
@@ -31,17 +29,17 @@ namespace mint
 
 		f32 in_range_float(f32 min, f32 max);
 
-		u32 integer();
+		u64 integer();
 
-		u32 in_range_integer(u32 min, u32 max);
+		u64 in_range_integer(u64 min, u64 max);
 
 		Vec2 vector2();
 
 		Vec2 in_range_vector2(f32 min, f32 max);
 
 	private:
-		std::mt19937 s_randomEngine;
-		std::uniform_int_distribution<std::mt19937::result_type> s_distribution;
+		std::mt19937_64 s_randomEngine;
+		std::uniform_int_distribution<std::mt19937_64::result_type> s_distribution;
 	};
 
 }
