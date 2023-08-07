@@ -45,7 +45,7 @@ public:
 	}
 
 private:
-	mint::String m_label = 0;
+	mint::String m_label;
 	entt::entity m_entity = entt::null;
 };
 
@@ -82,4 +82,7 @@ public:
 	entt::entity m_sound;
 	entt::entity m_forest;
 	entt::entity m_shot;
+
+	entt::entity m_shermanHull;
+	entt::entity m_shermanTurret;
 };

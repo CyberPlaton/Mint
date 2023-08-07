@@ -2,9 +2,19 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	//CUCA::transform_rotate(m_knight,  mint::algorithm::degree_to_radians(45.0f * dt));
+	CUCA::transform_rotate(m_shermanHull, mint::algorithm::degree_to_radians(-45.0f * dt));
+	CUCA::transform_translate(m_shermanHull, { dt, 0.0f });
 
- 	//CUCA::transform_translate(m_knight, { dt, 0.0f });
+	if (mint::CInput::is_key_held_char('Q'))
+	{
+		CUCA::transform_rotate(m_shermanTurret, -mint::algorithm::degree_to_radians(15.0f * dt));
+	}
+	if (mint::CInput::is_key_held_char('E'))
+	{
+		CUCA::transform_rotate(m_shermanTurret, mint::algorithm::degree_to_radians(15.0f * dt));
+	}
+
+
 
 	if (mint::CSAS::Get().is_entity_visible(m_particle))
 	{
@@ -421,8 +431,71 @@ bool CMainScene::on_load()
 
 
 
+	/*
+	* Tank Test.
+	*/
+	m_shermanHull = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_shermanHull);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_shermanHull);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_shermanHull);
+		auto& sprite = m_registry.add_component< mint::component::SSprite >(m_shermanHull);
+		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_shermanHull);
 
- 
+		identifier.m_enttId = SCAST(u64, m_shermanHull);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, m_shermanHull));
+		hierarchy.m_parent = entt::null;
+
+
+		CUCA::transform_set_scale(m_shermanHull, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_shermanHull, 0.0f);
+		CUCA::transform_set_position(m_shermanHull, { random.normalized_float() * 1024, random.normalized_float() * 1024 });
+
+		sprite.m_visible = true;
+		sprite.m_internalVisible = true;
+		sprite.m_depth = 0;
+		sprite.m_rect = { 0.0f, 0.0f, 256.0f, 256.0f };
+		sprite.m_color = { 255, 255, 255, 255 };
+		sprite.m_origin = { 128.0f, 128.0f };
+
+
+		mint::fx::CMaterialManager::Get().set_material_for_entity("mat_sherman_hull", m_shermanHull);
+		add_entity(m_shermanHull);
+		CWorldQuery::Get().register_entity_proxy(m_shermanHull, CUCA::sprite_get_destination_rect(m_shermanHull), CUCA::identifier_get_debug_name(m_shermanHull));
+	}
+
+	m_shermanTurret = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_shermanTurret);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_shermanTurret);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_shermanTurret);
+		auto& sprite = m_registry.add_component< mint::component::SSprite >(m_shermanTurret);
+		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_shermanTurret);
+
+		identifier.m_enttId = SCAST(u64, m_shermanTurret);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, m_shermanTurret));
+		CUCA::hierarchy_set_parent(m_shermanTurret, m_shermanHull);
+		CUCA::hierarchy_add_child(m_shermanHull, m_shermanTurret);
+
+
+		CUCA::transform_set_scale(m_shermanTurret, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_shermanTurret, 0.0f);
+		CUCA::transform_set_position(m_shermanTurret, { 0.0f, 0.0f });
+
+		sprite.m_visible = true;
+		sprite.m_internalVisible = true;
+		sprite.m_depth = 1;
+		sprite.m_rect = { 0.0f, 0.0f, 256.0f, 256.0f };
+		sprite.m_color = { 255, 255, 255, 255 };
+		sprite.m_origin = { 128.0f, 115.0f };
+
+		mint::fx::CMaterialManager::Get().set_material_for_entity("mat_sherman_turret", m_shermanTurret);
+		add_entity(m_shermanTurret);
+	}
+
+
 
 	m_ready = true;
 	return true;

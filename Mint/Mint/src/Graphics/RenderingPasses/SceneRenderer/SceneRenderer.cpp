@@ -82,8 +82,8 @@ namespace mint::fx
  				src = { sprite.m_rect.get_x(),		sprite.m_rect.get_y(),
 						sprite.m_rect.get_width(),	sprite.m_rect.get_height() };
  
-				px = position.x - src.width / 2.0f;
-				py = position.y - src.height / 2.0f;
+				px = position.x - sprite.m_origin.x;
+				py = position.y - sprite.m_origin.y;
 
 				dst = { px + sprite.m_origin.x, py + sprite.m_origin.y,
  						src.width * scale.x,	src.height * scale.y };
