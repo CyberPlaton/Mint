@@ -9,7 +9,7 @@
 
 #include "Common/Any.h"
 #include "Utility/Logging/Logging.h"
-#include "Utility/STL/BinarySearchTree.h"
+#include "Utility/STL/BinarySearchTree2.h"
 #include "Utility/Profiling/FunctionProfiler.h"
 
 
@@ -106,7 +106,7 @@ namespace mint::world
 
 	private:
 		/// @brief BST of nodes, findable with unique id.
-		CBinarySearchTree< CNode > m_nodes;
+		CBinarySearchTree2< CNode > m_nodes;
 
 		/// @brief Mapping object (node) labels to unique ids. Node can then be found through id in BST.
 		std::unordered_map< u64, u64 > m_identifiers;

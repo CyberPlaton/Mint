@@ -7,7 +7,7 @@
 #include "Utility/PluginSystem/Plugin.h"
 #include "RessourceManagement/TextureManager.h"
 
-#include "Utility/STL/BinarySearchTree.h"
+#include "Utility/STL/BinarySearchTree2.h"
 #include "Utility/Profiling/FunctionProfiler.h"
 #include "Utility/Logging/Logging.h"
 
@@ -51,7 +51,7 @@ namespace mint::fx
 		CParticleEmitter* get_particle_emitter_for_entity(entt::entity entity);
 
 	private:
-		CBinarySearchTree< CParticleEmitter > m_emitters;
+		CBinarySearchTree2< CParticleEmitter > m_emitters;
 
 		CMap< std::pair< String, String > > m_particleEmitterPrefabs;
 

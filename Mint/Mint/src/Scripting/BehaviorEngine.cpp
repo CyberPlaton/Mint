@@ -186,18 +186,18 @@ namespace mint::scripting
 
 			MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-				auto behavior = m_activeBehaviors.emplace(SCAST(u64, entity));
+				auto behavior = m_activeBehaviors.add_node(SCAST(u64, entity));
 
-			behavior->set_script_name(script_name);
+				behavior->set_script_name(script_name);
 
-			behavior->set_script_path(script_pair.second);
+				behavior->set_script_path(script_pair.second);
 
-			behavior->set_script_entity_verified(entity_get_handle(entity));
+				behavior->set_script_entity_verified(entity_get_handle(entity));
 
 
-			behavior->initialize();
+				behavior->initialize();
 
-			behavior->on_create();
+				behavior->on_create();
 
 			);
 
@@ -229,7 +229,7 @@ namespace mint::scripting
 
 			behavior->on_destroy();
 
-			m_activeBehaviors.remove(h);
+			m_activeBehaviors.remove_node(h);
  		);
 	}
 

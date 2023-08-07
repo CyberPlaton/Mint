@@ -4,7 +4,7 @@
 
 #include "Common/Common.h"
 #include "Materials/Material.h"
-#include "Utility/STL/Map2.h"
+#include "Utility/STL/BinarySearchTree2.h"
 #include "Utility/Serialization/Serializer.h"
 
 
@@ -36,7 +36,7 @@ namespace mint::fx
 		
 		bool get_material_definition(const String& material_name, SMaterialDefinition& material);
 
-		mint::CMap2< CMaterial >& get_materials_for_entity(entt::entity entity);
+		mint::CBinarySearchTree2< CMaterial >& get_materials_for_entity(entt::entity entity);
 
 		CMaterial* get_main_material_for_entity(entt::entity entity);
 
@@ -50,7 +50,7 @@ namespace mint::fx
 
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
-		std::map< EntityHandle, CMap2< CMaterial > > m_materials;
+		std::map< EntityHandle, CBinarySearchTree2< CMaterial > > m_materials;
 
 		CMap< std::pair< String, String > > m_materialPrefabs;
 

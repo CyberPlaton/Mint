@@ -98,6 +98,9 @@ namespace mint
 #include <vector>
 #include <string>
 #include <fstream>
+#include <stack>
+#include <unordered_map>
+#include <algorithm>
 
 #include "raylib/raylib.h"
 #include "raylib/rlgl.h"

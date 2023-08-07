@@ -26,7 +26,7 @@ namespace mint::reflection
 
 	struct SBase
 	{
-		friend class SAutoAdder;
+		friend struct SAutoAdder;
 
 		static CMetaClass* get_metaclass(SBase* component);
 

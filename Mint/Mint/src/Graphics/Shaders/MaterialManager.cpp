@@ -52,7 +52,7 @@ namespace mint::fx
 		if (!m_materials[h].lookup(hh))
 		{
 			// Create a new material entry.
-			material = m_materials[h].emplace(hh);
+			material = m_materials[h].add_node(hh);
 		}
 		else
 		{
@@ -106,7 +106,7 @@ namespace mint::fx
 			else
 			{
 				// ... add new material at next open index.
-				material = materials.emplace(mat_name_hash);
+				material = materials.add_node(mat_name_hash);
 			}
 
 			MINT_ASSERT(material != nullptr, "Invalid operation. Material was not found or could not be created!");
@@ -202,7 +202,7 @@ namespace mint::fx
 	}
 
 
-	mint::CMap2< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
+	mint::CBinarySearchTree2< mint::fx::CMaterial >& CMaterialManager::get_materials_for_entity(entt::entity entity)
 	{
  		auto h = SCAST(u64, entity);
 
@@ -257,7 +257,7 @@ namespace mint::fx
 
 		if (m_materials.find(h) != m_materials.end())
 		{
-			m_materials[h].remove(hh);
+			m_materials[h].remove_node(hh);
 		}
 	}
 

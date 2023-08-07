@@ -4,7 +4,7 @@
 
 #include "Behavior/Behavior.h"
 #include "../../IMint.h"
-#include "Utility/STL/Map2.h"
+#include "Utility/STL/BinarySearchTree2.h"
 
 
 
@@ -63,7 +63,7 @@ namespace mint::scripting
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 
-		CMap2< CBehavior > m_activeBehaviors;
+		CBinarySearchTree2< CBehavior > m_activeBehaviors;
 
 		CMap< std::pair< String, String > > m_behaviorPrefabs;
 

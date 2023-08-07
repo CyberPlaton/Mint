@@ -243,12 +243,12 @@ namespace mint::component
 	}
 
 
-	mint::CMap2< mint::fx::CMaterial >& CUCA::sprite_get_all_materials(entt::entity entity)
+	mint::CBinarySearchTree2< mint::fx::CMaterial >& CUCA::sprite_get_all_materials(entt::entity entity)
 	{
 
 		MINT_BEGIN_CRITICAL_SECTION(m_spriteCriticalSection,
 
-			auto & v = fx::CMaterialManager::Get().get_materials_for_entity(entity);
+			auto& v = fx::CMaterialManager::Get().get_materials_for_entity(entity);
 			
 		);
 

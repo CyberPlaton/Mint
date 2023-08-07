@@ -21,7 +21,7 @@ namespace mint::animation
 		auto h = mint::algorithm::djb_hash(animator_name);
 		auto s = mint::algorithm::djb_hash(state_name);
 
-		m_animators[s].remove(h);
+		m_animators[s].remove_node(h);
 	}
 
 	void CAnimatorStack::add_animation_state(const String& state_name)
@@ -51,7 +51,7 @@ namespace mint::animation
 		
 
 		// Create the Animator and initialize it.
-		auto animator = m_animators[s].emplace(h);
+		auto animator = m_animators[s].add_node(h);
 
 		animator->set_name(animator_name);
 
@@ -67,7 +67,7 @@ namespace mint::animation
 
 		if (!animator->on_initialize())
 		{
-			m_animators[s].remove(h);
+			m_animators[s].remove_node(h);
 			animator = nullptr;
 		}
 

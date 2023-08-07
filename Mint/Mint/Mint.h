@@ -50,7 +50,6 @@
 #include "AnimationSystem/Animators/TranslationAnimator.h"
 #include "WorldQuery/WorldQuery.h"
 #include "WorldQuery/WorldQueryDebugRenderer.h"
-#include "Utility/STL/BinarySearchTree.h"
 #include "SoundSystem/SoundSystem.h"
 #include "SoundSystem/SoundSystemDebugRenderer.h"
 

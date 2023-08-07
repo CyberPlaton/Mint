@@ -4,7 +4,7 @@
 
 #include "Script/Script.h"
 #include "../../IMint.h"
-#include "Utility/STL/Map2.h"
+#include "Utility/STL/BinarySearchTree2.h"
 
 
 namespace mint::scripting
@@ -54,7 +54,7 @@ namespace mint::scripting
 		MINT_CRITICAL_SECTION(m_criticalSection);
 
 
-		CMap2< CScript > m_scripts;
+		CBinarySearchTree2< CScript > m_scripts;
 
 
 	private:

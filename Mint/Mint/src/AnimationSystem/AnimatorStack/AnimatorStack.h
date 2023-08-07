@@ -3,7 +3,7 @@
 
 
 #include "../Common/IAnimator.h"
-#include "Utility/STL/Map2.h"
+#include "Utility/STL/BinarySearchTree2.h"
 
 
 namespace mint::animation
@@ -63,7 +63,7 @@ namespace mint::animation
 		bool m_stateChange = false;
 		bool m_initialUpdatePerformed = false;
 
-		std::unordered_map< u64, CMap2< CAnimator > > m_animators;
+		std::unordered_map< u64, CBinarySearchTree2< CAnimator > > m_animators;
 
 	};
 

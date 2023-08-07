@@ -4,7 +4,7 @@
 
 #include "Particle.h"
 #include "Utility/Logging/Logging.h"
-#include "Utility/STL/Common/ObjectAllocator.h"
+#include "Utility/STL/Common/ObjectAllocator2.h"
 #include "Graphics/Shaders/MaterialManager.h"
 #include "Graphics/Shaders/Materials/MaterialDefinition.h"
 #include "Common/Random.h"

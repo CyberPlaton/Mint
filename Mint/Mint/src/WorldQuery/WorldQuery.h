@@ -113,7 +113,7 @@ namespace mint::world
 		bool m_masterQueryHasFilter = false;
 		CWorldQueryFilter* m_masterQueryFilter = nullptr;
 
-		CBinarySearchTree< SWorldQueryProxy > m_registeredProxies;
+		CBinarySearchTree2< SWorldQueryProxy > m_registeredProxies;
 
 		std::unordered_map< s32, u64 > m_registeredProxyIds;
 

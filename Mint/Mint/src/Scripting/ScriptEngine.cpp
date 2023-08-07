@@ -176,7 +176,7 @@ namespace mint::scripting
 
 		MINT_BEGIN_CRITICAL_SECTION(m_criticalSection,
 
-			auto script = m_scripts.emplace(h);
+			auto script = m_scripts.add_node(h);
 
 			script->set_script_entity(entt::null);
 
@@ -190,7 +190,7 @@ namespace mint::scripting
 			}
 			else
 			{
-				m_scripts.remove(h);
+				m_scripts.remove_node(h);
 			}
 		);
 	}
@@ -208,7 +208,7 @@ namespace mint::scripting
 
 				script->on_destroy();
 
-				m_scripts.remove(h);
+				m_scripts.remove_node(h);
 
 			);
 
