@@ -25,6 +25,7 @@ namespace mint::algorithm
 
 	f32 vec3_compute_distance_between_two_vectors(const Vec3& p1, const Vec3& p2);
 
+	void vec2_rotate_around_point(Vec2& vec, f32 angle, Vec2 rotation_pivot_point);
 
 	/* Please note the difference between our coordinate system and box2d:
 	*

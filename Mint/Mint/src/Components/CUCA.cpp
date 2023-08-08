@@ -19,6 +19,8 @@ namespace mint::component
 
 	mint::Vec2 CUCA::transform_get_position(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_get_position");
+
 		const auto& transform = CUCA::_get_world_transform(entity);
 
 		return CUCA::extract_position_from_world_transform(transform);
@@ -52,6 +54,8 @@ namespace mint::component
 
 	void CUCA::transform_set_position(entt::entity entity, Vec2 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_set_position");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to translate an entity without a Transform component!");
 
@@ -75,6 +79,8 @@ namespace mint::component
 
 	void CUCA::transform_translate(entt::entity entity, Vec2 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_translate");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 					"Invalid operation. Trying to translate an entity without a Transform component!");
 
@@ -96,6 +102,8 @@ namespace mint::component
 
 	void CUCA::transform_set_rotation(entt::entity entity, f32 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_set_rotation");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
@@ -117,6 +125,8 @@ namespace mint::component
 
 	void CUCA::transform_rotate(entt::entity entity, f32 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_rotate");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to rotate an entity without a Transform component!");
 
@@ -168,6 +178,8 @@ namespace mint::component
 
 	f32 CUCA::transform_get_rotation(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_get_rotation");
+
 		const auto& transform = CUCA::_get_world_transform(entity);
 
 		return CUCA::extract_rotation_from_world_transform(transform);
@@ -176,6 +188,8 @@ namespace mint::component
 
 	mint::Vec2 CUCA::transform_get_scale(entt::entity entity)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_get_scale");
+
 		const auto& transform = CUCA::_get_world_transform(entity);
 
 		return CUCA::extract_scale_from_world_transform(transform);
@@ -184,6 +198,8 @@ namespace mint::component
 
 	void CUCA::transform_scale(entt::entity entity, Vec2 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_scale");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to scale an entity without a Transform component!");
 
@@ -205,6 +221,8 @@ namespace mint::component
 
 	void CUCA::transform_set_scale(entt::entity entity, Vec2 value)
 	{
+		MINT_PROFILE_SCOPE("Engine::CUCA", "CUCA::transform_set_scale");
+
 		MINT_ASSERT(MINT_SCENE_REGISTRY()->has_component< mint::component::STransform >(entity) == true,
 			"Invalid operation. Trying to scale an entity without a Transform component!");
 
@@ -1221,6 +1239,60 @@ namespace mint::component
 		);
 
 		return value;
+	}
+
+	mint::Vec2 CUCA::transform_get_forward_vector_world_space(entt::entity entity)
+	{
+		auto forward = transform_get_forward_vector_screen_space(entity);
+		auto zoom = mint::fx::CCameraManager::Get().get_active_camera()->get_zoom();
+
+		auto position = transform_get_position(entity);
+		auto position_screen = mint::fx::CCameraManager::Get().get_active_camera()->vector_world_to_screen(position);
+		auto rotation = transform_get_rotation(entity);
+
+		// Rotate in screen space according to entity rotation.
+		Vec2 forward_rotated;
+		forward_rotated.x = glm::cos(rotation) * forward.x - glm::sin(rotation) * forward.y;
+		forward_rotated.y = glm::sin(rotation) * forward.x + glm::cos(rotation) * forward.y;
+
+		// Compensate for camera zoom.
+		forward_rotated.x *= zoom;
+		forward_rotated.y *= zoom;
+
+		// Convert position to screen space and compute resulting vector, and return resulting world space vector.
+  		return mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world({ position_screen.x + forward_rotated.x, position_screen.y + forward_rotated.y });
+	}
+
+	void CUCA::transform_set_initial_forward_vector(entt::entity entity, Vec2 value)
+	{
+		auto& transform = MINT_SCENE_REGISTRY()->get_component< STransform >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+			transform.m_forward = value;
+
+		);
+	}
+
+	mint::Vec2 CUCA::transform_get_forward_vector_screen_space(entt::entity entity)
+	{
+		const auto& transform = MINT_SCENE_REGISTRY()->get_component< STransform >(entity);
+
+		MINT_BEGIN_CRITICAL_SECTION(m_transformCriticalSection,
+
+			auto v = transform.m_forward;
+
+		);
+
+		return v;
+	}
+
+	mint::Vec2 CUCA::transform_get_forward_vector_relative_normalized(entt::entity entity)
+	{
+		auto position = transform_get_position(entity);
+		auto forward = transform_get_forward_vector_world_space(entity);
+
+		return glm::normalize(position - forward);
 	}
 
 }

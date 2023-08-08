@@ -236,4 +236,20 @@ namespace mint::algorithm
 		return glm::sqrt(dx + dy + dz);
 	}
 
+	void vec2_rotate_around_point(Vec2& vec, f32 angle, Vec2 rotation_pivot_point)
+	{
+		Vec2 temp{};
+		f32 s = glm::sin(angle);
+		f32 c = glm::cos(angle);
+
+		// Translate to rotate around point.
+		vec = vec - rotation_pivot_point;
+		
+		temp.x = vec.x * c - vec.y * s;
+		temp.y = vec.x * s + vec.y * c;
+		
+		// Translate back to previous position.
+		vec = temp + rotation_pivot_point;
+	}
+
 }

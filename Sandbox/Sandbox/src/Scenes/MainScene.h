@@ -85,4 +85,5 @@ public:
 
 	entt::entity m_shermanHull;
 	entt::entity m_shermanTurret;
+	entt::entity m_shermanCupola;
 };

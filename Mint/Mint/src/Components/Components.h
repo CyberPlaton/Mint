@@ -149,6 +149,8 @@ namespace mint::component
 		static bool export_component(entt::entity entity, entt::id_type hash, const entt::registry& registry, maml::SNode* node);
 		static bool import_component(entt::entity entity, entt::id_type hash, entt::registry& registry, maml::SNode* node);
 
+		/// @brief Direction the entity is looking to in screen space.
+		Vec2 m_forward = {0.0f, 0.0f};
 
 		Vec2 m_position = {0.0f, 0.0f};
 

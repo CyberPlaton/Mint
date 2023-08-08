@@ -2,18 +2,69 @@
 
 void CMainScene::on_update(mint::f32 dt /*= 0.0f*/)
 {
-	CUCA::transform_rotate(m_shermanHull, mint::algorithm::degree_to_radians(-45.0f * dt));
-	CUCA::transform_translate(m_shermanHull, { dt, 0.0f });
+	using namespace mint;
 
-	if (mint::CInput::is_key_held_char('Q'))
+	f32 tank_speed_frwd = 10.0f;
+	f32 tank_speed_bck = 4.0f;
+	f32 tank_turret_rotation_speed = 0.25f;
+
+	auto turret_world = CUCA::transform_get_position(m_shermanTurret);
+	auto turret_screen = mint::fx::CCameraManager::Get().get_active_camera()->vector_world_to_screen(turret_world);
+	auto mouse = mint::CInput::get_mouse_position();
+	auto rotation = CUCA::transform_get_rotation(m_shermanTurret);
+
+	mouse.x -= turret_screen.x;
+	mouse.y -= turret_screen.y;
+	 
+	auto angle = glm::atan< f32 >(mouse.x, -mouse.y);
+
+	if (mint::algorithm::are_values_sufficiently_different(angle, rotation, 0.01f))
 	{
-		CUCA::transform_rotate(m_shermanTurret, -mint::algorithm::degree_to_radians(15.0f * dt));
-	}
-	if (mint::CInput::is_key_held_char('E'))
-	{
-		CUCA::transform_rotate(m_shermanTurret, mint::algorithm::degree_to_radians(15.0f * dt));
+		if (angle < rotation)
+		{
+			CUCA::transform_rotate(m_shermanTurret, -tank_turret_rotation_speed * dt);
+
+		}
+		else if (angle > rotation)
+		{
+			CUCA::transform_rotate(m_shermanTurret, tank_turret_rotation_speed * dt);
+		}
 	}
 
+	const bool w = mint::CInput::is_key_held_enum(KEY_UP);
+	const bool a = mint::CInput::is_key_held_enum(KEY_LEFT);
+	const bool s = mint::CInput::is_key_held_enum(KEY_DOWN);
+	const bool d = mint::CInput::is_key_held_enum(KEY_RIGHT);
+
+	if (w)
+	{
+		auto direction = CUCA::transform_get_forward_vector_relative_normalized(m_shermanHull);
+
+		CUCA::transform_translate(m_shermanHull,  -direction * dt * tank_speed_frwd);
+	}
+	if (a)
+	{
+		CUCA::transform_rotate(m_shermanHull, -mint::algorithm::degree_to_radians(15.0f * dt));
+	}
+	if (s)
+	{
+		auto direction = CUCA::transform_get_forward_vector_relative_normalized(m_shermanHull);
+		
+		CUCA::transform_translate(m_shermanHull, direction * dt * tank_speed_bck);
+	}
+	if (d)
+	{
+		CUCA::transform_rotate(m_shermanHull, mint::algorithm::degree_to_radians(15.0f * dt));
+	}
+
+ 	if (mint::CInput::is_key_held_char('Q'))
+ 	{
+ 		CUCA::transform_rotate(m_shermanTurret, -mint::algorithm::degree_to_radians(15.0f * dt));
+ 	}
+ 	if (mint::CInput::is_key_held_char('E'))
+ 	{
+ 		CUCA::transform_rotate(m_shermanTurret, mint::algorithm::degree_to_radians(15.0f * dt));
+ 	}
 
 
 	if (mint::CSAS::Get().is_entity_visible(m_particle))
@@ -133,7 +184,34 @@ void CMainScene::on_ui_render(mint::f32 dt /*= 0.0f*/)
 	// Render raycast.
 	fx::CPrimitiveRenderer::render_line(ray_start, ray_end, MINT_RED(), 2.0f);
 
- 	fx::CCameraManager::Get().get_active_camera()->end_camera();
+
+	// Render line from Tank position to Mouse position.
+	auto mouse = mint::CInput::get_mouse_position();
+	auto world_mouse = mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world(mouse);
+
+	static Vec2 turret_forward = { 0.0f, -100.0f };
+	auto turret_position = CUCA::transform_get_position(m_shermanTurret);
+	auto turret_rotation = CUCA::transform_get_rotation(m_shermanTurret);
+
+	fx::CPrimitiveRenderer::render_line(turret_position, world_mouse, MINT_RED_DARK(), 2.0f);
+
+	Vec2 turret_position_screen = mint::fx::CCameraManager::Get().get_active_camera()->vector_world_to_screen(turret_position);
+
+	// Rotate turret forward vector according to turret rotation in radians in screen space.
+	Vec2 turret_forward_rotated;
+	turret_forward_rotated.x = glm::cos(turret_rotation) * turret_forward.x - glm::sin(turret_rotation) * turret_forward.y;
+	turret_forward_rotated.y = glm::sin(turret_rotation) * turret_forward.x + glm::cos(turret_rotation) * turret_forward.y;
+
+	Vec2 turret_forward_world = mint::fx::CCameraManager::Get().get_active_camera()->vector_screen_to_world({ turret_position_screen.x + turret_forward_rotated.x, turret_position_screen.y + turret_forward_rotated.y });
+
+	fx::CPrimitiveRenderer::render_line(turret_position, turret_forward_world, MINT_RED_LIGHT(), 2.0f);
+
+	
+	fx::CPrimitiveRenderer::render_line(turret_position, CUCA::transform_get_forward_vector_world_space(m_shermanTurret), MINT_BLUE_LIGHT(), 2.0f);
+	fx::CPrimitiveRenderer::render_line(CUCA::transform_get_position(m_shermanHull), CUCA::transform_get_forward_vector_world_space(m_shermanHull), MINT_GREEN_LIGHT(), 2.0f);
+
+	
+	fx::CCameraManager::Get().get_active_camera()->end_camera();
 }
 
 
@@ -441,16 +519,23 @@ bool CMainScene::on_load()
 		auto& transform = m_registry.add_component< mint::component::STransform >(m_shermanHull);
 		auto& sprite = m_registry.add_component< mint::component::SSprite >(m_shermanHull);
 		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_shermanHull);
+		auto& ws = m_registry.add_component< mint::component::SWorldSettings >(m_shermanHull);
+
+		ws.m_groupId = 3;
+		ws.m_enabled = true;
+		ws.m_filterEnabled = true;
+		ws.m_queryable = true;
 
 		identifier.m_enttId = SCAST(u64, m_shermanHull);
 		identifier.m_uuid = identifier.m_enttId;
-		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, m_shermanHull));
+		identifier.m_debugName = "ShermanHull";
 		hierarchy.m_parent = entt::null;
 
 
 		CUCA::transform_set_scale(m_shermanHull, { 1.0f, 1.0f });
 		CUCA::transform_set_rotation(m_shermanHull, 0.0f);
 		CUCA::transform_set_position(m_shermanHull, { random.normalized_float() * 1024, random.normalized_float() * 1024 });
+		CUCA::transform_set_initial_forward_vector(m_shermanHull, { 0.0f, -1.0f });
 
 		sprite.m_visible = true;
 		sprite.m_internalVisible = true;
@@ -475,7 +560,7 @@ bool CMainScene::on_load()
 
 		identifier.m_enttId = SCAST(u64, m_shermanTurret);
 		identifier.m_uuid = identifier.m_enttId;
-		identifier.m_debugName = "Entity_" + std::to_string(SCAST(u64, m_shermanTurret));
+		identifier.m_debugName = "ShermanTurret";
 		CUCA::hierarchy_set_parent(m_shermanTurret, m_shermanHull);
 		CUCA::hierarchy_add_child(m_shermanHull, m_shermanTurret);
 
@@ -483,6 +568,7 @@ bool CMainScene::on_load()
 		CUCA::transform_set_scale(m_shermanTurret, { 1.0f, 1.0f });
 		CUCA::transform_set_rotation(m_shermanTurret, 0.0f);
 		CUCA::transform_set_position(m_shermanTurret, { 0.0f, 0.0f });
+		CUCA::transform_set_initial_forward_vector(m_shermanTurret, { 0.0f, -1.0f });
 
 		sprite.m_visible = true;
 		sprite.m_internalVisible = true;
@@ -495,6 +581,35 @@ bool CMainScene::on_load()
 		add_entity(m_shermanTurret);
 	}
 
+	m_shermanCupola = m_registry.create_entity();
+	{
+		auto& identifier = m_registry.add_component< mint::component::SIdentifier >(m_shermanCupola);
+		auto& hierarchy = m_registry.add_component< mint::component::SSceneHierarchy >(m_shermanCupola);
+		auto& transform = m_registry.add_component< mint::component::STransform >(m_shermanCupola);
+		auto& sprite = m_registry.add_component< mint::component::SSprite >(m_shermanCupola);
+		auto& dynamic = m_registry.add_component< mint::component::SDynamicGameobject >(m_shermanCupola);
+
+		identifier.m_enttId = SCAST(u64, m_shermanCupola);
+		identifier.m_uuid = identifier.m_enttId;
+		identifier.m_debugName = "ShermanCupola";
+		CUCA::hierarchy_set_parent(m_shermanCupola, m_shermanTurret);
+		CUCA::hierarchy_add_child(m_shermanTurret, m_shermanCupola);
+
+
+		CUCA::transform_set_scale(m_shermanCupola, { 1.0f, 1.0f });
+		CUCA::transform_set_rotation(m_shermanCupola, 0.0f);
+		CUCA::transform_set_position(m_shermanCupola, { 0.0f, 0.0f });
+
+		sprite.m_visible = true;
+		sprite.m_internalVisible = true;
+		sprite.m_depth = 1;
+		sprite.m_rect = { 0.0f, 0.0f, 256.0f, 256.0f };
+		sprite.m_color = { 255, 255, 255, 255 };
+		sprite.m_origin = { 128.0f, 128.0f };
+
+		mint::fx::CMaterialManager::Get().set_material_for_entity("mat_sherman_cupola", m_shermanCupola);
+		add_entity(m_shermanCupola);
+	}
 
 
 	m_ready = true;

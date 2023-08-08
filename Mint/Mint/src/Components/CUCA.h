@@ -113,6 +113,11 @@ namespace mint::component
 		static void transform_rotate(entt::entity entity, f32 value);
 		static void transform_set_rotation(entt::entity entity, f32 value);
 
+		static void transform_set_initial_forward_vector(entt::entity entity, Vec2 value);
+		static Vec2 transform_get_forward_vector_screen_space(entt::entity entity);
+		static Vec2 transform_get_forward_vector_world_space(entt::entity entity);
+		static Vec2 transform_get_forward_vector_relative_normalized(entt::entity entity);
+
 		static void transform_set_transform_matrix(entt::entity entity, const Mat4& matrix);
 		
 		static Vec2 transform_get_position(entt::entity entity);
